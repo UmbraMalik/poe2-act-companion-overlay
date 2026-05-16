@@ -1,0 +1,80 @@
+{
+  "name": "poe2-campaign-codex-overlay",
+  "version": "0.2.0",
+  "description": "Safe desktop overlay helper for Path of Exile 2 campaign routing.",
+  "main": "dist-electron/main/main.js",
+  "scripts": {
+    "dev": "concurrently -k \"tsc -p tsconfig.electron.json --watch --preserveWatchOutput\" \"vite --host 127.0.0.1\" \"wait-on http://127.0.0.1:5173/overlay.html dist-electron/main/main.js && electron .\"",
+    "build": "tsc -p tsconfig.electron.json && vite build",
+    "dist": "tsc -p tsconfig.electron.json && vite build && electron-builder",
+    "start": "npm run build && set ELECTRON_RENDERER_MODE=production&& electron .",
+    "check:release": "node scripts/check-release-files.cjs",
+    "dist:check": "npm run dist && npm run check:release",
+    "clean:release": "node scripts/clean-release.cjs",
+    "dist:clean": "npm run clean:release && npm run dist && npm run check:release"
+  },
+  "build": {
+    "appId": "com.codex.poe2-campaign-overlay",
+    "productName": "PoE2 Campaign Codex Overlay",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "dist-electron/**/*",
+      "src/data/**/*",
+      "package.json",
+      "assets/**/*"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "assets/app-icon.ico"
+    },
+    "asar": false,
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "UmbraMalik",
+        "repo": "poe2-campaign-codex-releases"
+      }
+    ],
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "PoE2 Campaign Codex Overlay",
+      "installerIcon": "assets/installer/icon.ico",
+      "uninstallerIcon": "assets/installer/icon.ico",
+      "installerHeader": "assets/installer/installer-header.bmp",
+      "installerSidebar": "assets/installer/installer-sidebar.bmp",
+      "uninstallDisplayName": "PoE2 Campaign Codex Overlay"
+    },
+    "artifactName": "PoE2-Campaign-Codex-Overlay-Setup-${version}.${ext}"
+  },
+  "dependencies": {
+    "electron-updater": "^6.8.3",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "concurrently": "^9.0.0",
+    "electron": "^37.0.0",
+    "electron-builder": "^26.0.0",
+    "typescript": "^5.8.0",
+    "vite": "^7.0.0",
+    "wait-on": "^8.0.0"
+  }
+}

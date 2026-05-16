@@ -1,0 +1,1147 @@
+{
+  "summaryTargets": {
+    "weaponSetPassivePoints": 24,
+    "coldResistance": 20,
+    "fireResistance": 20,
+    "lightningResistance": 20,
+    "spirit": 100,
+    "flatLife": 20,
+    "increasedLife": 5,
+    "increasedMana": 5
+  },
+  "bonuses": [
+    {
+      "id": "act1_clearfell_beira_cold_res",
+      "act": 1,
+      "zoneId": "a1_clearfell",
+      "zone_ru": "Клирфелл",
+      "title": "+10% сопротивления холоду",
+      "category": "resistance",
+      "source": "Бейра",
+      "details": [
+        "Убить ведьму Бейру.",
+        "Постоянный бонус персонажа: +10% сопротивления холоду."
+      ],
+      "reward": {
+        "type": "cold_resistance",
+        "value": 10
+      },
+      "eventRules": [
+        {
+          "all": [
+            "получил",
+            "+10",
+            "сопротивлению холоду"
+          ],
+          "zoneIds": [
+            "a1_clearfell"
+          ]
+        },
+        {
+          "all": [
+            "получил",
+            "+10",
+            "сопротивления холоду"
+          ],
+          "zoneIds": [
+            "a1_clearfell"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "act1_hunting_grounds_crowbell_weapon_points",
+      "act": 1,
+      "zoneId": "a1_hunting_grounds",
+      "zone_ru": "Охотничьи угодья",
+      "title": "+2 пассивных очка набора оружия",
+      "category": "weapon_set_passive",
+      "source": "Колокольщик / Crowbell",
+      "details": [
+        "Убить босса Колокольщика.",
+        "Награда: книга на +2 очка для дерева пассивок набора оружия."
+      ],
+      "reward": {
+        "type": "weapon_set_passive_points",
+        "value": 2
+      },
+      "eventRules": [
+        {
+          "all": [
+            "получили",
+            "2 очка пассивных умений для набора оружия"
+          ],
+          "zoneIds": [
+            "a1_hunting_grounds"
+          ]
+        },
+        {
+          "all": [
+            "получили очков пассивных умений",
+            "2"
+          ],
+          "zoneIds": [
+            "a1_hunting_grounds"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "act1_freythorn_king_mists_spirit",
+      "act": 1,
+      "zoneId": "a1_freythorn",
+      "zone_ru": "Фрейторн",
+      "title": "+30 духа",
+      "category": "spirit",
+      "source": "Хозяин в Туманах / Король в туманах",
+      "details": [
+        "Прервать ритуалы у трёх алтарей.",
+        "Убить босса и получить +30 духа и камень духа 4 уровня."
+      ],
+      "reward": {
+        "type": "spirit",
+        "value": 30
+      },
+      "eventRules": [
+        {
+          "all": [
+            "получил",
+            "+30",
+            "духу"
+          ],
+          "zoneIds": [
+            "a1_freythorn"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "act1_ogham_farmlands_unas_lute_weapon_points",
+      "act": 1,
+      "zoneId": "a1_ogham_farmlands",
+      "zone_ru": "Фермерские земли Огама",
+      "title": "+2 пассивных очка набора оружия",
+      "category": "weapon_set_passive",
+      "source": "Лютня Уны",
+      "details": [
+        "В круглом доме лежит лютня.",
+        "Отнести лютню Уне в лагерь и забрать +2 пассивных очка набора оружия."
+      ],
+      "reward": {
+        "type": "weapon_set_passive_points",
+        "value": 2
+      },
+      "eventRules": [
+        {
+          "all": [
+            "получили",
+            "2 очка пассивных умений для набора оружия"
+          ],
+          "zoneIds": [
+            "a1_ogham_farmlands"
+          ]
+        },
+        {
+          "all": [
+            "получили очков пассивных умений",
+            "2"
+          ],
+          "zoneIds": [
+            "a1_ogham_farmlands"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "act1_ogham_village_salvage_bench",
+      "act": 1,
+      "zoneId": "a1_ogham_village",
+      "zone_ru": "Деревня Огам",
+      "title": "Верстак для разборки",
+      "category": "utility",
+      "source": "Инструменты кузнеца",
+      "details": [
+        "Найти инструменты кузнеца.",
+        "Открывает в лагере верстак для разборки."
+      ],
+      "reward": {
+        "type": "utility",
+        "value": 1
+      },
+      "eventRules": []
+    },
+    {
+      "id": "act1_ogham_manor_candlemass_life",
+      "act": 1,
+      "zoneId": "a1_ogham_manor",
+      "zone_ru": "Замок Огам",
+      "title": "+20 к максимуму здоровья",
+      "category": "life",
+      "source": "Босс в церковном зале / Candlemass",
+      "details": [
+        "Найти церковный зал.",
+        "Убить босса и получить +20 к максимуму здоровья персонажа."
+      ],
+      "reward": {
+        "type": "flat_life",
+        "value": 20
+      },
+      "eventRules": [
+        {
+          "all": [
+            "получил",
+            "+20",
+            "максимуму здоровья"
+          ],
+          "zoneIds": [
+            "a1_ogham_manor"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "act2_keth_snake_boss_weapon_points",
+      "act": 2,
+      "zoneId": "a2_keth",
+      "zone_ru": "Кет",
+      "title": "+2 пассивных очка набора оружия",
+      "category": "weapon_set_passive",
+      "source": "Босс-змея / Кабала",
+      "details": [
+        "Убить босса-змею в Кете.",
+        "Награда: +2 пассивных очка набора оружия."
+      ],
+      "reward": {
+        "type": "weapon_set_passive_points",
+        "value": 2
+      },
+      "eventRules": [
+        {
+          "all": [
+            "получили",
+            "2 очка пассивных умений для набора оружия"
+          ],
+          "zoneIds": [
+            "a2_keth"
+          ]
+        },
+        {
+          "all": [
+            "получили очков пассивных умений",
+            "2"
+          ],
+          "zoneIds": [
+            "a2_keth"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "act2_keth_kabala_relic",
+      "act": 2,
+      "zoneId": "a2_keth",
+      "zone_ru": "Кет",
+      "title": "Реликвия клана Кабалы",
+      "category": "item",
+      "source": "Змеи в Кете",
+      "details": [
+        "Профармить локацию, пока не выпадет квестовая статуэтка.",
+        "Нужна для алтаря в Долине Титанов."
+      ],
+      "reward": {
+        "type": "item",
+        "value": 1
+      },
+      "eventRules": []
+    },
+    {
+      "id": "act2_bone_pits_sun_relic",
+      "act": 2,
+      "zoneId": "a2_bone_pits",
+      "zone_ru": "Костяные ямы",
+      "title": "Реликвия клана Солнца",
+      "category": "item",
+      "source": "Гиено-кентавры",
+      "details": [
+        "Профармить локацию, пока не выпадет квестовая статуэтка.",
+        "Нужна для алтаря в Долине Титанов."
+      ],
+      "reward": {
+        "type": "item",
+        "value": 1
+      },
+      "eventRules": []
+    },
+    {
+      "id": "act2_valley_titans_ancient_vows_choice",
+      "act": 2,
+      "zoneId": "a2_valley_titans",
+      "zone_ru": "Долина Титанов",
+      "title": "Древние клятвы: выбор оберегов",
+      "category": "choice",
+      "source": "Алтарь с двумя реликвиями",
+      "details": [
+        "Вставить обе реликвии в алтарь.",
+        "Выбор: +30% получаемых зарядов оберегов или +30% длительности эффекта оберегов.",
+        "Выбор можно менять позже; если не вставляется — попробовать Alt."
+      ],
+      "reward": {
+        "type": "choice",
+        "value": 1
+      },
+      "eventRules": [
+        {
+          "all": [
+            "оберегов"
+          ],
+          "zoneIds": [
+            "a2_valley_titans"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "act2_deshar_final_letter_weapon_points",
+      "act": 2,
+      "zoneId": "a2_deshar_early",
+      "zone_ru": "Дешар",
+      "title": "+2 пассивных очка за письмо",
+      "category": "weapon_set_passive",
+      "source": "Последнее письмо → Шамбрин",
+      "details": [
+        "Найти письмо в Дешаре.",
+        "Вернуть письмо в Караван к Шамбрин и получить книгу на +2 пассивных очка набора оружия."
+      ],
+      "reward": {
+        "type": "weapon_set_passive_points",
+        "value": 2
+      },
+      "eventRules": [
+        {
+          "all": [
+            "получили",
+            "2 очка пассивных умений для набора оружия"
+          ],
+          "zoneIds": [
+            "a2_deshar_early",
+            "a2_path_of_mourning",
+            "a2_spires_deshar"
+          ]
+        },
+        {
+          "all": [
+            "получили очков пассивных умений",
+            "2"
+          ],
+          "zoneIds": [
+            "a2_deshar_early",
+            "a2_path_of_mourning",
+            "a2_spires_deshar"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "act2_spires_deshar_garukhan_lightning_res",
+      "act": 2,
+      "zoneId": "a2_spires_deshar",
+      "zone_ru": "Шпили Дешара",
+      "title": "+10% сопротивления молнии",
+      "category": "resistance",
+      "source": "Святилище Сестёр Гарухан",
+      "details": [
+        "Подойти к святилищу Сестёр Гарухан и кликнуть.",
+        "Постоянный бонус: +10% сопротивления молнии."
+      ],
+      "reward": {
+        "type": "lightning_resistance",
+        "value": 10
+      },
+      "eventRules": [
+        {
+          "all": [
+            "получил",
+            "+10",
+            "сопротивлению молнии"
+          ],
+          "zoneIds": [
+            "a2_spires_deshar"
+          ]
+        },
+        {
+          "all": [
+            "получил",
+            "+10",
+            "сопротивления молнии"
+          ],
+          "zoneIds": [
+            "a2_spires_deshar"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "act3_sandswept_marsh_artificer_orb",
+      "act": 3,
+      "zoneId": "a3_sandswept_marsh",
+      "zone_ru": "Занесённое песком болото",
+      "title": "Сфера златокузнеца",
+      "category": "item",
+      "source": "Редкая корзина в лагере с хижинами",
+      "details": [
+        "Найти редкую корзину с жёлтым названием.",
+        "Убить босса, кликнуть по корзине и забрать сферу златокузнеца."
+      ],
+      "reward": {
+        "type": "item",
+        "value": 1
+      },
+      "eventRules": []
+    },
+    {
+      "id": "act3_jungle_ruins_mighty_silverfist_weapon_points",
+      "act": 3,
+      "zoneId": "a3_jungle_ruins",
+      "zone_ru": "Развалины в джунглях",
+      "title": "+2 пассивных очка набора оружия",
+      "category": "weapon_set_passive",
+      "source": "Чернорук / Mighty Silverfist",
+      "details": [
+        "Убить босса-гориллу Чернорука.",
+        "Награда: +2 пассивных очка набора оружия."
+      ],
+      "reward": {
+        "type": "weapon_set_passive_points",
+        "value": 2
+      },
+      "eventRules": [
+        {
+          "all": [
+            "получили",
+            "2 очка пассивных умений для набора оружия"
+          ],
+          "zoneIds": [
+            "a3_jungle_ruins"
+          ]
+        },
+        {
+          "all": [
+            "получили очков пассивных умений",
+            "2"
+          ],
+          "zoneIds": [
+            "a3_jungle_ruins"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "act3_azak_bog_ignagduk_spirit",
+      "act": 3,
+      "zoneId": "a3_azak_bog",
+      "zone_ru": "Болото Азак",
+      "title": "+30 духа",
+      "category": "spirit",
+      "source": "Игнагдук / ведьма на метле",
+      "details": [
+        "Убить босса-ведьму на метле.",
+        "Награда: +30 духа и камень духа 10 уровня."
+      ],
+      "reward": {
+        "type": "spirit",
+        "value": 30
+      },
+      "eventRules": [
+        {
+          "all": [
+            "получил",
+            "+30",
+            "духу"
+          ],
+          "zoneIds": [
+            "a3_azak_bog"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "act3_venom_crypts_choice",
+      "act": 3,
+      "zoneId": "a3_venom_crypts",
+      "zone_ru": "Ядовитые крипты",
+      "title": "Выборный постоянный бонус",
+      "category": "choice",
+      "source": "Склянка с ядом → Серви",
+      "details": [
+        "Найти склянку с ядом и отдать Серви в лагере.",
+        "Выбор навсегда: +25% порог оглушения, +30% порог стихийных состояний или +25% восстановление маны."
+      ],
+      "reward": {
+        "type": "choice",
+        "value": 1
+      },
+      "eventRules": [
+        {
+          "all": [
+            "порог оглушения"
+          ],
+          "zoneIds": [
+            "a3_venom_crypts"
+          ]
+        },
+        {
+          "all": [
+            "восстановлению маны"
+          ],
+          "zoneIds": [
+            "a3_venom_crypts"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "act3_machinarium_blackjaw_fire_res",
+      "act": 3,
+      "zoneId": "a3_jiquani_machinarium",
+      "zone_ru": "Машинариум Джиквани",
+      "title": "+10% сопротивления огню",
+      "category": "resistance",
+      "source": "Чернозев / Blackjaw",
+      "details": [
+        "Убить босса Чернозева.",
+        "Постоянный бонус: +10% сопротивления огню."
+      ],
+      "reward": {
+        "type": "fire_resistance",
+        "value": 10
+      },
+      "eventRules": [
+        {
+          "all": [
+            "получил",
+            "+10",
+            "сопротивлению огню"
+          ],
+          "zoneIds": [
+            "a3_jiquani_machinarium"
+          ]
+        },
+        {
+          "all": [
+            "получил",
+            "+10",
+            "сопротивления огню"
+          ],
+          "zoneIds": [
+            "a3_jiquani_machinarium"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "act3_vaal_heart_weapon_points",
+      "act": 3,
+      "zoneId": "a3_vaal_heart",
+      "zone_ru": "Ваальская часть / жертвенное сердце",
+      "title": "+2 пассивных очка за сердце",
+      "category": "weapon_set_passive",
+      "source": "Сердце ваал → жертвенный алтарь Аггората",
+      "details": [
+        "Бить надзирателей ваал и гигантов ваал, пока не выпадет Сердце.",
+        "Может выпасть в Утцаале или дальней части Аггората.",
+        "Отнести Сердце на жертвенный алтарь Аггората, использовать нож и получить +2 пассивных очка."
+      ],
+      "reward": {
+        "type": "weapon_set_passive_points",
+        "value": 2
+      },
+      "eventRules": [
+        {
+          "all": [
+            "получили",
+            "2 очка пассивных умений для набора оружия"
+          ],
+          "zoneIds": [
+            "a3_vaal_heart",
+            "a3_black_chambers"
+          ]
+        },
+        {
+          "all": [
+            "получили очков пассивных умений",
+            "2"
+          ],
+          "zoneIds": [
+            "a3_vaal_heart",
+            "a3_black_chambers"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "act4_kids_bay_freya_tujen_weapon_points",
+      "act": 4,
+      "zoneId": "a4_kids_bay",
+      "zone_ru": "Кеджский залив",
+      "title": "+2 пассивных очка набора оружия",
+      "category": "weapon_set_passive",
+      "source": "Фрейя → Туджин",
+      "details": [
+        "Освободить Фрейю и убить появившегося босса.",
+        "Вернуться в город и поговорить с Туджином за книгу на +2 пассивных очка."
+      ],
+      "reward": {
+        "type": "weapon_set_passive_points",
+        "value": 2
+      },
+      "eventRules": [
+        {
+          "all": [
+            "получили",
+            "2 очка пассивных умений для набора оружия"
+          ],
+          "zoneIds": [
+            "a4_kids_bay",
+            "a4_journeys_end"
+          ]
+        },
+        {
+          "all": [
+            "получили очков пассивных умений",
+            "2"
+          ],
+          "zoneIds": [
+            "a4_kids_bay",
+            "a4_journeys_end"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "act4_abandoned_prison_flask_choice",
+      "act": 4,
+      "zoneId": "a4_abandoned_prison",
+      "zone_ru": "Заброшенная тюрьма",
+      "title": "Выбор восстановления от флаконов",
+      "category": "choice",
+      "source": "Ключ от часовни → алтарь Богини правосудия",
+      "details": [
+        "Найти зелёный ключ от часовни с монстров.",
+        "Открыть ворота часовни и выбрать: +30% восстановления здоровья или маны от флаконов.",
+        "Выбор можно изменить позже."
+      ],
+      "reward": {
+        "type": "choice",
+        "value": 1
+      },
+      "eventRules": [
+        {
+          "all": [
+            "восстановления здоровья",
+            "флакон"
+          ],
+          "zoneIds": [
+            "a4_abandoned_prison"
+          ]
+        },
+        {
+          "all": [
+            "восстановления маны",
+            "флакон"
+          ],
+          "zoneIds": [
+            "a4_abandoned_prison"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "act4_eye_hinekora_mana",
+      "act": 4,
+      "zoneId": "a4_eye_hinekora",
+      "zone_ru": "Глаз Хинекоры",
+      "title": "+5% максимум маны",
+      "category": "mana",
+      "source": "Безмолвный зал после испытаний предков",
+      "details": [
+        "После прохождения испытаний предков зайти в Безмолвный зал.",
+        "Постоянный бонус: +5% к максимуму маны."
+      ],
+      "reward": {
+        "type": "increased_mana",
+        "value": 5
+      },
+      "eventRules": [
+        {
+          "all": [
+            "получил",
+            "+5",
+            "максимуму маны"
+          ],
+          "zoneIds": [
+            "a4_eye_hinekora"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "act4_halls_dead_fire_choice",
+      "act": 4,
+      "zoneId": "a4_halls_of_the_dead",
+      "zone_ru": "Залы мёртвых",
+      "title": "Выбор: +5 силы или +5% огня",
+      "category": "resistance",
+      "source": "Испытание Залов мёртвых",
+      "details": [
+        "Одно из трёх испытаний даёт выбор: +5 силы или +5% сопротивления огню.",
+        "Выбор нельзя изменить."
+      ],
+      "reward": {
+        "type": "fire_resistance",
+        "value": 5
+      },
+      "eventRules": [
+        {
+          "all": [
+            "получил",
+            "+5",
+            "сопротивлению огню"
+          ],
+          "zoneIds": [
+            "a4_halls_of_the_dead"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "act4_halls_dead_cold_choice",
+      "act": 4,
+      "zoneId": "a4_halls_of_the_dead",
+      "zone_ru": "Залы мёртвых",
+      "title": "Выбор: +5 интеллекта или +5% холода",
+      "category": "resistance",
+      "source": "Испытание Залов мёртвых",
+      "details": [
+        "Одно из трёх испытаний даёт выбор: +5 интеллекта или +5% сопротивления холоду.",
+        "Выбор нельзя изменить."
+      ],
+      "reward": {
+        "type": "cold_resistance",
+        "value": 5
+      },
+      "eventRules": [
+        {
+          "all": [
+            "получил",
+            "+5",
+            "сопротивлению холоду"
+          ],
+          "zoneIds": [
+            "a4_halls_of_the_dead"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "act4_halls_dead_lightning_choice",
+      "act": 4,
+      "zoneId": "a4_halls_of_the_dead",
+      "zone_ru": "Залы мёртвых",
+      "title": "Выбор: +5 ловкости или +5% молнии",
+      "category": "resistance",
+      "source": "Испытание Залов мёртвых",
+      "details": [
+        "Одно из трёх испытаний даёт выбор: +5 ловкости или +5% сопротивления молнии.",
+        "Выбор нельзя изменить."
+      ],
+      "reward": {
+        "type": "lightning_resistance",
+        "value": 5
+      },
+      "eventRules": [
+        {
+          "all": [
+            "получил",
+            "+5",
+            "сопротивлению молнии"
+          ],
+          "zoneIds": [
+            "a4_halls_of_the_dead"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "act4_halls_dead_navali_weapon_points",
+      "act": 4,
+      "zoneId": "a4_halls_of_the_dead",
+      "zone_ru": "Залы мёртвых",
+      "title": "+2 пассивных очка у Навали",
+      "category": "weapon_set_passive",
+      "source": "Белый Яма → серебряная монета → Навали",
+      "details": [
+        "После победы над Белым Ямой взять серебряную монету.",
+        "Отдать монету Навали и получить +2 пассивных очка набора оружия."
+      ],
+      "reward": {
+        "type": "weapon_set_passive_points",
+        "value": 2
+      },
+      "eventRules": [
+        {
+          "all": [
+            "получили",
+            "2 очка пассивных умений для набора оружия"
+          ],
+          "zoneIds": [
+            "a4_halls_of_the_dead"
+          ]
+        },
+        {
+          "all": [
+            "получили очков пассивных умений",
+            "2"
+          ],
+          "zoneIds": [
+            "a4_halls_of_the_dead"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "act4_kids_bay_artificer_orb_optional",
+      "act": 4,
+      "zoneId": "a4_kids_bay",
+      "zone_ru": "Кеджский залив",
+      "title": "Опционально: сфера златокузнеца",
+      "category": "item",
+      "source": "Гарантированный сундук",
+      "details": [
+        "Опционально: найти сундук, из которого гарантированно выпадает сфера златокузнеца."
+      ],
+      "reward": {
+        "type": "item",
+        "value": 1
+      },
+      "eventRules": []
+    },
+    {
+      "id": "act4_arastas_currency_bells_optional",
+      "act": 4,
+      "zoneId": "a4_arastas",
+      "zone_ru": "Арастас",
+      "title": "Опционально: 3 царей и 3 возвышения",
+      "category": "item",
+      "source": "Два колокола",
+      "details": [
+        "Колокол на городской площади даёт 3 сферы царей.",
+        "Колокол у обрыва даёт 3 сферы возвышения."
+      ],
+      "reward": {
+        "type": "item",
+        "value": 1
+      },
+      "eventRules": []
+    },
+    {
+      "id": "int1_wolvenholt_olswin_weapon_points",
+      "act": 5,
+      "zoneId": "i_final_wolvenholt",
+      "zone_ru": "Вольфенхолд",
+      "title": "+2 пассивных очка набора оружия",
+      "category": "weapon_set_passive",
+      "source": "Освин / Olswin",
+      "details": [
+        "Убить босса Освина.",
+        "Награда: +2 пассивных очка набора оружия."
+      ],
+      "reward": {
+        "type": "weapon_set_passive_points",
+        "value": 2
+      },
+      "eventRules": [
+        {
+          "all": [
+            "получили",
+            "2 очка пассивных умений для набора оружия"
+          ],
+          "zoneIds": [
+            "i_final_wolvenholt"
+          ]
+        },
+        {
+          "all": [
+            "получили очков пассивных умений",
+            "2"
+          ],
+          "zoneIds": [
+            "i_final_wolvenholt"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "int1_blackwood_omens_optional",
+      "act": 5,
+      "zoneId": "i_final_blackwood",
+      "zone_ru": "Чернолесье",
+      "title": "Опционально: предзнаменования",
+      "category": "item",
+      "source": "Алтари Чернолесья",
+      "details": [
+        "Опционально: несколько алтарей дропают случайное предзнаменование."
+      ],
+      "reward": {
+        "type": "item",
+        "value": 1
+      },
+      "eventRules": []
+    },
+    {
+      "id": "int1_holten_ferryman_runes_optional",
+      "act": 5,
+      "zoneId": "i_final_holten",
+      "zone_ru": "Холтен",
+      "title": "Опционально: большие руны у Паромщика",
+      "category": "item",
+      "source": "Паромщик",
+      "details": [
+        "У Паромщика можно купить большие руны.",
+        "Цена каждой: 2000 золота."
+      ],
+      "reward": {
+        "type": "item",
+        "value": 1
+      },
+      "eventRules": []
+    },
+    {
+      "id": "int2_khari_crossing_life_percent",
+      "act": 5,
+      "zoneId": "interlude_khari_crossing",
+      "zone_ru": "Кхарийский перевал",
+      "title": "+5% максимум здоровья",
+      "category": "life",
+      "source": "Расплавленная святыня",
+      "details": [
+        "Найти расплавленную святыню.",
+        "Постоянный бонус: +5% к максимуму здоровья."
+      ],
+      "reward": {
+        "type": "increased_life",
+        "value": 5
+      },
+      "eventRules": [
+        {
+          "all": [
+            "получил",
+            "+5",
+            "максимуму здоровья"
+          ],
+          "zoneIds": [
+            "interlude_khari_crossing"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "int2_khari_crossing_aktu_anundr_weapon_points",
+      "act": 5,
+      "zoneId": "interlude_khari_crossing",
+      "zone_ru": "Кхарийский перевал",
+      "title": "+2 пассивных очка набора оружия",
+      "category": "weapon_set_passive",
+      "source": "Актхи и Анундр → Рису",
+      "details": [
+        "Убить Актхи и Анундра.",
+        "Поговорить с Рису в городе и забрать +2 пассивных очка набора оружия."
+      ],
+      "reward": {
+        "type": "weapon_set_passive_points",
+        "value": 2
+      },
+      "eventRules": [
+        {
+          "all": [
+            "получили",
+            "2 очка пассивных умений для набора оружия"
+          ],
+          "zoneIds": [
+            "interlude_khari_crossing"
+          ]
+        },
+        {
+          "all": [
+            "получили очков пассивных умений",
+            "2"
+          ],
+          "zoneIds": [
+            "interlude_khari_crossing"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "int2_kima_pillar_choice",
+      "act": 5,
+      "zoneId": "i2_kima",
+      "zone_ru": "Кима",
+      "title": "Кимах: выбор одного из 7 бонусов",
+      "category": "choice",
+      "source": "7 колонн Кимаха",
+      "details": [
+        "Колонны дают один постоянный бонус, который можно изменить позже.",
+        "Варианты: +5 ко всем характеристикам; 12% скорость перезарядки; 20% область присутствия; 15% глобальная защита; 3% скорость передвижения; 5% сопротивление всем стихиям; 5% больше опыта, но минус к остальным параметрам."
+      ],
+      "reward": {
+        "type": "all_elemental_resistance",
+        "value": 5
+      },
+      "eventRules": [
+        {
+          "all": [
+            "получил",
+            "+5",
+            "сопротивлению всем"
+          ],
+          "zoneIds": [
+            "i2_kima"
+          ]
+        },
+        {
+          "all": [
+            "получил",
+            "+5",
+            "сопротивления всем"
+          ],
+          "zoneIds": [
+            "i2_kima"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "int3_mount_cryer_lythara_spirit",
+      "act": 5,
+      "zoneId": "i2_mount_cryer",
+      "zone_ru": "Деревня Криар",
+      "title": "+40 духа",
+      "category": "spirit",
+      "source": "Литара / Lythara",
+      "details": [
+        "Убить босса Литару.",
+        "Награда: +40 к максимуму духа и камень духа 14 уровня."
+      ],
+      "reward": {
+        "type": "spirit",
+        "value": 40
+      },
+      "eventRules": [
+        {
+          "all": [
+            "получил",
+            "+40",
+            "духу"
+          ],
+          "zoneIds": [
+            "i2_mount_cryer"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "int3_howling_caves_yeti_weapon_points",
+      "act": 5,
+      "zoneId": "i2_glacial_tarn",
+      "zone_ru": "Воющие пещеры",
+      "title": "+2 пассивных очка за бивни Йети",
+      "category": "weapon_set_passive",
+      "source": "Воющие пещеры → Хильда",
+      "details": [
+        "Убить Чудовищного Йети во Воющих пещерах.",
+        "Принести бивни Хильде в деревню и получить +2 пассивных очка набора оружия."
+      ],
+      "reward": {
+        "type": "weapon_set_passive_points",
+        "value": 2
+      },
+      "eventRules": [
+        {
+          "all": [
+            "получили",
+            "2 очка пассивных умений для набора оружия"
+          ],
+          "zoneIds": [
+            "i2_glacial_tarn"
+          ]
+        },
+        {
+          "all": [
+            "получили очков пассивных умений",
+            "2"
+          ],
+          "zoneIds": [
+            "i2_glacial_tarn"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "int3_kriar_peaks_unique_optional",
+      "act": 5,
+      "zone_ru": "Пики Криар",
+      "title": "Опционально: уникальный предмет на выбор",
+      "category": "item",
+      "source": "Старейшина Мэдокс",
+      "details": [
+        "Опционально: старейшина Мэдокс дарит один уникальный предмет на выбор из нескольких случайных."
+      ],
+      "reward": {
+        "type": "item",
+        "value": 1
+      },
+      "eventRules": [],
+      "zoneId": "i2_kriar_peaks"
+    },
+    {
+      "id": "int3_final_zolin_zelina_weapon_points",
+      "act": 5,
+      "zoneId": "i_final_holten_estate",
+      "zone_ru": "Поместье Холтен",
+      "title": "+2 пассивных очка после финала интерлюдий",
+      "category": "weapon_set_passive",
+      "source": "Золин и Зелина → Скрытый",
+      "details": [
+        "Убить финальных боссов интерлюдии Золина и Зелину.",
+        "Вернуться в город, поговорить со Скрытым и забрать +2 пассивных очка.",
+        "Затем выбрать отправку в Ориат."
+      ],
+      "reward": {
+        "type": "weapon_set_passive_points",
+        "value": 2
+      },
+      "eventRules": [
+        {
+          "all": [
+            "получили",
+            "2 очка пассивных умений для набора оружия"
+          ],
+          "zoneIds": [
+            "i_final_holten_estate",
+            "i_final_darkness"
+          ]
+        },
+        {
+          "all": [
+            "получили очков пассивных умений",
+            "2"
+          ],
+          "zoneIds": [
+            "i_final_holten_estate",
+            "i_final_darkness"
+          ]
+        }
+      ]
+    }
+  ]
+}

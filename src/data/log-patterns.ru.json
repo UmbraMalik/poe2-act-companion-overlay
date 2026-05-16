@@ -1,0 +1,73 @@
+{
+  "version": "draft-from-historical-log-2026-05-13",
+  "scene": {
+    "enter": [
+      "\\[SCENE\\] Set Source \\[(?<scene>.*?)\\]"
+    ],
+    "ignoreScenes": [
+      "(null)",
+      "(unknown)",
+      "Акт 1",
+      "Акт 2",
+      "Акт 3",
+      "Акт 4",
+      "Акт 5",
+      "Интерлюдия"
+    ],
+    "townScenes": [
+      "Атлас",
+      "Зиккурат",
+      "Искажённое убежище",
+      "Испытание Сехем",
+      "Караван",
+      "Караван Ардура",
+      "Кингсмарш",
+      "Колодец душ",
+      "Лагерь Клирфелл",
+      "Лагерь на зиккурате"
+    ]
+  },
+  "events": {
+    "clientRestart": [
+      "\\*\\*\\*\\*\\* LOG FILE OPENING \\*\\*\\*\\*\\*"
+    ],
+    "levelUp": [
+      ": (?<character>.+?) \\((?<class>[^)]+)\\) достигает (?<level>\\d+) уровня"
+    ],
+    "playerDeath": [
+      ": (?<player>.+?) был повержен\\."
+    ],
+    "rewardResistance": [
+      ": Игрок (?<player>.+?) получил \\+(?<amount>\\d+)% к сопротивлению \\[Resistances\\|(?<element>[^\\]]+)\\]\\.?"
+    ],
+    "rewardSpirit": [
+      ": Игрок (?<player>.+?) получил \\+(?<amount>\\d+) к \\[Spirit\\|духу\\]\\.?"
+    ],
+    "rewardLife": [
+      ": Игрок (?<player>.+?) получил \\+(?<amount>\\d+) к максимуму здоровья\\.?"
+    ],
+    "rewardManaPercent": [
+      ": Игрок (?<player>.+?) получил (?<amount>\\d+)% увеличение максимума маны\\.?"
+    ],
+    "rewardPassivePoints": [
+      ": Вы получили очков пассивных умений: (?<points>\\d+)\\."
+    ],
+    "rewardWeaponSetPoints": [
+      ": Вы получили (?<points>\\d+) очка? пассивных умений для набора оружия\\."
+    ],
+    "rewardCharm": [
+      ": Игрок (?<player>.+?) получил (?<text>.*\\[Charm\\|оберегов\\].*)\\.?"
+    ],
+    "rewardFlaskRecovery": [
+      ": Игрок (?<player>.+?) получил (?<amount>\\d+)% увеличение восстановления здоровья от \\[Flask\\|флаконов\\]\\.?"
+    ],
+    "rewardStunThreshold": [
+      ": Игрок (?<player>.+?) получил (?<amount>\\d+)% увеличение \\[StunThreshold\\|порога оглушения\\]\\.?"
+    ]
+  },
+  "notes": [
+    "Boss kills are not logged directly. Use rewards/dialogue as soft signals only.",
+    "Do not treat absence of reward event as missed.",
+    "Reward event may appear after using quest item in a different scene; store as global done event, not strict current-zone proof."
+  ]
+}
