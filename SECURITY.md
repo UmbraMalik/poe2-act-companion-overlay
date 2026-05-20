@@ -1,6 +1,6 @@
 # Security
 
-POE2 Campaign Codex Overlay is designed as a safe desktop overlay.
+POE2 Act Companion Overlay is designed as a safe desktop overlay.
 
 The app does not read game memory, does not inject code into the game process, does not intercept network packets and does not send game inputs.
 
@@ -8,4 +8,4 @@ It only reads a log file selected by the user and renders an always-on-top deskt
 
 To report a security concern or suspicious behavior, use Telegram feedback:
 
-https://t.me/POE2CampaignCodex?direct
+https://t.me/POE2ActCompanion?direct
