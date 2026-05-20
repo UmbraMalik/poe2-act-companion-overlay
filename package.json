@@ -1,6 +1,6 @@
 {
   "name": "poe2-campaign-codex-overlay",
-  "version": "0.2.8",
+  "version": "0.2.11",
   "description": "Safe desktop overlay helper for Path of Exile 2 campaign routing.",
   "main": "dist-electron/main/main.js",
   "scripts": {
@@ -12,10 +12,22 @@
     "dist:check": "npm run dist && npm run check:release",
     "clean:release": "node scripts/clean-release.cjs",
     "dist:clean": "npm run clean:release && npm run dist && npm run check:release",
-    "test": "npm run test:regression",
-    "test:regression": "tsc -p tsconfig.test.json && node scripts/run-regression-tests.cjs",
-    "build:checked": "npm test && npm run build",
-    "dist:checked": "npm test && npm run dist"
+    "test": "node scripts/run-and-clean.cjs npm run test:regression",
+    "test:regression": "tsc -p tsconfig.test.json && node scripts/run-regression-tests.cjs && npm run check:mappings && npm run check:styles && npm run check:artifacts && npm run check:mojibake && npm run check:main-modules && npm run check:logging && npm run check:renderer-types && npm run check:renderer-modules",
+    "build:checked": "node scripts/run-and-clean.cjs npm run build:checked:raw",
+    "dist:checked": "npm test && npm run dist",
+    "clean:tmp": "node scripts/clean-tmp.cjs",
+    "build:checked:raw": "npm run test:regression && npm run build && npm run check:bundle",
+    "check:mappings": "node scripts/check-zone-mappings.cjs && node scripts/check-en-zone-mappings.cjs",
+    "check:styles": "node scripts/check-style-partials.cjs",
+    "check:artifacts": "node scripts/check-source-artifacts.cjs",
+    "check:mojibake": "node scripts/check-mojibake.cjs",
+    "check:main-modules": "node scripts/check-main-modules.cjs",
+    "check:logging": "node scripts/check-logging.cjs",
+    "clean:generated": "node scripts/clean-generated.cjs",
+    "check:bundle": "node scripts/check-renderer-bundle.cjs",
+    "check:renderer-modules": "node scripts/check-renderer-source-modules.cjs",
+    "check:renderer-types": "tsc -p tsconfig.json"
   },
   "build": {
     "appId": "com.codex.poe2-campaign-overlay",

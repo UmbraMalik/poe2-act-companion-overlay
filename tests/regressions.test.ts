@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { getCurrentActElapsedMsForAct } from '../src/renderer/companion-helpers';
 import { shouldStartOverlayDrag } from '../src/shared/overlay-drag';
 import { loadLogFixtureLines } from './helpers/logFixtures';
-import { readText } from './helpers/loadJson';
+import { readMainProcessSource, readText } from './helpers/loadJson';
 import { withMockedNow } from './helpers/timerTestUtils';
 import {
   applyAppLogLine,
@@ -142,7 +142,7 @@ test('similar-zone regression pairs stay separated by exact area id', () => {
 test('overlay/main/settings regressions stay fixed statically', () => {
   const overlay = readText('src/renderer/pages/OverlayPage.tsx');
   const settings = readText('src/renderer/pages/SettingsPage.tsx');
-  const main = readText('src/main/main.ts');
+  const main = readMainProcessSource();
 
   assert.equal(
     shouldStartOverlayDrag({ closest: () => ({}) } as unknown as EventTarget, {

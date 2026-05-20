@@ -33,10 +33,6 @@ test('overlay lock handler only prevents propagation and updates overlayMovement
     resizeOverlay: () => {
       calls.push('resizeOverlay');
       return Promise.resolve({} as never);
-    },
-    moveOverlayBy: () => {
-      calls.push('moveOverlayBy');
-      return Promise.resolve(true);
     }
   };
 

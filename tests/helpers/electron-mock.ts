@@ -12,6 +12,7 @@ export let mockUserDataPath = join(process.cwd(), '.tmp-tests', 'mock-user-data'
 mkdirSync(mockUserDataPath, { recursive: true });
 
 const noop = () => {};
+const ipcHandlers = new Map<string, (event: unknown, ...args: unknown[]) => unknown>();
 
 class MockBrowserWindow {
   static getFocusedWindow(): MockBrowserWindow | null {
@@ -55,6 +56,18 @@ class MockBrowserWindow {
   removeMenu(): void {}
   setOpacity(): void {}
   setMinimumSize(): void {}
+  setFocusable(): void {}
+  setVisibleOnAllWorkspaces(): void {}
+  showInactive(): void {
+    this.visible = true;
+  }
+  setPosition(x: number, y: number): void {
+    this.bounds = {
+      ...this.bounds,
+      x,
+      y
+    };
+  }
   setBounds(bounds: typeof this.bounds): void {
     this.bounds = { ...bounds };
   }
@@ -117,8 +130,21 @@ const mockElectron = {
     unregisterAll: noop,
     isRegistered: () => false
   },
+  screen: {
+    getPrimaryDisplay: () => ({
+      workArea: { x: 0, y: 0, width: 2560, height: 1440 }
+    }),
+    getAllDisplays: () => [{
+      workArea: { x: 0, y: 0, width: 2560, height: 1440 }
+    }],
+    getDisplayMatching: () => ({
+      workArea: { x: 0, y: 0, width: 2560, height: 1440 }
+    })
+  },
   ipcMain: {
-    handle: noop
+    handle: (channel: string, handler: (event: unknown, ...args: unknown[]) => unknown) => {
+      ipcHandlers.set(channel, handler);
+    }
   }
 };
 
@@ -167,4 +193,19 @@ export function createMockUserDataPath(prefix = 'mock-user-data'): string {
   );
   mkdirSync(mockUserDataPath, { recursive: true });
   return mockUserDataPath;
+}
+
+export function resetElectronMockState(): void {
+  ipcHandlers.clear();
+}
+
+export async function invokeIpcHandler<T = unknown>(
+  channel: string,
+  ...args: unknown[]
+): Promise<T> {
+  const handler = ipcHandlers.get(channel);
+  if (!handler) {
+    throw new Error(`Missing IPC handler for ${channel}`);
+  }
+  return await handler({}, ...args) as T;
 }

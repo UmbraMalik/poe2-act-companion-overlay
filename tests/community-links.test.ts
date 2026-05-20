@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {
   COMMUNITY_LINKS,
   PROJECT_CHAT_URL,
+  PROJECT_DONATION_ALERTS_URL,
   PROJECT_FEEDBACK_URL,
   PROJECT_RELEASES_URL,
   PROJECT_REPOSITORY_URL,
@@ -41,6 +42,9 @@ test('support stays on its own page and the QR block does not reappear inside se
   const settingsPage = readText('src/renderer/pages/SettingsPage.tsx');
 
   assert.match(supportPage, /support-qr\.png/);
+  assert.match(supportPage, /PROJECT_DONATION_ALERTS_URL/);
   assert.match(supportPage, /Поддержать проект|support-qr/i);
   assert.doesNotMatch(settingsPage, /support-qr\.png/);
+  assert.doesNotMatch(settingsPage, /PROJECT_DONATION_ALERTS_URL/);
+  assert.equal(PROJECT_DONATION_ALERTS_URL, 'https://www.donationalerts.com/r/umbramalik');
 });

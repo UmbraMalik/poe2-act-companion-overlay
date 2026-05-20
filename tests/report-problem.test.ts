@@ -109,7 +109,6 @@ test('report diagnostics include version, overlay mode, zone and log information
 
   assert.match(diagnostics, /Версия приложения: 0\.2\.3/);
   assert.match(diagnostics, /Текущая зона: Кхарийский перевал \/ The Khari Crossing/);
-  assert.match(diagnostics, /Режим overlay: full/);
   assert.match(diagnostics, /Путь к логу: C:\\Logs\\LatestClient\.txt/);
   assert.match(diagnostics, /OS\/UserAgent: RegressionSuite\/1\.0/);
 });

@@ -1,0 +1,24 @@
+2026/05/20 10:00:00 000000000 [INFO Client] Generating level 1 area "P1_3" with seed 2001
+2026/05/20 10:00:01 000000000 [INFO Client] Вы вошли в область: Чернолесье.
+2026/05/20 10:00:02 000000000 [INFO Client] Generating level 1 area "P1_4" with seed 2002
+2026/05/20 10:00:03 000000000 [INFO Client] Вы вошли в область: Холтен.
+2026/05/20 10:00:04 000000000 [INFO Client] Generating level 1 area "P1_6" with seed 2003
+2026/05/20 10:00:05 000000000 [INFO Client] Вы вошли в область: Поместье Холтен.
+2026/05/20 10:00:06 000000000 [INFO Client] Generating level 1 area "G3_12" with seed 2004
+2026/05/20 10:00:07 000000000 [INFO Client] Вы вошли в область: Храм Копека.
+2026/05/20 10:00:08 000000000 [INFO Client] Generating level 1 area "P2_3" with seed 2005
+2026/05/20 10:00:09 000000000 [INFO Client] Вы вошли в область: Храм Селхари.
+2026/05/20 10:00:10 000000000 [INFO Client] Generating level 1 area "P2_1" with seed 2006
+2026/05/20 10:00:11 000000000 [INFO Client] Вы вошли в область: Кхарийский перевал.
+2026/05/20 10:00:12 000000000 [INFO Client] Generating level 1 area "P2_5" with seed 2007
+2026/05/20 10:00:13 000000000 [INFO Client] Вы вошли в область: Ворота Галаи.
+2026/05/20 10:00:14 000000000 [INFO Client] Generating level 1 area "P2_7" with seed 2008
+2026/05/20 10:00:15 000000000 [INFO Client] Вы вошли в область: Водохранилище Кима.
+2026/05/20 10:00:16 000000000 [INFO Client] Generating level 1 area "P3_3" with seed 2009
+2026/05/20 10:00:17 000000000 [INFO Client] Вы вошли в область: Ледниковое озеро.
+2026/05/20 10:00:18 000000000 [INFO Client] Generating level 1 area "P3_4" with seed 2010
+2026/05/20 10:00:19 000000000 [INFO Client] Вы вошли в область: Воющие пещеры.
+2026/05/20 10:00:20 000000000 [INFO Client] Generating level 1 area "P3_5" with seed 2011
+2026/05/20 10:00:21 000000000 [INFO Client] Вы вошли в область: Пики Криар.
+2026/05/20 10:00:22 000000000 [INFO Client] Generating level 1 area "P3_2" with seed 2012
+2026/05/20 10:00:23 000000000 [INFO Client] Вы вошли в область: Деревня Криар.

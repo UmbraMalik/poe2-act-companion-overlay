@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 
 export function readJson(relativePath) {
@@ -45,4 +45,14 @@ export function getZoneByAreaId(areaId) {
     const ids = [...(zone.area_ids ?? []), ...(zone.areaIds ?? [])];
     return ids.some((candidate) => normalizeAreaId(candidate) === normalized);
   }) ?? null;
+}
+
+export function readMainProcessSource() {
+  const mainDir = join(process.cwd(), 'src/main');
+  const appModules = readdirSync(mainDir)
+    .filter((fileName) => /^app-.*\.ts$/.test(fileName))
+    .sort()
+    .map((fileName) => `src/main/${fileName}`);
+
+  return ['src/main/main.ts', ...appModules].map(readText).join('\n');
 }
