@@ -1,4 +1,4 @@
-# POE2 Campaign Codex Overlay
+# POE2 Act Companion Overlay
 
 A lightweight desktop overlay for **Path of Exile 2 campaign routing**.
 
@@ -7,13 +7,13 @@ It shows the current campaign zone, route notes, rewards, reminders, timers, and
 > **Status:** beta / community project  
 > **Languages:** Russian and English  
 > **Primary platform:** Windows  
-> **Website:** https://umbramalik.github.io/poe2-campaign-codex/
+> **Website:** https://umbramalik.github.io/poe2-act-companion-overlay/
 
 ---
 
 ## What it does
 
-POE2 Campaign Codex Overlay is a small helper for campaign runs:
+POE2 Act Companion Overlay is a small helper for campaign runs:
 
 - detects the current zone from the game log file;
 - shows route notes for Acts 1–5;
@@ -66,7 +66,7 @@ This tool is provided as a community-made helper. Use it at your own discretion.
 
 Latest public builds are available on the releases page:
 
-https://github.com/UmbraMalik/poe2-campaign-codex-releases/releases
+https://github.com/UmbraMalik/poe2-act-companion-overlay/releases
 
 Windows may show a SmartScreen warning because the installer is currently unsigned. This does not automatically mean the file is malicious; it means the executable does not have Microsoft reputation/signing yet. You can inspect the source code and build it yourself if you prefer.
 
@@ -177,10 +177,10 @@ npm run dist:checked
 
 ## Community
 
-- Website: https://umbramalik.github.io/poe2-campaign-codex/
-- Telegram channel: https://t.me/POE2CampaignCodex
-- Telegram chat: https://t.me/POE2CampaignCodexChat
-- Feedback: https://t.me/POE2CampaignCodex?direct
+- Website: https://umbramalik.github.io/poe2-act-companion-overlay/
+- Telegram channel: https://t.me/POE2ActCompanion
+- Telegram chat: https://t.me/POE2ActCompanionChat
+- Feedback: https://t.me/POE2ActCompanion?direct
 
 Bug reports are especially useful when they include:
 
@@ -194,7 +194,7 @@ Bug reports are especially useful when they include:
 
 ## Russian / Русская версия
 
-**POE2 Campaign Codex Overlay** — это лёгкий desktop overlay для прохождения кампании Path of Exile 2.
+**POE2 Act Companion Overlay** — это лёгкий desktop overlay для прохождения кампании Path of Exile 2.
 
 Он показывает текущую зону, маршрут, задачи, награды, напоминания, таймеры и подробную панель по актам.
 
@@ -211,7 +211,7 @@ Bug reports are especially useful when they include:
 
 Скачать актуальную версию можно здесь:
 
-https://github.com/UmbraMalik/poe2-campaign-codex-releases/releases
+https://github.com/UmbraMalik/poe2-act-companion-overlay/releases
 
 Команды для проверки и сборки:
 
