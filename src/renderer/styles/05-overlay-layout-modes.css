@@ -1,0 +1,1052 @@
+/* Companion header, adaptive overlay, compact and timer-only modes. Extracted from styles.css preserving cascade order. */
+/* Companion header: allow Settings + reload + close controls in one row on desktop. */
+.companion-page .settings-header .button-row {
+  max-width: 560px;
+}
+
+/* Adaptive overlay height: content decides vertical size, user controls width. */
+.overlay-page .overlay-hud {
+  flex: 0 0 auto;
+  height: auto;
+  max-height: calc(100vh - 26px);
+}
+
+.resize-grip {
+  cursor: ew-resize;
+}
+
+
+.companion-header-actions {
+  justify-content: flex-end;
+}
+
+.support-card {
+  gap: 16px;
+}
+
+.support-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.85fr);
+  gap: 16px;
+  align-items: stretch;
+}
+
+.support-copy {
+  display: grid;
+  gap: 12px;
+}
+
+.support-link-list {
+  display: grid;
+  gap: 10px;
+}
+
+.support-link-list .value-box {
+  display: grid;
+  gap: 6px;
+}
+
+.support-link-list .value-box strong {
+  color: #ffd791;
+  font-size: 13px;
+}
+
+.support-link-list .value-box span {
+  color: #eef3f8;
+  word-break: break-all;
+}
+
+.support-qr-card {
+  display: grid;
+  gap: 14px;
+  align-content: start;
+  justify-items: center;
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(0, 0, 0, 0.16);
+}
+
+.support-qr-image {
+  width: min(100%, 240px);
+  max-width: 240px;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+  border-radius: 16px;
+  background: #ffffff;
+  padding: 10px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.25);
+}
+
+.support-qr-copy {
+  display: grid;
+  gap: 8px;
+  text-align: center;
+}
+
+.support-qr-copy h3 {
+  margin: 0;
+  color: #f1b96a;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 900px) {
+  .support-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .support-qr-card {
+    justify-items: start;
+  }
+
+  .support-qr-copy {
+    text-align: left;
+  }
+}
+
+
+.links-menu-wrap {
+  position: relative;
+}
+
+.links-menu-panel {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
+  width: min(420px, 78vw);
+  padding: 14px;
+  display: grid;
+  gap: 12px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(180deg, rgba(18, 22, 28, 0.98), rgba(8, 11, 15, 0.98));
+  box-shadow: 0 16px 42px rgba(0, 0, 0, 0.35);
+  z-index: 20;
+}
+
+.links-menu-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.links-menu-actions .button-secondary {
+  flex: 1 1 140px;
+}
+
+.links-menu-values {
+  display: grid;
+  gap: 8px;
+}
+
+.links-menu-values .value-box {
+  display: grid;
+  gap: 4px;
+}
+
+.links-menu-values .value-box strong {
+  color: #ffd791;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.links-menu-values .value-box span {
+  color: #eef3f8;
+  font-size: 13px;
+  word-break: break-all;
+}
+
+.links-menu-support {
+  display: grid;
+  grid-template-columns: 92px 1fr;
+  gap: 12px;
+  align-items: center;
+  padding-top: 4px;
+}
+
+.links-menu-qr {
+  width: 92px;
+  height: 92px;
+  object-fit: contain;
+  background: #fff;
+  border-radius: 12px;
+  padding: 6px;
+}
+
+.links-menu-support-copy {
+  display: grid;
+  gap: 6px;
+}
+
+.links-menu-support-copy strong {
+  color: #ffd791;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.links-menu-support-copy span {
+  color: #cbd6e2;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+@media (max-width: 900px) {
+  .links-menu-panel {
+    width: min(360px, 92vw);
+  }
+}
+
+
+.info-shell {
+  max-width: 1000px;
+}
+
+.info-page .settings-shell {
+  padding-bottom: 28px;
+}
+
+
+/* Compact main overlay mode: smaller battle HUD without secondary blocks. */
+.overlay-page.density-compact {
+  --space-page: 7px;
+  --space-section: 5px;
+  --space-card-y: 6px;
+  --space-card-x: 8px;
+}
+
+.overlay-page.density-compact .window-drag-strip {
+  height: 14px;
+  padding: 0 8px;
+  font-size: 8px;
+  line-height: 14px;
+  letter-spacing: 0.16em;
+}
+
+.overlay-page.density-compact .overlay-hud {
+  max-height: calc(100vh - 20px);
+  padding-bottom: calc(var(--space-page) + 20px);
+  gap: 6px;
+}
+
+.overlay-page.density-compact .overlay-shell {
+  border-radius: 16px;
+}
+
+.overlay-page.density-compact .hud-title-row {
+  gap: 6px;
+}
+
+.overlay-page.density-compact .hud-title-actions {
+  gap: 4px;
+}
+
+.overlay-page.density-compact .hud-timer-row {
+  margin-top: 5px;
+}
+
+.overlay-page.density-compact .overlay-timer-control {
+  min-height: 24px;
+  padding: 4px 7px;
+  font-size: 9px;
+}
+
+.overlay-page.density-compact .overlay-icon-button {
+  width: 24px;
+  min-width: 24px;
+  height: 24px;
+  font-size: 11px;
+}
+
+.overlay-page.density-compact .overlay-timer-controls {
+  gap: 4px;
+}
+
+.overlay-page.density-compact .hud-meta {
+  margin-top: 4px;
+  padding: 5px 8px;
+  line-height: 1.28;
+}
+
+.overlay-page.density-compact .hud-block h2 {
+  margin-bottom: 5px;
+}
+
+.overlay-page.density-compact .checklist-list {
+  gap: 4px;
+}
+
+.overlay-page.density-compact .checklist-item {
+  padding-left: 13px;
+  line-height: 1.28;
+}
+
+.checklist-more-note {
+  margin-top: 6px;
+}
+
+.overlay-page.density-compact .hud-next-zone {
+  padding: 5px 7px;
+  border-radius: 9px;
+  font-size: calc(var(--font-body) * 1.02);
+  line-height: 1.25;
+}
+
+.hud-footer-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.overlay-page.density-compact .hud-footer-actions {
+  gap: 6px;
+}
+
+.overlay-page.density-compact .timer-only-collapse-button {
+  min-width: 118px;
+  padding: 5px 10px;
+  font-size: 10px;
+}
+
+.overlay-page.density-compact .hud-footnote {
+  font-size: 11px;
+}
+
+.overlay-page.density-compact .resize-grip {
+  right: 8px;
+  bottom: 8px;
+  width: 24px;
+  height: 24px;
+}
+
+
+.hotkey-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.hotkey-field {
+  display: grid;
+  gap: 7px;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(0, 0, 0, 0.16);
+}
+
+.hotkey-field-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff2cf;
+}
+
+.hotkey-field input {
+  width: 100%;
+  min-height: 38px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(224, 174, 94, 0.24);
+  background: rgba(8, 11, 15, 0.72);
+  color: #f8f2e8;
+  font: inherit;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.hotkey-field input:focus {
+  outline: none;
+  border-color: rgba(255, 210, 122, 0.72);
+  box-shadow: 0 0 0 3px rgba(224, 174, 94, 0.12);
+}
+
+.hotkey-field small {
+  color: #94a0ad;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.settings-card-header-compact {
+  align-items: center;
+}
+
+.settings-card-header-compact h3 {
+  margin: 0 0 4px;
+}
+
+@media (max-width: 820px) {
+  .hotkey-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.hotkey-actions {
+  justify-content: flex-end;
+  gap: 8px;
+  min-width: 320px;
+}
+
+.hotkey-save-status {
+  margin-top: 6px;
+  color: #9ee6ad;
+}
+
+@media (max-width: 820px) {
+  .hotkey-actions {
+    min-width: 0;
+    justify-content: flex-start;
+  }
+}
+
+
+.hud-title-actions .overlay-utility-buttons {
+  margin-left: 1px;
+}
+
+.hud-title-actions .overlay-icon-button {
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);
+}
+
+
+/* Horizontal overlay controls: keep title clean and prevent timer-only layout collisions. */
+.hud-header .hud-title-row {
+  display: block;
+  min-width: 0;
+}
+
+.hud-header .hud-title-row h1 {
+  max-width: 100%;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.hud-header .hud-title-actions,
+.hud-header .hud-timer-row,
+.timer-only-header-actions {
+  display: none !important;
+}
+
+.overlay-top-control-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+  flex-wrap: wrap;
+  min-width: 0;
+  margin-top: 8px;
+}
+
+.overlay-top-control-row .overlay-timer-control,
+.overlay-top-control-row .overlay-icon-button {
+  flex: 0 0 auto;
+}
+
+.overlay-utility-buttons {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex: 0 0 auto;
+  margin: 0;
+}
+
+.overlay-icon-button {
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  padding: 0;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 999px;
+  border: 1px solid rgba(150, 170, 190, 0.28);
+  background: rgba(255, 255, 255, 0.055);
+  color: rgba(238, 243, 248, 0.86);
+  font-size: 14px;
+  font-weight: 900;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: none;
+}
+
+.overlay-icon-button:hover {
+  border-color: rgba(241, 185, 106, 0.5);
+  background: rgba(241, 185, 106, 0.18);
+  color: #ffe4a6;
+}
+
+.timer-only-header {
+  display: grid !important;
+  grid-template-columns: 1fr;
+  gap: 6px;
+  align-items: start;
+  min-width: 0;
+}
+
+.timer-only-heading {
+  min-width: 0;
+}
+
+.timer-only-kicker-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+}
+
+.timer-only-kicker-row .timer-only-kicker {
+  min-width: 0;
+  margin: 0;
+}
+
+.timer-only-kicker-row .timer-only-status {
+  margin-top: 0;
+}
+
+.timer-only-top-control-row {
+  margin-top: 2px;
+}
+
+.timer-only-top-control-row .overlay-icon-button {
+  width: 26px;
+  height: 26px;
+  min-width: 26px;
+  font-size: 13px;
+}
+
+.overlay-page.density-compact .overlay-top-control-row {
+  margin-top: 6px;
+  gap: 4px;
+}
+
+.overlay-page.density-compact .overlay-icon-button {
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  font-size: 12px;
+}
+
+@media (max-width: 430px) {
+  .overlay-top-control-row,
+  .overlay-top-control-row .overlay-timer-controls {
+    justify-content: flex-start;
+  }
+
+  .timer-only-kicker-row {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+  }
+}
+
+
+/* Final hard fix: lock/details/settings are direct siblings and must never stack. */
+.overlay-quick-actions {
+  display: inline-flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 6px !important;
+  width: max-content !important;
+  min-width: max-content !important;
+  max-width: none !important;
+  flex: 0 0 auto !important;
+  white-space: nowrap !important;
+}
+
+.overlay-quick-actions > .overlay-icon-button {
+  flex: 0 0 auto !important;
+}
+
+/* Global button styles below the overlay block set min-height: 42px.
+   Force overlay controls back to compact horizontal pills/circles. */
+.overlay-quick-actions > .overlay-icon-button {
+  width: 28px !important;
+  min-width: 28px !important;
+  max-width: 28px !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  max-height: 28px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+  aspect-ratio: 1 / 1 !important;
+}
+
+.overlay-top-control-row > .overlay-quick-actions,
+.timer-only-top-control-row > .overlay-quick-actions {
+  flex: 0 0 auto !important;
+  min-width: max-content !important;
+}
+
+.timer-only-top-control-row {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+}
+
+.timer-only-top-control-row .overlay-quick-actions > .overlay-icon-button,
+.overlay-page.density-compact .overlay-quick-actions > .overlay-icon-button {
+  width: 24px !important;
+  min-width: 24px !important;
+  max-width: 24px !important;
+  height: 24px !important;
+  min-height: 24px !important;
+  max-height: 24px !important;
+}
+
+/* Structured timer-only overlay: title / state / timer / details are separate rows. */
+.overlay-page-timer-only {
+  min-width: 0;
+}
+
+.overlay-timer-only-card {
+  gap: 9px;
+  padding: 12px 12px 14px;
+}
+
+.overlay-timer-only-card .timer-only-header {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 10px;
+}
+
+.overlay-timer-only-card .timer-only-heading {
+  display: grid;
+  min-width: 0;
+  gap: 6px;
+}
+
+.overlay-timer-only-card .timer-only-kicker {
+  margin: 0;
+  color: rgba(244, 234, 216, 0.82);
+  font-size: 11px;
+  font-weight: 900;
+  line-height: 1.18;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.timer-only-state-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+}
+
+.overlay-timer-only-card .timer-only-status {
+  margin: 0;
+  padding: 4px 8px;
+  font-size: 9px;
+  line-height: 1;
+  letter-spacing: 0.06em;
+}
+
+.overlay-timer-only-card .timer-only-actline {
+  margin: 0;
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(150, 170, 190, 0.24);
+  background: rgba(255, 255, 255, 0.045);
+  color: rgba(216, 231, 255, 0.84);
+  font-size: 10px;
+  font-weight: 850;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+  white-space: nowrap;
+}
+
+.overlay-timer-only-card .timer-only-top-control-row {
+  margin-top: 0;
+  justify-content: flex-end !important;
+}
+
+.timer-only-main-panel {
+  display: grid;
+  justify-items: center;
+  gap: 5px;
+  padding: 8px 10px 9px;
+  border-radius: 16px;
+  border: 1px solid rgba(224, 174, 94, 0.22);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(241, 185, 106, 0.10), transparent 58%),
+    rgba(0, 0, 0, 0.16);
+}
+
+.timer-only-main-label {
+  margin: 0;
+  color: #f1b96a;
+  font-size: 10px;
+  font-weight: 950;
+  line-height: 1;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.timer-only-main-panel .timer-only-time {
+  margin: 0;
+  text-align: center;
+  font-size: clamp(43px, 12vw, 64px);
+  line-height: 0.9;
+}
+
+.timer-only-main-panel .timer-only-controls-row {
+  margin-top: 1px;
+}
+
+.timer-only-info-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 6px;
+}
+
+.timer-only-info-grid .timer-only-meta,
+.timer-only-info-grid .timer-only-next {
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.overlay-timer-only-card .timer-only-movement-hint {
+  margin: 0;
+  text-align: center;
+  color: rgba(255, 231, 191, 0.62);
+}
+
+.overlay-timer-only-card .timer-only-footer {
+  padding-top: 1px;
+}
+
+@media (max-width: 430px) {
+  .overlay-timer-only-card .timer-only-header {
+    grid-template-columns: 1fr;
+    gap: 7px;
+  }
+
+  .overlay-timer-only-card .timer-only-top-control-row {
+    justify-content: flex-start !important;
+  }
+
+  .timer-only-main-panel .timer-only-time {
+    font-size: clamp(40px, 18vw, 58px);
+  }
+}
+
+/* Timer-only shrink mode: let users make the race timer genuinely small. */
+.overlay-page-timer-only {
+  min-width: 0;
+  padding: 6px;
+}
+
+.overlay-timer-only-card {
+  gap: 7px;
+  padding: 9px 10px 10px;
+}
+
+.overlay-timer-only-card .timer-only-header {
+  gap: 7px;
+}
+
+.overlay-timer-only-card .timer-only-heading {
+  gap: 5px;
+}
+
+.overlay-timer-only-card .timer-only-kicker {
+  font-size: 10px;
+  line-height: 1.12;
+}
+
+.overlay-timer-only-card .timer-only-status {
+  padding: 3px 7px;
+  font-size: 8.5px;
+}
+
+.overlay-timer-only-card .timer-only-actline {
+  padding: 3px 7px;
+  font-size: 9.5px;
+}
+
+.timer-only-main-panel {
+  gap: 4px;
+  padding: 6px 8px 7px;
+  border-radius: 14px;
+}
+
+.timer-only-main-label {
+  font-size: 9px;
+  letter-spacing: 0.12em;
+}
+
+.timer-only-main-panel .timer-only-time {
+  font-size: clamp(34px, 13vw, 58px);
+}
+
+.timer-only-info-grid {
+  gap: 5px;
+}
+
+.timer-only-info-grid .timer-only-meta,
+.timer-only-info-grid .timer-only-next {
+  padding: 5px 8px;
+  font-size: 10px;
+  line-height: 1.15;
+}
+
+.overlay-timer-only-card .timer-only-movement-hint {
+  font-size: 9px;
+  line-height: 1.15;
+}
+
+.overlay-timer-only-card .timer-only-footer {
+  min-height: 22px;
+}
+
+.overlay-timer-only-card .timer-only-footer span {
+  font-size: 9px;
+}
+
+@media (max-width: 340px) {
+  .overlay-timer-only-card {
+    gap: 6px;
+    padding: 8px;
+  }
+
+  .overlay-timer-only-card .timer-only-header {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 6px;
+  }
+
+  .timer-only-state-row {
+    gap: 4px;
+  }
+
+  .timer-only-main-panel .timer-only-time {
+    font-size: clamp(32px, 14vw, 48px);
+  }
+
+  .timer-only-info-grid .timer-only-meta,
+  .timer-only-info-grid .timer-only-next {
+    padding: 4px 7px;
+    font-size: 9.5px;
+  }
+
+  .overlay-timer-only-card .timer-only-movement-hint,
+  .overlay-timer-only-card .timer-only-footer span {
+    display: none;
+  }
+}
+
+.update-status-banner,
+.update-progress-card {
+  border-radius: 16px;
+  border: 1px solid rgba(224, 174, 94, 0.18);
+  background: rgba(255, 255, 255, 0.035);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+}
+
+.update-status-banner {
+  display: grid;
+  gap: 5px;
+  padding: 12px 14px;
+  color: #f4ead8;
+}
+
+.update-status-banner span {
+  color: #cfd7df;
+  font-size: 12px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.update-progress-card {
+  display: grid;
+  gap: 9px;
+  padding: 14px 16px;
+}
+
+.update-progress-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: #f4ead8;
+}
+
+.update-progress-track {
+  position: relative;
+  height: 9px;
+  overflow: hidden;
+  border-radius: 999px;
+  border: 1px solid rgba(224, 174, 94, 0.18);
+  background: rgba(0, 0, 0, 0.28);
+}
+
+.update-progress-track span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, rgba(224, 174, 94, 0.72), rgba(255, 220, 143, 0.94));
+  transition: width 180ms ease;
+}
+
+.update-inline-message p {
+  margin: 0;
+}
+
+.update-vpn-hint {
+  margin-top: 8px;
+  color: #ffe7bf;
+}
+
+.update-error-actions {
+  margin-top: 10px;
+}
+
+
+/* 0.1.12: keep overlay cards readable when the window is narrowed. */
+.overlay-hud .hud-block,
+.overlay-hud .hud-warning,
+.overlay-hud .hud-banner,
+.overlay-hud .checklist-item,
+.overlay-hud .section-list li,
+.overlay-hud .hud-next-zone,
+.overlay-hud .hud-meta,
+.overlay-hud .timer-only-next,
+.overlay-hud .timer-only-meta {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+.overlay-hud .hud-block {
+  overflow: visible;
+}
+
+.overlay-hud .hud-block h2 {
+  min-width: 0;
+  flex-wrap: nowrap;
+  align-items: center;
+  line-height: 1.22;
+  white-space: nowrap;
+}
+
+.overlay-hud .hud-block h2::after {
+  min-width: 18px;
+}
+
+.overlay-hud .section-list li,
+.overlay-hud .checklist-item,
+.overlay-hud .hud-next-zone,
+.overlay-hud .hud-footnote {
+  white-space: normal;
+}
+
+.overlay-hud .hud-footer-row,
+.overlay-hud .timer-only-footer {
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.overlay-hud .hud-footnote,
+.overlay-hud .timer-only-footer span {
+  flex: 1 1 160px;
+  min-width: 0;
+}
+
+/* 0.1.12: the League card uses the same frame behavior as other hud cards. */
+.overlay-hud .league-reward-section {
+  padding: var(--space-card-y) var(--space-card-x);
+  border-radius: 12px;
+  border-color: rgba(224, 174, 94, 0.20);
+  background: rgba(255, 255, 255, 0.045);
+  overflow: visible;
+}
+
+.overlay-hud .league-reward-section h2 {
+  margin: 0 0 6px;
+}
+
+.overlay-hud .league-reward-line {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 7px;
+  align-items: start;
+  min-width: 0;
+  color: #f7ead2;
+  font-size: var(--font-body);
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.overlay-hud .league-reward-marker {
+  color: #f6c36a;
+  font-size: calc(var(--font-body) * 0.9);
+  line-height: 1.45;
+}
+
+.overlay-hud .league-reward-line span:last-child {
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+.overlay-hud .league-reward-note {
+  margin: 5px 0 0 calc(var(--font-body) * 1.65);
+  min-width: 0;
+  color: rgba(255, 231, 191, 0.68);
+  font-size: calc(var(--font-body) * 0.88);
+  font-weight: 600;
+  line-height: 1.35;
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+/* 0.1.12: timer-only stays readable at small widths. */
+.overlay-page-timer-only .timer-only-header,
+.overlay-page-timer-only .timer-only-footer {
+  min-width: 0;
+}
+
+.overlay-page-timer-only .timer-only-header {
+  flex-wrap: wrap;
+}
+
+.overlay-page-timer-only .timer-only-header-actions {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.overlay-page-timer-only .timer-only-main-panel {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.overlay-page-timer-only .timer-only-time {
+  max-width: 100%;
+  font-size: clamp(30px, 16vw, 58px);
+  letter-spacing: -0.055em;
+}
+
+.overlay-page-timer-only .timer-only-info-grid .timer-only-meta,
+.overlay-page-timer-only .timer-only-info-grid .timer-only-next {
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+

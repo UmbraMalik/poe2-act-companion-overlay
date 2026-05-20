@@ -1,0 +1,284 @@
+/* Final route overlap and density fixes. Extracted from styles.css preserving cascade order. */
+/* Lock button active state must win over overlay polish overrides in all modes. */
+.overlay-lock-icon-button.is-locked,
+.overlay-page:not(.overlay-page-timer-only) .overlay-lock-icon-button.is-locked,
+.overlay-page.overlay-page-timer-only .overlay-lock-icon-button.is-locked,
+.overlay-page.density-compact .overlay-lock-icon-button.is-locked,
+.overlay-quick-actions > .overlay-lock-icon-button.is-locked,
+.timer-only-top-control-row .overlay-quick-actions > .overlay-lock-icon-button.is-locked {
+  border-color: rgba(255, 204, 96, 0.82) !important;
+  background:
+    radial-gradient(circle at 50% 18%, rgba(255, 226, 150, 0.34), transparent 58%),
+    linear-gradient(180deg, rgba(241, 185, 106, 0.34), rgba(132, 86, 24, 0.28)) !important;
+  color: #ffe4a6 !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 236, 179, 0.20),
+    0 0 0 1px rgba(255, 204, 96, 0.22),
+    0 0 14px rgba(241, 185, 106, 0.46) !important;
+}
+
+.overlay-lock-icon-button.is-locked:hover,
+.overlay-page:not(.overlay-page-timer-only) .overlay-lock-icon-button.is-locked:hover,
+.overlay-page.overlay-page-timer-only .overlay-lock-icon-button.is-locked:hover,
+.overlay-page.density-compact .overlay-lock-icon-button.is-locked:hover,
+.overlay-quick-actions > .overlay-lock-icon-button.is-locked:hover,
+.timer-only-top-control-row .overlay-quick-actions > .overlay-lock-icon-button.is-locked:hover {
+  border-color: rgba(255, 219, 128, 0.92) !important;
+  background:
+    radial-gradient(circle at 50% 18%, rgba(255, 236, 179, 0.42), transparent 58%),
+    linear-gradient(180deg, rgba(241, 185, 106, 0.42), rgba(132, 86, 24, 0.34)) !important;
+  color: #fff1c8 !important;
+}
+
+
+/* Final companion route polish: no fake completion checks, no empty route cards. */
+.companion-page .route-overview-grid {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 10px;
+}
+
+.companion-page .route-overview-card {
+  min-height: 104px;
+  padding: 12px 13px;
+  gap: 8px;
+  border-radius: 13px;
+  border-color: rgba(205, 220, 237, 0.105);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.034), rgba(255, 255, 255, 0.015)),
+    rgba(0, 0, 0, 0.12);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.025);
+}
+
+.companion-page .route-overview-card.status-visited,
+.companion-page .route-overview-card.status-completed,
+.companion-page .route-overview-card.status-done {
+  opacity: 1;
+}
+
+.companion-page .route-overview-card.status-current {
+  border-color: rgba(241, 185, 106, 0.46);
+  background:
+    radial-gradient(circle at 0% 0%, rgba(241, 185, 106, 0.12), transparent 38%),
+    linear-gradient(180deg, rgba(241, 185, 106, 0.075), rgba(255, 255, 255, 0.016)),
+    rgba(0, 0, 0, 0.13);
+  box-shadow:
+    inset 0 0 0 1px rgba(241, 185, 106, 0.16),
+    0 0 0 1px rgba(241, 185, 106, 0.05);
+}
+
+.companion-page .route-overview-header {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    "index title rec"
+    "index state state";
+  column-gap: 9px;
+  row-gap: 4px;
+  align-items: start;
+}
+
+.companion-page .route-step-index {
+  grid-area: index;
+  min-width: 28px;
+  height: 24px;
+  padding: 3px 6px;
+  line-height: 16px;
+  color: rgba(255, 220, 160, 0.94);
+  background: rgba(241, 185, 106, 0.105);
+  border-color: rgba(241, 185, 106, 0.20);
+}
+
+.companion-page .route-zone-name {
+  grid-area: title;
+  padding-top: 1px;
+  color: #f4ead8;
+  line-height: 1.2;
+}
+
+.companion-page .route-rec-badge,
+.companion-page .route-overview-header > span.route-rec-badge {
+  grid-area: rec;
+  max-width: 132px;
+  padding-top: 2px;
+  color: rgba(216, 226, 235, 0.82);
+  font-size: 11px;
+  line-height: 1.18;
+}
+
+.companion-page .route-state-pill {
+  grid-area: state;
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  min-height: 20px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(241, 185, 106, 0.28);
+  background: rgba(241, 185, 106, 0.10);
+  color: #ffe4a6;
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.companion-page .route-status-icon {
+  display: none;
+}
+
+.companion-page .compact-reward-list {
+  gap: 4px;
+  margin-top: 1px;
+  color: rgba(231, 238, 245, 0.86);
+  font-size: 12px;
+  line-height: 1.32;
+}
+
+.companion-page .compact-reward-list li {
+  padding-left: 13px;
+}
+
+.companion-page .compact-reward-list li::before {
+  color: rgba(241, 185, 106, 0.88);
+}
+
+.companion-page .route-empty-note {
+  margin: 0;
+  color: rgba(205, 215, 226, 0.70);
+  font-size: 12px;
+  line-height: 1.32;
+}
+
+@media (min-width: 1180px) {
+  .companion-page .route-overview-grid {
+    grid-template-columns: repeat(3, minmax(300px, 1fr));
+  }
+}
+
+@media (min-width: 1540px) {
+  .companion-page .route-overview-grid {
+    grid-template-columns: repeat(3, minmax(330px, 1fr));
+  }
+}
+
+/* Route tab density fix: prevent route cards from overflowing into the next row. */
+.companion-page .route-overview-grid {
+  grid-auto-rows: auto !important;
+  align-items: start !important;
+  gap: 12px !important;
+}
+
+.companion-page .route-overview-card {
+  align-self: start;
+  height: auto !important;
+  min-height: 92px;
+  overflow: hidden;
+}
+
+.companion-page .compact-reward-list {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+}
+
+.companion-page .compact-reward-list li {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  padding-left: 13px;
+  line-height: 1.32;
+}
+
+.companion-page .route-more-note,
+.companion-page .route-warning-inline {
+  margin: -2px 0 0;
+  color: rgba(205, 215, 226, 0.68);
+  font-size: 11px;
+  line-height: 1.28;
+}
+
+.companion-page .route-warning-inline {
+  color: rgba(255, 207, 155, 0.86);
+}
+
+.companion-page .route-zone-name {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.companion-page .route-rec-badge,
+.companion-page .route-overview-header > span.route-rec-badge {
+  min-width: 54px;
+}
+
+/* Final route overlap fix: use flex rows instead of CSS grid for variable-height route cards.
+   Grid rows were too easy to break with compact/clamped content and produced visual overlaps.
+   Flex wrap keeps each row height based on the tallest card in that row. */
+.companion-page .route-overview-list.route-overview-grid {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-content: flex-start !important;
+  align-items: flex-start !important;
+  gap: 12px !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  padding-right: 8px !important;
+}
+
+.companion-page .route-overview-list.route-overview-grid > .route-overview-card {
+  flex: 0 0 calc((100% - 24px) / 3) !important;
+  width: calc((100% - 24px) / 3) !important;
+  max-width: calc((100% - 24px) / 3) !important;
+  min-width: 0 !important;
+  height: auto !important;
+  min-height: 100px !important;
+  max-height: none !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+}
+
+.companion-page .route-overview-card,
+.companion-page .route-overview-card * {
+  min-width: 0;
+}
+
+.companion-page .route-overview-header {
+  min-width: 0;
+}
+
+.companion-page .route-zone-name {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.companion-page .compact-reward-list {
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.companion-page .route-more-note,
+.companion-page .route-warning-inline {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+@media (max-width: 1180px) {
+  .companion-page .route-overview-list.route-overview-grid > .route-overview-card {
+    flex-basis: calc((100% - 12px) / 2) !important;
+    width: calc((100% - 12px) / 2) !important;
+    max-width: calc((100% - 12px) / 2) !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .companion-page .route-overview-list.route-overview-grid > .route-overview-card {
+    flex-basis: 100% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+

@@ -4,10 +4,47 @@ const path = require('path');
 const ROOT = path.join(__dirname, '..');
 const GUIDE_PATH = path.join(ROOT, 'src/data/guide.json');
 const CAMPAIGN_BONUSES_PATH = path.join(ROOT, 'src/data/campaign-bonuses.json');
-const LOG_PATHS = {
-  en: 'E:/Steam/steamapps/common/Path of Exile 2/logs/LatestClientEN.txt',
-  ru: 'E:/Steam/steamapps/common/Path of Exile 2/logs/LatestClientRU.txt'
-};
+const DEFAULT_LOG_DIR = path.join(ROOT, 'tests/fixtures/poe2-logs');
+
+function readArgValue(flagName) {
+  const prefix = `${flagName}=`;
+  const argWithEquals = process.argv.find((arg) => arg.startsWith(prefix));
+  if (argWithEquals) {
+    return argWithEquals.slice(prefix.length);
+  }
+
+  const argIndex = process.argv.indexOf(flagName);
+  if (argIndex !== -1 && process.argv[argIndex + 1]) {
+    return process.argv[argIndex + 1];
+  }
+
+  return null;
+}
+
+function resolveOptionalPath(input) {
+  if (!input) {
+    return null;
+  }
+
+  return path.resolve(ROOT, String(input));
+}
+
+function getLogPaths() {
+  const logDir =
+    resolveOptionalPath(readArgValue('--log-dir') ?? process.env.POE2_ZONE_MAPPING_LOG_DIR) ??
+    DEFAULT_LOG_DIR;
+
+  return {
+    en:
+      resolveOptionalPath(readArgValue('--en-log') ?? process.env.POE2_ZONE_MAPPING_EN_LOG) ??
+      path.join(logDir, 'LatestClientEN.txt'),
+    ru:
+      resolveOptionalPath(readArgValue('--ru-log') ?? process.env.POE2_ZONE_MAPPING_RU_LOG) ??
+      path.join(logDir, 'LatestClientRU.txt')
+  };
+}
+
+const LOG_PATHS = getLogPaths();
 
 const GENERATED_AREA_REGEX = /Generating level \d+ area "(?<scene>[^"]+)" with seed \d+/i;
 const SCENE_SET_SOURCE_REGEX = /\[SCENE\]\s+Set Source\s+\[(?<scene>.*?)\]/i;
@@ -746,35 +783,35 @@ expectGuideContentIncludes(
 expectGuideContentIncludes(
   'P2_1 detail wording',
   'interlude_khari_crossing',
-  '\u041f\u043e\u0441\u0442\u043e\u044f\u043d\u043d\u044b\u0439 \u0431\u043e\u043d\u0443\u0441 \u0438\u0437 \u0440\u0430\u0441\u043f\u043b\u0430\u0432\u043b\u0435\u043d\u043d\u043e\u0439 \u0441\u0432\u044f\u0442\u044b\u043d\u0438 \u0432 \u041a\u0445\u0430\u0440\u0438\u0439\u0441\u043a\u043e\u043c \u043f\u0435\u0440\u0435\u0432\u0430\u043b\u0435'
+  '\u0440\u0430\u0441\u043f\u043b\u0430\u0432\u043b\u0435\u043d\u043d\u0430\u044f \u0441\u0432\u044f\u0442\u044b\u043d\u044f \u0432 \u041a\u0445\u0430\u0440\u0438\u0439\u0441\u043a\u043e\u043c \u043f\u0435\u0440\u0435\u0432\u0430\u043b\u0435'
 );
 
-expectGuideFieldValue('P2_5 zone_en', 'interlude_golye_gates', 'zone_en', 'The Galai Gates');
+expectGuideFieldValue('P2_5 zone_en', 'interlude_galai_gates', 'zone_en', 'The Galai Gates');
 expectGuideFieldValue(
   'P2_5 zone_ru',
-  'interlude_golye_gates',
+  'interlude_galai_gates',
   'zone_ru',
   '\u0412\u043e\u0440\u043e\u0442\u0430 \u0413\u0430\u043b\u0430\u0438'
 );
-expectGuideAreaId('P2_5 areaId', 'interlude_golye_gates', 'P2_5');
+expectGuideAreaId('P2_5 areaId', 'interlude_galai_gates', 'P2_5');
 expectGuideContentIncludes(
-  'P2_5 reward',
-  'interlude_golye_gates',
-  '2 \u043f\u0430\u0441\u0441\u0438\u0432\u043d\u044b\u0445 \u043e\u0447\u043a\u0430'
+  'P2_5 boss reward',
+  'interlude_galai_gates',
+  '\u0411\u043e\u0441\u0441 \u0412\u043e\u0440\u043d\u0430\u0441'
 );
-expectGuideContentIncludes(
-  'P2_5 Risu wording',
-  'interlude_golye_gates',
+expectGuideContentExcludes(
+  'P2_5 no Risu wording',
+  'interlude_galai_gates',
   '\u0420\u0438\u0441\u0443'
 );
 expectGuideContentExcludes(
   'P2_5 no Khari shrine wording',
-  'interlude_golye_gates',
+  'interlude_galai_gates',
   '\u0440\u0430\u0441\u043f\u043b\u0430\u0432\u043b\u0435\u043d\u043d\u0443\u044e \u0441\u0432\u044f\u0442\u044b\u043d\u044e'
 );
 expectGuideContentExcludes(
   'P2_5 no Khari life reward',
-  'interlude_golye_gates',
+  'interlude_galai_gates',
   '+5% \u043c\u0430\u043a\u0441\u0438\u043c\u0443\u043c \u0437\u0434\u043e\u0440\u043e\u0432\u044c\u044f'
 );
 
@@ -790,28 +827,28 @@ expectCampaignBonusOwnedBy(
 );
 expectCampaignBonusFieldValue(
   'Khari life source label',
-  'int2_golye_gates_life_percent',
+  'int2_khari_crossing_life_percent',
   'source',
   '\u0420\u0430\u0441\u043f\u043b\u0430\u0432\u043b\u0435\u043d\u043d\u0430\u044f \u0441\u0432\u044f\u0442\u044b\u043d\u044f'
 );
 expectCampaignBonusOwnedBy(
-  'Galai weapon bonus ownership',
+  'Khari weapon bonus ownership',
   {
     title:
       '+2 \u043f\u0430\u0441\u0441\u0438\u0432\u043d\u044b\u0445 \u043e\u0447\u043a\u0430 \u043d\u0430\u0431\u043e\u0440\u0430 \u043e\u0440\u0443\u0436\u0438\u044f',
     sourceIncludes: '\u0420\u0438\u0441\u0443'
   },
-  'interlude_golye_gates',
-  '\u0412\u043e\u0440\u043e\u0442\u0430 \u0413\u0430\u043b\u0430\u0438'
+  'interlude_khari_crossing',
+  '\u041a\u0445\u0430\u0440\u0438\u0439\u0441\u043a\u0438\u0439 \u043f\u0435\u0440\u0435\u0432\u0430\u043b'
 );
 expectNoCampaignBonusOnZone(
   'P2_5 no Khari named campaign bonus',
-  'interlude_golye_gates',
+  'interlude_galai_gates',
   '\u041a\u0445\u0430\u0440\u0438\u0439\u0441\u043a\u0438\u0439 \u043f\u0435\u0440\u0435\u0432\u0430\u043b'
 );
 expectNoCampaignBonusOnZone(
   'P2_5 no Khari life campaign bonus',
-  'interlude_golye_gates',
+  'interlude_galai_gates',
   '+5% \u043c\u0430\u043a\u0441\u0438\u043c\u0443\u043c \u0437\u0434\u043e\u0440\u043e\u0432\u044c\u044f'
 );
 expectCurrentZoneContainsBonus(
@@ -820,63 +857,63 @@ expectCurrentZoneContainsBonus(
     guideId: 'interlude_khari_crossing',
     rawZoneName: 'The Khari Crossing'
   },
-  'int2_golye_gates_life_percent'
+  'int2_khari_crossing_life_percent'
 );
-expectCurrentZoneExcludesBonus(
-  'P2_1 current zone excludes Galai weapon bonus',
+expectCurrentZoneContainsBonus(
+  'P2_1 current zone keeps Khari weapon bonus',
   {
     guideId: 'interlude_khari_crossing',
     rawZoneName: 'The Khari Crossing'
   },
-  'int2_golye_gates_aktu_anundr_weapon_points'
+  'int2_khari_crossing_aktu_anundr_weapon_points'
 );
-expectCurrentZoneContainsBonus(
-  'P2_5 current zone keeps Galai weapon bonus',
+expectCurrentZoneExcludesBonus(
+  'P2_5 current zone excludes Khari weapon bonus',
   {
-    guideId: 'interlude_golye_gates',
+    guideId: 'interlude_galai_gates',
     rawZoneName: 'The Galai Gates'
   },
-  'int2_golye_gates_aktu_anundr_weapon_points'
+  'int2_khari_crossing_aktu_anundr_weapon_points'
 );
 expectCurrentZoneExcludesBonus(
   'P2_5 current zone excludes Khari life bonus',
   {
-    guideId: 'interlude_golye_gates',
+    guideId: 'interlude_galai_gates',
     rawZoneName: 'The Galai Gates'
   },
-  'int2_golye_gates_life_percent'
+  'int2_khari_crossing_life_percent'
 );
 expectCurrentZoneExcludesBonus(
   'P2_5 stale raw Khari EN still excludes Khari life bonus',
   {
-    guideId: 'interlude_golye_gates',
+    guideId: 'interlude_galai_gates',
     rawZoneName: 'The Khari Crossing'
   },
-  'int2_golye_gates_life_percent'
+  'int2_khari_crossing_life_percent'
 );
 expectCurrentZoneExcludesBonus(
   'P2_5 stale raw Khari RU still excludes Khari life bonus',
   {
-    guideId: 'interlude_golye_gates',
+    guideId: 'interlude_galai_gates',
     rawZoneName: '\u041a\u0445\u0430\u0440\u0438\u0439\u0441\u043a\u0438\u0439 \u043f\u0435\u0440\u0435\u0432\u0430\u043b'
   },
-  'int2_golye_gates_life_percent'
+  'int2_khari_crossing_life_percent'
 );
-expectCurrentZoneContainsBonus(
-  'P2_5 stale raw Khari EN still keeps Galai weapon bonus',
+expectCurrentZoneExcludesBonus(
+  'P2_5 stale raw Khari EN still excludes Khari weapon bonus',
   {
-    guideId: 'interlude_golye_gates',
+    guideId: 'interlude_galai_gates',
     rawZoneName: 'The Khari Crossing'
   },
-  'int2_golye_gates_aktu_anundr_weapon_points'
+  'int2_khari_crossing_aktu_anundr_weapon_points'
 );
 expectCurrentZoneExcludesBonus(
   'P2_5 RU current zone excludes Khari life bonus',
   {
-    guideId: 'interlude_golye_gates',
+    guideId: 'interlude_galai_gates',
     rawZoneName: '\u0412\u043e\u0440\u043e\u0442\u0430 \u0413\u0430\u043b\u0430\u0438'
   },
-  'int2_golye_gates_life_percent'
+  'int2_khari_crossing_life_percent'
 );
 expectCurrentZoneContainsBonus(
   'P2_1 stale raw Galai EN still keeps Khari life bonus',
@@ -884,15 +921,15 @@ expectCurrentZoneContainsBonus(
     guideId: 'interlude_khari_crossing',
     rawZoneName: 'The Galai Gates'
   },
-  'int2_golye_gates_life_percent'
+  'int2_khari_crossing_life_percent'
 );
-expectCurrentZoneExcludesBonus(
-  'P2_1 stale raw Galai EN excludes Galai weapon bonus',
+expectCurrentZoneContainsBonus(
+  'P2_1 stale raw Galai EN still keeps Khari weapon bonus',
   {
     guideId: 'interlude_khari_crossing',
     rawZoneName: 'The Galai Gates'
   },
-  'int2_golye_gates_aktu_anundr_weapon_points'
+  'int2_khari_crossing_aktu_anundr_weapon_points'
 );
 expectCurrentZoneExcludesBonus(
   'Qimah Reservoir excludes Qimah choice bonus',
@@ -1048,7 +1085,7 @@ const EXPECTED_LOG_CASES = [
     areaId: 'P2_5',
     en: 'The Galai Gates',
     ru: '\u0412\u043e\u0440\u043e\u0442\u0430 \u0413\u0430\u043b\u0430\u0438',
-    guideId: 'interlude_golye_gates'
+    guideId: 'interlude_galai_gates'
   },
   {
     areaId: 'P2_7',
@@ -1066,7 +1103,7 @@ const EXPECTED_LOG_CASES = [
     areaId: 'P3_3',
     en: 'Glacial Tarn',
     ru: '\u041b\u0435\u0434\u043d\u0438\u043a\u043e\u0432\u043e\u0435 \u043e\u0437\u0435\u0440\u043e',
-    guideId: null
+    guideId: 'interlude_glacial_tarn'
   },
   {
     areaId: 'P3_4',
@@ -1092,7 +1129,9 @@ const extractedLogs = {};
 const missingLogs = [];
 for (const [label, filePath] of Object.entries(LOG_PATHS)) {
   if (!fs.existsSync(filePath)) {
-    missingLogs.push(`${label.toUpperCase()}: ${filePath}`);
+    const missingLog = `${label.toUpperCase()}: ${filePath}`;
+    missingLogs.push(missingLog);
+    fail(`missing zone mapping log: ${missingLog}`);
     continue;
   }
   extractedLogs[label] = extractAreaIdZoneMapFromLog(filePath);
@@ -1134,10 +1173,10 @@ for (const zoneCase of EXPECTED_LOG_CASES) {
 
 expectNotGuide('The Khari Crossing -> The Galai Gates', {
   zoneName: 'The Khari Crossing'
-}, 'interlude_golye_gates');
+}, 'interlude_galai_gates');
 expectNotGuide('\u041a\u0445\u0430\u0440\u0438\u0439\u0441\u043a\u0438\u0439 \u043f\u0435\u0440\u0435\u0432\u0430\u043b -> \u0412\u043e\u0440\u043e\u0442\u0430 \u0413\u0430\u043b\u0430\u0438', {
   zoneName: '\u041a\u0445\u0430\u0440\u0438\u0439\u0441\u043a\u0438\u0439 \u043f\u0435\u0440\u0435\u0432\u0430\u043b'
-}, 'interlude_golye_gates');
+}, 'interlude_galai_gates');
 expectNotGuide('The Galai Gates -> The Khari Crossing', {
   zoneName: 'The Galai Gates'
 }, 'interlude_khari_crossing');
@@ -1201,7 +1240,7 @@ expectGuide('areaId priority P2_1 beats stale The Galai Gates', {
 expectGuide('areaId priority P2_5 beats stale The Khari Crossing', {
   areaId: 'P2_5',
   zoneName: 'The Khari Crossing'
-}, 'interlude_golye_gates');
+}, 'interlude_galai_gates');
 expectGuide('areaId priority P2_6 beats stale Qimah Reservoir', {
   areaId: 'P2_6',
   zoneName: 'Qimah Reservoir'
@@ -1226,23 +1265,23 @@ expectGuide('areaId priority P3_5 beats stale Kriar Village', {
   areaId: 'P3_5',
   zoneName: 'Kriar Village'
 }, 'i2_kriar_peaks');
-expectNoGuide('areaId priority P3_3 beats stale Howling Caves', {
+expectGuide('areaId priority P3_3 beats stale Howling Caves', {
   areaId: 'P3_3',
   zoneName: 'Howling Caves'
-}, 'Howling Caves');
-expectNoGuide('areaId priority P3_3 beats stale \u0412\u043e\u044e\u0449\u0438\u0435 \u043f\u0435\u0449\u0435\u0440\u044b', {
+}, 'interlude_glacial_tarn');
+expectGuide('areaId priority P3_3 beats stale \u0412\u043e\u044e\u0449\u0438\u0435 \u043f\u0435\u0449\u0435\u0440\u044b', {
   areaId: 'P3_3',
   zoneName: '\u0412\u043e\u044e\u0449\u0438\u0435 \u043f\u0435\u0449\u0435\u0440\u044b'
-}, '\u0412\u043e\u044e\u0449\u0438\u0435 \u043f\u0435\u0449\u0435\u0440\u044b');
+}, 'interlude_glacial_tarn');
 
-expectNoGuide('Pools of Khatal', { zoneName: 'Pools of Khatal' }, 'Pools of Khatal');
-expectNoGuide('Etched Ravine', { zoneName: 'Etched Ravine' }, 'Etched Ravine');
-expectNoGuide('Glacial Tarn no-guide', {
+expectGuide('Pools of Khatal', { zoneName: 'Pools of Khatal' }, 'interlude_pools_of_khatal');
+expectGuide('Etched Ravine', { zoneName: 'Etched Ravine' }, 'interlude_etched_ravine');
+expectGuide('Glacial Tarn guide', {
   zoneName: 'Glacial Tarn'
-}, 'Glacial Tarn');
-expectNoGuide('\u041b\u0435\u0434\u043d\u0438\u043a\u043e\u0432\u043e\u0435 \u043e\u0437\u0435\u0440\u043e no-guide', {
+}, 'interlude_glacial_tarn');
+expectGuide('\u041b\u0435\u0434\u043d\u0438\u043a\u043e\u0432\u043e\u0435 \u043e\u0437\u0435\u0440\u043e guide', {
   zoneName: '\u041b\u0435\u0434\u043d\u0438\u043a\u043e\u0432\u043e\u0435 \u043e\u0437\u0435\u0440\u043e'
-}, '\u041b\u0435\u0434\u043d\u0438\u043a\u043e\u0432\u043e\u0435 \u043e\u0437\u0435\u0440\u043e');
+}, 'interlude_glacial_tarn');
 
 if (failures.length > 0) {
   console.error('Zone mapping check failed:\n');

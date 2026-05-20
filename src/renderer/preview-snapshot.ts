@@ -8,7 +8,8 @@ import type {
   CampaignBonusesDataFile,
   ChecklistItemProgress,
   GuideDataFile,
-  GuideEntry
+  GuideEntry,
+  PowerSpike
 } from '../shared/types';
 
 function normalizeKey(value: string | null | undefined): string {
@@ -47,16 +48,18 @@ function normalizeEntry(entry: GuideEntry, index: number): GuideEntry {
 }
 
 function getGuideSource(): GuideDataFile {
-  return Array.isArray(guideData)
+  const rawGuideData = guideData as unknown;
+
+  return Array.isArray(rawGuideData)
     ? {
-        zones: guideData.map((entry, index) => normalizeEntry(entry, index)),
+        zones: rawGuideData.map((entry, index) => normalizeEntry(entry as GuideEntry, index)),
         global_reminders: {
           vendor_checkpoints: []
         }
       }
     : {
-        ...(guideData as GuideDataFile),
-        zones: ((guideData as GuideDataFile).zones ?? []).map((entry, index) =>
+        ...(rawGuideData as GuideDataFile),
+        zones: (((rawGuideData as GuideDataFile).zones ?? []) as GuideEntry[]).map((entry, index) =>
           normalizeEntry(entry, index)
         )
       };
@@ -118,8 +121,8 @@ export function getPreviewSnapshot(): AppSnapshot {
     source.global_reminders?.vendor_checkpoints.find(
       (entry) => normalizeKey(entry.id) === normalizeKey(reminderId)
     ) ?? null;
-  const powerSpikes = Array.isArray(powerSpikesData) ? powerSpikesData : [];
-  const campaignBonuses = (campaignBonusesData as CampaignBonusesDataFile).bonuses ?? [];
+  const powerSpikes = (Array.isArray(powerSpikesData) ? powerSpikesData : []) as unknown as PowerSpike[];
+  const campaignBonuses = ((campaignBonusesData as unknown as CampaignBonusesDataFile).bonuses ?? []);
   const currentLevel =
     level && Number.isFinite(Number(level)) ? Number(level) : DEFAULT_CONFIG.currentLevel;
   const now = Date.now();
@@ -245,7 +248,7 @@ export function getPreviewSnapshot(): AppSnapshot {
       lastValidGameplayZoneAt: '2026-05-12T12:00:00.000Z',
       lastGameplayGuideId: selectedGuide?.id ?? null,
       lastGameplayZoneRu: selectedGuide?.zone_ru ?? null,
-      lastGameplayAct: selectedGuide?.act ?? null,
+      lastGameplayAct: typeof selectedGuide?.act === 'number' ? selectedGuide.act : null,
       lastSceneSource: selectedGuide?.zone_ru ?? null,
       lastSceneSourceAt: '2026-05-12T12:00:00.000Z',
       overlayMode: params.get('overlayMode') === 'timer_only' ? 'timer_only' : 'full',

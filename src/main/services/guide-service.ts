@@ -8,6 +8,7 @@ import type {
 } from '../../shared/types';
 import { extractGeneratedAreaId, extractNamedZoneFromLine } from './log-parser';
 import { resolveRuntimePath } from './runtime-paths';
+import { diagnosticInfo, diagnosticWarn } from '../diagnostic-logger';
 
 export type ZoneEventSource = 'internal-area-id' | 'entered-zone-name';
 
@@ -64,7 +65,7 @@ function stripZoneEventPrefixes(input: string): string {
   return String(input ?? '')
     .trim()
     .replace(/^(?:you have entered|entering area)\s*:?\s*/i, '')
-    .replace(/^(?:Р’С‹ РІРѕС€Р»Рё РІ РѕР±Р»Р°СЃС‚СЊ|Р’С‹ РІРѕС€Р»Рё|Р’С…РѕРґ РІ РѕР±Р»Р°СЃС‚СЊ)\s*:?\s*/i, '')
+    .replace(/^(?:вы вошли в область|вы вошли|вход в область)\s*:?\s*/i, '')
     .trim();
 }
 
@@ -273,7 +274,7 @@ export class GuideService {
 
         const previousGuideId = this.internalAreaTargetMap.get(normalizedAreaId);
         if (previousGuideId && previousGuideId !== entry.id) {
-          console.warn('[GuideService] Duplicate area_id mapping in guide.json', {
+          diagnosticWarn('GuideService', 'Duplicate area_id mapping in guide.json', {
             areaId,
             normalizedAreaId,
             previousGuideId,
@@ -415,7 +416,7 @@ export class GuideService {
     extractedInternalAreaId: string,
     result: InternalAreaLookupResult
   ): void {
-    console.info('[GuideService] Internal area lookup', {
+    diagnosticInfo('GuideService', 'Internal area lookup', {
       extractedInternalAreaId,
       normalizedInternalAreaId: result.normalizedInternalAreaId,
       mappingHit: result.mappingHit,

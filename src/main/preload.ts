@@ -6,8 +6,11 @@ import type {
   RunTimerState,
   SettingsPatch,
   AutoUpdateState,
+  TimerDiagnosticsPayload,
   TimerVisualTickPayload
 } from '../shared/types';
+
+const timerDiagnosticsEnabled = process.env.POE2_TIMER_DIAGNOSTICS === '1';
 
 const api: ElectronApi = {
   getSnapshot: () => ipcRenderer.invoke('app:get-snapshot'),
@@ -45,12 +48,20 @@ const api: ElectronApi = {
   resetRunTimer: () => ipcRenderer.invoke('app:reset-run-timer'),
   finishRunTimer: () => ipcRenderer.invoke('app:finish-run-timer'),
   getRunTimerState: () => ipcRenderer.invoke('timer:get-state'),
+  isTimerDiagnosticsEnabled: () => Promise.resolve(timerDiagnosticsEnabled),
+  sendTimerDiagnostics: (payload: TimerDiagnosticsPayload) =>
+    ipcRenderer.invoke('app:timer-diagnostics', payload),
+  getOverlayBounds: () => ipcRenderer.invoke('app:get-overlay-bounds'),
   resizeOverlay: (width: number, height: number) =>
     ipcRenderer.invoke('app:resize-overlay', width, height),
   resizeOverlayHeight: (height: number) =>
     ipcRenderer.invoke('app:resize-overlay-height', height),
-  moveOverlayBy: (deltaX: number, deltaY: number) =>
-    ipcRenderer.invoke('app:move-overlay-by', deltaX, deltaY),
+  setOverlayAutoResizeSuspended: (suspended: boolean) =>
+    ipcRenderer.invoke('app:set-overlay-auto-resize-suspended', suspended),
+  setOverlayDragActive: (active: boolean) =>
+    ipcRenderer.invoke('app:set-overlay-drag-active', active),
+  setOverlayPosition: (x: number, y: number) =>
+    ipcRenderer.invoke('app:set-overlay-position', x, y),
   setOverlayMode: (mode: OverlayMode) => ipcRenderer.invoke('app:set-overlay-mode', mode),
   toggleOverlayMode: () => ipcRenderer.invoke('app:toggle-overlay-mode'),
   closeOverlay: () => ipcRenderer.invoke('app:close-overlay'),

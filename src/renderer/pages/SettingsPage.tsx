@@ -1,6 +1,20 @@
-import { useEffect, useState, type KeyboardEvent, type ReactNode } from 'react';
+import { useEffect, useState } from 'react';
 import { useAppSnapshot, useLiveRunTimer } from '../hooks';
 import { useDocumentTitle, useI18n } from '../useI18n';
+import {
+  DEFAULT_HOTKEYS,
+  HOTKEY_LABELS,
+  InfoGrid,
+  OVERLAY_VISIBILITY_LABELS,
+  SHOW_DEVELOPER_SETTINGS,
+  formatDateTimeLocalInput,
+  formatLogSelectionMode,
+  formatOverlayDensity,
+  formatRunTimerStatus,
+  getDefaultDevLine,
+  getDefaultRewardLine,
+  hotkeyFromKeyboardEvent
+} from '../settings/settings-page-model';
 import {
   getCurrentActElapsedMs,
   getSceneDisplayName
@@ -27,173 +41,20 @@ import type {
   AutoUpdateState
 } from '../../shared/types';
 
-const SHOW_DEVELOPER_SETTINGS = import.meta.env.DEV;
-
-function getDefaultDevLine(language: AppLanguage): string {
-  return language === 'en'
-    ? '2026/05/12 12:00:00 You have entered area: Grelwood'
-    : '2026/05/12 12:00:00 Вы вошли в область: Грельвуд';
-}
-
-function getDefaultRewardLine(language: AppLanguage): string {
-  return language === 'en'
-    ? 'Player has received +10% to [Resistances|Cold].'
-    : 'Игрок получил +10% к сопротивлению [Resistances|холоду].';
-}
-
-const DEFAULT_HOTKEYS: HotkeySettings = {
-  markChecklistDone: 'F6',
-  undoChecklistMark: 'F7',
-  toggleTimerPause: 'F8',
-  openCompanion: 'F9',
-  toggleOverlayMode: 'F10'
-};
-
-const HOTKEY_LABELS: Array<{ key: keyof HotkeySettings; labelKey: string; noteKey: string }> = [
-  { key: 'toggleTimerPause', labelKey: 'settings.hotkeyPause', noteKey: 'settings.hotkeyAlways' },
-  { key: 'openCompanion', labelKey: 'settings.hotkeyCompanion', noteKey: 'settings.hotkeyAlways' },
-  { key: 'toggleOverlayMode', labelKey: 'settings.hotkeyOverlayMode', noteKey: 'settings.hotkeyAlways' }
-];
-
-const OVERLAY_VISIBILITY_LABELS = [
-  ['showOverlaySkip', 'settings.overlayShowSkip'],
-  ['showOverlayCriticalImportant', 'settings.overlayShowImportant'],
-  ['showOverlayBossTip', 'settings.overlayShowBossTips'],
-  ['showOverlayVendorReminder', 'settings.overlayShowVendor'],
-  ['showOverlayXpStatus', 'settings.overlayShowXp'],
-  ['showOverlayPowerSpike', 'settings.overlayShowPower'],
-  ['overlayTimerOnlyMode', 'settings.overlayTimerOnly']
-] as const;
-
-function hotkeyFromKeyboardEvent(event: KeyboardEvent<HTMLInputElement>): string | null {
-  const key = event.key;
-  if (!key || key === 'Control' || key === 'Shift' || key === 'Alt' || key === 'Meta') {
-    return null;
-  }
-
-  if (key === 'Escape') {
-    event.currentTarget.blur();
-    return null;
-  }
-
-  if (key === 'Backspace' || key === 'Delete') {
-    return '';
-  }
-
-  const parts: string[] = [];
-  if (event.ctrlKey || event.metaKey) {
-    parts.push('Ctrl');
-  }
-  if (event.altKey) {
-    parts.push('Alt');
-  }
-  if (event.shiftKey) {
-    parts.push('Shift');
-  }
-
-  let normalizedKey = key.length === 1 ? key.toUpperCase() : key;
-  if (normalizedKey === ' ') {
-    normalizedKey = 'Space';
-  }
-
-  const isFunctionKey = /^F(?:[1-9]|1[0-9]|2[0-4])$/.test(normalizedKey.toUpperCase());
-  const isSimpleKey = /^[A-Z0-9]$/.test(normalizedKey.toUpperCase()) || normalizedKey === 'Space';
-
-  if (!isFunctionKey && !isSimpleKey) {
-    return null;
-  }
-
-  if (!isFunctionKey && parts.length === 0) {
-    // Bare letters/numbers would hijack typing globally. Require Ctrl/Alt/Shift for them.
-    return null;
-  }
-
-  return [...parts, normalizedKey.toUpperCase()].join('+');
-}
-
-
-function formatDateTimeLocalInput(
-  timestamp: number | null,
-  fallbackLabel: string | null
-): string {
-  if (fallbackLabel) {
-    return fallbackLabel;
-  }
-
-  if (timestamp === null) {
-    return '';
-  }
-
-  const date = new Date(timestamp);
-  const pad = (value: number) => String(value).padStart(2, '0');
-
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
-}
-
-function formatRunTimerStatus(status: RunTimerStatus, language: AppLanguage): string {
-  switch (status) {
-    case 'armed':
-      return translate(language, 'companion.runStatus.armed');
-    case 'running':
-      return translate(language, 'companion.runStatus.running');
-    case 'paused':
-      return translate(language, 'companion.runStatus.paused');
-    case 'finished':
-      return translate(language, 'companion.runStatus.finished');
-    default:
-      return translate(language, 'companion.runStatus.idle');
-  }
-}
-
-function formatOverlayDensity(value: OverlayDensity, language: AppLanguage): string {
-  switch (value) {
-    case 'compact':
-      return translate(language, 'overlayDensity.compact');
-    case 'detailed':
-      return translate(language, 'overlayDensity.detailed');
-    default:
-      return translate(language, 'overlayDensity.normal');
-  }
-}
-
-function formatLogSelectionMode(mode: 'auto' | 'manual' | null, language: AppLanguage): string {
-  switch (mode) {
-    case 'auto':
-      return translate(language, 'logSelectionMode.auto');
-    case 'manual':
-      return translate(language, 'logSelectionMode.manual');
-    default:
-      return translate(language, 'logSelectionMode.legacy');
-  }
-}
-
-function InfoGrid({
-  items
-}: {
-  items: Array<{
-    label: string;
-    value: ReactNode;
-  }>;
-}) {
-  return (
-    <dl className="info-grid">
-      {items.map((item) => (
-        <div className="info-cell" key={item.label}>
-          <dt>{item.label}</dt>
-          <dd>{item.value}</dd>
-        </div>
-      ))}
-    </dl>
-  );
-}
-
 export function SettingsPage() {
   const snapshot = useAppSnapshot();
   const { t, language } = useI18n(snapshot?.config.appLanguage);
   const liveRunTimer = useLiveRunTimer(
     snapshot?.config.runTimer,
     snapshot?.config.runTimerSettings,
-    snapshot?.runtime.timerNowMs
+    snapshot?.runtime.timerNowMs,
+    32,
+    snapshot ? {
+      overlayMode: snapshot.runtime.overlayMode,
+      zoneName: snapshot.currentGuideEntry?.zone_ru ?? snapshot.currentZone.rawZoneName ?? null,
+      act: snapshot.currentGuideEntry?.act ?? snapshot.currentZone.actHint ?? null,
+      component: 'settings-live-timer'
+    } : undefined
   );
   const [busy, setBusy] = useState<string | null>(null);
   const [simulateZone, setSimulateZone] = useState('');
@@ -405,7 +266,7 @@ export function SettingsPage() {
     await runTask('save-hotkeys', async () => {
       const normalizedHotkeys = Object.fromEntries(
         Object.entries(hotkeyDrafts).map(([key, value]) => [key, String(value ?? '').trim()])
-      ) as HotkeySettings;
+      ) as unknown as HotkeySettings;
       setHotkeyDrafts(normalizedHotkeys);
       await window.poe2Overlay.updateSettings({
         hotkeys: normalizedHotkeys

@@ -1,0 +1,654 @@
+/* Header layout, close UX, intent hover/focus colors, compact header fixes. Extracted from styles.css preserving cascade order. */
+/* === Header layout v0.2.6.1: top-right technical buttons, title keeps full readable width === */
+.overlay-page:not(.overlay-page-timer-only) .hud-header {
+  position: relative;
+  --hud-utility-actions-width: 184px;
+  --hud-utility-actions-gap: 6px;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-header .hud-title-row {
+  position: relative !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  align-items: start !important;
+  gap: 0 !important;
+  min-height: 0 !important;
+  padding-right: 0 !important;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-header .hud-zone-title-card {
+  display: grid !important;
+  align-content: start !important;
+  gap: 9px !important;
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-header .hud-zone-kicker-row {
+  min-height: 26px;
+  margin: 0 !important;
+  padding-right: var(--hud-utility-actions-width) !important;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-header .hud-title-actions {
+  position: absolute !important;
+  top: 0 !important;
+  right: 0 !important;
+  z-index: 3 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  width: auto !important;
+  max-width: var(--hud-utility-actions-width) !important;
+  min-width: auto !important;
+  margin: 0 !important;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-header .overlay-quick-actions {
+  display: inline-flex !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: var(--hud-utility-actions-gap) !important;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-header .hud-title-row h1.hud-zone-name {
+  display: block !important;
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  white-space: normal !important;
+  overflow-wrap: break-word !important;
+  word-break: normal !important;
+  hyphens: none !important;
+  text-wrap: pretty;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-header .hud-header-divider {
+  margin-top: 2px;
+}
+
+.overlay-page.density-compact:not(.overlay-page-timer-only) .hud-header {
+  --hud-utility-actions-width: 176px;
+  --hud-utility-actions-gap: 5px;
+}
+
+.overlay-page.density-compact:not(.overlay-page-timer-only) .hud-header .hud-zone-title-card {
+  gap: 8px !important;
+}
+
+.overlay-page.density-compact:not(.overlay-page-timer-only) .hud-header .hud-zone-kicker-row {
+  min-height: 24px;
+}
+
+.overlay-page.density-compact:not(.overlay-page-timer-only) .hud-header .hud-title-row h1.hud-zone-name {
+  font-size: clamp(18px, calc(var(--font-title) * 0.96), 24px) !important;
+}
+
+@media (max-width: 360px) {
+  .overlay-page:not(.overlay-page-timer-only) .hud-header {
+    --hud-utility-actions-width: 166px;
+    --hud-utility-actions-gap: 4px;
+  }
+
+  .overlay-page:not(.overlay-page-timer-only) .hud-header .hud-zone-kicker-row {
+    padding-right: var(--hud-utility-actions-width) !important;
+  }
+}
+
+
+/* === Close overlay UX: red hover in every overlay mode === */
+.overlay-page .overlay-close-button,
+.overlay-page .overlay-quick-actions > .overlay-close-button,
+.overlay-page .timer-only-top-control-row .overlay-quick-actions > .overlay-close-button {
+  transition:
+    border-color 120ms ease,
+    background 120ms ease,
+    color 120ms ease,
+    box-shadow 120ms ease,
+    transform 120ms ease !important;
+}
+
+.overlay-page .overlay-close-button:hover,
+.overlay-page .overlay-close-button:focus-visible,
+.overlay-page .overlay-quick-actions > .overlay-close-button:hover,
+.overlay-page .overlay-quick-actions > .overlay-close-button:focus-visible,
+.overlay-page .timer-only-top-control-row .overlay-quick-actions > .overlay-close-button:hover,
+.overlay-page .timer-only-top-control-row .overlay-quick-actions > .overlay-close-button:focus-visible {
+  border-color: rgba(255, 94, 82, 0.88) !important;
+  background:
+    radial-gradient(circle at 50% 22%, rgba(255, 112, 98, 0.32), transparent 58%),
+    linear-gradient(180deg, rgba(120, 38, 35, 0.52), rgba(58, 20, 20, 0.48)) !important;
+  color: #fff0ec !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 214, 205, 0.12),
+    0 0 0 1px rgba(255, 94, 82, 0.18),
+    0 0 14px rgba(255, 74, 58, 0.24) !important;
+}
+
+.overlay-page .overlay-close-button:hover .overlay-icon-glyph-close,
+.overlay-page .overlay-close-button:focus-visible .overlay-icon-glyph-close {
+  color: #fff0ec !important;
+}
+
+
+
+
+/* === Support page refresh: QR inside Alfa-Bank block + DonationAlerts === */
+.support-card-updated {
+  gap: 18px;
+}
+
+.support-copy-intro {
+  display: grid;
+  gap: 8px;
+}
+
+.support-main-title {
+  margin: 0;
+  color: #f4efe4;
+  font-size: clamp(26px, 2.4vw, 38px);
+  line-height: 1.1;
+}
+
+.support-method-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+  gap: 12px;
+  align-items: start;
+}
+
+.support-method-card {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 206, 121, 0.22);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.025), rgba(0, 0, 0, 0.12));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+}
+
+.support-method-card-alfa {
+  align-content: start;
+}
+
+.support-method-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.support-method-icon {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 206, 121, 0.3);
+  background: rgba(0, 0, 0, 0.18);
+  overflow: hidden;
+}
+
+.support-method-icon-image {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+}
+
+.support-method-icon-image-alfa {
+  width: 25px;
+  height: 25px;
+}
+
+.support-method-icon-image-da {
+  width: 28px;
+  height: 28px;
+}
+
+.support-method-kicker {
+  margin: 0 0 2px;
+  font-size: 10px;
+}
+
+.support-method-header h4 {
+  margin: 0;
+  color: #f4efe4;
+  font-size: 16px;
+}
+
+.support-method-card .helper-text {
+  margin: 0;
+}
+
+.support-method-qr-box {
+  display: grid;
+  gap: 12px;
+  justify-items: center;
+  padding: 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.support-method-qr-copy {
+  width: 100%;
+  display: grid;
+  gap: 3px;
+}
+
+.support-method-qr-copy strong {
+  color: #f1b96a;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.support-method-qr-copy span {
+  color: #aeb8c4;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.support-method-qr-image {
+  width: min(100%, 230px);
+  max-width: 230px;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+  border-radius: 16px;
+  background: #ffffff;
+  padding: 10px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.25);
+}
+
+.support-inline-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.support-inline-box span {
+  font-weight: 700;
+}
+
+.support-method-action {
+  justify-self: start;
+}
+
+.support-supporters-note {
+  display: grid;
+  gap: 8px;
+}
+
+.support-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.support-tags span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.025);
+  color: #eef3f8;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .support-method-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .support-method-qr-box {
+    justify-items: start;
+  }
+}
+
+
+/* === Overlay button intent highlights: soft action-colored hover/focus in every overlay mode === */
+.overlay-page button.overlay-icon-button,
+.overlay-page button.overlay-timer-control,
+.overlay-page button.timer-only-expand-button,
+.overlay-page button.timer-only-collapse-button,
+.overlay-page button.compact-mode-button,
+.overlay-page button.overlay-onboarding-button {
+  transition:
+    border-color 140ms ease,
+    background 140ms ease,
+    color 140ms ease,
+    box-shadow 140ms ease,
+    transform 140ms ease,
+    filter 140ms ease !important;
+}
+
+.overlay-page button.overlay-icon-button:hover,
+.overlay-page button.overlay-icon-button:focus-visible,
+.overlay-page button.overlay-timer-control:hover:not(:disabled),
+.overlay-page button.overlay-timer-control:focus-visible:not(:disabled),
+.overlay-page button.timer-only-expand-button:hover,
+.overlay-page button.timer-only-expand-button:focus-visible,
+.overlay-page button.timer-only-collapse-button:hover,
+.overlay-page button.timer-only-collapse-button:focus-visible,
+.overlay-page button.compact-mode-button:hover,
+.overlay-page button.compact-mode-button:focus-visible,
+.overlay-page button.overlay-onboarding-button:hover,
+.overlay-page button.overlay-onboarding-button:focus-visible {
+  transform: translateY(-1px) !important;
+  filter: saturate(1.06) brightness(1.04) !important;
+}
+
+/* Pin / unpin movement: warm gold, because it changes overlay interaction state. */
+.overlay-page .overlay-lock-icon-button:hover,
+.overlay-page .overlay-lock-icon-button:focus-visible,
+.overlay-page .timer-only-top-control-row .overlay-lock-icon-button:hover,
+.overlay-page .timer-only-top-control-row .overlay-lock-icon-button:focus-visible {
+  border-color: rgba(241, 185, 106, 0.72) !important;
+  background:
+    radial-gradient(circle at 50% 22%, rgba(255, 224, 151, 0.26), transparent 58%),
+    linear-gradient(180deg, rgba(114, 79, 32, 0.42), rgba(42, 32, 21, 0.34)) !important;
+  color: #ffe6ae !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 232, 174, 0.12),
+    0 0 0 1px rgba(241, 185, 106, 0.16),
+    0 0 14px rgba(241, 185, 106, 0.22) !important;
+}
+
+/* Detailed panel/menu: calm blue, reads as “open more information”. */
+.overlay-page .overlay-icon-button:has(.overlay-icon-glyph-menu):hover,
+.overlay-page .overlay-icon-button:has(.overlay-icon-glyph-menu):focus-visible,
+.overlay-page .timer-only-top-control-row .overlay-icon-button:has(.overlay-icon-glyph-menu):hover,
+.overlay-page .timer-only-top-control-row .overlay-icon-button:has(.overlay-icon-glyph-menu):focus-visible {
+  border-color: rgba(112, 190, 255, 0.70) !important;
+  background:
+    radial-gradient(circle at 50% 22%, rgba(124, 205, 255, 0.24), transparent 58%),
+    linear-gradient(180deg, rgba(35, 79, 115, 0.42), rgba(18, 38, 58, 0.34)) !important;
+  color: #d9f1ff !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(201, 235, 255, 0.11),
+    0 0 0 1px rgba(112, 190, 255, 0.14),
+    0 0 14px rgba(82, 170, 255, 0.20) !important;
+}
+
+/* Settings: amber utility glow. */
+.overlay-page .overlay-icon-button:has(.overlay-icon-glyph-settings):hover,
+.overlay-page .overlay-icon-button:has(.overlay-icon-glyph-settings):focus-visible,
+.overlay-page .timer-only-top-control-row .overlay-icon-button:has(.overlay-icon-glyph-settings):hover,
+.overlay-page .timer-only-top-control-row .overlay-icon-button:has(.overlay-icon-glyph-settings):focus-visible {
+  border-color: rgba(255, 204, 112, 0.72) !important;
+  background:
+    radial-gradient(circle at 50% 22%, rgba(255, 226, 151, 0.25), transparent 58%),
+    linear-gradient(180deg, rgba(112, 76, 31, 0.42), rgba(44, 31, 18, 0.34)) !important;
+  color: #ffe2a3 !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 232, 174, 0.12),
+    0 0 0 1px rgba(255, 204, 112, 0.15),
+    0 0 14px rgba(241, 185, 106, 0.20) !important;
+}
+
+/* Close app: red danger glow everywhere, including timer-only. */
+.overlay-page .overlay-close-button:hover,
+.overlay-page .overlay-close-button:focus-visible,
+.overlay-page .overlay-quick-actions > .overlay-close-button:hover,
+.overlay-page .overlay-quick-actions > .overlay-close-button:focus-visible,
+.overlay-page .timer-only-top-control-row .overlay-quick-actions > .overlay-close-button:hover,
+.overlay-page .timer-only-top-control-row .overlay-quick-actions > .overlay-close-button:focus-visible {
+  border-color: rgba(255, 94, 82, 0.90) !important;
+  background:
+    radial-gradient(circle at 50% 22%, rgba(255, 112, 98, 0.34), transparent 58%),
+    linear-gradient(180deg, rgba(124, 39, 35, 0.54), rgba(58, 20, 20, 0.48)) !important;
+  color: #fff0ec !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 214, 205, 0.13),
+    0 0 0 1px rgba(255, 94, 82, 0.20),
+    0 0 16px rgba(255, 74, 58, 0.26) !important;
+}
+
+/* Start / continue: green action glow. */
+.overlay-page .overlay-timer-control-start:hover:not(:disabled),
+.overlay-page .overlay-timer-control-start:focus-visible:not(:disabled),
+.overlay-page:not(.overlay-page-timer-only) .overlay-timer-control-start:hover:not(:disabled),
+.overlay-page:not(.overlay-page-timer-only) .overlay-timer-control-start:focus-visible:not(:disabled),
+.overlay-page .timer-only-controls-row .overlay-timer-control-start:hover:not(:disabled),
+.overlay-page .timer-only-controls-row .overlay-timer-control-start:focus-visible:not(:disabled) {
+  border-color: rgba(125, 236, 162, 0.78) !important;
+  background:
+    radial-gradient(circle at 50% 22%, rgba(169, 255, 195, 0.34), transparent 58%),
+    linear-gradient(180deg, rgba(55, 151, 89, 0.44), rgba(24, 84, 52, 0.34)) !important;
+  color: #f0fff4 !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(205, 255, 220, 0.13),
+    0 0 0 1px rgba(125, 236, 162, 0.18),
+    0 0 16px rgba(84, 190, 112, 0.26) !important;
+}
+
+/* Pause: amber warning/action glow. */
+.overlay-page .overlay-timer-control-pause:hover:not(:disabled),
+.overlay-page .overlay-timer-control-pause:focus-visible:not(:disabled),
+.overlay-page:not(.overlay-page-timer-only) .overlay-timer-control-pause:hover:not(:disabled),
+.overlay-page:not(.overlay-page-timer-only) .overlay-timer-control-pause:focus-visible:not(:disabled),
+.overlay-page .timer-only-controls-row .overlay-timer-control-pause:hover:not(:disabled),
+.overlay-page .timer-only-controls-row .overlay-timer-control-pause:focus-visible:not(:disabled) {
+  border-color: rgba(255, 219, 128, 0.84) !important;
+  background:
+    radial-gradient(circle at 50% 22%, rgba(255, 236, 179, 0.36), transparent 58%),
+    linear-gradient(180deg, rgba(161, 106, 37, 0.46), rgba(92, 62, 24, 0.36)) !important;
+  color: #fff3cc !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 239, 192, 0.14),
+    0 0 0 1px rgba(255, 219, 128, 0.18),
+    0 0 16px rgba(241, 185, 106, 0.26) !important;
+}
+
+/* Reset: red/orange destructive glow. */
+.overlay-page .overlay-timer-control-reset:hover:not(:disabled),
+.overlay-page .overlay-timer-control-reset:focus-visible:not(:disabled),
+.overlay-page:not(.overlay-page-timer-only) .overlay-timer-control-reset:hover:not(:disabled),
+.overlay-page:not(.overlay-page-timer-only) .overlay-timer-control-reset:focus-visible:not(:disabled),
+.overlay-page .timer-only-controls-row .overlay-timer-control-reset:hover:not(:disabled),
+.overlay-page .timer-only-controls-row .overlay-timer-control-reset:focus-visible:not(:disabled) {
+  border-color: rgba(255, 136, 112, 0.78) !important;
+  background:
+    radial-gradient(circle at 50% 22%, rgba(255, 164, 146, 0.32), transparent 58%),
+    linear-gradient(180deg, rgba(149, 53, 46, 0.44), rgba(86, 31, 28, 0.34)) !important;
+  color: #ffe5df !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 215, 207, 0.12),
+    0 0 0 1px rgba(255, 136, 112, 0.16),
+    0 0 16px rgba(255, 93, 73, 0.22) !important;
+}
+
+/* Compact / expand view: blue UI mode glow. */
+.overlay-page .compact-mode-button:hover,
+.overlay-page .compact-mode-button:focus-visible,
+.overlay-page .timer-only-expand-button:hover,
+.overlay-page .timer-only-expand-button:focus-visible {
+  border-color: rgba(112, 190, 255, 0.70) !important;
+  background:
+    radial-gradient(circle at 50% 22%, rgba(124, 205, 255, 0.22), transparent 58%),
+    linear-gradient(180deg, rgba(35, 79, 115, 0.38), rgba(18, 38, 58, 0.30)) !important;
+  color: #e0f4ff !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(201, 235, 255, 0.11),
+    0 0 0 1px rgba(112, 190, 255, 0.14),
+    0 0 14px rgba(82, 170, 255, 0.20) !important;
+}
+
+/* Timer-only mode toggle: violet-blue “mode switch” glow. */
+.overlay-page .timer-only-collapse-button:not(.compact-mode-button):hover,
+.overlay-page .timer-only-collapse-button:not(.compact-mode-button):focus-visible {
+  border-color: rgba(164, 139, 255, 0.68) !important;
+  background:
+    radial-gradient(circle at 50% 22%, rgba(175, 150, 255, 0.22), transparent 58%),
+    linear-gradient(180deg, rgba(65, 50, 116, 0.38), rgba(35, 29, 64, 0.30)) !important;
+  color: #eee8ff !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(225, 215, 255, 0.10),
+    0 0 0 1px rgba(164, 139, 255, 0.14),
+    0 0 14px rgba(132, 110, 255, 0.18) !important;
+}
+
+/* Onboarding/settings CTA: same blue utility language as details. */
+.overlay-page .overlay-onboarding-button:hover,
+.overlay-page .overlay-onboarding-button:focus-visible {
+  border-color: rgba(112, 190, 255, 0.72) !important;
+  background:
+    radial-gradient(circle at 50% 22%, rgba(124, 205, 255, 0.22), transparent 58%),
+    linear-gradient(180deg, rgba(35, 79, 115, 0.38), rgba(18, 38, 58, 0.30)) !important;
+  color: #e0f4ff !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(201, 235, 255, 0.11),
+    0 0 0 1px rgba(112, 190, 255, 0.14),
+    0 0 14px rgba(82, 170, 255, 0.20) !important;
+}
+
+/* Resize affordance: soft gold, because it adjusts the overlay frame. */
+.overlay-page .resize-grip:hover:not(.is-disabled) {
+  border-color: rgba(241, 185, 106, 0.76) !important;
+  box-shadow:
+    0 0 0 1px rgba(241, 185, 106, 0.16),
+    0 0 14px rgba(241, 185, 106, 0.22) !important;
+}
+
+
+/* === Compact header act pill fix: keep АКТ chip centered around text === */
+.overlay-page.density-compact:not(.overlay-page-timer-only) .hud-header .hud-zone-kicker-row {
+  display: flex !important;
+  align-items: flex-start !important;
+  min-height: 22px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.overlay-page.density-compact:not(.overlay-page-timer-only) .hud-header .hud-zone-act-pill {
+  box-sizing: border-box !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: fit-content !important;
+  min-width: 0 !important;
+  height: 18px !important;
+  min-height: 18px !important;
+  padding: 0 7px !important;
+  line-height: 18px !important;
+  vertical-align: top !important;
+  transform: none !important;
+}
+
+.overlay-page.density-compact:not(.overlay-page-timer-only) .hud-header .hud-title-row h1.hud-zone-name {
+  clear: both;
+}
+
+
+/* === Compact act pill: match the normal overlay chip exactly === */
+.overlay-page.density-compact:not(.overlay-page-timer-only) .hud-header .hud-zone-kicker-row {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 5px !important;
+  min-height: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.overlay-page.density-compact:not(.overlay-page-timer-only) .hud-header .hud-zone-act-pill {
+  box-sizing: border-box !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  height: auto !important;
+  min-height: 19px !important;
+  padding: 3px 7px !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(231, 184, 109, 0.24) !important;
+  background: rgba(231, 184, 109, 0.095) !important;
+  color: #ffdca0 !important;
+  font-size: 9px !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  white-space: nowrap !important;
+  vertical-align: middle !important;
+  transform: none !important;
+}
+
+.overlay-page.density-compact:not(.overlay-page-timer-only) .hud-header .hud-title-row h1.hud-zone-name {
+  clear: none !important;
+}
+
+
+/* === Compact header narrow-width fix: keep ACT chip identical to main and never squeeze it === */
+.overlay-page.density-compact:not(.overlay-page-timer-only) .hud-header .hud-title-row {
+  position: relative !important;
+  display: block !important;
+  min-height: 72px !important;
+  padding-right: 0 !important;
+}
+
+.overlay-page.density-compact:not(.overlay-page-timer-only) .hud-header .hud-zone-title-card {
+  width: 100% !important;
+  max-width: none !important;
+  padding-right: 0 !important;
+  overflow: visible !important;
+  display: grid !important;
+  gap: 9px !important;
+}
+
+.overlay-page.density-compact:not(.overlay-page-timer-only) .hud-header .hud-zone-kicker-row {
+  width: auto !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  overflow: visible !important;
+}
+
+.overlay-page.density-compact:not(.overlay-page-timer-only) .hud-header .hud-zone-act-pill {
+  flex: 0 0 auto !important;
+  width: max-content !important;
+  max-width: none !important;
+  min-width: max-content !important;
+  min-height: 19px !important;
+  padding: 3px 7px !important;
+  border-radius: 999px !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+}
+
+.overlay-page.density-compact:not(.overlay-page-timer-only) .hud-header .hud-title-actions {
+  position: absolute !important;
+  top: 0 !important;
+  right: 0 !important;
+  z-index: 3 !important;
+}
+
+.overlay-page.density-compact:not(.overlay-page-timer-only) .hud-header .hud-title-row h1.hud-zone-name {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-top: 0 !important;
+  padding-right: 0 !important;
+  clear: both !important;
+  word-break: normal !important;
+  overflow-wrap: normal !important;
+  hyphens: none !important;
+}
+

@@ -1,27 +1,14 @@
 import {
-  memo,
   useCallback,
   useEffect,
   useRef,
   type MouseEvent as ReactMouseEvent,
   type PointerEvent as ReactPointerEvent
 } from 'react';
-import {
-  useAppSnapshot,
-  useLiveRunTimerText,
-  useRunTimerState,
-  type LiveRunTimerState
-} from '../hooks';
+import { useAppSnapshot, useRunTimerState } from '../hooks';
 import { useDocumentTitle, useI18n } from '../useI18n';
-import {
-  getCurrentActElapsedMs,
-  getCurrentActElapsedMsForAct,
-  getNearestPowerSpike,
-  getRunElapsedMs,
-  getSceneDisplayName,
-  getXpStatus
-} from '../companion-helpers';
-import { formatDuration, getLevelState } from '../utils';
+import { getSceneDisplayName } from '../companion-helpers';
+import { getLevelState } from '../utils';
 import { getOverlayMinimumSize } from '../../shared/overlay-layout';
 import { shouldStartOverlayDrag } from '../../shared/overlay-drag';
 import {
@@ -31,700 +18,34 @@ import {
   stopOverlayControlPropagation,
   toggleOverlayMovementLock
 } from '../overlay-lock';
-import leagueMechanicRewardsData from '../../data/league-mechanic-rewards.json';
-import { getCampaignBonusView, getGuideView, getLevelReminderView, getPowerSpikeView } from '../../i18n/data';
+import { LiveActTimeText, LiveRunTimeText, LiveTimerMeta } from '../overlay/OverlayTimerText';
+import {
+  formatActTitle,
+  formatHotkeyLabel,
+  formatTimerOnlyRunStatus,
+  getChecklistItemTone,
+  getCurrentZoneCampaignBonuses,
+  getCurrentZoneLeagueReward,
+  getImportantOverlayLines,
+  getOverlaySpeedrunLines,
+  getOverlayUpcomingReminders
+} from '../overlay/overlay-page-model';
+import { getCampaignBonusView, getGuideView } from '../../i18n/data';
 import { translateSystemText } from '../../i18n/runtime';
 import { translate } from '../../i18n/translations';
-import type {
-  AppLanguage,
-  CampaignBonusDefinition,
-  GuideEntry,
-  GuideProfile,
-  LevelReminder,
-  PowerSpike,
-  RunTimerSettings,
-  RunTimerState,
-  ZoneAct
-} from '../../shared/types';
-
-function formatActTitle(act: ZoneAct | null, language: AppLanguage): string {
-  if (act === null) {
-    return translate(language, 'overlay.currentZoneFallback');
-  }
-
-  return act === 'interlude'
-    ? translate(language, 'route.interludes')
-    : translate(language, 'route.act', { act });
-}
-
-function formatHotkeyLabel(value: string | null | undefined, fallback: string): string {
-  const label = (value ?? fallback).trim();
-  return label.length > 0 ? label : fallback;
-}
-
-function getTimerLeadText(
-  language: AppLanguage,
-  runTimer: RunTimerState,
-  now: number,
-  countdownMs: number | null,
-  actElapsedMs: number | null,
-  currentActLabel: string | null,
-  currentLevel: number | null,
-  recommendedLabel: string,
-  statusLabel: string
-): string {
-  if (runTimer.status === 'armed' && countdownMs !== null) {
-    return translate(language, 'overlay.timerStartIn', {
-      duration: formatDuration(countdownMs)
-    });
-  }
-
-  const total = formatDuration(getRunElapsedMs(runTimer, now));
-  const actPart = actElapsedMs === null
-    ? ''
-    : ` · ${currentActLabel ?? translate(language, 'route.interludes')} ${formatDuration(actElapsedMs)}`;
-  const levelPart = `${translate(language, 'common.level')} ${currentLevel ?? '?'} · ${translate(language, 'common.recommended')}: ${recommendedLabel} · ${statusLabel}`;
-
-  if (runTimer.status === 'paused') {
-    return translate(language, 'overlay.timerPaused', {
-      total,
-      actPart,
-      levelPart
-    });
-  }
-
-  if (runTimer.status === 'finished') {
-    return translate(language, 'overlay.timerFinished', {
-      total,
-      actPart,
-      levelPart
-    });
-  }
-
-  if (runTimer.status === 'running') {
-    return translate(language, 'overlay.timerRunning', {
-      total,
-      actPart,
-      levelPart
-    });
-  }
-
-  return translate(language, 'overlay.timerIdle', {
-    levelPart
-  });
-}
-
-function formatTimerOnlyRunStatus(
-  runTimer: RunTimerState,
-  language: AppLanguage
-): string {
-  if (runTimer.status === 'armed') {
-    return translate(language, 'overlay.timerOnlyArmed');
-  }
-
-  if (runTimer.status === 'paused') {
-    return translate(language, 'overlay.timerOnlyPaused');
-  }
-
-  if (runTimer.status === 'finished') {
-    return translate(language, 'overlay.timerOnlyFinished');
-  }
-
-  if (runTimer.status === 'running') {
-    return translate(language, 'overlay.timerOnlyRunning');
-  }
-
-  return translate(language, 'overlay.timerOnlyReady');
-}
-
-interface OverlayUpcomingReminder {
-  id: string;
-  level: number;
-  title: string;
-  items: string[];
-  source: 'vendor' | 'power';
-}
-
-interface LeagueMechanicRewardEntry {
-  id: string;
-  section: string;
-  actLabel: string;
-  zone_en: string;
-  zone_ru: string;
-  guideZoneId: string | null;
-  guideZoneRu: string | null;
-  aliases_ru?: string[];
-  reward_en: string;
-  reward_ru: string;
-  rewardType: string;
-  hasReward: boolean;
-  displayInOverlay: boolean;
-  oneTimeGuaranteed: boolean;
-  duplicateInCurrentGuide: boolean;
-  uncertain?: boolean;
-}
-
-const LEAGUE_MECHANIC_REWARDS = (
-  leagueMechanicRewardsData as { rewards?: LeagueMechanicRewardEntry[] }
-).rewards ?? [];
-
-function supportsActiveProfile(entry: PowerSpike, activeProfile: GuideProfile): boolean {
-  return !entry.profiles || entry.profiles.length === 0 || entry.profiles.includes(activeProfile);
-}
-
-function getOverlayUpcomingReminders(
-  snapshot: NonNullable<ReturnType<typeof useAppSnapshot>>,
-  language: AppLanguage,
-  maxDelta = 2
-): OverlayUpcomingReminder[] {
-  const currentLevel = snapshot.config.currentLevel;
-
-  if (currentLevel === null) {
-    return [];
-  }
-
-  const vendorReminders: OverlayUpcomingReminder[] = snapshot.vendorCheckpoints.map(
-    (entry: LevelReminder) => ({
-      id: `vendor-${entry.id}`,
-      level: entry.level,
-      title: getLevelReminderView(entry, language)?.displayTitle ?? entry.title,
-      items: getLevelReminderView(entry, language)?.displayItems ?? entry.items,
-      source: 'vendor'
-    })
-  );
-
-  const powerSpikes: OverlayUpcomingReminder[] = snapshot.powerSpikes
-    .filter((entry) => supportsActiveProfile(entry, snapshot.config.guideProfile))
-    .map((entry) => ({
-      id: `power-${entry.id}`,
-      level: entry.level,
-      title: getPowerSpikeView(entry, language)?.displayTitle ?? entry.title,
-      items: getPowerSpikeView(entry, language)?.displayItems ?? entry.items,
-      source: 'power' as const
-    }));
-
-  const seen = new Set<string>();
-
-  return [...vendorReminders, ...powerSpikes]
-    .filter((entry) => entry.level >= currentLevel && entry.level <= currentLevel + maxDelta)
-    .sort((left, right) => {
-      if (left.level !== right.level) {
-        return left.level - right.level;
-      }
-
-      if (left.source !== right.source) {
-        return left.source === 'vendor' ? -1 : 1;
-      }
-
-      return left.title.localeCompare(right.title, language === 'en' ? 'en' : 'ru');
-    })
-    .filter((entry) => {
-      const key = `${entry.level}-${entry.title.toLocaleLowerCase(language === 'en' ? 'en' : 'ru')}`;
-      if (seen.has(key)) {
-        return false;
-      }
-
-      seen.add(key);
-      return true;
-    })
-    .slice(0, 4);
-}
-
-function getImportantOverlayLines(
-  snapshot: NonNullable<ReturnType<typeof useAppSnapshot>>,
-  language: AppLanguage
-) {
-  const guide = snapshot.currentGuideEntry;
-  if (!guide) {
-    return [];
-  }
-
-  const guideView = getGuideView(guide, language);
-  const nearestPowerSpike = getNearestPowerSpike(
-    snapshot.powerSpikes,
-    snapshot.config.currentLevel,
-    snapshot.config.guideProfile
-  );
-  const powerSpikeView = getPowerSpikeView(nearestPowerSpike, language);
-  const xpStatus = getXpStatus(snapshot, language);
-  const lines: string[] = [];
-
-  if (snapshot.config.mainOverlaySettings.showOverlayCriticalImportant) {
-    lines.push(...(guideView?.important ?? []));
-  }
-
-  if (snapshot.config.mainOverlaySettings.showOverlayBossTip) {
-    lines.push(...(guideView?.bossTips ?? []));
-  }
-
-  if (
-    snapshot.config.mainOverlaySettings.showOverlayXpStatus &&
-    (xpStatus.variant === 'low' || xpStatus.variant === 'farm')
-  ) {
-    lines.push(xpStatus.longLabel);
-  }
-
-  if (snapshot.config.mainOverlaySettings.showOverlayPowerSpike && nearestPowerSpike) {
-    lines.push(
-      translate(language, 'overlay.powerSpike', {
-        level: nearestPowerSpike.level,
-        title: powerSpikeView?.displayTitle ?? nearestPowerSpike.title
-      })
-    );
-  }
-
-  return [...new Set(lines.filter(Boolean))].slice(0, 2);
-}
-
-function normalizeZoneBonusName(value: string | null | undefined): string {
-  return (value ?? '')
-    .toLowerCase()
-    .replace(/ё/g, 'е')
-    .replace(/[’']/g, '')
-    .replace(/\s+/g, ' ')
-    .trim();
-}
-
-function normalizeLeagueZoneName(value: string | null | undefined): string {
-  return (value ?? '')
-    .toLowerCase()
-    .replace(/ё/g, 'е')
-    .replace(/[’'`".,:;!?()[\]{}\/\u2014\u2013-]/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim()
-    .replace(/^the\s+/, '');
-}
-
-function addLeagueZoneCandidate(candidates: Set<string>, value: string | null | undefined): void {
-  const normalized = normalizeLeagueZoneName(value);
-  if (normalized) {
-    candidates.add(normalized);
-  }
-}
-
-function getCurrentZoneLeagueReward(
-  snapshot: NonNullable<ReturnType<typeof useAppSnapshot>>,
-  sceneName: string
-): LeagueMechanicRewardEntry | null {
-  const guide = snapshot.currentGuideEntry;
-  const guideId = guide?.id ?? null;
-  const candidates = new Set<string>();
-
-  addLeagueZoneCandidate(candidates, guide?.zone_ru);
-  addLeagueZoneCandidate(candidates, guide?.zone_en);
-  addLeagueZoneCandidate(candidates, snapshot.currentZone.rawZoneName);
-  addLeagueZoneCandidate(candidates, snapshot.runtime.lastRawZoneName);
-  addLeagueZoneCandidate(candidates, snapshot.runtime.lastMatchedZoneRu);
-  addLeagueZoneCandidate(candidates, snapshot.runtime.lastMatchedZoneEn);
-  addLeagueZoneCandidate(candidates, sceneName);
-
-  return (
-    LEAGUE_MECHANIC_REWARDS.find((reward) => {
-      if (!reward.displayInOverlay || !reward.hasReward || reward.duplicateInCurrentGuide) {
-        return false;
-      }
-
-      if (guideId && reward.guideZoneId === guideId) {
-        return true;
-      }
-
-      const rewardNames = [
-        reward.zone_ru,
-        reward.zone_en,
-        reward.guideZoneRu,
-        ...(reward.aliases_ru ?? [])
-      ];
-
-      return rewardNames.some((name) => candidates.has(normalizeLeagueZoneName(name)));
-    }) ?? null
-  );
-}
-
-function getGuideCampaignBonusIds(guide: GuideEntry | null): Set<string> {
-  const guideWithBonuses = guide as (GuideEntry & {
-    campaign_bonus_ids?: string[];
-    campaignBonusIds?: string[];
-  }) | null;
-
-  const ids = [
-    ...(Array.isArray(guideWithBonuses?.campaign_bonus_ids) ? guideWithBonuses.campaign_bonus_ids : []),
-    ...(Array.isArray(guideWithBonuses?.campaignBonusIds) ? guideWithBonuses.campaignBonusIds : [])
-  ];
-
-  return new Set(ids.map((id) => String(id ?? '').trim()).filter(Boolean));
-}
-function isKhariCrossingGuide(guide: GuideEntry | null, rawZoneName: string | null | undefined): boolean {
-  const guideId = normalizeZoneBonusName(guide?.id);
-  const zoneRu = normalizeZoneBonusName(guide?.zone_ru);
-  const zoneEn = normalizeZoneBonusName(guide?.zone_en);
-  const raw = normalizeZoneBonusName(rawZoneName);
-
-  return (
-    guideId === 'interlude_khari_crossing' ||
-    zoneRu === 'кхарийский перевал' ||
-    zoneEn === 'the khari crossing' ||
-    raw === 'кхарийский перевал' ||
-    raw === 'the khari crossing'
-  );
-}
-
-function isGalaiGatesGuide(guide: GuideEntry | null, rawZoneName: string | null | undefined): boolean {
-  const guideId = normalizeZoneBonusName(guide?.id);
-  const zoneRu = normalizeZoneBonusName(guide?.zone_ru);
-  const zoneEn = normalizeZoneBonusName(guide?.zone_en);
-  const raw = normalizeZoneBonusName(rawZoneName);
-
-  return (
-    guideId === 'interlude_golye_gates' ||
-    zoneRu === 'ворота галаи' ||
-    zoneRu === 'врата голай' ||
-    zoneEn === 'the galai gates' ||
-    zoneEn === 'golye gates' ||
-    raw === 'ворота галаи' ||
-    raw === 'врата голай' ||
-    raw === 'the galai gates' ||
-    raw === 'golye gates'
-  );
-}
-
-function isKhariCrossingCampaignBonus(bonus: CampaignBonusDefinition): boolean {
-  const id = normalizeZoneBonusName(bonus.id);
-  const zoneId = normalizeZoneBonusName(bonus.zoneId);
-  const zoneRu = normalizeZoneBonusName(bonus.zone_ru);
-  const title = normalizeZoneBonusName(bonus.title);
-  const source = normalizeZoneBonusName(bonus.source);
-  const details = normalizeZoneBonusName((bonus.details ?? []).join(' '));
-
-  if (zoneId === 'interlude_khari_crossing' || zoneRu === 'кхарийский перевал') {
-    return true;
-  }
-
-  const isLifeBonus = title.includes('+5') && title.includes('здоров');
-  const isWeaponBonus = title.includes('+2') && title.includes('пассив') && title.includes('оруж');
-  const mentionsKhariSource =
-    source.includes('кхарийский перевал') ||
-    details.includes('расплавленн') ||
-    details.includes('актхи') ||
-    details.includes('анундр') ||
-    details.includes('рису');
-
-  return (
-    id.includes('khari_crossing') ||
-    (id.includes('golye_gates') && (isLifeBonus || isWeaponBonus) && mentionsKhariSource) ||
-    ((isLifeBonus || isWeaponBonus) && mentionsKhariSource)
-  );
-}
-
-function getCurrentZoneCampaignBonuses(snapshot: NonNullable<ReturnType<typeof useAppSnapshot>>) {
-  const guide = snapshot.currentGuideEntry;
-  const rawZoneName = snapshot.currentZone.rawZoneName;
-  const guideId = guide?.id ?? null;
-  const explicitBonusIds = getGuideCampaignBonusIds(guide);
-  const progress = snapshot.config.campaignBonusProgress ?? {};
-  const isKhariCrossing = isKhariCrossingGuide(guide, rawZoneName);
-  const isGalaiGates = isGalaiGatesGuide(guide, rawZoneName);
-  const zoneNames = guideId
-    ? new Set<string>()
-    : new Set([normalizeZoneBonusName(guide?.zone_ru), normalizeZoneBonusName(rawZoneName)].filter(Boolean));
-
-  const matchedBonuses = snapshot.campaignBonuses.filter((bonus) => {
-    const isKhariBonus = isKhariCrossingCampaignBonus(bonus);
-
-    // The Galai Gates / Ворота Галаи do not own the Khari Crossing campaign bonuses.
-    if (isGalaiGates && isKhariBonus) {
-      return false;
-    }
-
-    // Khari Crossing owns both +5% life and +2 weapon set passive points.
-    if (isKhariCrossing && isKhariBonus) {
-      return true;
-    }
-
-    if (guideId) {
-      return bonus.zoneId === guideId || explicitBonusIds.has(bonus.id);
-    }
-
-    return explicitBonusIds.has(bonus.id) || zoneNames.has(normalizeZoneBonusName(bonus.zone_ru));
-  });
-
-  const uniqueBonuses = Array.from(new Map(matchedBonuses.map((bonus) => [bonus.id, bonus])).values());
-
-  return uniqueBonuses
-    .map((bonus) => ({ bonus, done: Boolean(progress[bonus.id]) }))
-    .sort((left, right) => Number(left.done) - Number(right.done));
-}
-
-function getDetailLines(
-  guide: GuideEntry | null,
-  key: string,
-  language: AppLanguage
-): string[] {
-  const details = getGuideView(guide, language)?.details;
-
-  if (!details || Array.isArray(details) || typeof details !== 'object') {
-    return [];
-  }
-
-  const value = (details as Record<string, unknown>)[key];
-
-  if (!Array.isArray(value)) {
-    return [];
-  }
-
-  return value.filter((item): item is string => typeof item === 'string' && item.trim().length > 0);
-}
-
-function getOverlaySpeedrunLines(
-  guide: GuideEntry | null,
-  language: AppLanguage
-): string[] {
-  const groups: Array<[string, string]> = [
-    ['checkpoint', 'companion.detailsGroup.checkpoint'],
-    ['town_plan', 'companion.detailsGroup.town'],
-    ['navigation', 'companion.detailsGroup.navigation'],
-    ['time_saves', 'companion.detailsGroup.time_saves'],
-    ['opportunistic', 'companion.detailsGroup.opportunistic'],
-    ['xp_strategy', 'common.xpNotes'],
-    ['craft_plan', 'common.craftingTips']
-  ];
-
-  return groups
-    .flatMap(([key, labelKey]) =>
-      getDetailLines(guide, key, language)
-        .slice(0, 1)
-        .map((line) => `${translate(language, labelKey)}: ${line}`)
-    )
-    .slice(0, 3);
-}
-
-
-function getChecklistItemTone(
-  item: GuideEntry['checklist'][number]
-): string {
-  if (
-    item.type === 'reward' ||
-    item.type === 'permanent_reward' ||
-    item.type === 'passive' ||
-    item.type === 'resistance' ||
-    item.type === 'spirit' ||
-    item.type === 'life' ||
-    item.type === 'mana' ||
-    item.type === 'crafting' ||
-    item.type === 'currency'
-  ) {
-    return ' is-reward';
-  }
-
-  if (item.type === 'boss') {
-    return ' is-boss';
-  }
-
-  if (!item.required || item.type === 'route_task') {
-    return ' is-optional';
-  }
-
-  const normalized = item.text.toLocaleLowerCase('ru');
-  const isReward =
-    normalized.includes('награ') ||
-    normalized.includes('пассив') ||
-    normalized.includes('сопротив') ||
-    normalized.includes('резист') ||
-    normalized.includes('дух') ||
-    normalized.includes('spirit') ||
-    normalized.includes('gem') ||
-    normalized.includes('камень') ||
-    normalized.includes('+');
-  const isBoss =
-    normalized.includes('босс') ||
-    normalized.includes('убить') ||
-    normalized.includes('побед') ||
-    normalized.includes('trial') ||
-    normalized.includes('испытан');
-  const isSkip =
-    normalized.includes('скип') ||
-    normalized.includes('не задерж') ||
-    normalized.includes('не чист') ||
-    normalized.includes('опционально');
-
-  if (isReward) {
-    return ' is-reward';
-  }
-
-  if (isBoss) {
-    return ' is-boss';
-  }
-
-  if (isSkip) {
-    return ' is-optional';
-  }
-
-  return '';
-}
-
-interface LiveRunTimeTextProps {
-  runTimer: RunTimerState;
-  settings: RunTimerSettings | null | undefined;
-  snapshotNowMs: number | null | undefined;
-  overlayMode?: string | null;
-}
-
-const LiveRunTimeText = memo(function LiveRunTimeText({
-  runTimer,
-  settings,
-  snapshotNowMs,
-  overlayMode
-}: LiveRunTimeTextProps) {
-  const textRef = useRef<HTMLSpanElement | null>(null);
-  const formatTimerText = useCallback(
-    (liveRunTimer: LiveRunTimerState) => {
-      const liveTimer = liveRunTimer.runTimer ?? runTimer;
-      const displayMs =
-        liveTimer.status === 'armed' && liveRunTimer.countdownMs !== null
-          ? liveRunTimer.countdownMs
-          : liveRunTimer.runElapsedMs;
-
-      return formatDuration(displayMs);
-    },
-    [runTimer]
-  );
-
-  useLiveRunTimerText(
-    textRef,
-    runTimer,
-    settings,
-    snapshotNowMs,
-    formatTimerText,
-    32,
-    overlayMode ? { overlayMode } : undefined
-  );
-
-  return <span ref={textRef}>{formatTimerText({
-    nowMs: snapshotNowMs ?? Date.now(),
-    runTimer,
-    runElapsedMs: getRunElapsedMs(runTimer, snapshotNowMs ?? Date.now()),
-    countdownMs: null
-  })}</span>;
-});
-
-interface LiveActTimeTextProps {
-  runTimer: RunTimerState;
-  currentAct: number | null;
-  snapshotNowMs: number | null | undefined;
-}
-
-const LiveActTimeText = memo(function LiveActTimeText({
-  runTimer,
-  currentAct,
-  snapshotNowMs
-}: LiveActTimeTextProps) {
-  const textRef = useRef<HTMLSpanElement | null>(null);
-  const formatActText = useCallback(
-    (liveRunTimer: LiveRunTimerState) => {
-      const actElapsedMs = getCurrentActElapsedMsForAct(runTimer, currentAct, liveRunTimer.nowMs);
-      return actElapsedMs === null ? '' : formatDuration(actElapsedMs);
-    },
-    [currentAct, runTimer]
-  );
-
-  useLiveRunTimerText(textRef, runTimer, null, snapshotNowMs, formatActText, 32);
-
-  if (currentAct === null) {
-    return null;
-  }
-
-  return <span ref={textRef}>{formatActText({
-    nowMs: snapshotNowMs ?? Date.now(),
-    runTimer,
-    runElapsedMs: getRunElapsedMs(runTimer, snapshotNowMs ?? Date.now()),
-    countdownMs: null
-  })}</span>;
-});
-
-interface LiveTimerMetaProps {
-  language: AppLanguage;
-  runTimer: RunTimerState;
-  settings: RunTimerSettings | null | undefined;
-  snapshotNowMs: number | null | undefined;
-  overlayMode: string | null | undefined;
-  guide: GuideEntry | null;
-  currentAct: number | null;
-  currentActLabel: string | null;
-  currentLevel: number | null;
-  recommendedLabel: string;
-  statusLabel: string;
-}
-
-const LiveTimerMeta = memo(function LiveTimerMeta({
-  language,
-  runTimer,
-  settings,
-  snapshotNowMs,
-  overlayMode,
-  guide,
-  currentAct,
-  currentActLabel,
-  currentLevel,
-  recommendedLabel,
-  statusLabel
-}: LiveTimerMetaProps) {
-  const textRef = useRef<HTMLSpanElement | null>(null);
-  const formatMetaText = useCallback(
-    (liveRunTimer: LiveRunTimerState) => {
-      const actElapsedMs = getCurrentActElapsedMsForAct(runTimer, currentAct, liveRunTimer.nowMs);
-
-      return getTimerLeadText(
-        language,
-        runTimer,
-        liveRunTimer.nowMs,
-        liveRunTimer.countdownMs,
-        actElapsedMs,
-        currentActLabel,
-        currentLevel,
-        recommendedLabel,
-        statusLabel
-      );
-    },
-    [
-      currentAct,
-      currentActLabel,
-      currentLevel,
-      guide,
-      language,
-      recommendedLabel,
-      runTimer,
-      statusLabel
-    ]
-  );
-
-  useLiveRunTimerText(
-    textRef,
-    runTimer,
-    settings,
-    snapshotNowMs,
-    formatMetaText,
-    32,
-    { overlayMode }
-  );
-
-  return <span ref={textRef}>{formatMetaText({
-    nowMs: snapshotNowMs ?? Date.now(),
-    runTimer,
-    runElapsedMs: getRunElapsedMs(runTimer, snapshotNowMs ?? Date.now()),
-    countdownMs: null
-  })}</span>;
-});
+import type { AppLanguage } from '../../shared/types';
 
 const DEFAULT_OVERLAY_MINIMUM_SIZE = getOverlayMinimumSize('full', 'normal', 90);
 
 function getRendererViewportWidth(): number {
   return Math.round(
-    document.documentElement.clientWidth || window.innerWidth || window.outerWidth || DEFAULT_OVERLAY_MINIMUM_SIZE.width
+    document.documentElement.clientWidth || window.innerWidth || DEFAULT_OVERLAY_MINIMUM_SIZE.width
   );
 }
 
 function getRendererViewportHeight(): number {
   return Math.round(
-    document.documentElement.clientHeight || window.innerHeight || window.outerHeight || DEFAULT_OVERLAY_MINIMUM_SIZE.height
+    document.documentElement.clientHeight || window.innerHeight || DEFAULT_OVERLAY_MINIMUM_SIZE.height
   );
 }
 
@@ -738,16 +59,19 @@ export function OverlayPage() {
     frame: number | null;
   } | null>(null);
   const overlayDragStateRef = useRef<{
-    lastX: number;
-    lastY: number;
-    pendingX: number;
-    pendingY: number;
+    startMouseScreenX: number;
+    startMouseScreenY: number;
+    latestMouseScreenX: number;
+    latestMouseScreenY: number;
+    startWindowX: number | null;
+    startWindowY: number | null;
     frame: number | null;
   } | null>(null);
   const overlayMovementLockedRef = useRef(false);
   const overlayPageRef = useRef<HTMLElement | null>(null);
   const overlayShellRef = useRef<HTMLElement | null>(null);
   const autoResizeFrameRef = useRef<number | null>(null);
+  const adaptiveOverlayHeightSuspendedUntilRef = useRef(0);
   const autoResizeMinimumHeight = snapshot
     ? getOverlayMinimumSize(
         snapshot.runtime.overlayMode,
@@ -760,7 +84,29 @@ export function OverlayPage() {
     overlayMovementLockedRef.current = Boolean(snapshot?.config.overlayMovementLocked);
   }, [snapshot?.config.overlayMovementLocked]);
 
-  const scheduleAdaptiveOverlayHeight = useCallback(() => {
+  const isAdaptiveOverlayHeightSuspended = useCallback(() => (
+    Date.now() < adaptiveOverlayHeightSuspendedUntilRef.current
+  ), []);
+
+  const suspendAdaptiveOverlayHeight = useCallback((durationMs = 900) => {
+    adaptiveOverlayHeightSuspendedUntilRef.current = Math.max(
+      adaptiveOverlayHeightSuspendedUntilRef.current,
+      Date.now() + durationMs
+    );
+    void window.poe2Overlay?.setOverlayAutoResizeSuspended(true);
+  }, []);
+
+  const releaseAdaptiveOverlayHeightSuspension = useCallback((durationMs = 500) => {
+    adaptiveOverlayHeightSuspendedUntilRef.current = Math.max(
+      adaptiveOverlayHeightSuspendedUntilRef.current,
+      Date.now() + durationMs
+    );
+    void window.poe2Overlay?.setOverlayAutoResizeSuspended(false);
+  }, []);
+
+  const scheduleAdaptiveOverlayHeight = useCallback((options?: { allowDuringManualResize?: boolean }) => {
+    const allowDuringManualResize = Boolean(options?.allowDuringManualResize);
+
     if (autoResizeFrameRef.current !== null) {
       cancelAnimationFrame(autoResizeFrameRef.current);
     }
@@ -772,7 +118,14 @@ export function OverlayPage() {
       const shell = overlayShellRef.current;
       const api = window.poe2Overlay;
 
-      if (!page || !shell || !api || overlayDragStateRef.current || resizeStateRef.current) {
+      if (
+        !page ||
+        !shell ||
+        !api ||
+        overlayDragStateRef.current ||
+        isAdaptiveOverlayHeightSuspended() ||
+        (resizeStateRef.current && !allowDuringManualResize)
+      ) {
         return;
       }
 
@@ -809,12 +162,11 @@ export function OverlayPage() {
         return;
       }
 
-      // Keep width as the main-process source of truth. On high-DPI displays, renderer
-      // outerWidth can be reported in a different coordinate space and may inflate the
-      // overlay while the user is only moving it.
+      // Keep width as the main-process source of truth so adaptive height never widens
+      // the overlay while the user is only moving it.
       void api.resizeOverlayHeight(nextHeight);
     });
-  }, [autoResizeMinimumHeight]);
+  }, [autoResizeMinimumHeight, isAdaptiveOverlayHeightSuspended]);
 
   useEffect(() => {
     const page = overlayPageRef.current;
@@ -831,11 +183,12 @@ export function OverlayPage() {
     observer.observe(shell);
     observer.observe(page);
     scheduleAdaptiveOverlayHeight();
-    window.addEventListener('resize', scheduleAdaptiveOverlayHeight);
+    const handleWindowResize = () => scheduleAdaptiveOverlayHeight();
+    window.addEventListener('resize', handleWindowResize);
 
     return () => {
       observer.disconnect();
-      window.removeEventListener('resize', scheduleAdaptiveOverlayHeight);
+      window.removeEventListener('resize', handleWindowResize);
 
       if (autoResizeFrameRef.current !== null) {
         cancelAnimationFrame(autoResizeFrameRef.current);
@@ -862,7 +215,8 @@ export function OverlayPage() {
 
     if (
       overlayMovementLockedRef.current ||
-      !api?.moveOverlayBy ||
+      !api?.getOverlayBounds ||
+      !api?.setOverlayPosition ||
       !shouldStartOverlayDrag(event.target, {
         button: event.button
       })
@@ -872,6 +226,8 @@ export function OverlayPage() {
 
     event.preventDefault();
     event.stopPropagation();
+    suspendAdaptiveOverlayHeight(1200);
+    void api.setOverlayDragActive?.(true);
 
     const dragElement = event.currentTarget;
     const pointerId = event.pointerId;
@@ -883,37 +239,40 @@ export function OverlayPage() {
     }
 
     overlayDragStateRef.current = {
-      lastX: event.screenX,
-      lastY: event.screenY,
-      pendingX: 0,
-      pendingY: 0,
+      startMouseScreenX: event.screenX,
+      startMouseScreenY: event.screenY,
+      latestMouseScreenX: event.screenX,
+      latestMouseScreenY: event.screenY,
+      startWindowX: null,
+      startWindowY: null,
       frame: null
     };
 
-    const flushPendingMove = () => {
+    const flushAbsoluteMove = () => {
       const state = overlayDragStateRef.current;
-      if (!state) {
+      if (!state || state.startWindowX === null || state.startWindowY === null) {
         return;
       }
 
       state.frame = null;
-      const deltaX = state.pendingX;
-      const deltaY = state.pendingY;
-      state.pendingX = 0;
-      state.pendingY = 0;
-
-      if (deltaX !== 0 || deltaY !== 0) {
-        void api.moveOverlayBy(deltaX, deltaY);
-      }
+      const nextX = state.startWindowX + (state.latestMouseScreenX - state.startMouseScreenX);
+      const nextY = state.startWindowY + (state.latestMouseScreenY - state.startMouseScreenY);
+      suspendAdaptiveOverlayHeight(1200);
+      void api.setOverlayPosition(nextX, nextY);
     };
 
     const scheduleMove = () => {
       const state = overlayDragStateRef.current;
-      if (!state || state.frame !== null) {
+      if (
+        !state ||
+        state.frame !== null ||
+        state.startWindowX === null ||
+        state.startWindowY === null
+      ) {
         return;
       }
 
-      state.frame = window.requestAnimationFrame(flushPendingMove);
+      state.frame = window.requestAnimationFrame(flushAbsoluteMove);
     };
 
     const handlePointerMove = (moveEvent: PointerEvent) => {
@@ -925,26 +284,25 @@ export function OverlayPage() {
       moveEvent.preventDefault();
       moveEvent.stopPropagation();
 
-      const deltaX = moveEvent.screenX - state.lastX;
-      const deltaY = moveEvent.screenY - state.lastY;
-      state.lastX = moveEvent.screenX;
-      state.lastY = moveEvent.screenY;
-
-      if (deltaX === 0 && deltaY === 0) {
+      if (
+        moveEvent.screenX === state.latestMouseScreenX &&
+        moveEvent.screenY === state.latestMouseScreenY
+      ) {
         return;
       }
 
-      state.pendingX += deltaX;
-      state.pendingY += deltaY;
+      suspendAdaptiveOverlayHeight(1200);
+      state.latestMouseScreenX = moveEvent.screenX;
+      state.latestMouseScreenY = moveEvent.screenY;
       scheduleMove();
     };
 
     const stopOverlayDrag = () => {
       const state = overlayDragStateRef.current;
 
-      if (state?.frame !== null) {
+      if (state && state.frame !== null) {
         window.cancelAnimationFrame(state.frame);
-        flushPendingMove();
+        flushAbsoluteMove();
       }
 
       try {
@@ -954,6 +312,8 @@ export function OverlayPage() {
       }
 
       overlayDragStateRef.current = null;
+      void api.setOverlayDragActive?.(false);
+      releaseAdaptiveOverlayHeightSuspension(500);
       window.removeEventListener('pointermove', handlePointerMove, true);
       window.removeEventListener('pointerup', stopOverlayDrag, true);
       window.removeEventListener('pointercancel', stopOverlayDrag, true);
@@ -966,7 +326,27 @@ export function OverlayPage() {
     window.addEventListener('pointerup', stopOverlayDrag, true);
     window.addEventListener('pointercancel', stopOverlayDrag, true);
     window.addEventListener('blur', stopOverlayDrag, true);
-  }, []);
+    void api.getOverlayBounds()
+      .then((bounds) => {
+        const state = overlayDragStateRef.current;
+
+        if (!state) {
+          return;
+        }
+
+        if (!bounds) {
+          stopOverlayDrag();
+          return;
+        }
+
+        state.startWindowX = bounds.x;
+        state.startWindowY = bounds.y;
+        scheduleMove();
+      })
+      .catch(() => {
+        stopOverlayDrag();
+      });
+  }, [releaseAdaptiveOverlayHeightSuspension, suspendAdaptiveOverlayHeight]);
 
   const toggleTimerOnlyMode = useCallback(() => {
     const switchMode = async () => {
@@ -1086,14 +466,18 @@ export function OverlayPage() {
       }
 
       state.frame = requestAnimationFrame(() => {
-        void window.poe2Overlay.resizeOverlay(nextWidth, currentHeight);
-        scheduleAdaptiveOverlayHeight();
+        void window.poe2Overlay.resizeOverlay(nextWidth, currentHeight).then(() => {
+          // Manual width resize is expected to reflow text. Let the overlay grow
+          // downward to fit the new wrapped content, but keep this separate from
+          // normal window dragging where size must stay locked.
+          scheduleAdaptiveOverlayHeight({ allowDuringManualResize: true });
+        });
       });
     };
 
     const stopResize = () => {
       const state = resizeStateRef.current;
-      if (state?.frame !== null) {
+      if (state && state.frame !== null) {
         cancelAnimationFrame(state.frame);
       }
 
@@ -1101,6 +485,10 @@ export function OverlayPage() {
       window.removeEventListener('pointermove', handleMove);
       window.removeEventListener('pointerup', stopResize);
       window.removeEventListener('pointercancel', stopResize);
+
+      window.requestAnimationFrame(() => {
+        scheduleAdaptiveOverlayHeight({ allowDuringManualResize: true });
+      });
     };
 
     window.addEventListener('pointermove', handleMove);
@@ -1370,6 +758,9 @@ export function OverlayPage() {
                       runTimer={displayRunTimer}
                       currentAct={currentActTimerAct}
                       snapshotNowMs={runtime.timerNowMs}
+                      componentName="timer-only-act-time-text"
+                      overlayMode={runtime.overlayMode}
+                      zoneName={guide?.zone_ru ?? currentZone.rawZoneName ?? overlayZoneName}
                     />
                   </span>
                 </div>
@@ -1387,7 +778,10 @@ export function OverlayPage() {
                 runTimer={displayRunTimer}
                 settings={config.runTimerSettings}
                 snapshotNowMs={runtime.timerNowMs}
+                componentName="timer-only-run-time-text"
                 overlayMode={runtime.overlayMode}
+                zoneName={guide?.zone_ru ?? currentZone.rawZoneName ?? overlayZoneName}
+                act={currentActTimerAct}
               />
             </div>
             <div className="timer-only-controls-row">{timerControls}</div>
@@ -1446,8 +840,8 @@ export function OverlayPage() {
               settings={config.runTimerSettings}
               snapshotNowMs={runtime.timerNowMs}
               overlayMode={runtime.overlayMode}
+              zoneName={guide?.zone_ru ?? currentZone.rawZoneName ?? overlayZoneName}
               language={language}
-              guide={guide}
               currentAct={currentActTimerAct}
               currentActLabel={currentActTimerLabel}
               currentLevel={config.currentLevel}
@@ -1522,12 +916,12 @@ export function OverlayPage() {
             <h2>{t('overlay.zoneBonuses')}</h2>
             <ul className="section-list compact-list overlay-bonus-list">
               {zoneBonusItems.map(({ bonus, done }) => {
-                const bonusView = getCampaignBonusView(bonus, language) ?? bonus;
+                const bonusView = getCampaignBonusView(bonus, language);
 
                 return (
                   <li key={bonus.id} className={done ? 'bonus-line is-done' : 'bonus-line'}>
                     <span className="bonus-state-marker">{done ? '✓' : '○'}</span>
-                    <span>{'displayTitle' in bonusView ? bonusView.displayTitle : bonus.title}</span>
+                    <span>{bonusView?.displayTitle ?? bonus.title}</span>
                   </li>
                 );
               })}

@@ -3,7 +3,8 @@ import { access, open, stat } from 'node:fs/promises';
 import { basename, dirname } from 'node:path';
 import { StringDecoder } from 'node:string_decoder';
 import { GuideService, type ExtractedZoneMatch } from './guide-service';
-import { extractGeneratedAreaId, extractNamedZoneFromLine, normalizeText } from './log-parser';
+import { extractGeneratedAreaId, extractNamedZoneFromLine } from './log-parser';
+import { shouldKeepPendingZoneAreaId } from '../scene-classifier';
 import type {
   LogWatcherRuntimeState,
   LogWatcherStatus
@@ -21,25 +22,6 @@ interface LogWatcherCallbacks {
 
 const TAIL_BYTES = 128 * 1024;
 const POLL_INTERVAL_MS = 750;
-const PENDING_AREA_ID_HOLD_SCENES = new Set([
-  '(null)',
-  '(unknown)',
-  'null',
-  'unknown',
-  'act 1',
-  'act 2',
-  'act 3',
-  'act 4',
-  'act 5',
-  '\u0430\u043a\u0442 1',
-  '\u0430\u043a\u0442 2',
-  '\u0430\u043a\u0442 3',
-  '\u0430\u043a\u0442 4',
-  '\u0430\u043a\u0442 5',
-  'interlude',
-  '\u0438\u043d\u0442\u0435\u0440\u043b\u044e\u0434\u0438\u044f'
-]);
-
 function stripNulCharacters(input: string): string {
   return String(input ?? '').replace(/\u0000/g, '');
 }
@@ -92,7 +74,7 @@ export class LogWatcher {
   }
 
   private shouldKeepPendingAreaId(zoneName: string | null | undefined): boolean {
-    return PENDING_AREA_ID_HOLD_SCENES.has(normalizeText(String(zoneName ?? '')));
+    return shouldKeepPendingZoneAreaId(zoneName);
   }
 
   private extractZoneMatch(line: string): ExtractedZoneMatch | null {
