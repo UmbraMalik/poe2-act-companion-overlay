@@ -1,0 +1,704 @@
+/* 0.2.x UI polish, companion actions, settings/support polish. Extracted from styles.css preserving cascade order. */
+/* Companion header actions: Info / Community / Support / Settings / Report / Close */
+.companion-page .settings-header .companion-header-actions {
+  max-width: 920px;
+}
+
+.companion-page .companion-header-actions button {
+  min-width: 128px;
+}
+
+.compact-helper-text {
+  margin: 6px 0 0;
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+/* 0.2.5 UI polish: cleaner game-overlay look, no guide/mapping logic changes. */
+.overlay-page:not(.overlay-page-timer-only) {
+  padding: 5px;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .window-drag-strip {
+  height: 14px;
+  padding: 0 9px;
+  font-size: 8.5px;
+  line-height: 14px;
+  letter-spacing: 0.18em;
+  color: rgba(236, 218, 184, 0.42);
+}
+
+.overlay-page:not(.overlay-page-timer-only) .overlay-shell {
+  border-radius: 20px;
+  border-color: rgba(231, 184, 109, 0.30);
+  background:
+    radial-gradient(circle at 100% 0%, rgba(239, 180, 93, 0.15), transparent 34%),
+    radial-gradient(circle at 0% 100%, rgba(112, 146, 188, 0.08), transparent 38%),
+    linear-gradient(180deg, rgba(17, 20, 25, 0.945), rgba(7, 10, 14, 0.935));
+  box-shadow:
+    0 18px 44px rgba(0, 0, 0, 0.42),
+    inset 0 1px 0 rgba(255, 236, 194, 0.07),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.025);
+}
+
+.overlay-page:not(.overlay-page-timer-only) .overlay-hud {
+  gap: calc(var(--space-section) + 1px);
+  padding: calc(var(--space-page) - 1px);
+  padding-bottom: calc(var(--space-page) + 18px);
+  scrollbar-color: rgba(230, 178, 102, 0.36) rgba(0, 0, 0, 0.12);
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-header {
+  display: grid;
+  gap: 7px;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-zone-title-card {
+  min-width: 0;
+  display: grid;
+  gap: 5px;
+  padding: 9px 10px 10px;
+  border-radius: 16px;
+  border: 1px solid rgba(231, 184, 109, 0.20);
+  background:
+    linear-gradient(180deg, rgba(255, 235, 196, 0.055), rgba(255, 255, 255, 0.018)),
+    rgba(0, 0, 0, 0.16);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.12);
+}
+
+.hud-zone-kicker-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+}
+
+.hud-zone-act-pill,
+.hud-zone-level-pill {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  min-height: 19px;
+  padding: 3px 7px;
+  border-radius: 999px;
+  border: 1px solid rgba(231, 184, 109, 0.24);
+  background: rgba(231, 184, 109, 0.095);
+  color: #ffdca0;
+  font-size: 9px;
+  font-weight: 950;
+  line-height: 1;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.hud-zone-level-pill {
+  border-color: rgba(150, 170, 190, 0.20);
+  background: rgba(255, 255, 255, 0.045);
+  color: rgba(229, 236, 244, 0.76);
+  letter-spacing: 0.04em;
+  text-transform: none;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+.hud-zone-level-pill.level-low,
+.hud-zone-level-pill.level-ok,
+.hud-zone-level-pill.level-farm,
+.hud-zone-level-pill.level-high,
+.hud-zone-level-pill.level-unknown {
+  border-color: rgba(150, 170, 190, 0.20);
+  background: rgba(255, 255, 255, 0.045);
+  color: rgba(229, 236, 244, 0.76);
+}
+
+
+.hud-header .hud-title-row h1.hud-zone-name {
+  margin: 0;
+  color: #fff3d8;
+  font-size: clamp(19px, calc(var(--font-title) * 1.02), 28px);
+  font-weight: 820;
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.72);
+}
+
+.hud-zone-subtitle {
+  margin: 0;
+  color: rgba(218, 226, 235, 0.62);
+  font-size: calc(var(--font-meta) * 0.92);
+  font-weight: 650;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .overlay-top-control-row {
+  align-items: center;
+  gap: 6px;
+  margin-top: 0;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .overlay-quick-actions,
+.overlay-page:not(.overlay-page-timer-only) .overlay-timer-controls {
+  gap: 5px !important;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .overlay-timer-control,
+.overlay-page:not(.overlay-page-timer-only) .timer-only-collapse-button,
+.overlay-page:not(.overlay-page-timer-only) .overlay-icon-button {
+  border-color: rgba(205, 220, 237, 0.16) !important;
+  background: rgba(255, 255, 255, 0.045) !important;
+  color: rgba(238, 243, 248, 0.82) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
+}
+
+.overlay-page:not(.overlay-page-timer-only) .overlay-timer-control-primary {
+  border-color: rgba(241, 185, 106, 0.40) !important;
+  background: rgba(241, 185, 106, 0.13) !important;
+  color: #ffe4a6 !important;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .overlay-timer-control:hover:not(:disabled),
+.overlay-page:not(.overlay-page-timer-only) .timer-only-collapse-button:hover,
+.overlay-page:not(.overlay-page-timer-only) .overlay-icon-button:hover {
+  border-color: rgba(241, 185, 106, 0.52) !important;
+  background: rgba(241, 185, 106, 0.18) !important;
+  color: #ffe4a6 !important;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-meta {
+  margin: 0;
+  font-size: calc(var(--font-meta) * 0.94);
+  font-weight: 760;
+  line-height: 1.28;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .overlay-movement-hint {
+  margin: -1px 0 0;
+  color: rgba(255, 231, 191, 0.54);
+  font-size: 10px;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-block,
+.overlay-page:not(.overlay-page-timer-only) .hud-banner,
+.overlay-page:not(.overlay-page-timer-only) .hud-warning {
+  padding: calc(var(--space-card-y) + 1px) calc(var(--space-card-x) + 1px);
+  border-radius: 15px;
+  border-color: rgba(205, 220, 237, 0.12);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.044), rgba(255, 255, 255, 0.020)),
+    rgba(0, 0, 0, 0.115);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.035),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-block h2 {
+  margin-bottom: 7px;
+  gap: 7px;
+  color: rgba(255, 220, 160, 0.88);
+  font-size: calc(var(--font-heading) * 0.98);
+  font-weight: 900;
+  letter-spacing: 0.105em;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-block h2::after {
+  background: linear-gradient(90deg, rgba(241, 185, 106, 0.20), transparent);
+}
+
+.overlay-page:not(.overlay-page-timer-only) .checklist-list,
+.overlay-page:not(.overlay-page-timer-only) .section-list {
+  gap: 5px;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .checklist-item,
+.overlay-page:not(.overlay-page-timer-only) .section-list li {
+  padding-left: 18px;
+  color: rgba(239, 237, 230, 0.90);
+  font-size: var(--font-body);
+  line-height: 1.36;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .checklist-item::before,
+.overlay-page:not(.overlay-page-timer-only) .section-list li::before {
+  content: "";
+  top: 0.58em;
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(233, 189, 117, 0.86);
+  box-shadow: 0 0 8px rgba(233, 189, 117, 0.18);
+}
+
+.overlay-page:not(.overlay-page-timer-only) .league-reward-line {
+  padding: 6px 8px 6px 24px;
+  border-radius: 11px;
+  border: 1px solid rgba(241, 185, 106, 0.20);
+  background: rgba(241, 185, 106, 0.075);
+  color: #fff0c4;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .league-reward-section,
+.overlay-page:not(.overlay-page-timer-only) .reminder-section {
+  border-color: rgba(241, 185, 106, 0.26);
+  background:
+    radial-gradient(circle at 0% 0%, rgba(241, 185, 106, 0.10), transparent 42%),
+    rgba(0, 0, 0, 0.12);
+}
+
+.overlay-page:not(.overlay-page-timer-only) .zone-bonuses-section {
+  border-color: rgba(95, 165, 255, 0.35);
+  background: linear-gradient(135deg, rgba(19, 45, 74, 0.42), rgba(14, 18, 24, 0.62));
+}
+
+.overlay-page:not(.overlay-page-timer-only) .bonus-line {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 8px;
+  align-items: start;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .bonus-line.is-done {
+  color: rgba(210, 255, 219, 0.78);
+}
+
+.overlay-page:not(.overlay-page-timer-only) .bonus-state-marker {
+  color: #f6c36a;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .bonus-line.is-done .bonus-state-marker {
+  color: #7ee787;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .league-reward-line {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 7px;
+  padding-left: 8px;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .league-reward-note {
+  margin: 6px 0 0;
+  color: rgba(255, 226, 180, 0.70);
+  font-size: calc(var(--font-meta) * 0.92);
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-next-block {
+  border-color: rgba(127, 184, 237, 0.18);
+  background:
+    linear-gradient(180deg, rgba(127, 184, 237, 0.055), rgba(255, 255, 255, 0.018)),
+    rgba(0, 0, 0, 0.12);
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-next-zone {
+  padding: 7px 9px;
+  border-radius: 12px;
+  border-color: rgba(127, 184, 237, 0.16);
+  background: rgba(0, 0, 0, 0.16);
+  color: #eaf4ff;
+  text-align: left;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .skip-section {
+  border-color: rgba(255, 119, 91, 0.22);
+  background:
+    linear-gradient(180deg, rgba(255, 119, 91, 0.07), rgba(255, 255, 255, 0.015)),
+    rgba(0, 0, 0, 0.12);
+}
+
+.overlay-page:not(.overlay-page-timer-only) .skip-section h2 {
+  color: rgba(255, 149, 130, 0.92);
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-footer-row {
+  justify-content: flex-start;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-footer-actions {
+  gap: 5px;
+}
+
+.overlay-page.density-compact:not(.overlay-page-timer-only) .hud-zone-title-card {
+  padding: 7px 8px 8px;
+  gap: 4px;
+}
+
+.overlay-page.density-compact:not(.overlay-page-timer-only) .hud-header .hud-title-row h1.hud-zone-name {
+  font-size: clamp(17px, calc(var(--font-title) * 0.98), 23px);
+}
+
+.overlay-page.density-compact:not(.overlay-page-timer-only) .hud-zone-level-pill,
+.overlay-page.density-compact:not(.overlay-page-timer-only) .hud-zone-act-pill {
+  min-height: 17px;
+  padding: 2px 6px;
+  font-size: 8px;
+}
+
+.overlay-page.density-compact:not(.overlay-page-timer-only) .hud-meta {
+  padding: 5px 7px;
+  font-size: calc(var(--font-meta) * 0.90);
+}
+
+.overlay-page.density-compact:not(.overlay-page-timer-only) .hud-block {
+  border-radius: 13px;
+}
+
+.overlay-page.density-compact:not(.overlay-page-timer-only) .checklist-item,
+.overlay-page.density-compact:not(.overlay-page-timer-only) .section-list li {
+  line-height: 1.27;
+}
+
+
+/* 0.2.x settings UI polish: align Settings visuals with the overlay without touching logic. */
+.settings-page:not(.companion-page) {
+  background:
+    radial-gradient(circle at 100% 0%, rgba(239, 180, 93, 0.12), transparent 28%),
+    radial-gradient(circle at 0% 100%, rgba(112, 146, 188, 0.08), transparent 34%),
+    linear-gradient(180deg, #0f151d, #0b1017);
+}
+
+.settings-page:not(.companion-page) .settings-header.window-drag-strip {
+  border-radius: 20px;
+  border: 1px solid rgba(231, 184, 109, 0.24);
+  background:
+    radial-gradient(circle at 100% 0%, rgba(239, 180, 93, 0.13), transparent 34%),
+    linear-gradient(180deg, rgba(17, 20, 25, 0.955), rgba(9, 12, 16, 0.94));
+  box-shadow:
+    0 18px 44px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 236, 194, 0.06),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.025);
+}
+
+.settings-page:not(.companion-page) .settings-header-copy {
+  display: grid;
+  gap: 7px;
+}
+
+.settings-page:not(.companion-page) .settings-intro {
+  max-width: 720px;
+  color: rgba(221, 229, 238, 0.76);
+}
+
+.settings-page:not(.companion-page) .settings-shell {
+  gap: 12px;
+  padding-right: 2px;
+}
+
+.settings-page:not(.companion-page) .settings-card {
+  gap: 12px;
+  padding: 16px 18px;
+  border-radius: 16px;
+  border: 1px solid rgba(205, 220, 237, 0.12);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.018)),
+    rgba(0, 0, 0, 0.12);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.03),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.08),
+    0 12px 28px rgba(0, 0, 0, 0.18);
+}
+
+.settings-page:not(.companion-page) .first-run-card {
+  border-color: rgba(241, 185, 106, 0.24);
+  background:
+    radial-gradient(circle at 0% 0%, rgba(241, 185, 106, 0.10), transparent 42%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.02)),
+    rgba(0, 0, 0, 0.13);
+}
+
+.settings-page:not(.companion-page) .danger-card {
+  border-color: rgba(255, 111, 91, 0.22);
+  background:
+    radial-gradient(circle at 0% 0%, rgba(255, 111, 91, 0.08), transparent 42%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.015)),
+    rgba(0, 0, 0, 0.13);
+}
+
+.settings-page:not(.companion-page) .settings-card-header {
+  gap: 12px;
+}
+
+.settings-page:not(.companion-page) .settings-section-title,
+.settings-page:not(.companion-page) .settings-subtitle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  color: rgba(255, 220, 160, 0.9);
+  letter-spacing: 0.10em;
+}
+
+.settings-page:not(.companion-page) .settings-section-title {
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.settings-page:not(.companion-page) .settings-subtitle {
+  margin-bottom: 0;
+  font-size: 11px;
+}
+
+.settings-page:not(.companion-page) .settings-section-title::after,
+.settings-page:not(.companion-page) .settings-subtitle::after {
+  content: "";
+  flex: 1 1 auto;
+  min-width: 24px;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(241, 185, 106, 0.26), transparent);
+}
+
+.settings-page:not(.companion-page) .settings-subsection,
+.settings-page:not(.companion-page) .details-panel,
+.settings-page:not(.companion-page) .info-cell,
+.settings-page:not(.companion-page) .value-box,
+.settings-page:not(.companion-page) .toggle-card,
+.settings-page:not(.companion-page) .hotkey-field,
+.settings-page:not(.companion-page) .update-result-card,
+.settings-page:not(.companion-page) .update-notes-card,
+.settings-page:not(.companion-page) .update-inline-message,
+.settings-page:not(.companion-page) .update-progress-card {
+  border-radius: 14px;
+  border: 1px solid rgba(205, 220, 237, 0.10);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.025), rgba(255, 255, 255, 0.012)),
+    rgba(0, 0, 0, 0.15);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.022);
+}
+
+.settings-page:not(.companion-page) .settings-subsection {
+  padding: 13px 14px;
+}
+
+.settings-page:not(.companion-page) .info-cell {
+  min-height: 72px;
+  padding: 11px 12px;
+}
+
+.settings-page:not(.companion-page) .info-cell dt,
+.settings-page:not(.companion-page) .settings-dev-grid dt {
+  color: rgba(183, 198, 214, 0.82);
+}
+
+.settings-page:not(.companion-page) .info-cell dd,
+.settings-page:not(.companion-page) .settings-dev-grid dd,
+.settings-page:not(.companion-page) .value-box {
+  color: #f4ead8;
+}
+
+.settings-page:not(.companion-page) .value-box strong {
+  color: rgba(255, 220, 160, 0.92);
+}
+
+.settings-page:not(.companion-page) .button-row {
+  gap: 8px;
+}
+
+.settings-page:not(.companion-page) button,
+.settings-page:not(.companion-page) select,
+.settings-page:not(.companion-page) input,
+.settings-page:not(.companion-page) textarea {
+  border-radius: 11px;
+  border: 1px solid rgba(205, 220, 237, 0.14);
+  background: rgba(9, 12, 16, 0.70);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.02),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+.settings-page:not(.companion-page) button:hover:not(:disabled),
+.settings-page:not(.companion-page) select:hover,
+.settings-page:not(.companion-page) input:hover,
+.settings-page:not(.companion-page) textarea:hover {
+  border-color: rgba(241, 185, 106, 0.28);
+  background: rgba(12, 16, 21, 0.78);
+}
+
+.settings-page:not(.companion-page) button:focus-visible,
+.settings-page:not(.companion-page) select:focus-visible,
+.settings-page:not(.companion-page) input:focus-visible,
+.settings-page:not(.companion-page) textarea:focus-visible {
+  border-color: rgba(241, 185, 106, 0.58);
+  box-shadow: 0 0 0 3px rgba(241, 185, 106, 0.12);
+}
+
+.settings-page:not(.companion-page) .button-primary {
+  border-color: rgba(241, 185, 106, 0.40);
+  background: linear-gradient(180deg, rgba(133, 90, 28, 0.34), rgba(87, 58, 18, 0.28));
+  color: #fff0d2;
+}
+
+.settings-page:not(.companion-page) .button-secondary,
+.settings-page:not(.companion-page) .ghost-button {
+  border-color: rgba(205, 220, 237, 0.14);
+  background: rgba(255, 255, 255, 0.045);
+  color: rgba(238, 243, 248, 0.90);
+}
+
+.settings-page:not(.companion-page) .button-danger {
+  border-color: rgba(255, 111, 91, 0.30);
+  background: rgba(111, 35, 31, 0.24);
+  color: #ffc7bc;
+}
+
+.settings-page:not(.companion-page) .settings-field,
+.settings-page:not(.companion-page) .slider-field,
+.settings-page:not(.companion-page) .select-field {
+  gap: 6px;
+}
+
+.settings-page:not(.companion-page) .settings-field > span,
+.settings-page:not(.companion-page) .select-field > span,
+.settings-page:not(.companion-page) .slider-field > span,
+.settings-page:not(.companion-page) .settings-inline-grid label > span,
+.settings-page:not(.companion-page) .toggle-card span,
+.settings-page:not(.companion-page) .hotkey-field-title {
+  color: rgba(232, 239, 246, 0.90);
+}
+
+.settings-page:not(.companion-page) .checkbox-grid {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.settings-page:not(.companion-page) .toggle-card {
+  min-height: 50px;
+  padding: 11px 12px;
+}
+
+.settings-page:not(.companion-page) .hotkey-grid {
+  gap: 10px;
+}
+
+.settings-page:not(.companion-page) .hotkey-field input {
+  min-height: 40px;
+  font-weight: 700;
+}
+
+.settings-page:not(.companion-page) .hotkey-field small,
+.settings-page:not(.companion-page) .helper-text {
+  color: rgba(205, 215, 226, 0.70);
+}
+
+.settings-page:not(.companion-page) .settings-status-pill {
+  min-height: 26px;
+  padding: 4px 10px;
+  border-color: rgba(255, 215, 145, 0.22);
+  background: rgba(255, 255, 255, 0.035);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+.settings-page:not(.companion-page) .settings-inline-path {
+  border-color: rgba(241, 185, 106, 0.20);
+  background: rgba(0, 0, 0, 0.22);
+}
+
+.settings-page:not(.companion-page) .update-summary-grid {
+  gap: 10px;
+}
+
+.settings-page:not(.companion-page) .update-progress-track {
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.settings-page:not(.companion-page) .update-progress-track > span {
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(241, 185, 106, 0.95), rgba(255, 220, 160, 0.85));
+}
+
+@media (max-width: 760px) {
+  .settings-page:not(.companion-page) .settings-card {
+    padding: 14px;
+  }
+
+  .settings-page:not(.companion-page) .settings-header.window-drag-strip {
+    padding: 14px;
+  }
+}
+
+
+
+/* Companion current-zone tab: keep scrolling on the tab body, not inside tiny cards. */
+.companion-page .companion-zone-dashboard {
+  align-items: start;
+  align-content: start;
+  grid-auto-rows: max-content;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-right: 6px;
+  scrollbar-width: thin;
+}
+
+.companion-page .companion-zone-dashboard .companion-column {
+  align-self: start;
+  min-height: 0;
+  height: auto;
+  overflow: visible;
+}
+
+.companion-page .companion-zone-dashboard .companion-block,
+.companion-page .companion-zone-dashboard .companion-details-block {
+  flex: 0 0 auto;
+  max-height: none;
+  overflow: visible;
+  scrollbar-width: auto;
+}
+
+.companion-page .companion-zone-dashboard .companion-checklist-list,
+.companion-page .companion-zone-dashboard .companion-stack {
+  max-height: none;
+  overflow: visible;
+}
+
+.companion-zone-dashboard::-webkit-scrollbar {
+  width: 8px;
+}
+
+.companion-zone-dashboard::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(214, 162, 84, 0.45);
+}
+
+/* Companion detailed panel header: title/intro must not be squeezed by the action buttons. */
+.companion-page .settings-header.window-drag-strip {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: stretch;
+  justify-content: stretch;
+  overflow: hidden;
+}
+
+.companion-page .settings-header-copy {
+  width: 100%;
+  min-width: 0;
+}
+
+.companion-page .settings-header-copy .eyebrow,
+.companion-page .settings-header-copy h1,
+.companion-page .settings-header-copy .settings-intro {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.companion-page .settings-header-copy .eyebrow {
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+.companion-page .settings-header .companion-header-actions {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+  justify-content: stretch;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.companion-page .companion-header-actions button {
+  width: 100%;
+  min-width: 0;
+}

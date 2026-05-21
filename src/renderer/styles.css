@@ -1,0 +1,19 @@
+/*
+ * Renderer stylesheet index.
+ *
+ * The old single styles.css file was split into ordered partials to make the
+ * cascade readable without changing selector order or runtime behavior.
+ * Keep imports in this order unless you intentionally change override priority.
+ */
+@import './styles/01-overlay-core.css'; /* Base overlay, shared HUD, timer-only early rules */
+@import './styles/02-settings-shell.css'; /* Settings and app shell layout */
+@import './styles/03-route-reminders-bonuses.css'; /* Route density, reminders dashboard, bonus tabs */
+@import './styles/04-overlay-data-timer-base.css'; /* Zone bonus cards, league rewards, timer-only base */
+@import './styles/05-overlay-layout-modes.css'; /* Companion header, adaptive overlay, compact and timer-only modes */
+@import './styles/06-report-community-support.css'; /* Report window and companion community/support tabs */
+@import './styles/07-ui-polish-settings-support.css'; /* 0.2.x UI polish, companion actions, settings/support polish */
+@import './styles/08-route-polish-final.css'; /* Final route overlap and density fixes */
+@import './styles/09-overlay-chrome-controls.css'; /* Overlay chrome, controls, icons, header pass */
+@import './styles/10-typography-refresh.css'; /* Typography refresh and text weight tuning */
+@import './styles/11-overlay-header-actions.css'; /* Header layout, close UX, intent hover/focus colors, compact header fixes */
+@import './styles/12-localization-toggle.css'; /* Very narrow overlay and RU/EN language toggle */

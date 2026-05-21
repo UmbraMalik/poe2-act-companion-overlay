@@ -1,0 +1,96 @@
+{
+  "version": "draft-from-client-log-2026-05-14",
+  "scene": {
+    "enter": [
+      "\\[SCENE\\] Set Source \\[(?<scene>.*?)\\]",
+      "Generating level \\d+ area \\\"(?<scene>[^\\\"]+)\\\" with seed \\d+",
+      "You have entered\\s+(?<scene>.+?)[.!]?$",
+      "Entering area:\\s*(?<scene>.+?)[.!]?$"
+    ],
+    "ignoreScenes": [
+      "(null)",
+      "(unknown)",
+      "null",
+      "unknown",
+      "Act 1",
+      "Act 2",
+      "Act 3",
+      "Act 4",
+      "Act 5",
+      "Interlude",
+      "G_Endgame_Town"
+    ],
+    "townScenes": [
+      "G1_town",
+      "G2_town",
+      "G3_town",
+      "G4_town",
+      "C_G1_town",
+      "C_G2_town",
+      "C_G3_town",
+      "C_G4_town",
+      "P1_Town",
+      "P2_Town",
+      "P3_Town"
+    ]
+  },
+  "events": {
+    "clientRestart": [
+      "\\*\\*\\*\\*\\* LOG FILE OPENING \\*\\*\\*\\*\\*"
+    ],
+    "levelUp": [
+      ": (?<character>.+?) \\((?<class>[^)]+)\\) is now level (?<level>\\d+)",
+      ": (?<character>.+?) \\((?<class>[^)]+)\\) достигает (?<level>\\d+) уровня"
+    ],
+    "playerDeath": [
+      ": (?<player>.+?) has been slain\\.",
+      ": (?<player>.+?) был повержен\\."
+    ],
+    "rewardResistance": [
+      ": (?<player>.+?) (?:has|have) received \\+(?<amount>\\d+)% to \\[Resistances\\|(?<element>[^\\]]+)\\]\\.?"
+    ],
+    "rewardSpirit": [
+      ": (?<player>.+?) (?:has|have) received \\+(?<amount>\\d+) to \\[Spirit\\|Spirit\\]\\.?"
+    ],
+    "rewardLife": [
+      ": (?<player>.+?) (?:has|have) received \\+(?<amount>\\d+) to maximum Life\\.?"
+    ],
+    "rewardLifePercent": [
+      ": (?<player>.+?) (?:has|have) received (?<amount>\\d+)% increased maximum Life\\.?"
+    ],
+    "rewardManaPercent": [
+      ": (?<player>.+?) (?:has|have) received (?<amount>\\d+)% increased maximum Mana\\.?"
+    ],
+    "rewardPassivePoints": [
+      ": You have received (?<points>\\d+) Passive Skill Points\\.?",
+      ": You have gained (?<points>\\d+) Passive Skill Points\\.?",
+      ": You received (?<points>\\d+) Passive Skill Points\\.?",
+      ": (?:Quest Reward:\\s*)?(?<points>\\d+) Passive Skill Points\\.?",
+      ": (?:(?<points>\\d+)\\s+)?Passive Skill Points\\.?"
+    ],
+    "rewardWeaponSetPoints": [
+      ": You have received (?<points>\\d+) Weapon Set Passive Skill Points\\.?",
+      ": You have gained (?<points>\\d+) Weapon Set Passive Skill Points\\.?",
+      ": You received (?<points>\\d+) Weapon Set Passive Skill Points\\.?",
+      ": (?:Quest Reward:\\s*)?(?<points>\\d+) Weapon Set Passive Skill Points\\.?",
+      ": (?:(?<points>\\d+)\\s+)?Weapon Set Passive Skill Points\\.?"
+    ],
+    "rewardCharm": [
+      ": (?<player>.+?) (?:has|have) received (?<text>.*\\[Charm\\].*)\\.?"
+    ],
+    "rewardFlaskRecovery": [
+      ": (?<player>.+?) (?:has|have) received (?<amount>\\d+)% increased Life Recovery from \\[Flask\\|Flasks\\]\\.?"
+    ],
+    "rewardStunThreshold": [
+      ": (?<player>.+?) (?:has|have) received (?<amount>\\d+)% increased \\[StunThreshold\\|Stun Threshold\\]\\.?"
+    ],
+    "rewardElementalAilmentThreshold": [
+      ": (?<player>.+?) (?:has|have) received (?<amount>\\d+)% increased \\[AilmentThreshold\\|Elemental Ailment Threshold\\]\\.?"
+    ]
+  },
+  "notes": [
+    "EN client logs in this sample primarily expose internal area ids via 'Generating level ... area \"G1_1\"'.",
+    "Zone matching needs internal area aliases in guide.json, not only human-readable zone_en names.",
+    "Reward examples were found for Cold/Lightning/Fire resistance, Spirit, Life, Passive Points, Weapon Set Passive Points, Charm effects and Flask recovery."
+  ]
+}

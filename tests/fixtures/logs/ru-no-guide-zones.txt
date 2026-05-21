@@ -1,0 +1,16 @@
+2026/05/16 23:00:00 123 [DEBUG Client] Generating level 9 area "G1_unknown_test" with seed 1
+2026/05/16 23:00:01 [SCENE] Set Source [Неизвестная роща]
+2026/05/16 23:00:30 123 [DEBUG Client] Generating level 18 area "G2_unknown_test" with seed 1
+2026/05/16 23:00:31 [SCENE] Set Source [Забытый проход]
+2026/05/16 23:01:00 123 [DEBUG Client] Generating level 45 area "G3_unknown_test" with seed 1
+2026/05/16 23:01:01 [SCENE] Set Source [Безымянные руины]
+2026/05/16 23:01:30 123 [DEBUG Client] Generating level 52 area "G4_unknown_test" with seed 1
+2026/05/16 23:01:31 [SCENE] Set Source [Туманный брод]
+2026/05/16 23:01:45 123 [DEBUG Client] Generating level 61 area "G5_unknown_test" with seed 1
+2026/05/16 23:01:46 [SCENE] Set Source [Молчаливая топь]
+2026/05/16 23:01:50 123 [DEBUG Client] Generating level 62 area "P1_unknown_test" with seed 1
+2026/05/16 23:01:51 [SCENE] Set Source [Пустой двор]
+2026/05/16 23:02:00 123 [DEBUG Client] Generating level 65 area "P2_unknown_test" with seed 1
+2026/05/16 23:02:01 [SCENE] Set Source [Неизвестный перевал]
+2026/05/16 23:02:20 123 [DEBUG Client] Generating level 67 area "P3_unknown_test" with seed 1
+2026/05/16 23:02:21 [SCENE] Set Source [Затерянная вершина]

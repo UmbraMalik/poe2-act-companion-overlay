@@ -1,0 +1,8 @@
+2026/05/16 23:50:00 123 [DEBUG Client] Generating level 12 area "G1_12" with seed 1
+2026/05/16 23:50:01 [SCENE] Set Source [Фрейторн]
+2026/05/16 23:50:30 : Игрок Umbra получил +30 к [Spirit|духу].
+2026/05/16 23:50:31 : Игрок Umbra получил +30 к [Spirit|духу].
+2026/05/16 23:51:00 123 [DEBUG Client] Generating level 67 area "P3_2" with seed 1
+2026/05/16 23:51:01 [SCENE] Set Source [Kriar Village]
+2026/05/16 23:51:30 : Umbra has received +40 to [Spirit|Spirit].
+2026/05/16 23:51:31 : Umbra has received +40 to [Spirit|Spirit].

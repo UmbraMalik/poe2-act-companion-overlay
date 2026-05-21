@@ -1,0 +1,6 @@
+2026/05/16 22:10:01 [SCENE] Set Source [Clearfell Encampment]
+2026/05/16 22:10:10 123 [DEBUG Client] Generating level 8 area "G1_11" with seed 1
+2026/05/16 22:10:11 [SCENE] Set Source [Hunting Grounds]
+2026/05/16 22:12:00 : Umbra (Sorceress) is now level 12
+2026/05/16 22:13:00 : Umbra has been slain.
+2026/05/16 22:15:00 You have entered Clearfell Encampment.

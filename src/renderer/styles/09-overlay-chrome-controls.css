@@ -1,0 +1,572 @@
+/* Overlay chrome, controls, icons, header pass. Extracted from styles.css preserving cascade order. */
+/* Final timer controls pass: icon-only timer buttons, close button, smaller grip. */
+.overlay-timer-controls {
+  gap: 5px !important;
+}
+
+.overlay-timer-icon-control,
+.overlay-top-control-row .overlay-timer-icon-control,
+.timer-only-controls-row .overlay-timer-icon-control,
+.overlay-page:not(.overlay-page-timer-only) .overlay-timer-icon-control {
+  width: 28px !important;
+  min-width: 28px !important;
+  max-width: 28px !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  max-height: 28px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 999px !important;
+  font-size: 13px !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+  letter-spacing: 0 !important;
+  aspect-ratio: 1 / 1 !important;
+}
+
+.overlay-timer-control-start,
+.overlay-page:not(.overlay-page-timer-only) .overlay-timer-control-start,
+.timer-only-controls-row .overlay-timer-control-start {
+  border-color: rgba(104, 211, 145, 0.50) !important;
+  background:
+    radial-gradient(circle at 50% 18%, rgba(142, 236, 169, 0.26), transparent 58%),
+    linear-gradient(180deg, rgba(50, 135, 81, 0.28), rgba(21, 79, 49, 0.22)) !important;
+  color: #d8ffe1 !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(190, 255, 206, 0.11),
+    0 0 10px rgba(84, 190, 112, 0.18) !important;
+}
+
+.overlay-timer-control-start:hover:not(:disabled),
+.overlay-page:not(.overlay-page-timer-only) .overlay-timer-control-start:hover:not(:disabled),
+.timer-only-controls-row .overlay-timer-control-start:hover:not(:disabled) {
+  border-color: rgba(135, 238, 166, 0.68) !important;
+  background:
+    radial-gradient(circle at 50% 18%, rgba(166, 255, 191, 0.34), transparent 58%),
+    linear-gradient(180deg, rgba(58, 156, 92, 0.35), rgba(25, 94, 56, 0.28)) !important;
+  color: #effff2 !important;
+}
+
+.overlay-timer-control-pause,
+.overlay-page:not(.overlay-page-timer-only) .overlay-timer-control-pause,
+.timer-only-controls-row .overlay-timer-control-pause {
+  border-color: rgba(255, 204, 96, 0.62) !important;
+  background:
+    radial-gradient(circle at 50% 18%, rgba(255, 226, 150, 0.28), transparent 58%),
+    linear-gradient(180deg, rgba(241, 185, 106, 0.30), rgba(132, 86, 24, 0.24)) !important;
+  color: #ffe4a6 !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 236, 179, 0.15),
+    0 0 10px rgba(241, 185, 106, 0.22) !important;
+}
+
+.overlay-timer-control-pause:hover:not(:disabled),
+.overlay-page:not(.overlay-page-timer-only) .overlay-timer-control-pause:hover:not(:disabled),
+.timer-only-controls-row .overlay-timer-control-pause:hover:not(:disabled) {
+  border-color: rgba(255, 219, 128, 0.82) !important;
+  background:
+    radial-gradient(circle at 50% 18%, rgba(255, 236, 179, 0.38), transparent 58%),
+    linear-gradient(180deg, rgba(241, 185, 106, 0.38), rgba(132, 86, 24, 0.31)) !important;
+  color: #fff1c8 !important;
+}
+
+.overlay-timer-control-reset,
+.overlay-page:not(.overlay-page-timer-only) .overlay-timer-control-reset,
+.timer-only-controls-row .overlay-timer-control-reset {
+  border-color: rgba(255, 112, 91, 0.48) !important;
+  background:
+    radial-gradient(circle at 50% 18%, rgba(255, 142, 122, 0.22), transparent 58%),
+    linear-gradient(180deg, rgba(132, 48, 42, 0.28), rgba(83, 28, 25, 0.22)) !important;
+  color: #ffd2ca !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 196, 184, 0.10),
+    0 0 10px rgba(255, 93, 73, 0.14) !important;
+}
+
+.overlay-timer-control-reset:hover:not(:disabled),
+.overlay-page:not(.overlay-page-timer-only) .overlay-timer-control-reset:hover:not(:disabled),
+.timer-only-controls-row .overlay-timer-control-reset:hover:not(:disabled) {
+  border-color: rgba(255, 142, 122, 0.68) !important;
+  background:
+    radial-gradient(circle at 50% 18%, rgba(255, 164, 146, 0.30), transparent 58%),
+    linear-gradient(180deg, rgba(154, 56, 49, 0.35), rgba(96, 32, 28, 0.28)) !important;
+  color: #ffe5df !important;
+}
+
+.overlay-close-button,
+.overlay-quick-actions > .overlay-close-button,
+.timer-only-top-control-row .overlay-quick-actions > .overlay-close-button {
+  font-size: 18px !important;
+  line-height: 1 !important;
+  color: rgba(238, 243, 248, 0.82) !important;
+}
+
+.overlay-close-button:hover,
+.overlay-quick-actions > .overlay-close-button:hover,
+.timer-only-top-control-row .overlay-quick-actions > .overlay-close-button:hover {
+  border-color: rgba(255, 142, 122, 0.58) !important;
+  background: rgba(255, 112, 91, 0.18) !important;
+  color: #ffd2ca !important;
+}
+
+/* Put utility buttons in the top-right of the main overlay title row. */
+.overlay-page:not(.overlay-page-timer-only) .hud-header .hud-title-row {
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+  min-width: 0 !important;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-header .hud-zone-title-card {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-header .hud-title-actions {
+  display: inline-flex !important;
+  flex: 0 0 auto !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  min-width: max-content !important;
+  margin: 0 !important;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .overlay-top-control-row {
+  margin-top: 0 !important;
+  justify-content: flex-start !important;
+}
+
+/* Timer-only no longer shows textual status pills like “ПАУЗА” / “ТАЙМЕР АКТИВЕН”. */
+.overlay-page-timer-only .timer-only-state-row {
+  min-height: 0 !important;
+}
+
+/* The diagonal resize marker should be present but quieter. */
+.resize-grip,
+.overlay-page.density-compact .resize-grip,
+.overlay-page-timer-only .resize-grip {
+  right: 7px !important;
+  bottom: 7px !important;
+  width: 18px !important;
+  height: 18px !important;
+  opacity: 0.48 !important;
+  background:
+    linear-gradient(135deg, transparent 0 48%, rgba(224, 174, 94, 0.68) 49% 55%, transparent 56%),
+    linear-gradient(135deg, transparent 0 66%, rgba(224, 174, 94, 0.46) 67% 73%, transparent 74%),
+    linear-gradient(135deg, transparent 0 82%, rgba(224, 174, 94, 0.34) 83% 89%, transparent 90%) !important;
+  filter: drop-shadow(0 0 5px rgba(224, 174, 94, 0.18)) !important;
+}
+
+.resize-grip:hover {
+  opacity: 0.72 !important;
+  filter: drop-shadow(0 0 7px rgba(224, 174, 94, 0.30)) !important;
+}
+
+.resize-grip.is-disabled {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+@media (max-width: 360px) {
+  .overlay-page:not(.overlay-page-timer-only) .hud-header .hud-title-row {
+    flex-wrap: wrap !important;
+  }
+
+  .overlay-page:not(.overlay-page-timer-only) .hud-header .hud-title-actions {
+    justify-content: flex-start !important;
+  }
+}
+
+
+/* Final overlay chrome fix: no transparent outer drag band, cleaner top-right controls, centered timer icons. */
+.overlay-page {
+  padding: 0 !important;
+}
+
+.overlay-page .window-drag-strip {
+  display: none !important;
+  flex: 0 0 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+}
+
+.overlay-page .overlay-shell,
+.overlay-page .overlay-hud,
+.overlay-page:not(.overlay-page-timer-only) .overlay-shell,
+.overlay-page:not(.overlay-page-timer-only) .overlay-hud,
+.overlay-page.overlay-page-timer-only .overlay-shell,
+.overlay-page.overlay-page-timer-only .overlay-hud {
+  height: 100vh !important;
+  max-height: 100vh !important;
+  min-height: 0 !important;
+}
+
+.overlay-page .overlay-shell {
+  border-radius: 20px !important;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-header .hud-title-row {
+  position: relative !important;
+  display: block !important;
+  min-width: 0 !important;
+  padding-right: 124px !important;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-header .hud-zone-title-card {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-header .hud-title-actions {
+  position: absolute !important;
+  top: 0 !important;
+  right: 0 !important;
+  z-index: 5 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: 116px !important;
+  margin: 0 !important;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-header .overlay-quick-actions {
+  justify-content: flex-end !important;
+  gap: 5px !important;
+}
+
+.overlay-page.density-compact:not(.overlay-page-timer-only) .hud-header .hud-title-row {
+  padding-right: 108px !important;
+}
+
+.overlay-page.density-compact:not(.overlay-page-timer-only) .hud-header .hud-title-actions {
+  max-width: 102px !important;
+}
+
+.overlay-timer-icon-control,
+.overlay-top-control-row .overlay-timer-icon-control,
+.timer-only-controls-row .overlay-timer-icon-control,
+.overlay-page:not(.overlay-page-timer-only) .overlay-timer-icon-control {
+  position: relative !important;
+  overflow: hidden !important;
+  display: inline-grid !important;
+  place-items: center !important;
+  text-align: center !important;
+  vertical-align: middle !important;
+}
+
+.timer-button-glyph {
+  width: 100% !important;
+  height: 100% !important;
+  display: grid !important;
+  place-items: center !important;
+  line-height: 1 !important;
+  text-align: center !important;
+  font-family: "Segoe UI Symbol", "Segoe UI", system-ui, sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 900 !important;
+  transform: translateY(-0.5px) !important;
+  pointer-events: none !important;
+}
+
+.overlay-timer-control-reset .timer-button-glyph {
+  font-size: 14px !important;
+  transform: translateY(-0.75px) !important;
+}
+
+.overlay-timer-control-start .timer-button-glyph {
+  transform: translateX(0.75px) translateY(-0.5px) !important;
+}
+
+.overlay-timer-control-start,
+.overlay-page:not(.overlay-page-timer-only) .overlay-timer-control-start,
+.timer-only-controls-row .overlay-timer-control-start {
+  border-color: rgba(112, 218, 151, 0.42) !important;
+  background:
+    radial-gradient(circle at 50% 22%, rgba(160, 255, 188, 0.20), transparent 56%),
+    linear-gradient(180deg, rgba(42, 116, 73, 0.26), rgba(20, 66, 44, 0.23)) !important;
+  color: #dffff0 !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(190, 255, 206, 0.10),
+    0 0 8px rgba(84, 190, 112, 0.14) !important;
+}
+
+.overlay-timer-control-pause,
+.overlay-page:not(.overlay-page-timer-only) .overlay-timer-control-pause,
+.timer-only-controls-row .overlay-timer-control-pause {
+  border-color: rgba(241, 185, 106, 0.50) !important;
+  background:
+    radial-gradient(circle at 50% 22%, rgba(255, 231, 166, 0.22), transparent 56%),
+    linear-gradient(180deg, rgba(160, 104, 35, 0.28), rgba(91, 62, 24, 0.24)) !important;
+  color: #ffe4a6 !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 236, 179, 0.12),
+    0 0 8px rgba(241, 185, 106, 0.17) !important;
+}
+
+.overlay-timer-control-reset,
+.overlay-page:not(.overlay-page-timer-only) .overlay-timer-control-reset,
+.timer-only-controls-row .overlay-timer-control-reset {
+  border-color: rgba(255, 112, 91, 0.40) !important;
+  background:
+    radial-gradient(circle at 50% 22%, rgba(255, 154, 136, 0.18), transparent 56%),
+    linear-gradient(180deg, rgba(120, 42, 38, 0.26), rgba(75, 28, 27, 0.23)) !important;
+  color: #ffd8d0 !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 196, 184, 0.09),
+    0 0 8px rgba(255, 93, 73, 0.11) !important;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .overlay-close-button,
+.overlay-quick-actions > .overlay-close-button,
+.timer-only-top-control-row .overlay-quick-actions > .overlay-close-button {
+  display: inline-grid !important;
+  place-items: center !important;
+  font-size: 17px !important;
+  line-height: 1 !important;
+  padding-bottom: 2px !important;
+}
+
+@media (max-width: 360px) {
+  .overlay-page:not(.overlay-page-timer-only) .hud-header .hud-title-row {
+    padding-right: 0 !important;
+  }
+
+  .overlay-page:not(.overlay-page-timer-only) .hud-header .hud-title-actions {
+    position: static !important;
+    justify-content: flex-start !important;
+    margin-top: 6px !important;
+    max-width: none !important;
+  }
+}
+
+/* 0.2.5 header layout pass: clean title area, utility controls top-right, timer below divider. */
+.hud-header-divider {
+  height: 1px;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    rgba(231, 184, 109, 0.22) 0%,
+    rgba(255, 255, 255, 0.08) 38%,
+    rgba(231, 184, 109, 0.16) 100%
+  );
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-header {
+  display: grid;
+  gap: 9px;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-header .hud-title-row {
+  position: static !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+  min-width: 0 !important;
+  padding-right: 0 !important;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-header .hud-zone-title-card {
+  flex: 1 1 auto !important;
+  width: auto !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  display: grid !important;
+  gap: 6px !important;
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-zone-kicker-row {
+  gap: 6px;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-header .hud-title-actions {
+  position: static !important;
+  top: auto !important;
+  right: auto !important;
+  z-index: auto !important;
+  display: inline-flex !important;
+  flex: 0 0 auto !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  width: auto !important;
+  max-width: none !important;
+  min-width: max-content !important;
+  margin: 0 !important;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-header .overlay-quick-actions {
+  justify-content: flex-end !important;
+  gap: 6px !important;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-header .hud-title-row h1.hud-zone-name {
+  margin: 0;
+  font-size: clamp(21px, calc(var(--font-title) * 1.06), 29px);
+  line-height: 1.02;
+  letter-spacing: -0.036em;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .overlay-top-control-row {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+  justify-content: flex-start !important;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-meta {
+  margin: 0;
+  padding: 8px 10px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.overlay-page.density-compact:not(.overlay-page-timer-only) .hud-header {
+  gap: 7px;
+}
+
+.overlay-page.density-compact:not(.overlay-page-timer-only) .hud-header .hud-title-row {
+  gap: 10px !important;
+}
+
+.overlay-page.density-compact:not(.overlay-page-timer-only) .hud-header .hud-title-row h1.hud-zone-name {
+  font-size: clamp(18px, calc(var(--font-title) * 1.0), 24px);
+}
+
+@media (max-width: 360px) {
+  .overlay-page:not(.overlay-page-timer-only) .hud-header .hud-title-row {
+    flex-wrap: wrap !important;
+  }
+
+  .overlay-page:not(.overlay-page-timer-only) .hud-header .hud-title-actions {
+    justify-content: flex-start !important;
+  }
+}
+
+/* Tiny follow-up: optical center for pause glyph + restore red low-level highlight after header polish overrides. */
+.overlay-timer-control-pause .timer-button-glyph {
+  position: relative !important;
+  font-size: 0 !important;
+  transform: none !important;
+}
+
+.overlay-timer-control-pause .timer-button-glyph::before,
+.overlay-timer-control-pause .timer-button-glyph::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 3px;
+  height: 11px;
+  border-radius: 999px;
+  background: currentColor;
+  box-shadow: 0 0 5px currentColor;
+  transform: translateY(-50%);
+}
+
+.overlay-timer-control-pause .timer-button-glyph::before {
+  left: calc(50% - 4px);
+}
+
+.overlay-timer-control-pause .timer-button-glyph::after {
+  right: calc(50% - 4px);
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-meta.level-low,
+.overlay-page-timer-only .timer-only-meta.level-low {
+  background:
+    linear-gradient(90deg, rgba(170, 48, 42, 0.20), rgba(170, 48, 42, 0.08)) !important;
+  border-color: rgba(255, 103, 91, 0.42) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 103, 91, 0.10),
+    0 0 12px rgba(255, 74, 58, 0.10) !important;
+  color: #ffd6cf !important;
+}
+
+
+/* Final icon-centering pass: utility icons must stay optically centered in all overlay modes. */
+.overlay-icon-button,
+.overlay-quick-actions > .overlay-icon-button,
+.timer-only-top-control-row .overlay-quick-actions > .overlay-icon-button,
+.overlay-page.density-compact .overlay-quick-actions > .overlay-icon-button {
+  display: inline-grid !important;
+  place-items: center !important;
+  align-content: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  vertical-align: middle !important;
+  overflow: hidden !important;
+}
+
+.overlay-icon-button > .overlay-icon-glyph,
+.overlay-quick-actions > .overlay-icon-button > .overlay-icon-glyph,
+.timer-only-top-control-row .overlay-quick-actions > .overlay-icon-button > .overlay-icon-glyph,
+.overlay-page.density-compact .overlay-quick-actions > .overlay-icon-button > .overlay-icon-glyph {
+  width: 100% !important;
+  height: 100% !important;
+  display: grid !important;
+  place-items: center !important;
+  align-content: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+  text-align: center !important;
+  pointer-events: none !important;
+  user-select: none !important;
+  font-family: "Segoe UI Symbol", "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", "Segoe UI", system-ui, sans-serif !important;
+}
+
+.overlay-icon-glyph-lock {
+  font-size: 13px !important;
+  transform: translateY(-0.5px) !important;
+}
+
+.overlay-icon-glyph-menu {
+  font-size: 14px !important;
+  transform: translateY(-1px) !important;
+}
+
+.overlay-icon-glyph-settings {
+  font-size: 13px !important;
+  transform: translateY(-0.75px) !important;
+}
+
+.overlay-icon-glyph-close {
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  transform: translateY(-1px) !important;
+}
+
+.timer-only-top-control-row .overlay-icon-glyph-lock,
+.overlay-page.density-compact .overlay-icon-glyph-lock {
+  font-size: 12px !important;
+}
+
+.timer-only-top-control-row .overlay-icon-glyph-menu,
+.overlay-page.density-compact .overlay-icon-glyph-menu {
+  font-size: 13px !important;
+}
+
+.timer-only-top-control-row .overlay-icon-glyph-settings,
+.overlay-page.density-compact .overlay-icon-glyph-settings {
+  font-size: 12px !important;
+}
+
+.timer-only-top-control-row .overlay-icon-glyph-close,
+.overlay-page.density-compact .overlay-icon-glyph-close {
+  font-size: 15px !important;
+}
+

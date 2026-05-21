@@ -1,0 +1,203 @@
+/* Typography refresh and text weight tuning. Extracted from styles.css preserving cascade order. */
+/* === Typography refresh v2: visible system-font change, layout untouched === */
+:root {
+  /* Windows-safe stack: no bundled font files, no downloads. */
+  --font-ui:
+    "Trebuchet MS",
+    "Segoe UI",
+    "Segoe UI Variable Text",
+    system-ui,
+    sans-serif;
+  --font-display:
+    Georgia,
+    Cambria,
+    "Times New Roman",
+    serif;
+  --font-caps:
+    Bahnschrift,
+    "Arial Narrow",
+    "Segoe UI Semibold",
+    "Segoe UI",
+    sans-serif;
+  --fw-body: 500;
+  --fw-body-strong: 600;
+  --fw-heading: 650;
+  --fw-heavy: 760;
+}
+
+html,
+body,
+#root,
+.overlay-page,
+.settings-page,
+.close-confirm-page,
+.info-page,
+.report-page,
+.community-page,
+.support-page,
+.update-page,
+.companion-page,
+button,
+input,
+select,
+textarea {
+  font-family: var(--font-ui) !important;
+  font-weight: var(--fw-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: geometricPrecision;
+  font-synthesis-weight: auto;
+}
+
+/* Zone title: this is the obvious visual change from the reference. */
+.hud-header .hud-title-row h1.hud-zone-name,
+.overlay-page:not(.overlay-page-timer-only) .hud-header .hud-title-row h1.hud-zone-name {
+  font-family: var(--font-display) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.045em !important;
+  line-height: 1.02 !important;
+}
+
+/* Compact label chips and section captions: cleaner game-HUD caps. */
+.hud-zone-act-pill,
+.hud-zone-level-pill,
+.hud-block h2,
+.settings-card h2,
+.details-panel h3,
+.companion-block h3,
+.companion-inline-title,
+.settings-section-title,
+.settings-subtitle,
+.eyebrow,
+.compact-table th,
+.support-qr-copy h3,
+.timer-only-kicker,
+.timer-only-header h1,
+.timer-only-main-label,
+.overlay-upcoming-range,
+.overlay-page:not(.overlay-page-timer-only) .hud-block h2 {
+  font-family: var(--font-caps) !important;
+  font-weight: var(--fw-heading) !important;
+  letter-spacing: 0.12em !important;
+}
+
+/* Normal text: less chunky than the old all-bold look. */
+.checklist-item,
+.section-single-text,
+.section-list li,
+.details-list li,
+.details-checklist li,
+.helper-text,
+.status-line,
+.hud-empty,
+.hud-footnote,
+.settings-step-list li,
+.close-confirm-message,
+.close-confirm-note,
+.update-note-list,
+.update-inline-message,
+.update-status-banner,
+.info-cell dd,
+.settings-dev-grid dd,
+.value-box,
+.bonus-meta,
+.bonus-details-list,
+.overlay-upcoming-note,
+.overlay-page:not(.overlay-page-timer-only) .checklist-item,
+.overlay-page:not(.overlay-page-timer-only) .section-list li {
+  font-family: var(--font-ui) !important;
+  font-weight: var(--fw-body) !important;
+}
+
+/* Important lines keep emphasis, but not the whole UI screaming 900 weight. */
+.hud-meta,
+.timer-only-meta,
+.timer-only-next,
+.hud-next-zone,
+.route-overview-header span,
+.route-rec-badge,
+.overlay-movement-hint,
+.overlay-onboarding-text,
+.overlay-onboarding-move-hint,
+.overlay-page:not(.overlay-page-timer-only) .hud-meta {
+  font-family: var(--font-ui) !important;
+  font-weight: var(--fw-body-strong) !important;
+  letter-spacing: 0.005em !important;
+}
+
+button,
+.button-primary,
+.button-secondary,
+.ghost-button,
+.button-danger,
+.button-danger-soft,
+select,
+input,
+textarea,
+.toggle-card span,
+.settings-field > span,
+.select-field > span,
+.slider-field > span,
+.settings-inline-grid label > span,
+.timer-only-collapse-button,
+.compact-mode-button {
+  font-family: var(--font-ui) !important;
+  font-weight: var(--fw-body-strong) !important;
+}
+
+.overlay-timer-control,
+.settings-status-pill,
+.overlay-hotkey-pill,
+.overlay-hotkey-pill kbd,
+.overlay-onboarding-title,
+.overlay-onboarding-list strong,
+.overlay-onboarding-list li::before,
+.overlay-onboarding-path,
+.update-note-item.is-heading,
+.update-note-item > span:first-child,
+.route-step-index,
+.route-zone-name,
+.route-status-icon,
+.route-state-pill,
+.reminder-level,
+.reminder-badge,
+.reminder-chip span,
+.overlay-upcoming-level,
+.overlay-upcoming-title,
+.overlay-upcoming-badge,
+.bonus-status-marker,
+.bonus-title-line strong,
+.bonus-category-pill,
+.bonus-verify-pill,
+.bonus-state-marker,
+.league-reward-line,
+.league-reward-line span:last-child,
+.timer-only-status,
+.timer-only-actline,
+.timer-only-expand-button,
+.timer-only-collapse-button,
+.timer-only-footer span {
+  font-family: var(--font-ui) !important;
+  font-weight: var(--fw-heavy) !important;
+}
+
+.league-reward-note,
+.overlay-page:not(.overlay-page-timer-only) .league-reward-note {
+  font-family: var(--font-ui) !important;
+  font-weight: 450 !important;
+}
+
+.timer-only-time {
+  font-family: var(--font-caps) !important;
+  font-weight: var(--fw-heavy) !important;
+  letter-spacing: -0.035em !important;
+}
+
+/* Keep icon buttons from inheriting weird display typography. */
+.overlay-icon-button,
+.overlay-icon-button *,
+.overlay-icon-glyph,
+.close-confirm-close {
+  font-family: var(--font-ui) !important;
+}
+

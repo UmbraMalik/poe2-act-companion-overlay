@@ -1,0 +1,16 @@
+2026/05/16 23:10:00 123 [DEBUG Client] Generating level 8 area "G1_unknown_test" with seed 1
+2026/05/16 23:10:01 [SCENE] Set Source [The Glade]
+2026/05/16 23:10:30 123 [DEBUG Client] Generating level 18 area "G2_unknown_test" with seed 1
+2026/05/16 23:10:31 [SCENE] Set Source [Dusty Cut]
+2026/05/16 23:11:00 123 [DEBUG Client] Generating level 35 area "G3_unknown_test" with seed 1
+2026/05/16 23:11:01 [SCENE] Set Source [Forgotten Hollow]
+2026/05/16 23:11:30 123 [DEBUG Client] Generating level 46 area "G4_unknown_test" with seed 1
+2026/05/16 23:11:31 [SCENE] Set Source [Forgotten Causeway]
+2026/05/16 23:11:45 123 [DEBUG Client] Generating level 61 area "G5_unknown_test" with seed 1
+2026/05/16 23:11:46 [SCENE] Set Source [Silent Fen]
+2026/05/16 23:11:50 123 [DEBUG Client] Generating level 62 area "P1_unknown_test" with seed 1
+2026/05/16 23:11:51 [SCENE] Set Source [Empty Court]
+2026/05/16 23:12:00 123 [DEBUG Client] Generating level 68 area "P2_unknown_test" with seed 1
+2026/05/16 23:12:01 [SCENE] Set Source [Uncharted Vault]
+2026/05/16 23:12:20 123 [DEBUG Client] Generating level 69 area "P3_unknown_test" with seed 1
+2026/05/16 23:12:21 [SCENE] Set Source [Lost Summit]

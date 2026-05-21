@@ -1,0 +1,211 @@
+/* Report window and companion community/support tabs. Extracted from styles.css preserving cascade order. */
+/* Report issue window */
+.report-page {
+  min-height: 100vh;
+}
+
+.report-shell {
+  max-width: 920px;
+}
+
+.report-header-actions {
+  justify-content: flex-end;
+}
+
+.report-card {
+  gap: 16px;
+}
+
+.report-card-header {
+  align-items: flex-end;
+}
+
+.report-template-field {
+  min-width: 280px;
+}
+
+.report-message-textarea {
+  width: 100%;
+  min-height: 430px;
+  resize: vertical;
+  line-height: 1.45;
+  color: #f4ead8;
+  font-family: ui-monospace, "Cascadia Code", "Consolas", monospace;
+  font-size: 12px;
+  white-space: pre-wrap;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(0, 0, 0, 0.16)),
+    rgba(0, 0, 0, 0.22);
+}
+
+.report-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.report-action-note {
+  margin: 0;
+}
+
+@media (max-width: 760px) {
+  .report-card-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .report-template-field {
+    min-width: 0;
+  }
+
+  .report-actions button {
+    width: 100%;
+  }
+}
+
+/* Companion header has one extra feedback button in 0.2.0. */
+.companion-page .settings-header .companion-header-actions {
+  max-width: 760px;
+}
+
+.companion-header-actions button {
+  min-width: 132px;
+}
+
+/* Community / support tabs in companion panel */
+.companion-scroll-layout {
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.community-links-panel,
+.companion-support-panel {
+  flex: 0 0 auto;
+}
+
+.community-links-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.community-link-card {
+  display: grid;
+  gap: 12px;
+  padding: 13px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.022)),
+    rgba(0, 0, 0, 0.14);
+}
+
+.community-link-card strong {
+  display: block;
+  margin-bottom: 5px;
+  color: #f4ead8;
+  font-size: 15px;
+  line-height: 1.2;
+}
+
+.community-link-card p {
+  margin: 0;
+  color: #aab4c0;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.community-link-actions {
+  display: grid;
+  gap: 8px;
+}
+
+.community-link-actions code {
+  display: block;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(0, 0, 0, 0.18);
+  color: #dce6f0;
+  font-size: 12px;
+  line-height: 1.35;
+  white-space: normal;
+  word-break: break-all;
+}
+
+.companion-support-panel {
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 320px);
+  align-items: start;
+  gap: 16px;
+}
+
+.companion-support-copy {
+  display: grid;
+  gap: 12px;
+}
+
+.support-note-list {
+  display: grid;
+  gap: 10px;
+}
+
+.support-note-list .value-box {
+  display: grid;
+  gap: 5px;
+}
+
+.support-note-list .value-box strong,
+.project-link-box strong {
+  color: #ffd791;
+  font-size: 13px;
+}
+
+.support-note-list .value-box span,
+.project-link-box span {
+  color: #eef3f8;
+  line-height: 1.45;
+}
+
+.companion-support-qr-card {
+  display: grid;
+  gap: 12px;
+  justify-items: center;
+  padding: 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(0, 0, 0, 0.16);
+}
+
+.companion-support-qr-card .helper-text {
+  text-align: center;
+}
+
+.project-link-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.project-link-box {
+  display: grid;
+  gap: 8px;
+}
+
+.project-link-box .button-secondary {
+  justify-self: start;
+}
+
+@media (max-width: 900px) {
+  .community-links-grid,
+  .project-link-grid,
+  .companion-support-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .companion-support-qr-card {
+    justify-items: start;
+  }
+
+  .companion-support-qr-card .helper-text {
+    text-align: left;
+  }
+}
+

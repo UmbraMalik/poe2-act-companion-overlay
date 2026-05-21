@@ -1,0 +1,9 @@
+2026/05/16 23:30:00 123 [DEBUG Client] Generating level 53 area "G4_2_1" with seed 1
+2026/05/16 23:30:01 [SCENE] Set Source [Kid's Bay]
+2026/05/16 23:30:30 : You have received 2 Passive Skill Points.
+2026/05/16 23:30:31 : You have received 2 Weapon Set Passive Skill Points.
+2026/05/16 23:31:00 123 [DEBUG Client] Generating level 67 area "P3_2" with seed 1
+2026/05/16 23:31:01 [SCENE] Set Source [Kriar Village]
+2026/05/16 23:31:30 : Umbra has received +40 to [Spirit|Spirit].
+2026/05/16 23:32:00 [SCENE] Set Source [Oriath]
+2026/05/16 23:32:10 : Umbra has received +10% to [Resistances|Lightning].

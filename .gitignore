@@ -1,0 +1,34 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+dist-electron/
+release/
+out/
+
+# Temporary test/runtime data
+.tmp-tests/
+.tmp-appdata/
+POE2ACT_regression_autotests/
+
+# Logs and local env
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.env
+.env.*
+
+# Local archives/installers
+*.zip
+*.7z
+*.rar
+*.exe
+*.blockmap
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

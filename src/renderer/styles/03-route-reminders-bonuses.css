@@ -1,0 +1,735 @@
+/* Route density, reminders dashboard, bonus tabs. Extracted from styles.css preserving cascade order. */
+/* Compact route/reminders polish: readable sequence, less vertical waste, fewer scrolls. */
+.route-overview-grid {
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 8px;
+  align-items: start;
+}
+
+.route-overview-card {
+  position: relative;
+  gap: 6px;
+  padding: 9px 10px;
+  border-radius: 10px;
+  min-height: unset;
+}
+
+.route-overview-header {
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.route-title-wrap {
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+}
+
+.route-step-index {
+  flex: 0 0 auto;
+  min-width: 26px;
+  padding: 2px 5px;
+  border-radius: 999px;
+  color: #f1b96a;
+  background: rgba(241, 185, 106, 0.11);
+  border: 1px solid rgba(241, 185, 106, 0.22);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+
+.route-overview-header strong {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.route-overview-header > span {
+  flex: 0 0 auto;
+  font-size: 12px;
+  opacity: 0.86;
+}
+
+.compact-reward-list {
+  gap: 2px;
+  font-size: 12px;
+  line-height: 1.25;
+  opacity: 0.95;
+}
+
+.compact-reward-list li {
+  padding-left: 11px;
+}
+
+.companion-route-list-card h3 {
+  margin-bottom: 2px;
+}
+
+/* Reminders are a dashboard, not four stretched empty panels. */
+.reminders-tab-layout {
+  overflow: hidden;
+}
+
+.reminders-dashboard-grid {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  display: grid;
+  grid-template-columns: minmax(240px, 0.9fr) minmax(240px, 0.9fr) minmax(360px, 1.35fr);
+  grid-auto-rows: min-content;
+  gap: 12px;
+  align-content: start;
+  align-items: start;
+  padding-right: 4px;
+}
+
+.reminders-card {
+  align-self: start;
+  height: auto;
+  min-height: unset;
+  max-height: none;
+  overflow: visible;
+}
+
+.reminders-card-wide {
+  grid-column: span 1;
+}
+
+.reminders-card-nearest {
+  min-height: unset;
+}
+
+.reminder-list {
+  display: grid;
+  gap: 7px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.reminder-item {
+  display: grid;
+  gap: 4px;
+  padding: 8px 9px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.055);
+}
+
+.reminder-line {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.reminder-level {
+  flex: 0 0 auto;
+  color: #f1b96a;
+  font-weight: 800;
+}
+
+.reminder-sublist {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding-left: 18px;
+  color: #d8e2eb;
+  font-size: 12px;
+  line-height: 1.28;
+}
+
+.reminder-chip-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 7px;
+}
+
+.reminder-chip {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  padding: 8px 9px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.055);
+}
+
+.reminder-chip span {
+  color: #f1b96a;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+}
+
+.reminder-chip strong {
+  font-size: 12px;
+  line-height: 1.25;
+}
+
+.reminders-dismissed-card {
+  flex: 0 0 auto;
+  max-height: 180px;
+  overflow: auto;
+}
+
+@media (max-width: 1120px) {
+  .reminders-dashboard-grid {
+    grid-template-columns: repeat(2, minmax(240px, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .reminders-dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Route readability fix: keep sequence clear, prevent titles from breaking letter-by-letter, and restore all important checklist notes. */
+.route-overview-grid {
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 9px;
+  align-content: start;
+}
+
+.route-overview-card {
+  min-width: 0;
+  padding: 9px 10px;
+  gap: 6px;
+  min-height: 86px;
+}
+
+.route-overview-header {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr) auto;
+  align-items: start;
+  column-gap: 6px;
+  row-gap: 3px;
+  min-width: 0;
+}
+
+.route-title-wrap {
+  display: contents;
+}
+
+.route-step-index {
+  align-self: start;
+  min-width: 26px;
+  height: 22px;
+  padding: 2px 5px;
+  line-height: 16px;
+}
+
+.route-status-icon {
+  align-self: start;
+  width: 16px;
+  text-align: center;
+  color: #f4ead8;
+  line-height: 22px;
+  font-weight: 800;
+}
+
+.route-zone-name {
+  min-width: 0;
+  color: #fff1d0;
+  font-size: 14px;
+  line-height: 1.18;
+  font-weight: 800;
+  white-space: normal;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
+}
+
+.route-rec-badge,
+.route-overview-header > span.route-rec-badge {
+  justify-self: end;
+  align-self: start;
+  max-width: 112px;
+  color: #d8e2eb;
+  font-size: 11px;
+  line-height: 1.2;
+  text-align: right;
+  opacity: 0.9;
+  white-space: normal;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+.route-overview-header strong {
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+.compact-reward-list {
+  display: grid;
+  gap: 2px;
+  margin-top: 2px;
+  font-size: 11.5px;
+  line-height: 1.24;
+}
+
+.compact-reward-list li {
+  min-width: 0;
+  padding-left: 10px;
+  white-space: normal;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+@media (min-width: 1180px) {
+  .route-overview-grid {
+    grid-template-columns: repeat(3, minmax(260px, 1fr));
+  }
+}
+
+@media (min-width: 1500px) {
+  .route-overview-grid {
+    grid-template-columns: repeat(4, minmax(250px, 1fr));
+  }
+}
+
+/* Reminder cards: highlight the next relevant level and avoid floating/empty-looking panels. */
+.reminder-item.is-nearest {
+  border-color: rgba(241, 185, 106, 0.55);
+  background: linear-gradient(90deg, rgba(241, 185, 106, 0.16), rgba(241, 185, 106, 0.045));
+  box-shadow: inset 0 0 0 1px rgba(241, 185, 106, 0.18);
+}
+
+.reminder-line {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 8px;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+.reminder-title {
+  min-width: 0;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+.reminder-badge {
+  justify-self: end;
+  padding: 2px 6px;
+  border-radius: 999px;
+  color: #12171d;
+  background: #f1b96a;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.reminders-dashboard-grid {
+  grid-template-columns: repeat(2, minmax(280px, 1fr));
+}
+
+.reminder-chip-grid {
+  grid-template-columns: repeat(auto-fit, minmax(112px, 1fr));
+}
+
+.reminder-chip strong {
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+/* Overlay: compact nearest level/vendor reminders. */
+.upcoming-overlay-section {
+  background: linear-gradient(180deg, rgba(139, 96, 35, 0.16), rgba(28, 22, 15, 0.20));
+  font-size: var(--font-body);
+}
+
+.upcoming-overlay-section .reminder-header-row {
+  gap: calc(var(--space-section) * 0.9);
+}
+
+.overlay-upcoming-range {
+  flex: 0 0 auto;
+  min-width: 0;
+  color: rgba(225, 212, 188, 0.66);
+  font-size: var(--font-heading);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.overlay-upcoming-list {
+  display: grid;
+  gap: calc(var(--space-section) * 0.85);
+  margin: var(--space-section) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.overlay-upcoming-item {
+  display: grid;
+  gap: calc(var(--space-section) * 0.38);
+  min-width: 0;
+  padding: var(--space-card-y) var(--space-card-x);
+  border-radius: 10px;
+  border: 1px solid rgba(241, 185, 106, 0.18);
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.overlay-upcoming-item.is-current-level {
+  border-color: rgba(241, 185, 106, 0.55);
+  background: linear-gradient(90deg, rgba(241, 185, 106, 0.18), rgba(241, 185, 106, 0.055));
+}
+
+.overlay-upcoming-line {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: calc(var(--space-section) * 0.85);
+  align-items: baseline;
+  min-width: 0;
+}
+
+.overlay-upcoming-level {
+  color: #f1b96a;
+  font-size: calc(var(--font-body) * 1.08);
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.overlay-upcoming-title {
+  min-width: 0;
+  color: #fff3d1;
+  font-size: var(--font-body);
+  font-weight: 800;
+  line-height: 1.22;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+.overlay-upcoming-badge {
+  justify-self: end;
+  padding: 1px calc(var(--space-card-x) * 0.6);
+  border-radius: 999px;
+  background: #f1b96a;
+  color: #12171d;
+  font-size: var(--font-heading);
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.overlay-upcoming-note {
+  margin: 0;
+  min-width: 0;
+  color: rgba(225, 235, 242, 0.82);
+  font-size: var(--font-meta);
+  line-height: 1.25;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+/* Campaign bonuses dashboard */
+.bonuses-tab-layout {
+  min-height: 0;
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.bonuses-summary-card {
+  margin-bottom: 12px;
+}
+
+.bonuses-summary-grid {
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+
+.bonuses-act-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 12px;
+  align-items: start;
+}
+
+.bonuses-act-card {
+  min-width: 0;
+}
+
+.bonuses-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.bonus-row {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: start;
+  padding: 10px 11px;
+  border: 1px solid rgba(214, 170, 93, 0.14);
+  border-radius: 12px;
+  background: rgba(10, 14, 19, 0.42);
+}
+
+.bonus-row.is-done {
+  border-color: rgba(127, 194, 126, 0.32);
+  background: rgba(35, 70, 45, 0.16);
+}
+
+.bonus-status-marker {
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  color: #ffd27a;
+  border: 1px solid rgba(255, 210, 122, 0.4);
+  background: rgba(255, 210, 122, 0.08);
+  font-weight: 800;
+}
+
+.bonus-row.is-done .bonus-status-marker {
+  color: #9ee6a3;
+  border-color: rgba(158, 230, 163, 0.45);
+  background: rgba(158, 230, 163, 0.12);
+}
+
+.bonus-main {
+  min-width: 0;
+}
+
+.bonus-title-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+  color: #f7ead1;
+}
+
+.bonus-category-pill,
+.bonus-verify-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 18px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.bonus-category-pill {
+  color: #c9dcff;
+  background: rgba(116, 164, 255, 0.12);
+  border: 1px solid rgba(116, 164, 255, 0.18);
+}
+
+.bonus-verify-pill {
+  color: #ffd27a;
+  background: rgba(255, 210, 122, 0.12);
+  border: 1px solid rgba(255, 210, 122, 0.22);
+}
+
+.bonus-meta,
+.bonus-detected-line {
+  margin: 4px 0 0;
+  color: rgba(214, 229, 255, 0.74);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.bonus-detected-line {
+  color: rgba(158, 230, 163, 0.78);
+}
+
+.bonus-details-list {
+  margin: 6px 0 0;
+  padding-left: 16px;
+  color: rgba(248, 239, 221, 0.82);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.bonus-toggle-button {
+  min-width: 82px;
+  min-height: 34px;
+  padding: 7px 10px;
+  white-space: nowrap;
+}
+
+@media (max-width: 780px) {
+  .bonus-row {
+    grid-template-columns: 24px minmax(0, 1fr);
+  }
+
+  .bonus-toggle-button {
+    grid-column: 2;
+    justify-self: start;
+  }
+}
+
+/* BONUS COMPACT OVERRIDES START */
+/* Compact mode for Companion → Бонусы tab. Appended as a safe override, no JSX/main logic touched. */
+.bonuses-tab-layout {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 10px;
+  overflow: hidden;
+  padding-right: 0;
+}
+
+.bonuses-summary-card {
+  margin-bottom: 0 !important;
+  padding: 10px 12px !important;
+  gap: 8px !important;
+}
+
+.bonuses-summary-card h3 {
+  font-size: 11px;
+}
+
+.bonuses-summary-card .helper-text {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.25;
+}
+
+.bonuses-summary-card .button-row {
+  gap: 6px;
+}
+
+.bonuses-summary-card .button-row button {
+  min-height: 30px;
+  padding: 6px 10px;
+  font-size: 12px;
+  flex: 0 0 auto;
+}
+
+.bonuses-summary-grid {
+  grid-template-columns: repeat(auto-fit, minmax(92px, 1fr)) !important;
+  gap: 6px !important;
+}
+
+.bonuses-summary-grid .info-cell {
+  min-height: 50px;
+  padding: 7px 8px;
+  border-radius: 10px;
+  gap: 2px;
+}
+
+.bonuses-summary-grid .info-cell dt {
+  font-size: 9px;
+  letter-spacing: 0.06em;
+}
+
+.bonuses-summary-grid .info-cell dd {
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.bonuses-act-grid {
+  min-height: 0;
+  overflow: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(285px, 1fr)) !important;
+  gap: 8px !important;
+  align-items: start;
+  align-content: start;
+  padding-right: 6px;
+}
+
+.bonuses-act-card {
+  padding: 10px 11px !important;
+  gap: 7px !important;
+  border-radius: 12px !important;
+}
+
+.bonuses-act-card h3 {
+  font-size: 11px;
+}
+
+.bonuses-list {
+  gap: 6px !important;
+}
+
+.bonus-row {
+  grid-template-columns: 18px minmax(0, 1fr) auto !important;
+  gap: 7px !important;
+  padding: 7px 8px !important;
+  border-radius: 10px !important;
+  min-width: 0;
+}
+
+.bonus-status-marker {
+  width: 16px !important;
+  height: 16px !important;
+  font-size: 10px;
+  margin-top: 2px;
+}
+
+.bonus-title-line {
+  gap: 4px !important;
+  line-height: 1.18;
+}
+
+.bonus-title-line strong {
+  font-size: 12.5px;
+  line-height: 1.18;
+}
+
+.bonus-category-pill,
+.bonus-verify-pill {
+  min-height: 14px !important;
+  padding: 1px 5px !important;
+  font-size: 8px !important;
+  letter-spacing: 0.04em;
+}
+
+.bonus-meta,
+.bonus-detected-line {
+  margin-top: 2px !important;
+  font-size: 10.5px !important;
+  line-height: 1.22 !important;
+}
+
+.bonus-details-list {
+  margin-top: 3px !important;
+  padding-left: 13px !important;
+  font-size: 10.5px !important;
+  line-height: 1.22 !important;
+}
+
+.bonus-details-list li + li {
+  margin-top: 1px;
+}
+
+.bonus-toggle-button {
+  min-width: 58px !important;
+  min-height: 25px !important;
+  padding: 4px 7px !important;
+  border-radius: 8px !important;
+  font-size: 11px !important;
+  align-self: start;
+}
+
+@media (max-width: 980px) {
+  .bonuses-act-grid {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) !important;
+  }
+}
+
+@media (max-width: 700px) {
+  .bonuses-tab-layout {
+    overflow: auto;
+  }
+  .bonuses-act-grid {
+    overflow: visible;
+    grid-template-columns: 1fr !important;
+  }
+}
+/* BONUS COMPACT OVERRIDES END */
+
+

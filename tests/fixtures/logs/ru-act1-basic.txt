@@ -1,0 +1,6 @@
+2026/05/16 22:00:01 [SCENE] Set Source [Лагерь Клирфелл]
+2026/05/16 22:00:10 123 [DEBUG Client] Generating level 6 area "G1_4" with seed 1
+2026/05/16 22:00:11 [SCENE] Set Source [Грельвуд]
+2026/05/16 22:02:00 : Umbra (Sorceress) достигает 4 уровня
+2026/05/16 22:05:00 : Umbra был повержен.
+2026/05/16 22:06:00 [SCENE] Set Source [Лагерь Клирфелл]

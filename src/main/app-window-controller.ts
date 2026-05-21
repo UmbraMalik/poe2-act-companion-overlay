@@ -1,0 +1,749 @@
+import { access, appendFile, stat } from 'node:fs/promises';
+import { constants } from 'node:fs';
+import { join } from 'node:path';
+import {
+  app,
+  BrowserWindow,
+  dialog,
+  globalShortcut,
+  ipcMain,
+  Menu,
+  screen,
+  shell,
+  Tray
+} from 'electron';
+import type { OpenDialogOptions } from 'electron';
+
+import { ConfigStore } from './services/config-store';
+import { GuideService } from './services/guide-service';
+import {
+  extractGeneratedAreaId,
+  extractNamedZoneFromLine,
+  normalizeText,
+  parseLevelUp,
+  parsePermanentReward
+} from './services/log-parser';
+import { LogWatcher } from './services/log-watcher';
+import { resolveRuntimePath } from './services/runtime-paths';
+import { checkForUpdates } from './services/update-service';
+import { AutoUpdateService } from './services/auto-update-service';
+import {
+  DEFAULT_COMPACT_OVERLAY_BOUNDS,
+  DEFAULT_COMPANION_BOUNDS,
+  DEFAULT_HOTKEYS,
+  DEFAULT_OVERLAY_BOUNDS,
+  DEFAULT_RUN_TIMER,
+  DEFAULT_TIMER_ONLY_OVERLAY_BOUNDS,
+  DEFAULT_TOWN_TIMER
+} from '../shared/defaults';
+import { buildChecklistDefinition, buildChecklistViewItems } from '../shared/checklist';
+import { getRunTimerDisplayElapsed, getZoneTimerDisplayElapsed } from '../shared/timers';
+import { getOverlayMinimumSize } from '../shared/overlay-layout';
+import {
+  areOverlayBoundsEqual,
+  areOverlayBoundsSizeEqual,
+  canSourceChangeOverlaySize,
+  planOverlayBoundsChange,
+  shouldIgnoreOverlayAutoHeight
+} from './overlay-window-bounds';
+import { TimerDiagnosticsLog, isTimerDiagnosticsEnabled } from './timer-diagnostics-log';
+import { translate } from '../i18n/translations';
+import { DIRECT_COMPOSITION_COMPAT_ENABLED, configureElectronStartup } from './electron-startup';
+import { createAppIcon } from './app-icons';
+import {
+  HOTKEY_ACTION_LABELS,
+  formatConfiguredHotkey,
+  normalizeHotkeyAccelerator
+} from './hotkey-utils';
+import {
+  inferActHintFromInternalAreaId as inferActHintFromInternalAreaIdFromScene,
+  isActLabelScene,
+  isLoginLikeScene,
+  isTownSceneWithGuide,
+  isUnknownOrNullScene,
+  isValidGameplaySceneSource,
+  normalizeSceneText,
+  shouldKeepPendingZoneAreaId
+} from './scene-classifier';
+import campaignBonusesData from '../data/campaign-bonuses.json';
+import type {
+  AppConfig,
+  AppLanguage,
+  AppSnapshot,
+  AutoUpdateState,
+  CampaignBonusDefinition,
+  CurrentZoneState,
+  GuideEntry,
+  GuideZoneProgress,
+  LogWatcherStatus,
+  OverlayBounds,
+  OverlayMode,
+  RunSummary,
+  RunTimerState,
+  SettingsPatch,
+  TimerDiagnosticsPayload,
+  UpdateCheckResult,
+  UpdateInfo,
+  ZoneAct,
+  ZoneSource
+} from '../shared/types';
+import {
+  BROADCAST_THROTTLE_MS,
+  DEV_SAMPLE_ZONE_LINE,
+  TIMER_DIAGNOSTICS_TICK_DELAY_THRESHOLD_MS,
+  TIMER_VISUAL_HEARTBEAT_MS,
+  UPDATE_CHECK_DELAY_MS,
+  clampOpacity,
+  devServerUrl,
+  isDev,
+  isSafeExternalUrl
+} from './app-environment';
+
+
+export function runCreateOverlayWindow(this: any) {
+        const bounds = this.getOverlayBoundsForMode(this.overlayMode);
+        const minimumSize = this.getOverlayMinimumSize(this.overlayMode);
+        this.lastOverlayKnownBounds = bounds;
+        this.logOverlayBoundsEvent('info', {
+            phase: 'window-create',
+            source: 'restoreBounds',
+            from: null,
+            to: bounds
+        });
+        this.overlayWindow = new BrowserWindow({
+            icon: createAppIcon(),
+            ...bounds,
+            frame: false,
+            transparent: true,
+            // Native resize is unstable with transparent frameless Electron windows on high-DPI
+            // and Linux compositors. The app uses its own resize grip via setBounds instead.
+            resizable: false,
+            minWidth: minimumSize.width,
+            minHeight: minimumSize.height,
+            show: false,
+            alwaysOnTop: true,
+            skipTaskbar: false,
+            // Keep the overlay focusable so local buttons and fallback hotkeys still work.
+            // Showing is done through showInactive(), so the game should not lose focus on expand/show.
+            focusable: true,
+            hasShadow: false,
+            backgroundColor: '#00000000',
+            webPreferences: {
+                preload: join(__dirname, 'preload.js'),
+                contextIsolation: true,
+                nodeIntegration: false,
+                backgroundThrottling: false
+            }
+        });
+        this.attachManualHotkeys(this.overlayWindow);
+        this.overlayWindow.setAlwaysOnTop(true, 'screen-saver');
+        this.overlayWindow.setVisibleOnAllWorkspaces(true, {
+            visibleOnFullScreen: true
+        });
+        this.overlayWindow.setOpacity(this.config.overlayOpacity);
+        this.overlayWindow.setMenuBarVisibility(false);
+        this.overlayWindow.setFocusable(true);
+        this.overlayWindow.on('close', (event: any) => {
+            if (this.isClosingOverlayWindow) {
+                return;
+            }
+            if (!this.isQuitting) {
+                event.preventDefault();
+                this.overlayWindow?.hide();
+            }
+        });
+        this.overlayWindow.on('closed', () => {
+            this.overlayWindow = null;
+            this.isClosingOverlayWindow = false;
+            this.overlayDragInProgress = false;
+            this.overlayDragBounds = null;
+            this.lastOverlayKnownBounds = null;
+            this.overlayBoundsSourceHint = null;
+        });
+        this.overlayWindow.on('move', () => {
+            this.handleOverlayWindowBoundsEvent('move');
+            this.persistOverlayBounds();
+        });
+        this.overlayWindow.on('resize', () => {
+            this.handleOverlayWindowBoundsEvent('resize');
+            this.persistOverlayBounds();
+        });
+        void this.loadWindowPage(this.overlayWindow, 'overlay');
+        this.overlayWindow.once('ready-to-show', () => {
+            this.showOverlayInactive();
+        });
+    }
+
+export function runGetConfiguredHotkeys(this: any) {
+        return {
+            markChecklistDone: formatConfiguredHotkey(this.config.hotkeys.markChecklistDone, DEFAULT_HOTKEYS.markChecklistDone),
+            undoChecklistMark: formatConfiguredHotkey(this.config.hotkeys.undoChecklistMark, DEFAULT_HOTKEYS.undoChecklistMark),
+            toggleTimerPause: formatConfiguredHotkey(this.config.hotkeys.toggleTimerPause, DEFAULT_HOTKEYS.toggleTimerPause),
+            openCompanion: formatConfiguredHotkey(this.config.hotkeys.openCompanion, DEFAULT_HOTKEYS.openCompanion),
+            toggleOverlayMode: formatConfiguredHotkey(this.config.hotkeys.toggleOverlayMode, DEFAULT_HOTKEYS.toggleOverlayMode)
+        };
+    }
+
+export function runRegisterGlobalHotkeys(this: any) {
+        globalShortcut.unregisterAll();
+        this.registeredGlobalHotkeys.clear();
+        this.globalHotkeysRegistered = false;
+        const hotkeys = this.getConfiguredHotkeys();
+        const shortcuts: Array<[string, string, () => void]> = [
+            [
+                'toggleTimerPause',
+                hotkeys.toggleTimerPause,
+                () => {
+                    if (this.config.runTimer.status === 'running') {
+                        this.pauseRunTimer();
+                    }
+                    else if (this.config.runTimer.status === 'paused') {
+                        this.resumeRunTimer();
+                    }
+                }
+            ],
+            ['openCompanion', hotkeys.openCompanion, () => this.toggleCompanionWindow()],
+            ['toggleOverlayMode', hotkeys.toggleOverlayMode, () => this.toggleOverlayMode()]
+        ];
+        if (this.config.manualHotkeysEnabled) {
+            shortcuts.push(['markChecklistDone', hotkeys.markChecklistDone, () => this.markCurrentChecklistItemDone()], ['undoChecklistMark', hotkeys.undoChecklistMark, () => this.undoLastChecklistMark()]);
+        }
+        const usedAccelerators = new Map<string, string>();
+        for (const [action, accelerator, handler] of shortcuts) {
+            const normalized = normalizeHotkeyAccelerator(accelerator);
+            if (!normalized) {
+                console.warn(`[Hotkeys] Invalid shortcut for ${action}: ${accelerator}`);
+                continue;
+            }
+            const duplicateAction = usedAccelerators.get(normalized);
+            if (duplicateAction) {
+                console.warn(`[Hotkeys] Duplicate shortcut ${normalized} for ${action} and ${duplicateAction}. Skipping ${action}.`);
+                continue;
+            }
+            usedAccelerators.set(normalized, action);
+            const registered = globalShortcut.register(normalized, () => {
+                if (this.isQuitting) {
+                    return;
+                }
+                handler();
+            });
+            if (!registered) {
+                console.warn(`[Hotkeys] Failed to register global shortcut ${normalized} (${HOTKEY_ACTION_LABELS[action as keyof typeof HOTKEY_ACTION_LABELS]}). Local fallback will work when overlay is focused.`);
+                continue;
+            }
+            this.registeredGlobalHotkeys.add(normalized);
+        }
+        this.globalHotkeysRegistered = this.registeredGlobalHotkeys.size > 0;
+        this.refreshTrayMenu();
+    }
+
+export function runGetLocalInputAccelerator(this: any, input: any) {
+        const key = String(input.key ?? '').trim();
+        if (!key) {
+            return null;
+        }
+        const parts: string[] = [];
+        if (input.control || input.meta) {
+            parts.push('Ctrl');
+        }
+        if (input.alt) {
+            parts.push('Alt');
+        }
+        if (input.shift) {
+            parts.push('Shift');
+        }
+        const upperKey = key.length === 1 ? key.toUpperCase() : key.toUpperCase();
+        parts.push(upperKey === ' ' ? 'Space' : upperKey);
+        return normalizeHotkeyAccelerator(parts.join('+'));
+    }
+
+export function runAttachManualHotkeys(this: any, window: any) {
+        window.webContents.on('before-input-event', (event: any, input: any) => {
+            if (input.type !== 'keyDown') {
+                return;
+            }
+            const inputAccelerator = this.getLocalInputAccelerator(input);
+            if (!inputAccelerator || this.registeredGlobalHotkeys.has(inputAccelerator)) {
+                return;
+            }
+            const hotkeys = this.getConfiguredHotkeys();
+            const matches = (value: any) => normalizeHotkeyAccelerator(value) === inputAccelerator;
+            if (matches(hotkeys.openCompanion)) {
+                event.preventDefault();
+                this.toggleCompanionWindow();
+                return;
+            }
+            if (matches(hotkeys.toggleOverlayMode)) {
+                event.preventDefault();
+                this.toggleOverlayMode();
+                return;
+            }
+            if (matches(hotkeys.toggleTimerPause)) {
+                event.preventDefault();
+                if (this.config.runTimer.status === 'running') {
+                    this.pauseRunTimer();
+                }
+                else if (this.config.runTimer.status === 'paused') {
+                    this.resumeRunTimer();
+                }
+                return;
+            }
+            if (!this.config.manualHotkeysEnabled) {
+                return;
+            }
+            if (matches(hotkeys.markChecklistDone)) {
+                event.preventDefault();
+                this.markCurrentChecklistItemDone();
+                return;
+            }
+            if (matches(hotkeys.undoChecklistMark)) {
+                event.preventDefault();
+                this.undoLastChecklistMark();
+                return;
+            }
+        });
+    }
+
+export function runToggleSettingsWindow(this: any) {
+        if (this.settingsWindow && !this.settingsWindow.isDestroyed()) {
+            if (this.settingsWindow.isVisible()) {
+                this.settingsWindow.hide();
+                return;
+            }
+            if (this.settingsWindow.isMinimized()) {
+                this.settingsWindow.restore();
+            }
+            this.settingsWindow.show();
+            this.settingsWindow.focus();
+            return;
+        }
+        this.openSettingsWindow();
+    }
+
+export function runOpenSettingsWindow(this: any) {
+        if (this.settingsWindow) {
+            this.settingsWindow.show();
+            this.settingsWindow.focus();
+            return;
+        }
+        this.settingsWindow = new BrowserWindow({
+            icon: createAppIcon(),
+            width: 760,
+            height: 860,
+            minWidth: 680,
+            minHeight: 720,
+            frame: false,
+            titleBarStyle: 'hidden',
+            backgroundColor: '#10161f',
+            show: false,
+            autoHideMenuBar: true,
+            webPreferences: {
+                preload: join(__dirname, 'preload.js'),
+                contextIsolation: true,
+                nodeIntegration: false,
+                backgroundThrottling: false
+            }
+        });
+        this.attachManualHotkeys(this.settingsWindow);
+        this.settingsWindow.on('close', (event: any) => {
+            if (!this.isQuitting) {
+                event.preventDefault();
+                this.settingsWindow?.hide();
+            }
+        });
+        this.settingsWindow.on('closed', () => {
+            this.settingsWindow = null;
+        });
+        void this.loadWindowPage(this.settingsWindow, 'settings');
+        this.settingsWindow.once('ready-to-show', () => {
+            this.settingsWindow?.show();
+        });
+    }
+
+export function runToggleCompanionWindow(this: any) {
+        if (this.companionWindow && !this.companionWindow.isDestroyed()) {
+            if (this.companionWindow.isVisible()) {
+                this.companionWindow.hide();
+                return;
+            }
+            if (this.companionWindow.isMinimized()) {
+                this.companionWindow.restore();
+            }
+            this.companionWindow.show();
+            this.companionWindow.focus();
+            return;
+        }
+        this.openCompanionWindow();
+    }
+
+export function runOpenCompanionWindow(this: any) {
+        if (this.companionWindow) {
+            this.companionWindow.show();
+            this.companionWindow.focus();
+            return;
+        }
+        const bounds = this.getCompanionBounds();
+        this.companionWindow = new BrowserWindow({
+            icon: createAppIcon(),
+            ...bounds,
+            minWidth: 720,
+            minHeight: 520,
+            resizable: true,
+            show: false,
+            autoHideMenuBar: true,
+            backgroundColor: '#0f151d',
+            alwaysOnTop: this.config.companionAlwaysOnTop,
+            webPreferences: {
+                preload: join(__dirname, 'preload.js'),
+                contextIsolation: true,
+                nodeIntegration: false,
+                backgroundThrottling: false
+            }
+        });
+        this.attachManualHotkeys(this.companionWindow);
+        this.companionWindow.on('close', (event: any) => {
+            if (!this.isQuitting) {
+                event.preventDefault();
+                this.companionWindow?.hide();
+            }
+        });
+        this.companionWindow.on('closed', () => {
+            this.companionWindow = null;
+        });
+        this.companionWindow.on('move', () => {
+            this.persistCompanionBounds();
+        });
+        this.companionWindow.on('resize', () => {
+            this.persistCompanionBounds();
+        });
+        void this.loadWindowPage(this.companionWindow, 'companion');
+        this.companionWindow.once('ready-to-show', () => {
+            this.companionWindow?.show();
+        });
+    }
+
+export function runOpenInfoWindow(this: any) {
+        if (this.infoWindow) {
+            this.infoWindow.show();
+            this.infoWindow.focus();
+            return;
+        }
+        this.infoWindow = new BrowserWindow({
+            icon: createAppIcon(),
+            width: 760,
+            height: 760,
+            minWidth: 680,
+            minHeight: 620,
+            frame: false,
+            titleBarStyle: 'hidden',
+            backgroundColor: '#10161f',
+            show: false,
+            autoHideMenuBar: true,
+            webPreferences: {
+                preload: join(__dirname, 'preload.js'),
+                contextIsolation: true,
+                nodeIntegration: false,
+                backgroundThrottling: false
+            }
+        });
+        this.attachManualHotkeys(this.infoWindow);
+        this.infoWindow.on('close', (event: any) => {
+            if (!this.isQuitting) {
+                event.preventDefault();
+                this.infoWindow?.hide();
+            }
+        });
+        this.infoWindow.on('closed', () => {
+            this.infoWindow = null;
+        });
+        void this.loadWindowPage(this.infoWindow, 'info');
+        this.infoWindow.once('ready-to-show', () => {
+            this.infoWindow?.show();
+        });
+    }
+
+export function runOpenCommunityWindow(this: any) {
+        if (this.communityWindow) {
+            this.communityWindow.show();
+            this.communityWindow.focus();
+            return;
+        }
+        this.communityWindow = new BrowserWindow({
+            icon: createAppIcon(),
+            width: 760,
+            height: 680,
+            minWidth: 680,
+            minHeight: 560,
+            frame: false,
+            titleBarStyle: 'hidden',
+            backgroundColor: '#10161f',
+            show: false,
+            autoHideMenuBar: true,
+            webPreferences: {
+                preload: join(__dirname, 'preload.js'),
+                contextIsolation: true,
+                nodeIntegration: false,
+                backgroundThrottling: false
+            }
+        });
+        this.attachManualHotkeys(this.communityWindow);
+        this.communityWindow.on('close', (event: any) => {
+            if (!this.isQuitting) {
+                event.preventDefault();
+                this.communityWindow?.hide();
+            }
+        });
+        this.communityWindow.on('closed', () => {
+            this.communityWindow = null;
+        });
+        void this.loadWindowPage(this.communityWindow, 'community');
+        this.communityWindow.once('ready-to-show', () => {
+            this.communityWindow?.show();
+            this.communityWindow?.focus();
+        });
+    }
+
+export function runOpenSupportWindow(this: any) {
+        if (this.supportWindow) {
+            this.supportWindow.show();
+            this.supportWindow.focus();
+            return;
+        }
+        this.supportWindow = new BrowserWindow({
+            icon: createAppIcon(),
+            width: 760,
+            height: 700,
+            minWidth: 680,
+            minHeight: 560,
+            frame: false,
+            titleBarStyle: 'hidden',
+            backgroundColor: '#10161f',
+            show: false,
+            autoHideMenuBar: true,
+            webPreferences: {
+                preload: join(__dirname, 'preload.js'),
+                contextIsolation: true,
+                nodeIntegration: false,
+                backgroundThrottling: false
+            }
+        });
+        this.attachManualHotkeys(this.supportWindow);
+        this.supportWindow.on('close', (event: any) => {
+            if (!this.isQuitting) {
+                event.preventDefault();
+                this.supportWindow?.hide();
+            }
+        });
+        this.supportWindow.on('closed', () => {
+            this.supportWindow = null;
+        });
+        void this.loadWindowPage(this.supportWindow, 'support');
+        this.supportWindow.once('ready-to-show', () => {
+            this.supportWindow?.show();
+            this.supportWindow?.focus();
+        });
+    }
+
+export function runOpenReportIssueWindow(this: any) {
+        if (this.reportWindow) {
+            this.reportWindow.show();
+            this.reportWindow.focus();
+            return;
+        }
+        this.reportWindow = new BrowserWindow({
+            icon: createAppIcon(),
+            width: 820,
+            height: 780,
+            minWidth: 720,
+            minHeight: 620,
+            frame: false,
+            titleBarStyle: 'hidden',
+            backgroundColor: '#10161f',
+            show: false,
+            autoHideMenuBar: true,
+            webPreferences: {
+                preload: join(__dirname, 'preload.js'),
+                contextIsolation: true,
+                nodeIntegration: false,
+                backgroundThrottling: false
+            }
+        });
+        this.attachManualHotkeys(this.reportWindow);
+        this.reportWindow.on('close', (event: any) => {
+            if (!this.isQuitting) {
+                event.preventDefault();
+                this.reportWindow?.hide();
+            }
+        });
+        this.reportWindow.on('closed', () => {
+            this.reportWindow = null;
+        });
+        void this.loadWindowPage(this.reportWindow, 'report');
+        this.reportWindow.once('ready-to-show', () => {
+            this.reportWindow?.show();
+            this.reportWindow?.focus();
+        });
+    }
+
+export function runCreateTray(this: any) {
+        this.tray = new Tray(createAppIcon());
+        this.tray.setToolTip(this.t('main.trayTooltip'));
+        this.refreshTrayMenu();
+        this.tray.on('double-click', () => {
+            this.showOverlay();
+        });
+    }
+
+export function runGetHotkeyTrayLabel(this: any) {
+        const hotkeys = this.getConfiguredHotkeys();
+        const segments: string[] = [];
+        if (this.config.manualHotkeysEnabled) {
+            segments.push(`${hotkeys.markChecklistDone} — ${this.t('main.hotkeysMark')}`);
+            segments.push(`${hotkeys.undoChecklistMark} — ${this.t('main.hotkeysUndo')}`);
+        }
+        segments.push(`${hotkeys.toggleTimerPause} — ${this.t('main.hotkeysPause')}`);
+        segments.push(`${hotkeys.openCompanion} — ${this.t('main.hotkeysCompanion')}`);
+        segments.push(`${hotkeys.toggleOverlayMode} — ${this.t('main.hotkeysOverlayMode')}`);
+        return `${this.t('main.hotkeysLabel')}: ${segments.join(', ')}`;
+    }
+
+export function runRefreshTrayMenu(this: any) {
+        if (!this.tray) {
+            return;
+        }
+        this.tray.setToolTip(this.t('main.trayTooltip'));
+        const menu = Menu.buildFromTemplate([
+            {
+                label: this.t('main.trayShowOverlay'),
+                click: () => this.showOverlay()
+            },
+            {
+                label: this.t('main.trayHideOverlay'),
+                click: () => this.overlayWindow?.hide()
+            },
+            {
+                label: this.t('main.trayOpenCompanion'),
+                click: () => this.openCompanionWindow()
+            },
+            {
+                label: this.t('main.traySettings'),
+                click: () => this.openSettingsWindow()
+            },
+            { type: 'separator' },
+            {
+                label: this.getHotkeyTrayLabel(),
+                enabled: false
+            },
+            {
+                label: this.t('main.trayQuit'),
+                click: () => {
+                    app.quit();
+                }
+            }
+        ]);
+        this.tray.setContextMenu(menu);
+    }
+
+export async function runAppendDevSampleLine(this: any) {
+        const targetPath = this.config.logFilePath ?? this.runtime.watchedLogPath;
+        if (!targetPath) {
+            return;
+        }
+        await appendFile(targetPath, `${DEV_SAMPLE_ZONE_LINE}\r\n`, 'utf8');
+        await this.refreshLogFileInfo(targetPath);
+        await this.logWatcher.checkNow();
+        this.broadcastState();
+    }
+
+export function runShowOverlayInactive(this: any) {
+        if (!this.overlayWindow || this.overlayWindow.isDestroyed()) {
+            return;
+        }
+        // Show without activating the window. The overlay remains focusable for mouse buttons
+        // and fallback local hotkeys, but showInactive() keeps the game focused on show/expand.
+        this.overlayWindow.setFocusable(true);
+        this.overlayWindow.setAlwaysOnTop(true, 'screen-saver');
+        this.overlayWindow.showInactive();
+    }
+
+export function runShowOverlay(this: any) {
+        if (!this.overlayWindow || this.overlayWindow.isDestroyed()) {
+            this.createOverlayWindow();
+            return;
+        }
+        this.showOverlayInactive();
+    }
+
+export function runSetOverlayMode(this: any, mode: any) {
+        if (this.overlayMode === mode && this.runtime.overlayMode === mode) {
+            return;
+        }
+        const previousOverlayMode = this.overlayMode;
+        const previousOverlayDensity = this.config.overlayDensity;
+        const previousOverlayBounds = this.overlayWindow && !this.overlayWindow.isDestroyed()
+            ? this.overlayWindow.getBounds()
+            : null;
+        if (previousOverlayBounds) {
+            if (this.overlayBoundsTimer) {
+                clearTimeout(this.overlayBoundsTimer);
+                this.overlayBoundsTimer = null;
+            }
+            this.persistOverlayBoundsForState(previousOverlayMode, previousOverlayDensity, previousOverlayBounds);
+        }
+        this.overlayMode = mode;
+        this.runtime.overlayMode = mode;
+        this.config = this.configStore.updateSettings({
+            mainOverlaySettings: {
+                overlayMode: mode
+            }
+        });
+        if (this.overlayWindow && !this.overlayWindow.isDestroyed()) {
+            const minimumSize = this.getOverlayMinimumSize(mode);
+            const nextBounds = this.getOverlayBoundsForMode(mode);
+            this.applyOverlayWindowBounds('modeSwitch', nextBounds, { minimumSize });
+            this.overlayWindow.setFocusable(true);
+            this.overlayWindow.setAlwaysOnTop(true, 'screen-saver');
+            if (this.overlayWindow.isVisible()) {
+                this.overlayWindow.showInactive();
+            }
+        }
+        this.broadcastState();
+    }
+
+export function runToggleOverlayMode(this: any) {
+        if (this.overlayMode === 'timer_only') {
+            if (this.config.overlayDensity === 'compact') {
+                this.config = this.configStore.updateSettings({
+                    overlayDensity: 'normal'
+                });
+            }
+            this.setOverlayMode('full');
+            return;
+        }
+        this.setOverlayMode('timer_only');
+    }
+
+export async function runLoadWindowPage(this: any, window: any, page: any) {
+        if (isDev) {
+            try {
+                await window.loadURL(`${devServerUrl}/${page}.html`);
+                if (this.config.realtimePriorityEnabled) {
+                    this.scheduleRealtimePriorityApply(true);
+                }
+                return;
+            }
+            catch {
+                // If Vite is not running, fall back to built files.
+            }
+        }
+        await window.loadFile(resolveRuntimePath('dist', `${page}.html`));
+        if (this.config.realtimePriorityEnabled) {
+            this.scheduleRealtimePriorityApply(true);
+        }
+    }
+
+export function runGetStartupOverlayMode(this: any) {
+        return this.config.mainOverlaySettings.overlayTimerOnlyMode
+            ? 'timer_only'
+            : this.config.mainOverlaySettings.overlayMode;
+    }

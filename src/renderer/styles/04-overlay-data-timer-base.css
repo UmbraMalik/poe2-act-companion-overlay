@@ -1,0 +1,362 @@
+/* Zone bonus cards, league rewards, timer-only base. Extracted from styles.css preserving cascade order. */
+/* Zone bonuses synced from campaign-bonuses.json into Overlay/Current Zone. */
+.zone-bonuses-section {
+  border-color: rgba(95, 165, 255, 0.35);
+  background: linear-gradient(135deg, rgba(19, 45, 74, 0.42), rgba(14, 18, 24, 0.62));
+}
+
+.overlay-bonus-list,
+.zone-bonus-details-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.bonus-line {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 8px;
+  min-width: 0;
+}
+
+.bonus-line span:last-child {
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+.bonus-line.is-done {
+  color: rgba(210, 255, 219, 0.78);
+}
+
+.bonus-state-marker {
+  flex: 0 0 auto;
+  color: #f6c36a;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.bonus-line.is-done .bonus-state-marker {
+  color: #7ee787;
+}
+
+.zone-bonuses-card {
+  border-color: rgba(95, 165, 255, 0.28);
+}
+
+/* League mechanic reward hints synced from league-mechanic-rewards.json. */
+.league-reward-section {
+  border-color: rgba(241, 185, 106, 0.34);
+  background: linear-gradient(135deg, rgba(65, 39, 15, 0.42), rgba(14, 18, 24, 0.62));
+}
+
+.league-reward-line {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 8px;
+  min-width: 0;
+  color: #f7ead2;
+  font-weight: 700;
+  line-height: 1.42;
+}
+
+.league-reward-line span:last-child {
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+.league-reward-marker {
+  flex: 0 0 auto;
+  color: #f6c36a;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.league-reward-note {
+  margin: 5px 0 0 21px;
+  min-width: 0;
+  color: rgba(255, 231, 191, 0.68);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.35;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+
+.compact-helper-text {
+  margin-top: 8px;
+  font-size: 11px;
+  opacity: 0.72;
+}
+
+
+/* Overlay visible height resize fix */
+/*
+  The Electron BrowserWindow can be taller than the overlay content.
+  In that case the bottom part becomes an invisible transparent rectangle.
+  Keep the visible HUD shell stretched to the actual BrowserWindow height,
+  so manual resize changes both width and height visually.
+*/
+.overlay-page {
+  width: 100vw;
+  height: 100vh;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.overlay-page .window-drag-strip {
+  flex: 0 0 18px;
+}
+
+.overlay-page .overlay-hud {
+  flex: 1 1 auto;
+  height: calc(100vh - 26px);
+  max-height: none;
+  min-height: 0;
+}
+
+.overlay-page .overlay-shell {
+  min-height: 0;
+}
+
+
+/* speedrun-intel compact overlay extras */
+.speedrun-section .section-list li {
+  line-height: 1.28;
+}
+
+.speedrun-section {
+  border-color: rgba(245, 179, 80, 0.34);
+}
+
+.companion-details-block .companion-inline-title {
+  color: var(--accent, #f0b35a);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+
+/* Timer-only / race focus overlay mode. */
+.overlay-page-timer-only {
+  min-width: 0;
+}
+
+.overlay-timer-only-card {
+  min-height: 0;
+  gap: 6px;
+  padding: 12px 12px 14px;
+  overflow: hidden;
+}
+
+.timer-only-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.timer-only-heading {
+  min-width: 0;
+}
+
+.timer-only-header-actions {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+
+.timer-only-kicker {
+  margin: 0 0 3px;
+  color: rgba(244, 234, 216, 0.72);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.timer-only-header h1 {
+  margin: 0;
+  color: #f1b96a;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.timer-only-actline {
+  margin: 4px 0 0;
+  color: rgba(216, 231, 255, 0.86);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.timer-only-status {
+  flex: 0 0 auto;
+  margin-top: 2px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(241, 185, 106, 0.35);
+  background: rgba(241, 185, 106, 0.12);
+  color: #ffe4a6;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.timer-only-status.status-paused {
+  border-color: rgba(255, 210, 104, 0.45);
+  color: #ffd978;
+}
+
+.timer-only-status.status-finished {
+  border-color: rgba(95, 205, 137, 0.45);
+  color: #9bf0b9;
+}
+
+.timer-only-time {
+  margin-top: 0;
+  display: inline-block;
+  min-width: 8ch;
+  color: #fff7df;
+  font-size: clamp(32px, 10vw, 58px);
+  font-weight: 950;
+  line-height: 0.92;
+  letter-spacing: -0.06em;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+  white-space: nowrap;
+  text-shadow: 0 5px 24px rgba(0, 0, 0, 0.75);
+}
+
+.timer-only-controls-row {
+  display: flex;
+  justify-content: center;
+}
+
+.timer-only-controls-row .overlay-timer-controls {
+  justify-content: center;
+}
+
+.timer-only-controls-row .overlay-timer-control {
+  min-height: 30px;
+  padding: 6px 12px;
+  font-size: 11px;
+}
+
+.timer-only-meta {
+  margin: 0;
+  padding: 5px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(224, 174, 94, 0.24);
+  color: rgba(235, 244, 255, 0.88);
+  background: rgba(0, 0, 0, 0.16);
+  font-size: 11px;
+  font-weight: 800;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    color 160ms ease;
+}
+
+.timer-only-next {
+  margin: 0;
+  padding: 7px 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(224, 174, 94, 0.2);
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff0c4;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.2;
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+.timer-only-footer,
+.hud-footer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.timer-only-footer:has(.timer-only-expand-button:only-child),
+.hud-footer-row:has(.hud-footer-actions:only-child) {
+  justify-content: center;
+}
+
+.timer-only-footer span {
+  flex: 1 1 auto;
+  min-width: 0;
+  text-align: right;
+  color: rgba(244, 234, 216, 0.58);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.timer-only-expand-button,
+.timer-only-collapse-button {
+  min-height: 24px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(241, 185, 106, 0.42);
+  background: rgba(241, 185, 106, 0.12);
+  color: #ffe4a6;
+  font-size: 10px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.timer-only-expand-button:hover,
+.timer-only-collapse-button:hover {
+  background: rgba(241, 185, 106, 0.22);
+}
+
+.hud-footer-row .hud-footnote {
+  margin: 0;
+}
+
+@media (max-width: 430px) {
+  .hud-title-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .hud-title-actions {
+    justify-content: flex-start;
+  }
+
+  .overlay-timer-controls {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 390px) {
+  .timer-only-time {
+    font-size: clamp(34px, 16vw, 58px);
+  }
+
+  .timer-only-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
