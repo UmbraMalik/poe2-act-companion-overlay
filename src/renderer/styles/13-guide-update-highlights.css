@@ -1,0 +1,17 @@
+.is-guide-update {
+  color: #9fe8b1 !important;
+}
+
+.checklist-item.is-guide-update,
+.section-list li.is-guide-update,
+.details-list li.is-guide-update {
+  padding-right: 6px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, rgba(74, 190, 118, 0.13), rgba(74, 190, 118, 0.03));
+}
+
+.checklist-item.is-guide-update::before,
+.section-list li.is-guide-update::before,
+.details-list li.is-guide-update::before {
+  color: #86d99a !important;
+}

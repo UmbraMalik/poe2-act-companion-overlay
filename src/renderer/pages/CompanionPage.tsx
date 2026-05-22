@@ -20,6 +20,7 @@ import { formatDuration, formatRecommendedLevelLabel } from '../utils';
 import type { ActTimeRow } from '../companion-helpers';
 import { getCampaignBonusView, getGuideView, translateDataText } from '../../i18n/data';
 import { translate } from '../../i18n/translations';
+import { getGuideUpdateClassName } from '../guide-update-highlights';
 import type { AppLanguage, CampaignBonusDefinition, CampaignBonusProgress, GuideEntry, RunSummary, ZoneAct } from '../../shared/types';
 
 type CompanionTab = 'zone' | 'route' | 'timer' | 'actTimes' | 'reminders' | 'bonuses' | 'summary';
@@ -178,7 +179,7 @@ function renderStringSection(
       <h3>{title}</h3>
       <ul className="details-list">
         {items.map((item) => (
-          <li key={`${title}-${item}`}>{item}</li>
+          <li key={`${title}-${item}`} className={getGuideUpdateClassName(item).trim()}>{item}</li>
         ))}
       </ul>
     </section>
@@ -268,7 +269,9 @@ function renderDetails(
               </p>
               <ul className="details-list">
                 {(value as string[]).map((item) => (
-                  <li key={`${key}-${item}`}>{translateDataText(item, language)}</li>
+                  <li key={`${key}-${item}`} className={getGuideUpdateClassName(translateDataText(item, language)).trim()}>
+                    {translateDataText(item, language)}
+                  </li>
                 ))}
               </ul>
             </div>
@@ -713,7 +716,7 @@ export function CompanionPage() {
             {guideChecklist.length > 0 ? (
               <ul className="checklist-list companion-checklist-list">
                 {guideChecklist.map((item) => (
-                  <li key={item.id} className="checklist-item">
+                  <li key={item.id} className={`checklist-item${getGuideUpdateClassName(item.text)}`}>
                     {item.text}
                   </li>
                 ))}

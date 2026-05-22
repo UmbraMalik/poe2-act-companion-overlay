@@ -42,6 +42,7 @@ import leagueMechanicRewardsData from '../../data/league-mechanic-rewards.json';
 import { getCampaignBonusView, getGuideView, getLevelReminderView, getPowerSpikeView } from '../../i18n/data';
 import { translateSystemText } from '../../i18n/runtime';
 import { translate } from '../../i18n/translations';
+import { getGuideUpdateClassName } from '../guide-update-highlights';
 import type {
   AppLanguage,
   CampaignBonusDefinition,
@@ -1665,7 +1666,7 @@ export function OverlayPage() {
               <>
                 <ul className="checklist-list overlay-checklist-list">
                   {visibleChecklist.map((item) => (
-                    <li key={item.id} className={`checklist-item${getChecklistItemTone(item)}`}>
+                    <li key={item.id} className={`checklist-item${getChecklistItemTone(item)}${getGuideUpdateClassName(item.text)}`}>
                       {item.text}
                     </li>
                   ))}
@@ -1729,7 +1730,7 @@ export function OverlayPage() {
             <h2>{t('common.skip')}</h2>
             <ul className="section-list compact-list">
               {skipLines.map((item) => (
-                <li key={item}>{item}</li>
+                <li key={item} className={getGuideUpdateClassName(item).trim()}>{item}</li>
               ))}
             </ul>
           </section>
@@ -1740,7 +1741,7 @@ export function OverlayPage() {
             <h2>{t('overlay.speedrun')}</h2>
             <ul className="section-list compact-list">
               {speedrunLines.map((item) => (
-                <li key={item}>{item}</li>
+                <li key={item} className={getGuideUpdateClassName(item).trim()}>{item}</li>
               ))}
             </ul>
           </section>
@@ -1751,7 +1752,7 @@ export function OverlayPage() {
             <h2>{t('common.important')}</h2>
             <ul className="section-list compact-list">
               {importantLines.map((item) => (
-                <li key={item}>{item}</li>
+                <li key={item} className={getGuideUpdateClassName(item).trim()}>{item}</li>
               ))}
             </ul>
           </section>
