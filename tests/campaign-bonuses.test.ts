@@ -70,6 +70,17 @@ test('repeated same reward line does not tick the next similar weapon-set bonus'
   );
 });
 
+
+test('Una lute reward can be claimed after Ogham Manor town return', () => {
+  const app = createTestAppInstance();
+  applyAppLogLine(app as never, '2026/05/16 22:35:10 123 [DEBUG Client] Generating level 17 area "G1_15" with seed 1');
+  applyAppLogLine(app as never, '[SCENE] Set Source [Замок Огам]');
+  applyAppLogLine(app as never, '[SCENE] Set Source [Лагерь Клирфелл]');
+  applyAppLogLine(app as never, ': Вы получили 2 очка пассивных умений для набора оружия.');
+
+  assert.deepEqual(getDoneBonusIds(app), ['act1_ogham_farmlands_unas_lute_weapon_points']);
+});
+
 test('reward in town uses last gameplay zone context instead of the first matching bonus', () => {
   const app = createTestAppInstance();
   applyAppLogLine(app as never, '2026/05/16 22:10:10 123 [DEBUG Client] Generating level 6 area "G1_2" with seed 1');

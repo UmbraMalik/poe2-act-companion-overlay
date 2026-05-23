@@ -129,7 +129,37 @@
             "2 очка пассивных умений для набора оружия"
           ],
           "zoneIds": [
-            "a1_ogham_farmlands"
+            "a1_ogham_farmlands",
+            "a1_ogham_village",
+            "a1_manor_ramparts",
+            "a1_ogham_manor"
+          ]
+        },
+        {
+          "all": [
+            "2",
+            "очк",
+            "набор",
+            "оруж"
+          ],
+          "zoneIds": [
+            "a1_ogham_farmlands",
+            "a1_ogham_village",
+            "a1_manor_ramparts",
+            "a1_ogham_manor"
+          ]
+        },
+        {
+          "all": [
+            "2",
+            "weapon set",
+            "passive"
+          ],
+          "zoneIds": [
+            "a1_ogham_farmlands",
+            "a1_ogham_village",
+            "a1_manor_ramparts",
+            "a1_ogham_manor"
           ]
         }
       ]
