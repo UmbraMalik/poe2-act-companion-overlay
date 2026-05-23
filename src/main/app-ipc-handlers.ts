@@ -470,6 +470,26 @@ export function runRegisterIpc(this: any) {
             this.openCompanionWindow();
             return this.getSnapshot();
         });
+        ipcMain.handle('app:request-run-reset-confirmation', async () => {
+            this.openCompanionWindow();
+            const sendResetRequest = () => {
+                if (!this.companionWindow || this.companionWindow.isDestroyed()) {
+                    return;
+                }
+                this.companionWindow.show();
+                this.companionWindow.focus();
+                this.companionWindow.webContents.send('app:request-run-reset-confirmation');
+            };
+            if (this.companionWindow?.webContents.isLoading()) {
+                this.companionWindow.webContents.once('did-finish-load', () => {
+                    setTimeout(sendResetRequest, 50);
+                });
+            }
+            else {
+                setTimeout(sendResetRequest, 50);
+            }
+            return this.getSnapshot();
+        });
         ipcMain.handle('app:toggle-companion-panel', async () => {
             this.toggleCompanionWindow();
             return this.getSnapshot();

@@ -656,6 +656,7 @@ export interface ElectronApi {
   toggleOverlayMode: () => Promise<AppSnapshot>;
   closeOverlay: () => Promise<boolean>;
   openCompanionPanel: () => Promise<AppSnapshot>;
+  requestRunResetConfirmation: () => Promise<AppSnapshot>;
   toggleCompanionPanel: () => Promise<AppSnapshot>;
   openSettings: () => Promise<AppSnapshot>;
   toggleSettings: () => Promise<AppSnapshot>;
@@ -670,6 +671,7 @@ export interface ElectronApi {
   confirmCloseAndSave: () => Promise<boolean>;
   onAutoUpdateChanged: (callback: (state: AutoUpdateState) => void) => () => void;
   onRunTimerChanged: (callback: (runTimer: RunTimerState) => void) => () => void;
+  onRunResetConfirmationRequested: (callback: () => void) => () => void;
   onTimerVisualTick: (callback: (payload: TimerVisualTickPayload) => void) => () => void;
   onStateChanged: (callback: (snapshot: AppSnapshot) => void) => () => void;
 }

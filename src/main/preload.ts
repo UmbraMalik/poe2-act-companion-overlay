@@ -69,6 +69,7 @@ const api: ElectronApi = {
   toggleOverlayMode: () => ipcRenderer.invoke('app:toggle-overlay-mode'),
   closeOverlay: () => ipcRenderer.invoke('app:close-overlay'),
   openCompanionPanel: () => ipcRenderer.invoke('app:open-companion-panel'),
+  requestRunResetConfirmation: () => ipcRenderer.invoke('app:request-run-reset-confirmation'),
   toggleCompanionPanel: () => ipcRenderer.invoke('app:toggle-companion-panel'),
   openSettings: () => ipcRenderer.invoke('app:open-settings'),
   toggleSettings: () => ipcRenderer.invoke('app:toggle-settings'),
@@ -98,6 +99,15 @@ const api: ElectronApi = {
     ipcRenderer.on('timer:state-changed', listener);
     return () => {
       ipcRenderer.removeListener('timer:state-changed', listener);
+    };
+  },
+  onRunResetConfirmationRequested: (callback: () => void) => {
+    const listener = () => {
+      callback();
+    };
+    ipcRenderer.on('app:request-run-reset-confirmation', listener);
+    return () => {
+      ipcRenderer.removeListener('app:request-run-reset-confirmation', listener);
     };
   },
   onTimerVisualTick: (callback: (payload: TimerVisualTickPayload) => void) => {

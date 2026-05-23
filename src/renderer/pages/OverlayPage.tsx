@@ -1328,7 +1328,7 @@ export function OverlayPage() {
       return;
     }
 
-    setShowResetRunDialog(true);
+    void api.requestRunResetConfirmation();
   };
   const stopTimerResetPointerDown = (event: ReactPointerEvent<HTMLButtonElement>) => {
     stopOverlayControlPropagation(event);

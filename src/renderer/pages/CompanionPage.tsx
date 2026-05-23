@@ -884,6 +884,15 @@ export function CompanionPage() {
     }
   }, [snapshot, selectedAct, language]);
 
+  useEffect(() => {
+    const unsubscribe = window.poe2Overlay.onRunResetConfirmationRequested(() => {
+      setActiveTab('timer');
+      setRunConfirmDialog({ type: 'reset' });
+    });
+
+    return unsubscribe;
+  }, []);
+
   if (!snapshot) {
     return <div className="settings-shell">{t('companion.loading')}</div>;
   }
