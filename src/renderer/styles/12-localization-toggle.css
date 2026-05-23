@@ -869,20 +869,24 @@
   flex: 1 1 100%;
 }
 
-/* Overlay header timer button: match utility icon size and center glyph optically. */
+/* Overlay header start/pause button: same footprint as utility buttons and centered glyph. */
 .overlay-page:not(.overlay-page-timer-only) .hud-header .hud-zone-kicker-row .overlay-timer-icon-control {
-  width: 28px !important;
-  min-width: 28px !important;
-  max-width: 28px !important;
-  height: 28px !important;
-  min-height: 28px !important;
-  max-height: 28px !important;
+  width: 26px !important;
+  min-width: 26px !important;
+  max-width: 26px !important;
+  height: 26px !important;
+  min-height: 26px !important;
+  max-height: 26px !important;
+  box-sizing: border-box !important;
   padding: 0 !important;
   display: inline-grid !important;
   place-items: center !important;
+  align-items: center !important;
+  justify-content: center !important;
   align-self: center !important;
   border-radius: 999px !important;
   line-height: 1 !important;
+  vertical-align: middle !important;
 }
 
 .overlay-page.density-compact:not(.overlay-page-timer-only) .hud-header .hud-zone-kicker-row .overlay-timer-icon-control {
@@ -894,12 +898,14 @@
   max-height: 24px !important;
 }
 
-.overlay-page:not(.overlay-page-timer-only) .hud-header .hud-zone-kicker-row .overlay-timer-control-start .timer-button-glyph {
+.overlay-page:not(.overlay-page-timer-only) .hud-header .hud-zone-kicker-row .overlay-timer-icon-control .timer-button-glyph {
   position: relative !important;
   width: 100% !important;
   height: 100% !important;
   display: grid !important;
   place-items: center !important;
+  align-content: center !important;
+  justify-content: center !important;
   font-size: 0 !important;
   line-height: 1 !important;
   transform: none !important;
@@ -909,15 +915,14 @@
   content: "";
   width: 0;
   height: 0;
-  border-top: 5px solid transparent;
-  border-bottom: 5px solid transparent;
-  border-left: 8px solid currentColor;
-  filter: drop-shadow(0 0 4px currentColor);
+  border-top: 4.5px solid transparent;
+  border-bottom: 4.5px solid transparent;
+  border-left: 7px solid currentColor;
   transform: translateX(1px);
+  filter: drop-shadow(0 0 3px currentColor);
 }
 
-.overlay-page.density-compact:not(.overlay-page-timer-only) .hud-header .hud-zone-kicker-row .overlay-timer-control-start .timer-button-glyph::before {
-  border-top-width: 4px;
-  border-bottom-width: 4px;
-  border-left-width: 7px;
+.overlay-page:not(.overlay-page-timer-only) .hud-header .hud-zone-kicker-row .overlay-timer-control-pause .timer-button-glyph::before,
+.overlay-page:not(.overlay-page-timer-only) .hud-header .hud-zone-kicker-row .overlay-timer-control-pause .timer-button-glyph::after {
+  height: 10px !important;
 }

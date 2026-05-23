@@ -570,3 +570,28 @@
   font-size: 15px !important;
 }
 
+
+/* Timer-only play glyph: keep button size, center the play icon optically. */
+.overlay-page.overlay-page-timer-only .timer-only-controls-row .overlay-timer-control-start .timer-button-glyph {
+  position: relative !important;
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+  font-size: 0 !important;
+  line-height: 0 !important;
+  transform: none !important;
+}
+
+.overlay-page.overlay-page-timer-only .timer-only-controls-row .overlay-timer-control-start .timer-button-glyph::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 8px solid currentColor;
+  filter: drop-shadow(0 0 5px currentColor);
+  transform: translate(calc(-50% + 1px), -50%);
+}
