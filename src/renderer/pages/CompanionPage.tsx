@@ -1538,46 +1538,54 @@ export function CompanionPage() {
     </div>
   );
 
+  const summaryHero = displayRunTimer.status === 'finished' ? (
+    renderSummary(config.lastRunSummary, language)
+  ) : (
+    <div className="summary-dashboard">
+      <section className="companion-block summary-hero-card">
+        <div>
+          <h3>{t('companion.summaryLiveTitle')}</h3>
+          <p className="helper-text">{t('companion.summaryLiveIntro')}</p>
+        </div>
+        <div className="run-metric-grid">
+          {renderMetricCard(t('companion.totalTime'), formatDuration(currentRunElapsed), formatRunStatus(displayRunTimer.status, language), 'accent')}
+          {renderMetricCard(t('companion.completedActs'), `${getCompletedActCount(actTimeRows)} / ${TOTAL_CAMPAIGN_ACTS}`, t('companion.completedActsHint'))}
+          {renderMetricCard(t('companion.currentAct'), nowAct === null ? '—' : formatActTitle(nowAct, language), currentActElapsed !== null ? formatDuration(currentActElapsed) : t('common.notAvailable'))}
+          {renderMetricCard(t('companion.longestZone'), longestZones[0] ? formatDuration(longestZones[0].elapsedMs) : '—', longestZones[0] ? translateDataText(longestZones[0].zone_ru, language) : t('companion.zoneHistoryEmpty'), 'muted')}
+        </div>
+      </section>
+    </div>
+  );
+
   const summaryTab = (
-    <div className="companion-tab-layout">
-      {displayRunTimer.status === 'finished' ? (
-        renderSummary(config.lastRunSummary, language)
-      ) : (
-        <div className="summary-dashboard">
-          <section className="companion-block summary-hero-card">
-            <div>
-              <h3>{t('companion.summaryLiveTitle')}</h3>
-              <p className="helper-text">{t('companion.summaryLiveIntro')}</p>
-            </div>
-            <div className="run-metric-grid">
-              {renderMetricCard(t('companion.totalTime'), formatDuration(currentRunElapsed), formatRunStatus(displayRunTimer.status, language), 'accent')}
-              {renderMetricCard(t('companion.completedActs'), `${getCompletedActCount(actTimeRows)} / ${TOTAL_CAMPAIGN_ACTS}`, t('companion.completedActsHint'))}
-              {renderMetricCard(t('companion.currentAct'), nowAct === null ? '—' : formatActTitle(nowAct, language), currentActElapsed !== null ? formatDuration(currentActElapsed) : t('common.notAvailable'))}
-              {renderMetricCard(t('companion.longestZone'), longestZones[0] ? formatDuration(longestZones[0].elapsedMs) : '—', longestZones[0] ? translateDataText(longestZones[0].zone_ru, language) : t('companion.zoneHistoryEmpty'), 'muted')}
-            </div>
+    <div className="companion-tab-layout companion-summary-layout">
+      {summaryHero}
+
+      <div className="summary-scroll-body">
+        <div className="summary-meta-grid">
+          <section className="companion-block summary-best-card">
+            <h3>{t('companion.bestRun')}</h3>
+            {config.bestRun ? (
+              <div className="best-run-card">
+                <strong>{formatDuration(config.bestRun.totalElapsedMs)}</strong>
+                <span>{new Date(config.bestRun.finishedAt).toLocaleString(language === 'en' ? 'en-US' : 'ru-RU')}</span>
+              </div>
+            ) : (
+              <div className="summary-empty-state">
+                <p className="helper-text">{t('companion.bestRunEmpty')}</p>
+              </div>
+            )}
+          </section>
+
+          <section className="companion-block summary-longest-card">
+            <h3>{t('companion.longestZones')}</h3>
+            {renderLongestZoneList(longestZones, language, t('companion.zoneHistoryEmpty'))}
           </section>
         </div>
-      )}
 
-      <section className="companion-block summary-best-card">
-        <h3>{t('companion.bestRun')}</h3>
-        {config.bestRun ? (
-          <div className="best-run-card">
-            <strong>{formatDuration(config.bestRun.totalElapsedMs)}</strong>
-            <span>{new Date(config.bestRun.finishedAt).toLocaleString(language === 'en' ? 'en-US' : 'ru-RU')}</span>
-          </div>
-        ) : (
-          <p className="helper-text">{t('companion.bestRunEmpty')}</p>
-        )}
-      </section>
-
-      {renderRunComparison(runHistory, currentRunElapsed, actTimeRows, language)}
-      {renderRunHistory(runHistory, language, restoreSavedRun, deleteSavedRun)}
-
-      <section className="companion-block summary-longest-card">
-        <h3>{t('companion.longestZones')}</h3>
-        {renderLongestZoneList(longestZones, language, t('companion.zoneHistoryEmpty'))}
-      </section>
+        {renderRunComparison(runHistory, currentRunElapsed, actTimeRows, language)}
+        {renderRunHistory(runHistory, language, restoreSavedRun, deleteSavedRun)}
+      </div>
     </div>
   );
 

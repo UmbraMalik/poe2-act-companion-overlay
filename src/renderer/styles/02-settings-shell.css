@@ -996,6 +996,28 @@ textarea {
   overflow: hidden;
 }
 
+.companion-summary-layout {
+  align-items: stretch;
+}
+
+.summary-scroll-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  padding-right: 4px;
+}
+
+.summary-meta-grid {
+  display: grid;
+  grid-template-columns: minmax(240px, 0.95fr) minmax(0, 1.05fr);
+  gap: 12px;
+  align-items: start;
+}
+
 .companion-overview-card {
   flex: 0 0 auto;
 }
@@ -1141,7 +1163,8 @@ textarea {
 .route-overview-grid::-webkit-scrollbar,
 .companion-tables-grid::-webkit-scrollbar,
 .compact-table-wrap::-webkit-scrollbar,
-.settings-shell::-webkit-scrollbar {
+.settings-shell::-webkit-scrollbar,
+.summary-scroll-body::-webkit-scrollbar {
   width: 8px;
 }
 
@@ -1149,7 +1172,8 @@ textarea {
 .route-overview-grid::-webkit-scrollbar-thumb,
 .companion-tables-grid::-webkit-scrollbar-thumb,
 .compact-table-wrap::-webkit-scrollbar-thumb,
-.settings-shell::-webkit-scrollbar-thumb {
+.settings-shell::-webkit-scrollbar-thumb,
+.summary-scroll-body::-webkit-scrollbar-thumb {
   border-radius: 999px;
   background: rgba(214, 162, 84, 0.45);
 }
@@ -1157,6 +1181,10 @@ textarea {
 @media (max-width: 1120px) {
   .companion-zone-dashboard {
     grid-template-columns: repeat(2, minmax(240px, 1fr));
+  }
+
+  .summary-meta-grid {
+    grid-template-columns: 1fr;
   }
 }
 

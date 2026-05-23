@@ -592,6 +592,16 @@
             "a4_kids_bay",
             "a4_journeys_end"
           ]
+        },
+        {
+          "all": [
+            "received",
+            "2 Weapon Set Passive Skill Points"
+          ],
+          "zoneIds": [
+            "a4_kids_bay",
+            "a4_journeys_end"
+          ]
         }
       ]
     },
