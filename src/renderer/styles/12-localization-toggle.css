@@ -172,3 +172,238 @@
 .overlay-page.density-compact .overlay-language-option {
   font-size: 9px;
 }
+
+/* Companion act times / run summary polish. */
+.act-times-dashboard,
+.summary-dashboard {
+  display: grid;
+  gap: 14px;
+}
+
+.act-times-hero-card,
+.summary-hero-card {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.8fr) minmax(360px, 1.2fr);
+  align-items: stretch;
+  gap: 16px;
+  background:
+    radial-gradient(circle at 12% 0%, rgba(214, 162, 84, 0.15), transparent 32%),
+    linear-gradient(135deg, rgba(22, 26, 32, 0.98), rgba(12, 15, 20, 0.98));
+}
+
+.run-metric-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(120px, 1fr));
+  gap: 10px;
+}
+
+.run-metric-card {
+  min-height: 96px;
+  padding: 13px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.035);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
+}
+
+.run-metric-card.is-accent {
+  border-color: rgba(214, 162, 84, 0.36);
+  background: linear-gradient(135deg, rgba(214, 162, 84, 0.16), rgba(255, 255, 255, 0.035));
+}
+
+.run-metric-card.is-muted {
+  opacity: 0.88;
+}
+
+.run-metric-card span,
+.act-time-card-footer span {
+  display: block;
+  color: rgba(234, 240, 247, 0.64);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.run-metric-card strong {
+  display: block;
+  margin-top: 8px;
+  color: #fff7df;
+  font-size: clamp(18px, 2vw, 28px);
+  line-height: 1;
+}
+
+.run-metric-card small {
+  display: block;
+  margin-top: 8px;
+  color: rgba(234, 240, 247, 0.66);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.act-time-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 12px;
+}
+
+.act-time-card {
+  position: relative;
+  overflow: hidden;
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02));
+}
+
+.act-time-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  background: rgba(214, 162, 84, 0.72);
+}
+
+.act-time-card.is-current {
+  border-color: rgba(214, 162, 84, 0.46);
+  box-shadow: 0 0 0 1px rgba(214, 162, 84, 0.08), 0 12px 32px rgba(0, 0, 0, 0.18);
+}
+
+.act-time-card-topline,
+.act-time-card-footer,
+.summary-section-heading,
+.longest-zone-list li,
+.best-run-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.act-time-index {
+  color: rgba(234, 240, 247, 0.45);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+}
+
+.act-time-status-pill {
+  padding: 4px 8px;
+  border: 1px solid rgba(214, 162, 84, 0.24);
+  border-radius: 999px;
+  color: #ffd791;
+  background: rgba(214, 162, 84, 0.08);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.act-time-card h4 {
+  margin: 12px 0 8px;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 14px;
+}
+
+.act-time-main-value {
+  color: #ffffff;
+  font-size: clamp(24px, 2.4vw, 34px);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+}
+
+.act-time-card-footer {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.act-time-card-footer strong {
+  color: #fff7df;
+  font-size: 13px;
+}
+
+.summary-longest-card,
+.summary-best-card,
+.act-times-card-list {
+  min-height: 0;
+}
+
+.summary-section-heading span {
+  color: rgba(234, 240, 247, 0.64);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.longest-zone-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.longest-zone-list li {
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.longest-zone-rank {
+  flex: 0 0 auto;
+  color: #ffd791;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.longest-zone-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.longest-zone-list strong {
+  flex: 0 0 auto;
+  color: #ffffff;
+}
+
+.best-run-card {
+  padding: 14px;
+  border: 1px solid rgba(214, 162, 84, 0.2);
+  border-radius: 14px;
+  background: rgba(214, 162, 84, 0.08);
+}
+
+.best-run-card strong {
+  color: #fff7df;
+  font-size: 26px;
+}
+
+.best-run-card span {
+  color: rgba(234, 240, 247, 0.72);
+  font-size: 13px;
+}
+
+@media (max-width: 980px) {
+  .act-times-hero-card,
+  .summary-hero-card {
+    grid-template-columns: 1fr;
+  }
+
+  .run-metric-grid {
+    grid-template-columns: repeat(2, minmax(140px, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .run-metric-grid,
+  .act-time-card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .longest-zone-list li,
+  .best-run-card {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

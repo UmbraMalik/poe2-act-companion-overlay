@@ -165,6 +165,150 @@ function renderActTimeTable(rows: ActTimeRow[], emptyMessage: string, language: 
   );
 }
 
+
+function getCompletedActCount(rows: ActTimeRow[]): number {
+  return rows.filter((row) => row.status === 'finished').length;
+}
+
+function getSlowestActRow(rows: ActTimeRow[]): ActTimeRow | null {
+  return rows.length > 0
+    ? [...rows].sort((left, right) => right.elapsedMs - left.elapsedMs)[0]
+    : null;
+}
+
+function getAverageActElapsedMs(rows: ActTimeRow[]): number | null {
+  const finishedRows = rows.filter((row) => row.status === 'finished' && row.elapsedMs > 0);
+
+  if (finishedRows.length === 0) {
+    return null;
+  }
+
+  return Math.round(finishedRows.reduce((total, row) => total + row.elapsedMs, 0) / finishedRows.length);
+}
+
+function formatActLabel(act: number, language: AppLanguage): string {
+  return translate(language, 'route.act', { act });
+}
+
+function renderMetricCard(
+  label: string,
+  value: string,
+  hint?: string | null,
+  variant?: 'accent' | 'muted'
+) {
+  return (
+    <div className={`run-metric-card ${variant ? `is-${variant}` : ''}`.trim()}>
+      <span>{label}</span>
+      <strong>{value}</strong>
+      {hint && <small>{hint}</small>}
+    </div>
+  );
+}
+
+function renderActTimeCards(rows: ActTimeRow[], emptyMessage: string, language: AppLanguage) {
+  if (rows.length === 0) {
+    return <p className="helper-text">{emptyMessage}</p>;
+  }
+
+  return (
+    <div className="act-time-card-grid">
+      {rows.map((row, index) => {
+        const statusLabel = formatActTimeStatus(row.status, language);
+        const isCurrent = row.status === 'current';
+
+        return (
+          <article key={`act-time-card-${row.act}`} className={`act-time-card ${isCurrent ? 'is-current' : 'is-finished'}`}>
+            <div className="act-time-card-topline">
+              <span className="act-time-index">{String(index + 1).padStart(2, '0')}</span>
+              <span className="act-time-status-pill">{statusLabel}</span>
+            </div>
+            <h4>{formatActLabel(row.act, language)}</h4>
+            <div className="act-time-main-value">{formatDuration(row.elapsedMs)}</div>
+            <div className="act-time-card-footer">
+              <span>{translate(language, 'companion.cumulativeTime')}</span>
+              <strong>{formatDuration(row.totalElapsedMs)}</strong>
+            </div>
+          </article>
+        );
+      })}
+    </div>
+  );
+}
+
+function renderLongestZoneList(
+  longestZones: { zoneId: string; zone_ru: string; elapsedMs: number; enteredAt: number }[],
+  language: AppLanguage,
+  emptyMessage: string
+) {
+  if (longestZones.length === 0) {
+    return <p className="helper-text">{emptyMessage}</p>;
+  }
+
+  return (
+    <ol className="longest-zone-list">
+      {longestZones.map((entry, index) => (
+        <li key={`${entry.zoneId}-${entry.enteredAt}`}>
+          <span className="longest-zone-rank">#{index + 1}</span>
+          <span className="longest-zone-name">{translateDataText(entry.zone_ru, language)}</span>
+          <strong>{formatDuration(entry.elapsedMs)}</strong>
+        </li>
+      ))}
+    </ol>
+  );
+}
+
+function renderActTimesDashboard(
+  rows: ActTimeRow[],
+  totalElapsedMs: number,
+  emptyMessage: string,
+  language: AppLanguage
+) {
+  const completedActCount = getCompletedActCount(rows);
+  const slowestAct = getSlowestActRow(rows);
+  const averageActElapsedMs = getAverageActElapsedMs(rows);
+  const currentAct = rows.find((row) => row.status === 'current') ?? rows[rows.length - 1] ?? null;
+
+  return (
+    <div className="act-times-dashboard">
+      <section className="companion-block act-times-hero-card">
+        <div>
+          <h3>{translate(language, 'companion.actTimesTitle')}</h3>
+          <p className="helper-text">{translate(language, 'companion.actTimesIntro')}</p>
+        </div>
+        <div className="run-metric-grid">
+          {renderMetricCard(
+            translate(language, 'companion.totalTime'),
+            formatDuration(totalElapsedMs),
+            translate(language, 'companion.totalTimeHint'),
+            'accent'
+          )}
+          {renderMetricCard(
+            translate(language, 'companion.completedActs'),
+            `${completedActCount} / ${Math.max(4, rows.length)}`,
+            currentAct ? translate(language, 'companion.currentActMetric', { act: currentAct.act }) : translate(language, 'companion.noCurrentAct')
+          )}
+          {renderMetricCard(
+            translate(language, 'companion.longestAct'),
+            slowestAct ? formatDuration(slowestAct.elapsedMs) : '—',
+            slowestAct ? formatActLabel(slowestAct.act, language) : translate(language, 'companion.noActSplits')
+          )}
+          {renderMetricCard(
+            translate(language, 'companion.averageAct'),
+            averageActElapsedMs !== null ? formatDuration(averageActElapsedMs) : '—',
+            translate(language, 'companion.finishedActsOnly'),
+            'muted'
+          )}
+        </div>
+      </section>
+
+      <section className="companion-block act-times-card-list">
+        <h3>{translate(language, 'companion.actSplitCards')}</h3>
+        {renderActTimeCards(rows, emptyMessage, language)}
+      </section>
+    </div>
+  );
+}
+
 function renderStringSection(
   title: string,
   items: string[],
@@ -522,41 +666,39 @@ function renderSummary(summary: RunSummary | null, language: AppLanguage) {
   }
 
   const actTimeRows = getActTimeRowsFromSplits(summary.actSplits, summary.totalElapsedMs);
+  const completedActCount = getCompletedActCount(actTimeRows);
+  const slowestAct = getSlowestActRow(actTimeRows);
 
   return (
-    <div className="companion-stack">
-      <section className="companion-block">
-        <h3>{translate(language, 'companion.summaryTitle')}</h3>
-        <dl className="info-grid companion-info-grid">
-          <div className="info-cell">
-            <dt>{translate(language, 'companion.totalTime')}</dt>
-            <dd>{formatDuration(summary.totalElapsedMs)}</dd>
-          </div>
-          <div className="info-cell">
-            <dt>{translate(language, 'companion.pauses')}</dt>
-            <dd>{summary.pauseCount}</dd>
-          </div>
-          <div className="info-cell">
-            <dt>{translate(language, 'companion.record')}</dt>
-            <dd>{summary.isNewPb ? translate(language, 'companion.newRecord') : translate(language, 'companion.noRecordUpdate')}</dd>
-          </div>
-        </dl>
+    <div className="summary-dashboard">
+      <section className="companion-block summary-hero-card">
+        <div>
+          <h3>{translate(language, 'companion.summaryTitle')}</h3>
+          <p className="helper-text">{translate(language, 'companion.summaryFinishedIntro')}</p>
+        </div>
+        <div className="run-metric-grid">
+          {renderMetricCard(translate(language, 'companion.totalTime'), formatDuration(summary.totalElapsedMs), translate(language, 'companion.finalTime'), 'accent')}
+          {renderMetricCard(translate(language, 'companion.completedActs'), String(completedActCount), translate(language, 'companion.completedActsHint'))}
+          {renderMetricCard(translate(language, 'companion.pauses'), String(summary.pauseCount), translate(language, 'companion.pauseCountHint'), 'muted')}
+          {renderMetricCard(
+            translate(language, 'companion.record'),
+            summary.isNewPb ? translate(language, 'companion.newRecord') : translate(language, 'companion.noRecordUpdate'),
+            translate(language, 'companion.recordHint')
+          )}
+        </div>
       </section>
 
-      <section className="companion-block">
+      <section className="companion-block act-times-card-list">
         <h3>{translate(language, 'common.actTimes')}</h3>
-        {renderActTimeTable(actTimeRows, translate(language, 'companion.actTimesEmptyRunning'), language)}
+        {renderActTimeCards(actTimeRows, translate(language, 'companion.actTimesEmptyFinished'), language)}
       </section>
 
-      <section className="companion-block">
-        <h3>{translate(language, 'companion.longestZones')}</h3>
-        <ul className="details-list">
-          {summary.longestZones.map((entry) => (
-            <li key={`${entry.zoneId}-${entry.enteredAt}`}>
-              {translateDataText(entry.zone_ru, language)} · {formatDuration(entry.elapsedMs)}
-            </li>
-          ))}
-        </ul>
+      <section className="companion-block summary-longest-card">
+        <div className="summary-section-heading">
+          <h3>{translate(language, 'companion.longestZones')}</h3>
+          {slowestAct && <span>{translate(language, 'companion.longestActShort', { act: slowestAct.act, time: formatDuration(slowestAct.elapsedMs) })}</span>}
+        </div>
+        {renderLongestZoneList(summary.longestZones, language, translate(language, 'companion.zoneHistoryEmpty'))}
       </section>
     </div>
   );
@@ -940,16 +1082,14 @@ export function CompanionPage() {
 
   const actTimesTab = (
     <div className="companion-tab-layout">
-      <section className="companion-block companion-table-card">
-        <h3>{t('common.actTimes')}</h3>
-        {renderActTimeTable(
-          actTimeRows,
-          displayRunTimer.status === 'finished'
-            ? t('companion.actTimesEmptyFinished')
-            : t('companion.actTimesEmptyRunning'),
-          language
-        )}
-      </section>
+      {renderActTimesDashboard(
+        actTimeRows,
+        currentRunElapsed,
+        displayRunTimer.status === 'finished'
+          ? t('companion.actTimesEmptyFinished')
+          : t('companion.actTimesEmptyRunning'),
+        language
+      )}
     </div>
   );
 
@@ -1149,35 +1289,40 @@ export function CompanionPage() {
 
   const summaryTab = (
     <div className="companion-tab-layout">
-      {displayRunTimer.status === 'finished'
-        ? renderSummary(config.lastRunSummary, language)
-        : <p className="helper-text">{t('companion.summaryEmpty')}</p>}
+      {displayRunTimer.status === 'finished' ? (
+        renderSummary(config.lastRunSummary, language)
+      ) : (
+        <div className="summary-dashboard">
+          <section className="companion-block summary-hero-card">
+            <div>
+              <h3>{t('companion.summaryLiveTitle')}</h3>
+              <p className="helper-text">{t('companion.summaryLiveIntro')}</p>
+            </div>
+            <div className="run-metric-grid">
+              {renderMetricCard(t('companion.totalTime'), formatDuration(currentRunElapsed), formatRunStatus(displayRunTimer.status, language), 'accent')}
+              {renderMetricCard(t('companion.completedActs'), `${getCompletedActCount(actTimeRows)} / ${Math.max(4, actTimeRows.length)}`, t('companion.completedActsHint'))}
+              {renderMetricCard(t('companion.currentAct'), nowAct === null ? '—' : formatActTitle(nowAct, language), currentActElapsed !== null ? formatDuration(currentActElapsed) : t('common.notAvailable'))}
+              {renderMetricCard(t('companion.longestZone'), longestZones[0] ? formatDuration(longestZones[0].elapsedMs) : '—', longestZones[0] ? translateDataText(longestZones[0].zone_ru, language) : t('companion.zoneHistoryEmpty'), 'muted')}
+            </div>
+          </section>
+        </div>
+      )}
 
-      <section className="companion-block">
+      <section className="companion-block summary-best-card">
         <h3>{t('companion.bestRun')}</h3>
         {config.bestRun ? (
-          <ul className="details-list">
-            <li>{t('companion.bestTime', { time: formatDuration(config.bestRun.totalElapsedMs) })}</li>
-            <li>{t('companion.bestDate', { date: new Date(config.bestRun.finishedAt).toLocaleString(language === 'en' ? 'en-US' : 'ru-RU') })}</li>
-          </ul>
+          <div className="best-run-card">
+            <strong>{formatDuration(config.bestRun.totalElapsedMs)}</strong>
+            <span>{new Date(config.bestRun.finishedAt).toLocaleString(language === 'en' ? 'en-US' : 'ru-RU')}</span>
+          </div>
         ) : (
           <p className="helper-text">{t('companion.bestRunEmpty')}</p>
         )}
       </section>
 
-      <section className="companion-block">
+      <section className="companion-block summary-longest-card">
         <h3>{t('companion.longestZones')}</h3>
-        {longestZones.length > 0 ? (
-          <ul className="details-list">
-            {longestZones.map((entry) => (
-              <li key={`${entry.zoneId}-${entry.enteredAt}`}>
-                {translateDataText(entry.zone_ru, language)} · {formatDuration(entry.elapsedMs)}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="helper-text">{t('companion.zoneHistoryEmpty')}</p>
-        )}
+        {renderLongestZoneList(longestZones, language, t('companion.zoneHistoryEmpty'))}
       </section>
     </div>
   );
