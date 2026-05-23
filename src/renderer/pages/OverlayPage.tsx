@@ -1330,13 +1330,11 @@ export function OverlayPage() {
 
     setShowResetRunDialog(true);
   };
-  const handleTimerResetPointerDown = (event: ReactPointerEvent<HTMLButtonElement>) => {
-    if (event.button !== 0) {
-      return;
-    }
-
-    event.preventDefault();
-    event.stopPropagation();
+  const stopTimerResetPointerDown = (event: ReactPointerEvent<HTMLButtonElement>) => {
+    stopOverlayControlPropagation(event);
+  };
+  const handleTimerResetClick = (event: ReactMouseEvent<HTMLButtonElement>) => {
+    stopOverlayControlPropagation(event);
     handleTimerReset();
   };
   const handleCompactOverlayToggle = async () => {
@@ -1544,7 +1542,9 @@ export function OverlayPage() {
         type="button"
         title={t('overlay.resetTimer')}
         aria-label={t('overlay.resetTimer')}
-        onPointerDown={handleTimerResetPointerDown}
+        onPointerDown={stopTimerResetPointerDown}
+        onMouseDown={stopOverlayControlPropagation}
+        onClick={handleTimerResetClick}
       >
         <span className="timer-button-glyph" aria-hidden="true">↻</span>
       </button>
