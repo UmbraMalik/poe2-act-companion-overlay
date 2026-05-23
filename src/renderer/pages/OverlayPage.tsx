@@ -276,7 +276,7 @@ function getCurrentZoneLeagueReward(
 
   return (
     LEAGUE_MECHANIC_REWARDS.find((reward) => {
-      if (!reward.displayInOverlay || !reward.hasReward || reward.duplicateInCurrentGuide) {
+      if (!reward.displayInOverlay || !reward.hasReward) {
         return false;
       }
 

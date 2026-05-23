@@ -1026,35 +1026,48 @@ export function CompanionPage() {
   };
 
   const zoneTab = (
-    <div className="companion-tab-layout">
-      <section className="companion-block companion-overview-card">
-        <h3>{guide ? `${formatActTitle(guide.act, language)} · ${sceneName}` : sceneName}</h3>
-        <dl className="info-grid companion-info-grid">
-          <div className="info-cell">
+    <div className="companion-tab-layout companion-zone-polished-layout">
+      <section className="companion-block companion-overview-card zone-hero-card">
+        <div className="zone-hero-copy">
+          <p className="eyebrow">{guide ? formatActTitle(guide.act, language) : t('companion.currentScene')}</p>
+          <h3>{sceneName}</h3>
+          <p className="helper-text">
+            {guideView?.nextZoneName
+              ? t('companion.routeNextPrefix', { text: guideView.nextZoneName })
+              : currentZone.sceneKind === 'town'
+                ? t('companion.sceneTownHub')
+                : t('companion.sceneGameplay')}
+          </p>
+        </div>
+        <dl className="zone-hero-metrics">
+          <div className="zone-metric-card is-accent">
             <dt>{t('companion.nextZone')}</dt>
             <dd>{guideView?.nextZoneName ?? t('common.notAvailable')}</dd>
           </div>
-          <div className="info-cell">
+          <div className="zone-metric-card">
             <dt>{t('companion.levelRec')}</dt>
             <dd>{t('common.level')} {config.currentLevel ?? '?'} · {guideView?.recommendedLevelLabel ?? t('common.notAvailable')}</dd>
           </div>
-          <div className="info-cell">
+          <div className="zone-metric-card">
             <dt>{t('companion.experience')}</dt>
             <dd>{xpStatus.longLabel}</dd>
           </div>
-          <div className="info-cell">
+          <div className="zone-metric-card">
             <dt>{t('companion.sceneLabel')}</dt>
             <dd>{currentZone.sceneKind === 'town' ? t('companion.sceneTownHub') : t('companion.sceneGameplay')}</dd>
           </div>
         </dl>
       </section>
 
-      <div className="companion-zone-dashboard">
-        <div className="companion-column">
-          <section className="companion-block">
-            <h3>{t('overlay.inThisZone')}</h3>
+      <div className="companion-zone-dashboard zone-card-board">
+        <div className="companion-column zone-main-column">
+          <section className="companion-block zone-task-card zone-task-primary">
+            <div className="zone-section-heading">
+              <h3>{t('overlay.inThisZone')}</h3>
+              {guideChecklist.length > 0 && <span>{guideChecklist.length}</span>}
+            </div>
             {guideChecklist.length > 0 ? (
-              <ul className="checklist-list companion-checklist-list">
+              <ul className="checklist-list companion-checklist-list zone-checklist-list">
                 {guideChecklist.map((item) => (
                   <li key={item.id} className={`checklist-item${getGuideUpdateClassName(item.text)}`}>
                     {item.text}
@@ -1068,10 +1081,12 @@ export function CompanionPage() {
             )}
           </section>
 
-
           {localizedCurrentZoneBonuses.length > 0 && (
-            <section className="companion-block zone-bonuses-card">
-              <h3>{t('overlay.zoneBonuses')}</h3>
+            <section className="companion-block zone-bonuses-card zone-task-card">
+              <div className="zone-section-heading">
+                <h3>{t('overlay.zoneBonuses')}</h3>
+                <span>{localizedCurrentZoneBonuses.filter(({ done }) => done).length}/{localizedCurrentZoneBonuses.length}</span>
+              </div>
               <ul className="details-list zone-bonus-details-list">
                 {localizedCurrentZoneBonuses.map(({ bonus, done }) => (
                   <li key={bonus.id} className={done ? 'bonus-line is-done' : 'bonus-line'}>
@@ -1084,20 +1099,20 @@ export function CompanionPage() {
             </section>
           )}
 
-          {renderStringSection(t('common.next'), guideView?.nextZoneName ? [guideView.nextZoneName] : [])}
-          {renderStringSection(t('common.skip'), guideView?.skip ?? [], 'skip-section')}
+          {renderStringSection(t('common.next'), guideView?.nextZoneName ? [guideView.nextZoneName] : [], 'zone-task-card zone-next-card')}
+          {renderStringSection(t('common.skip'), guideView?.skip ?? [], 'skip-section zone-task-card')}
         </div>
 
         <div className="companion-column">
-          {renderStringSection(t('companion.take'), guideView?.rewards ?? [])}
-          {renderStringSection(t('common.important'), guideView?.important ?? [])}
-          {renderStringSection(t('common.bossTips'), guideView?.bossTips ?? [])}
+          {renderStringSection(t('companion.take'), guideView?.rewards ?? [], 'zone-task-card zone-reward-card')}
+          {renderStringSection(t('common.important'), guideView?.important ?? [], 'zone-task-card zone-important-card')}
+          {renderStringSection(t('common.bossTips'), guideView?.bossTips ?? [], 'zone-task-card')}
         </div>
 
         <div className="companion-column">
-          {renderStringSection(t('common.xpNotes'), guideView?.xpNotes ?? [])}
-          {renderStringSection(t('common.craftingTips'), guideView?.craftingTips ?? [])}
-          {renderStringSection(t('common.after'), guideView?.after ?? [])}
+          {renderStringSection(t('common.xpNotes'), guideView?.xpNotes ?? [], 'zone-task-card')}
+          {renderStringSection(t('common.craftingTips'), guideView?.craftingTips ?? [], 'zone-task-card')}
+          {renderStringSection(t('common.after'), guideView?.after ?? [], 'zone-task-card')}
           {renderDetails(guideView?.details ?? guide?.details, language)}
         </div>
       </div>
@@ -1186,33 +1201,31 @@ export function CompanionPage() {
   );
 
   const timerTab = (
-    <div className="companion-tab-layout">
-      <section className="companion-block">
-        <h3>{t('companion.timerTitle')}</h3>
-        <dl className="info-grid companion-info-grid">
-          <div className="info-cell">
-            <dt>{t('companion.totalTime')}</dt>
-            <dd>{formatDuration(currentRunElapsed)}</dd>
-          </div>
-          <div className="info-cell">
-            <dt>{t('settings.actTime')}</dt>
-            <dd>{currentActElapsed === null ? t('common.notAvailable') : formatDuration(currentActElapsed)}</dd>
-          </div>
-          <div className="info-cell">
-            <dt>{t('common.status')}</dt>
-            <dd>{formatRunStatus(displayRunTimer.status, language)}</dd>
-          </div>
-          <div className="info-cell">
-            <dt>{t('settings.countdown')}</dt>
-            <dd>{countdownMs === null ? t('common.notAvailable') : formatDuration(countdownMs)}</dd>
-          </div>
-        </dl>
-        <p className="helper-text">{t('companion.timerDescription')}</p>
-        <div className="button-row">
+    <div className="companion-tab-layout timer-polished-layout">
+      <section className="companion-block timer-hero-card">
+        <div className="timer-hero-copy">
+          <p className="eyebrow">{t('companion.timerTitle')}</p>
+          <h3>{formatDuration(currentRunElapsed)}</h3>
+          <p className="helper-text">{t('companion.timerDescription')}</p>
+        </div>
+        <div className="timer-metric-grid">
+          {renderMetricCard(t('companion.totalTime'), formatDuration(currentRunElapsed), t('companion.totalTimeHint'), 'accent')}
+          {renderMetricCard(t('settings.actTime'), currentActElapsed === null ? '—' : formatDuration(currentActElapsed), nowAct === null ? t('companion.noCurrentAct') : formatActTitle(nowAct, language))}
+          {renderMetricCard(t('common.status'), formatRunStatus(displayRunTimer.status, language), currentZone.sceneKind === 'town' ? t('companion.sceneTownHub') : t('companion.sceneGameplay'))}
+          {renderMetricCard(t('settings.countdown'), countdownMs === null ? '—' : formatDuration(countdownMs), countdownMs === null ? t('common.notAvailable') : t('settings.countdown'), 'muted')}
+        </div>
+      </section>
+
+      <section className="companion-block timer-control-card">
+        <div className="timer-control-copy">
+          <h3>{t('companion.runControlsTitle')}</h3>
+          <p className="helper-text">{t('companion.runControlsIntro')}</p>
+        </div>
+        <div className="timer-action-grid">
           {displayRunTimer.status === 'running' ? (
             <button
               type="button"
-              className="button-secondary"
+              className="button-secondary timer-action-button"
               disabled={busy !== null}
               onClick={() =>
                 runTask('pause-run', async () => {
@@ -1225,7 +1238,7 @@ export function CompanionPage() {
           ) : displayRunTimer.status === 'paused' ? (
             <button
               type="button"
-              className="button-primary"
+              className="button-primary timer-action-button"
               disabled={busy !== null}
               onClick={() =>
                 runTask('resume-run', async () => {
@@ -1238,7 +1251,7 @@ export function CompanionPage() {
           ) : (
             <button
               type="button"
-              className="button-primary"
+              className="button-primary timer-action-button"
               disabled={busy !== null}
               onClick={() =>
                 runTask('start-run', async () => {
@@ -1251,7 +1264,7 @@ export function CompanionPage() {
           )}
           <button
             type="button"
-            className="button-secondary"
+            className="button-secondary timer-action-button"
             disabled={busy !== null}
             onClick={() =>
               runTask('finish-run', async () => {
@@ -1263,9 +1276,9 @@ export function CompanionPage() {
           </button>
           <button
             type="button"
-            className="button-danger"
+            className="button-danger timer-action-button"
             disabled={busy !== null}
-onClick={resetRunWithOptionalSave}
+            onClick={resetRunWithOptionalSave}
           >
             {t('common.reset')}
           </button>

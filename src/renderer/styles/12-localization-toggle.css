@@ -515,3 +515,202 @@
 .delta-bad {
   color: #ffb38c !important;
 }
+
+/* Companion timer + current zone visual polish. */
+.timer-polished-layout,
+.companion-zone-polished-layout {
+  gap: 16px;
+}
+
+.timer-hero-card,
+.zone-hero-card {
+  display: grid;
+  grid-template-columns: minmax(240px, 0.72fr) minmax(420px, 1.28fr);
+  align-items: stretch;
+  gap: 16px;
+  background:
+    radial-gradient(circle at 12% 0%, rgba(214, 162, 84, 0.16), transparent 34%),
+    linear-gradient(135deg, rgba(25, 29, 35, 0.98), rgba(11, 14, 19, 0.98));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.035),
+    0 18px 46px rgba(0, 0, 0, 0.18);
+}
+
+.timer-hero-copy,
+.zone-hero-copy,
+.timer-control-copy {
+  min-width: 0;
+}
+
+.timer-hero-copy .eyebrow,
+.zone-hero-copy .eyebrow {
+  margin-bottom: 8px;
+}
+
+.timer-hero-copy h3,
+.zone-hero-copy h3 {
+  margin: 0;
+  color: #fff7df;
+  font-size: clamp(28px, 4vw, 54px);
+  line-height: 0.96;
+  letter-spacing: -0.045em;
+}
+
+.zone-hero-copy h3 {
+  font-size: clamp(24px, 3vw, 42px);
+}
+
+.timer-metric-grid,
+.zone-hero-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(120px, 1fr));
+  gap: 10px;
+}
+
+.zone-hero-metrics {
+  margin: 0;
+}
+
+.zone-metric-card {
+  min-height: 96px;
+  padding: 13px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.035);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
+}
+
+.zone-metric-card.is-accent {
+  border-color: rgba(214, 162, 84, 0.36);
+  background: linear-gradient(135deg, rgba(214, 162, 84, 0.16), rgba(255, 255, 255, 0.035));
+}
+
+.zone-metric-card dt {
+  margin: 0 0 8px;
+  color: rgba(234, 240, 247, 0.64);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.zone-metric-card dd {
+  margin: 0;
+  color: #fff7df;
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.timer-control-card,
+.run-save-card {
+  background:
+    radial-gradient(circle at 7% 0%, rgba(214, 162, 84, 0.10), transparent 34%),
+    rgba(255, 255, 255, 0.024);
+}
+
+.timer-control-card {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) minmax(360px, auto);
+  align-items: center;
+  gap: 14px;
+}
+
+.timer-action-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(120px, 1fr));
+  gap: 10px;
+}
+
+.timer-action-button {
+  min-height: 44px;
+}
+
+.zone-card-board {
+  align-items: start;
+}
+
+.zone-task-card {
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.042), rgba(255, 255, 255, 0.018));
+}
+
+.zone-task-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  background: rgba(214, 162, 84, 0.46);
+  opacity: 0.55;
+}
+
+.zone-task-primary::before,
+.zone-reward-card::before {
+  opacity: 0.9;
+}
+
+.zone-important-card {
+  border-color: rgba(214, 162, 84, 0.20);
+  background:
+    radial-gradient(circle at 0% 0%, rgba(214, 162, 84, 0.10), transparent 40%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.044), rgba(255, 255, 255, 0.018));
+}
+
+.zone-next-card {
+  border-color: rgba(93, 166, 255, 0.18);
+}
+
+.zone-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.zone-section-heading h3 {
+  margin: 0;
+}
+
+.zone-section-heading span {
+  flex: 0 0 auto;
+  padding: 3px 8px;
+  border: 1px solid rgba(214, 162, 84, 0.24);
+  border-radius: 999px;
+  color: #ffd791;
+  background: rgba(214, 162, 84, 0.08);
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.zone-checklist-list .checklist-item,
+.zone-task-card .details-list li {
+  line-height: 1.5;
+}
+
+.zone-task-card .guide-update-050 {
+  border-radius: 10px;
+}
+
+@media (max-width: 1100px) {
+  .timer-hero-card,
+  .zone-hero-card,
+  .timer-control-card {
+    grid-template-columns: 1fr;
+  }
+
+  .timer-metric-grid,
+  .zone-hero-metrics {
+    grid-template-columns: repeat(2, minmax(140px, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .timer-metric-grid,
+  .zone-hero-metrics,
+  .timer-action-grid {
+    grid-template-columns: 1fr;
+  }
+}
