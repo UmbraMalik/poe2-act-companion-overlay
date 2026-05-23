@@ -1038,11 +1038,11 @@
       "section": "act4",
       "actLabel": "Акт 4",
       "zone_en": "Journey's End",
-      "zone_ru": "Конец пути",
+      "zone_ru": "Конец странствия",
       "guideZoneId": "a4_journeys_end",
-      "guideZoneRu": "Конец пути",
+      "guideZoneRu": "Конец странствия",
       "aliases_ru": [
-        "Конец странствия"
+        "Конец пути"
       ],
       "reward_en": "Orb of Alchemy",
       "reward_ru": "Сфера алхимии",

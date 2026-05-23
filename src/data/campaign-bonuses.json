@@ -522,10 +522,10 @@
       ]
     },
     {
-      "id": "act4_kids_bay_freya_tujen_weapon_points",
+      "id": "act4_journeys_end_freya_tujen_weapon_points",
       "act": 4,
-      "zoneId": "a4_kids_bay",
-      "zone_ru": "Кеджский залив",
+      "zoneId": "a4_journeys_end",
+      "zone_ru": "Конец странствия",
       "title": "+2 пассивных очка набора оружия",
       "category": "weapon_set_passive",
       "source": "Фрейя → Туджин",
@@ -727,7 +727,31 @@
             "2 очка пассивных умений для набора оружия"
           ],
           "zoneIds": [
-            "a4_halls_of_the_dead"
+            "a4_halls_of_the_dead",
+            "a4_trial_of_ancestors"
+          ]
+        },
+        {
+          "all": [
+            "получили",
+            "2 очка пассивных умений",
+            "набор оружия"
+          ],
+          "zoneIds": [
+            "a4_halls_of_the_dead",
+            "a4_trial_of_ancestors"
+          ]
+        },
+        {
+          "all": [
+            "получили",
+            "+2",
+            "пассив",
+            "набор оружия"
+          ],
+          "zoneIds": [
+            "a4_halls_of_the_dead",
+            "a4_trial_of_ancestors"
           ]
         }
       ]
