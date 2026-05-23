@@ -2,9 +2,8 @@ import { useEffect, useState } from 'react';
 import { useAppSnapshot, useLiveRunTimer } from '../hooks';
 import { useDocumentTitle, useI18n } from '../useI18n';
 import {
-  getActTimeRows,
   getActTimeRowsFromSplits,
-  getCurrentActElapsedMs,
+  getCurrentActElapsedMsForAct,
   getCurrentRouteAct,
   getDismissedReminderHistory,
   getLongestZones,
@@ -753,12 +752,13 @@ export function CompanionPage() {
   const routeZones = getRouteOverviewForAct(snapshot, selectedAct ?? nowAct, language);
   const xpStatus = getXpStatus(snapshot, language);
   const countdownMs = liveRunTimer.countdownMs;
-  const currentActElapsed = getCurrentActElapsedMs(
+  const currentRunElapsed = liveRunTimer.runElapsedMs;
+  const currentNumericAct = typeof nowAct === 'number' ? nowAct : null;
+  const currentActElapsed = getCurrentActElapsedMsForAct(
     displayRunTimer,
-    guide,
+    currentNumericAct,
     liveRunTimer.nowMs
   );
-  const currentRunElapsed = liveRunTimer.runElapsedMs;
   const nearestPowerSpike = getNearestPowerSpike(
     snapshot.powerSpikes,
     config.currentLevel,
@@ -784,7 +784,11 @@ export function CompanionPage() {
     bonus: getCampaignBonusView(bonus, language) ?? bonus,
     done
   }));
-  const actTimeRows = getActTimeRows(displayRunTimer, guide, liveRunTimer.nowMs);
+  const actTimeRows = getActTimeRowsFromSplits(displayRunTimer.actSplits, currentRunElapsed, {
+    currentAct: currentNumericAct,
+    includeCurrentAct: displayRunTimer.status === 'running' || displayRunTimer.status === 'paused',
+    currentStatus: displayRunTimer.status
+  });
   const hasNoGuideForKnownZone =
     !guide &&
     Boolean(currentZone.rawZoneName) &&
