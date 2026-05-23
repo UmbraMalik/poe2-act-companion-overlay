@@ -36,7 +36,9 @@ jobs:
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
+          name: PoE2 Act Companion Overlay ${{ github.ref_name }}
+          draft: true
           files: |
             release/*.exe
-            release/*.yml
+            release/latest.yml
             release/*.blockmap
