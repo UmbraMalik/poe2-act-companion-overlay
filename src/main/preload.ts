@@ -57,8 +57,8 @@ const api: ElectronApi = {
   getOverlayBounds: () => ipcRenderer.invoke('app:get-overlay-bounds'),
   resizeOverlay: (width: number, height: number) =>
     ipcRenderer.invoke('app:resize-overlay', width, height),
-  resizeOverlayHeight: (height: number) =>
-    ipcRenderer.invoke('app:resize-overlay-height', height),
+  resizeOverlayHeight: (height: number, options?: { force?: boolean; allowBelowMinimum?: boolean }) =>
+    ipcRenderer.invoke('app:resize-overlay-height', height, options),
   setOverlayAutoResizeSuspended: (suspended: boolean) =>
     ipcRenderer.invoke('app:set-overlay-auto-resize-suspended', suspended),
   setOverlayDragActive: (active: boolean) =>

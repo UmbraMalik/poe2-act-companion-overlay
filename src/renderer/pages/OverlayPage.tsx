@@ -902,8 +902,14 @@ export function OverlayPage() {
     void window.poe2Overlay?.setOverlayAutoResizeSuspended(false);
   }, []);
 
-  const scheduleAdaptiveOverlayHeight = useCallback((options?: { allowDuringManualResize?: boolean }) => {
+  const scheduleAdaptiveOverlayHeight = useCallback((options?: {
+    allowDuringManualResize?: boolean;
+    force?: boolean;
+    allowBelowMinimum?: boolean;
+  }) => {
     const allowDuringManualResize = Boolean(options?.allowDuringManualResize);
+    const force = Boolean(options?.force);
+    const allowBelowMinimum = Boolean(options?.allowBelowMinimum ?? isOverlayCollapsed);
 
     if (autoResizeFrameRef.current !== null) {
       autoResizeFrameRef.current.cancel();
@@ -924,7 +930,7 @@ export function OverlayPage() {
         !shell ||
         !api ||
         overlayDragStateRef.current ||
-        isAdaptiveOverlayHeightSuspended() ||
+        (!force && isAdaptiveOverlayHeightSuspended()) ||
         (resizeStateRef.current && !allowDuringManualResize)
       ) {
         return;
@@ -948,27 +954,59 @@ export function OverlayPage() {
         return Math.max(max, child.offsetTop + child.offsetHeight);
       }, 0);
       const dragStripHeight = dragStrip?.getBoundingClientRect().height ?? 0;
+      const contentHeight = Math.max(shell.scrollHeight, contentBottom + shellPaddingBottom);
       const desiredHeight = Math.ceil(
         pagePaddingY +
           dragStripHeight +
-          contentBottom +
-          shellPaddingBottom +
+          contentHeight +
           shellBorderY +
           2
       );
       const nextHeight = Math.max(autoResizeMinimumHeight, desiredHeight);
       const currentHeight = getRendererViewportHeight();
 
-      if (Math.abs(currentHeight - nextHeight) < 8) {
+      if (!force && Math.abs(currentHeight - nextHeight) < 8) {
         return;
       }
 
       // Keep width as the main-process source of truth so adaptive height never widens
       // the overlay while the user is only moving it.
-      void api.resizeOverlayHeight(nextHeight);
+      void api.resizeOverlayHeight(nextHeight, { force, allowBelowMinimum });
       }
     });
-  }, [autoResizeMinimumHeight, isAdaptiveOverlayHeightSuspended]);
+  }, [autoResizeMinimumHeight, isAdaptiveOverlayHeightSuspended, isOverlayCollapsed]);
+
+  useEffect(() => {
+    let firstFrame: number | null = null;
+    let secondFrame: number | null = null;
+    const timers: number[] = [];
+    const resizeForCurrentCollapseState = () => {
+      scheduleAdaptiveOverlayHeight({
+        force: true,
+        allowBelowMinimum: isOverlayCollapsed
+      });
+    };
+
+    firstFrame = window.requestAnimationFrame(() => {
+      resizeForCurrentCollapseState();
+      secondFrame = window.requestAnimationFrame(resizeForCurrentCollapseState);
+    });
+
+    timers.push(window.setTimeout(resizeForCurrentCollapseState, 90));
+    timers.push(window.setTimeout(resizeForCurrentCollapseState, 220));
+
+    return () => {
+      if (firstFrame !== null) {
+        window.cancelAnimationFrame(firstFrame);
+      }
+
+      if (secondFrame !== null) {
+        window.cancelAnimationFrame(secondFrame);
+      }
+
+      timers.forEach((timer) => window.clearTimeout(timer));
+    };
+  }, [isOverlayCollapsed, scheduleAdaptiveOverlayHeight]);
 
   useEffect(() => {
     const page = overlayPageRef.current;
@@ -1348,7 +1386,6 @@ export function OverlayPage() {
   const handleOverlayCollapsedToggle = (event: ReactMouseEvent<HTMLButtonElement>) => {
     stopOverlayControlPropagation(event);
     setIsOverlayCollapsed((value) => !value);
-    window.setTimeout(scheduleAdaptiveOverlayHeight, 0);
   };
 
   const handleLanguageChange = (nextLanguage: AppLanguage) => {

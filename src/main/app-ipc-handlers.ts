@@ -410,29 +410,55 @@ export function runRegisterIpc(this: any) {
             }
             return true;
         });
-        ipcMain.handle('app:resize-overlay-height', async (_event: any, height: any) => {
+        ipcMain.handle('app:resize-overlay-height', async (_event: any, height: any, options: any = {}) => {
             const targetWindow = this.overlayWindow;
             if (!targetWindow || targetWindow.isDestroyed()) {
                 return this.getSnapshot();
             }
-            if (shouldIgnoreOverlayAutoHeight({
-                dragInProgress: this.overlayDragInProgress,
+            const forceAutoHeight = Boolean(options?.force);
+            const allowBelowMinimum = Boolean(options?.allowBelowMinimum);
+            const currentBounds = targetWindow.getBounds();
+            const requestedHeight = Math.round(Number(height) || currentBounds.height);
+            const ignoreBecauseDragIsActive = this.overlayDragInProgress;
+            const ignoreBecauseSuspended = !forceAutoHeight && shouldIgnoreOverlayAutoHeight({
+                dragInProgress: false,
                 suspendedUntil: this.overlayAutoResizeSuspendedUntil
-            })) {
+            });
+            if (ignoreBecauseDragIsActive || ignoreBecauseSuspended) {
                 this.logOverlayBoundsEvent('info', {
                     phase: 'auto-height-ignored',
                     source: 'autoHeight',
-                    reason: this.overlayDragInProgress ? 'dragActive' : 'suspended',
-                    requestedHeight: Math.round(Number(height) || targetWindow.getBounds().height),
+                    reason: ignoreBecauseDragIsActive ? 'dragActive' : 'suspended',
+                    requestedHeight,
                     bounds: targetWindow.getBounds()
                 });
                 return this.getSnapshot();
             }
-            const currentBounds = targetWindow.getBounds();
-            const nextBounds = this.normalizeOverlayBoundsForMode({
+            let nextBounds = this.normalizeOverlayBoundsForMode({
                 ...currentBounds,
-                height: Math.round(Number(height) || currentBounds.height)
+                height: requestedHeight
             }, this.overlayMode, this.config.overlayDensity);
+            const minimumSize = this.getOverlayMinimumSize(this.overlayMode, this.config.overlayDensity, this.config.overlayScale);
+            if (
+                allowBelowMinimum &&
+                this.overlayMode !== 'timer_only' &&
+                requestedHeight < minimumSize.height
+            ) {
+                const display = screen.getDisplayMatching(currentBounds);
+                const virtualArea = this.getOverlayVirtualWorkArea();
+                const collapsedHeight = Math.min(
+                    Math.max(44, requestedHeight),
+                    Math.max(44, display.workArea.height - 16)
+                );
+                const minVisibleHeight = this.getOverlayMinimumVisibleHeight(collapsedHeight);
+                const minY = virtualArea.y;
+                const maxY = virtualArea.y + virtualArea.height - minVisibleHeight;
+                nextBounds = {
+                    ...nextBounds,
+                    y: Math.min(Math.max(nextBounds.y, minY), Math.max(minY, maxY)),
+                    height: collapsedHeight
+                };
+            }
             this.applyOverlayWindowBounds('autoHeight', nextBounds);
             this.persistOverlayBoundsForCurrentState(targetWindow.getBounds());
             this.broadcastState();
