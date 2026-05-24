@@ -1225,13 +1225,17 @@ expectNotGuide('\u0414\u0435\u0440\u0435\u0432\u043d\u044f \u041a\u0440\u0438\u0
 }, 'i2_kriar_peaks');
 
 expectGuide('Clearfell', { zoneName: 'Clearfell' }, 'a1_clearfell');
-expectNoGuide('Clearfell Encampment', { zoneName: 'Clearfell Encampment' }, 'Clearfell Encampment');
+expectGuide('Clearfell Encampment', { zoneName: 'Clearfell Encampment' }, 'a1_clearfell_encampment');
 expectNotGuide('Clearfell Encampment -> Clearfell', {
   zoneName: 'Clearfell Encampment'
 }, 'a1_clearfell');
-expectNoGuide('\u041b\u0430\u0433\u0435\u0440\u044c \u041a\u043b\u0438\u0440\u0444\u0435\u043b\u043b', {
+expectGuide('\u041b\u0430\u0433\u0435\u0440\u044c \u041a\u043b\u0438\u0440\u0444\u0435\u043b\u043b', {
   zoneName: '\u041b\u0430\u0433\u0435\u0440\u044c \u041a\u043b\u0438\u0440\u0444\u0435\u043b\u043b'
-}, '\u041b\u0430\u0433\u0435\u0440\u044c \u041a\u043b\u0438\u0440\u0444\u0435\u043b\u043b');
+}, 'a1_clearfell_encampment');
+expectGuide('Ardura Caravan', { zoneName: 'Ardura Caravan' }, 'a2_ardura_caravan');
+expectGuide('Caravan', { zoneName: 'Caravan' }, 'a2_ardura_caravan');
+expectGuide('The Ziggurat Encampment', { zoneName: 'The Ziggurat Encampment' }, 'a3_ziggurat_encampment');
+expectGuide('Ziggurat', { zoneName: 'Ziggurat' }, 'a3_ziggurat_encampment');
 
 expectGuide('areaId priority P2_1 beats stale The Galai Gates', {
   areaId: 'P2_1',

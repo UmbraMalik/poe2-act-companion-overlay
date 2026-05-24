@@ -648,27 +648,6 @@
       "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
     },
     {
-      "id": "league_act2_dreadnought_vanguard",
-      "section": "act2",
-      "actLabel": "Акт 2",
-      "zone_en": "Dreadnought Vanguard",
-      "zone_ru": "Авангард Дредноута",
-      "guideZoneId": "a2_dreadnought_vanguard",
-      "guideZoneRu": "Авангард Дредноута",
-      "aliases_ru": [],
-      "reward_en": "None",
-      "reward_ru": "Нет гарантированной награды",
-      "rewardType": "none",
-      "hasReward": false,
-      "displayInOverlay": false,
-      "oneTimeGuaranteed": false,
-      "duplicateInCurrentGuide": false,
-      "duplicateNote": null,
-      "coverageNote": null,
-      "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
-    },
-    {
       "id": "league_act3_sandswept_marsh",
       "section": "act3",
       "actLabel": "Акт 3",

@@ -23,6 +23,16 @@ const LOCKED_CAMPAIGN_ZONES: LockedCampaignZone[] = [
     ]
   },
   {
+    "id": "a1_clearfell_encampment",
+    "act": 1,
+    "zoneRu": "Лагерь Клирфелл",
+    "zoneEn": "Clearfell Encampment",
+    "areaIds": [
+      "C_G1_town",
+      "G1_town"
+    ]
+  },
+  {
     "id": "a1_clearfell",
     "act": 1,
     "zoneRu": "Клирфелл",
@@ -160,6 +170,16 @@ const LOCKED_CAMPAIGN_ZONES: LockedCampaignZone[] = [
     "areaIds": [
       "C_G1_15",
       "G1_15"
+    ]
+  },
+  {
+    "id": "a2_ardura_caravan",
+    "act": 2,
+    "zoneRu": "Караван Ардура",
+    "zoneEn": "Ardura Caravan",
+    "areaIds": [
+      "C_G2_town",
+      "G2_town"
     ]
   },
   {
@@ -343,13 +363,13 @@ const LOCKED_CAMPAIGN_ZONES: LockedCampaignZone[] = [
     ]
   },
   {
-    "id": "a2_dreadnought_vanguard",
-    "act": 2,
-    "zoneRu": "Авангард Дредноута",
-    "zoneEn": "Dreadnought Vanguard",
+    "id": "a3_ziggurat_encampment",
+    "act": 3,
+    "zoneRu": "Лагерь на зиккурате",
+    "zoneEn": "The Ziggurat Encampment",
     "areaIds": [
-      "C_G2_12_2",
-      "G2_12_2"
+      "C_G3_town",
+      "G3_town"
     ]
   },
   {

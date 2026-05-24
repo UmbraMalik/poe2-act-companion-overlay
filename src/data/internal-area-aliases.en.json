@@ -12,7 +12,8 @@
     "2026-05-17: added guide cards for Mud Burrow, Lightless Passage, Temple of Chaos, Trial of the Ancestors, Plunder's Point, and Interlude side zones; Kedge Bay/Kid's Bay wording intentionally unchanged.",
     "2026-05-24: added P1_1/C_P1_1 -> Scorched Farmlands and fixed Interlude 1/2 route chain names.",
     "2026-05-24: added P3_Town/C_P3_Town -> The Glade and P3_1/C_P3_1 -> Ashen Forest for the Kriar branch route.",
-    "2026-05-24: added P2_Town/C_P2_Town -> Khari Bazaar and P1_Town/C_P1_Town -> The Refuge; route now goes Heart of the Tribe -> Khari Bazaar and Cuachic Vault -> Refuge."
+    "2026-05-24: added P2_Town/C_P2_Town -> Khari Bazaar and P1_Town/C_P1_Town -> The Refuge; route now goes Heart of the Tribe -> Khari Bazaar and Cuachic Vault -> Refuge.",
+    "2026-05-24: added hub guide mappings for G1/G2/G3 towns and removed Dreadnought Vanguard from the active 0.5 route."
   ],
   "areaToGuideId": {
     "abyss_intro": "a2_lightless_passage",
@@ -35,7 +36,6 @@
     "c_g2_10_1": "a2_mawdun_quarry",
     "c_g2_10_2": "a2_mawdun_mine",
     "c_g2_12_1": "a2_dreadnought",
-    "c_g2_12_2": "a2_dreadnought_vanguard",
     "c_g2_13": "a2_trial_of_the_sekhemas",
     "c_g2_2": "a2_traitors_passage",
     "c_g2_3": "a2_halani_gates",
@@ -124,7 +124,6 @@
     "g2_10_1": "a2_mawdun_quarry",
     "g2_10_2": "a2_mawdun_mine",
     "g2_12_1": "a2_dreadnought",
-    "g2_12_2": "a2_dreadnought_vanguard",
     "g2_13": "a2_trial_of_the_sekhemas",
     "g2_2": "a2_traitors_passage",
     "g2_3": "a2_halani_gates",
@@ -202,7 +201,13 @@
     "c_p2_town": "interlude_khari_bazaar",
     "p2_town": "interlude_khari_bazaar",
     "c_p1_town": "interlude_refuge",
-    "p1_town": "interlude_refuge"
+    "p1_town": "interlude_refuge",
+    "c_g1_town": "a1_clearfell_encampment",
+    "g1_town": "a1_clearfell_encampment",
+    "c_g2_town": "a2_ardura_caravan",
+    "g2_town": "a2_ardura_caravan",
+    "c_g3_town": "a3_ziggurat_encampment",
+    "g3_town": "a3_ziggurat_encampment"
   },
   "knownTownAreaIds": [
     "g1_town",
