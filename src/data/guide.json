@@ -1516,104 +1516,6 @@
       ]
     },
     {
-      "id": "a2_ardura_caravan",
-      "act": 2,
-      "zone_en": "Ardura Caravan",
-      "zone_ru": "Караван Ардура",
-      "aliases": [
-        "Караван",
-        "Caravan",
-        "The Ardura Caravan"
-      ],
-      "recommended_level": 13,
-      "recommended_level_label": "Акт 2 / хаб",
-      "is_good_xp_zone": false,
-      "checklist": [
-        {
-          "id": "a2_ardura_caravan_task_1",
-          "text": "Начать акт через Окраины Вастири → Каменоломня Маудун → Шахта Маудун → Тропа Изменницы → Ворота Халани",
-          "type": "route_task",
-          "required": false,
-          "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
-        },
-        {
-          "id": "a2_ardura_caravan_task_2",
-          "text": "Дальше: Бесплодные земли мастодонтов → Бессветный проход → Костяные ямы → Кет → Затерянный город → Захоронённые святилища",
-          "type": "route_task",
-          "required": false,
-          "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
-        },
-        {
-          "id": "a2_ardura_caravan_task_3",
-          "text": "Финал: Долина Титанов → Грот Титанов → Дешар → Путь скорби → Шпили Дешара → Дредноут",
-          "type": "route_task",
-          "required": false,
-          "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
-        },
-        {
-          "id": "a2_ardura_caravan_task_4",
-          "text": "Испытание Сехем — опционально, не обязательно для маршрута кампании",
-          "type": "route_task",
-          "required": false,
-          "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
-        }
-      ],
-      "rewards": [
-        "Хаб Акта 2 и быстрые возвраты к торговцам"
-      ],
-      "skip": [
-        "Авангард Дредноута больше не вести как отдельную точку маршрута",
-        "Испытание Сехем можно отложить, если цель — быстрый проход актов"
-      ],
-      "important": [
-        "0.5: Авангард Дредноута убран из актуального маршрута; финал акта закрывается через Дредноут."
-      ],
-      "after": [],
-      "boss_tips": [],
-      "xp_notes": [],
-      "crafting_tips": [],
-      "next_zone_ru": "Окраины Вастири",
-      "details": {
-        "route": [
-          "Окраины Вастири → Каменоломня Маудун → Шахта Маудун → Тропа Изменницы → Ворота Халани",
-          "Бесплодные земли мастодонтов → Бессветный проход → Костяные ямы → Кет → Затерянный город → Захоронённые святилища",
-          "Долина Титанов → Грот Титанов → Дешар → Путь скорби → Шпили Дешара → Дредноут"
-        ],
-        "rewards": [
-          "Хаб Акта 2 и быстрые возвраты к торговцам"
-        ],
-        "skip": [
-          "Авангард Дредноута: зона удалена из актуального маршрута 0.5",
-          "Испытание Сехем — опционально"
-        ],
-        "important": [
-          "Караван Ардура — памятка общего порядка: внутри акта идти по карточкам, но не возвращать в маршрут удалённый Авангард Дредноута."
-        ],
-        "after": [],
-        "boss_tips": [],
-        "xp_notes": [],
-        "crafting_tips": [],
-        "town_plan": [
-          "Пока караван едет, сдавать квесты, проверять торговцев и не стоять в пустой анимации."
-        ],
-        "navigation": [
-          "Если потерял порядок: сначала пустынная ветка Маудуна/Халани, потом мастодонты и Кет, затем Титаны/Дешар/Дредноут."
-        ]
-      },
-      "display": {
-        "wideModeRecommended": true,
-        "showAllChecklist": true
-      },
-      "area_ids": [
-        "C_G2_town",
-        "G2_town"
-      ]
-    },
-    {
       "id": "a2_vastiri_outskirts",
       "act": 2,
       "zone_en": "Vastiri Outskirts",
@@ -1654,13 +1556,14 @@
       ],
       "skip": [],
       "important": [
+        "После Окраин Вастири попасть в Караван Ардура, затем выходить в Каменоломню Маудун.",
         "После босса: город → Асала → карта пустыни → Ворота Халани для квестового состояния → TP"
       ],
       "after": [],
       "boss_tips": [],
       "xp_notes": [],
       "crafting_tips": [],
-      "next_zone_ru": "Каменоломня Маудун",
+      "next_zone_ru": "Караван Ардура",
       "details": {
         "route": [
           "Если нашёл разграбленный лагерь — взять камень поддержки 2 тира",
@@ -1673,6 +1576,7 @@
         ],
         "skip": [],
         "important": [
+          "После Окраин Вастири попасть в Караван Ардура, затем выходить в Каменоломню Маудун.",
           "После босса: город → Асала → карта пустыни → Ворота Халани для квестового состояния → TP"
         ],
         "after": [],
@@ -1696,6 +1600,106 @@
       "area_ids": [
         "C_G2_1",
         "G2_1"
+      ]
+    },
+    {
+      "id": "a2_ardura_caravan",
+      "act": 2,
+      "zone_en": "Ardura Caravan",
+      "zone_ru": "Караван Ардура",
+      "aliases": [
+        "Караван",
+        "Caravan",
+        "The Ardura Caravan"
+      ],
+      "recommended_level": 13,
+      "recommended_level_label": "Акт 2 / хаб",
+      "is_good_xp_zone": false,
+      "checklist": [
+        {
+          "id": "a2_ardura_caravan_task_1",
+          "text": "После Окраин Вастири из Каравана идти в Каменоломню Маудун → Шахта Маудун → Тропа Изменницы → Ворота Халани",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a2_ardura_caravan_task_2",
+          "text": "Дальше: Бесплодные земли мастодонтов → Бессветный проход → Костяные ямы → Кет → Затерянный город → Захоронённые святилища",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a2_ardura_caravan_task_3",
+          "text": "Финал: Долина Титанов → Грот Титанов → Дешар → Путь скорби → Шпили Дешара → Дредноут",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a2_ardura_caravan_task_4",
+          "text": "Испытание Сехем — опционально, не обязательно для маршрута кампании",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        }
+      ],
+      "rewards": [
+        "Хаб Акта 2 и быстрые возвраты к торговцам"
+      ],
+      "skip": [
+        "Авангард Дредноута больше не вести как отдельную точку маршрута",
+        "Испытание Сехем можно отложить, если цель — быстрый проход актов"
+      ],
+      "important": [
+        "Акт 2 начинается с Окраин Вастири; после входа в Караван идти в Каменоломню Маудун.",
+        "0.5: Авангард Дредноута убран из актуального маршрута; финал акта закрывается через Дредноут."
+      ],
+      "after": [],
+      "boss_tips": [],
+      "xp_notes": [],
+      "crafting_tips": [],
+      "next_zone_ru": "Каменоломня Маудун",
+      "details": {
+        "route": [
+          "Окраины Вастири → Караван Ардура → Каменоломня Маудун → Шахта Маудун → Тропа Изменницы → Ворота Халани",
+          "Бесплодные земли мастодонтов → Бессветный проход → Костяные ямы → Кет → Затерянный город → Захоронённые святилища",
+          "Долина Титанов → Грот Титанов → Дешар → Путь скорби → Шпили Дешара → Дредноут"
+        ],
+        "rewards": [
+          "Хаб Акта 2 и быстрые возвраты к торговцам"
+        ],
+        "skip": [
+          "Авангард Дредноута: зона удалена из актуального маршрута 0.5",
+          "Испытание Сехем — опционально"
+        ],
+        "important": [
+          "Караван Ардура — хаб после стартовой зоны; не вести его перед Окраинами Вастири.",
+          "Авангард Дредноута больше не возвращать в маршрут 0.5."
+        ],
+        "after": [],
+        "boss_tips": [],
+        "xp_notes": [],
+        "crafting_tips": [],
+        "town_plan": [
+          "Пока караван едет, сдавать квесты, проверять торговцев и не стоять в пустой анимации."
+        ],
+        "navigation": [
+          "Если потерял порядок: сначала Окраины Вастири и Караван, потом Маудун/Халани, затем мастодонты и Кет, затем Титаны/Дешар/Дредноут."
+        ]
+      },
+      "display": {
+        "wideModeRecommended": true,
+        "showAllChecklist": true
+      },
+      "area_ids": [
+        "C_G2_town",
+        "G2_town"
       ]
     },
     {
@@ -3100,99 +3104,6 @@
       ]
     },
     {
-      "id": "a3_ziggurat_encampment",
-      "act": 3,
-      "zone_en": "The Ziggurat Encampment",
-      "zone_ru": "Лагерь на зиккурате",
-      "aliases": [
-        "Зиккурат",
-        "Ziggurat",
-        "Ziggurat Encampment"
-      ],
-      "recommended_level": 28,
-      "recommended_level_label": "Акт 3 / хаб",
-      "is_good_xp_zone": false,
-      "checklist": [
-        {
-          "id": "a3_ziggurat_encampment_task_1",
-          "text": "Идти по порядку карточек Акта 3: Занесённое песком болото → Развалины в джунглях → Ядовитые крипты",
-          "type": "route_task",
-          "required": false,
-          "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
-        },
-        {
-          "id": "a3_ziggurat_encampment_task_2",
-          "text": "Дальше: Заражённые земли → Болото Азак → Топи химеридов → Машинариум Джиквани → Святилище Джиквани",
-          "type": "route_task",
-          "required": false,
-          "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
-        },
-        {
-          "id": "a3_ziggurat_encampment_task_3",
-          "text": "Финал: Водные пути Матлана → Затопленный город → Расплавленные залы → Осквернённая вершина → Храм Копека → Чёрные палаты",
-          "type": "route_task",
-          "required": false,
-          "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
-        },
-        {
-          "id": "a3_ziggurat_encampment_task_4",
-          "text": "Храм Хаоса — опционально, заходить только если нужен Trial of Chaos / восхождение",
-          "type": "route_task",
-          "required": false,
-          "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
-        }
-      ],
-      "rewards": [
-        "Хаб Акта 3 и быстрый ориентир по порядку зон"
-      ],
-      "skip": [
-        "Храм Хаоса в быстром маршруте, если не нужен Trial of Chaos"
-      ],
-      "important": [
-        "В Акте 3 основной маршрут идёт по порядку карточек; Храм Хаоса — боковая опциональная зона."
-      ],
-      "after": [],
-      "boss_tips": [],
-      "xp_notes": [],
-      "crafting_tips": [],
-      "next_zone_ru": "Занесённое песком болото",
-      "details": {
-        "route": [
-          "Занесённое песком болото → Развалины в джунглях → Ядовитые крипты",
-          "Заражённые земли → Болото Азак → Топи химеридов → Машинариум Джиквани → Святилище Джиквани",
-          "Водные пути Матлана → Затопленный город → Расплавленные залы → Осквернённая вершина → Храм Копека → Чёрные палаты"
-        ],
-        "rewards": [
-          "Хаб Акта 3 и быстрый ориентир по порядку зон"
-        ],
-        "skip": [
-          "Храм Хаоса — опционально для Trial of Chaos / восхождения"
-        ],
-        "important": [
-          "Если запутался, идти по карточкам Акта 3 сверху вниз; не считать Храм Хаоса обязательным прогрессом."
-        ],
-        "after": [],
-        "boss_tips": [],
-        "xp_notes": [],
-        "crafting_tips": [],
-        "navigation": [
-          "Храм Хаоса находится как боковая ветка: быстрое прохождение кампании обычно идёт мимо него."
-        ]
-      },
-      "display": {
-        "wideModeRecommended": true,
-        "showAllChecklist": true
-      },
-      "area_ids": [
-        "C_G3_town",
-        "G3_town"
-      ]
-    },
-    {
       "id": "a3_sandswept_marsh",
       "act": 3,
       "zone_en": "Sandswept Marsh",
@@ -3242,13 +3153,14 @@
       ],
       "skip": [],
       "important": [
+        "После стартовой зоны попасть в Лагерь на зиккурате, затем идти в Развалины в джунглях.",
         "В городе проверить Освальда на оружие, броню и фласки"
       ],
       "after": [],
       "boss_tips": [],
       "xp_notes": [],
       "crafting_tips": [],
-      "next_zone_ru": "Развалины в джунглях",
+      "next_zone_ru": "Лагерь на зиккурате",
       "details": {
         "route": [
           "Если встретил Рутбриджа — убить за камень умения 9 уровня",
@@ -3263,6 +3175,7 @@
         ],
         "skip": [],
         "important": [
+          "После стартовой зоны попасть в Лагерь на зиккурате, затем идти в Развалины в джунглях.",
           "В городе проверить Освальда на оружие, броню и фласки"
         ],
         "after": [],
@@ -3286,6 +3199,101 @@
       "area_ids": [
         "C_G3_1",
         "G3_1"
+      ]
+    },
+    {
+      "id": "a3_ziggurat_encampment",
+      "act": 3,
+      "zone_en": "The Ziggurat Encampment",
+      "zone_ru": "Лагерь на зиккурате",
+      "aliases": [
+        "Зиккурат",
+        "Ziggurat",
+        "Ziggurat Encampment"
+      ],
+      "recommended_level": 28,
+      "recommended_level_label": "Акт 3 / хаб",
+      "is_good_xp_zone": false,
+      "checklist": [
+        {
+          "id": "a3_ziggurat_encampment_task_1",
+          "text": "После Занесённого песком болота из хаба идти в Развалины в джунглях → Ядовитые крипты",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a3_ziggurat_encampment_task_2",
+          "text": "Дальше: Заражённые земли → Болото Азак → Топи химеридов → Машинариум Джиквани → Святилище Джиквани",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a3_ziggurat_encampment_task_3",
+          "text": "Финал: Водные пути Матлана → Затопленный город → Расплавленные залы → Осквернённая вершина → Храм Копека → Чёрные палаты",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a3_ziggurat_encampment_task_4",
+          "text": "Храм Хаоса — опционально, заходить только если нужен Trial of Chaos / восхождение",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        }
+      ],
+      "rewards": [
+        "Хаб Акта 3 и быстрый ориентир по порядку зон"
+      ],
+      "skip": [
+        "Храм Хаоса в быстром маршруте, если не нужен Trial of Chaos"
+      ],
+      "important": [
+        "Акт 3 стартует с Занесённого песком болота; Лагерь на зиккурате — хаб после стартовой зоны.",
+        "Храм Хаоса — боковая опциональная зона."
+      ],
+      "after": [],
+      "boss_tips": [],
+      "xp_notes": [],
+      "crafting_tips": [],
+      "next_zone_ru": "Развалины в джунглях",
+      "details": {
+        "route": [
+          "Занесённое песком болото → Лагерь на зиккурате → Развалины в джунглях → Ядовитые крипты",
+          "Заражённые земли → Болото Азак → Топи химеридов → Машинариум Джиквани → Святилище Джиквани",
+          "Водные пути Матлана → Затопленный город → Расплавленные залы → Осквернённая вершина → Храм Копека → Чёрные палаты"
+        ],
+        "rewards": [
+          "Хаб Акта 3 и быстрый ориентир по порядку зон"
+        ],
+        "skip": [
+          "Храм Хаоса — опционально для Trial of Chaos / восхождения"
+        ],
+        "important": [
+          "Лагерь на зиккурате — хаб после стартовой зоны; из него дальше идти в Развалины в джунглях.",
+          "Если запутался, после хаба идти по карточкам Акта 3 сверху вниз; не считать Храм Хаоса обязательным прогрессом."
+        ],
+        "after": [],
+        "boss_tips": [],
+        "xp_notes": [],
+        "crafting_tips": [],
+        "navigation": [
+          "Храм Хаоса находится как боковая ветка: быстрое прохождение кампании обычно идёт мимо него."
+        ]
+      },
+      "display": {
+        "wideModeRecommended": true,
+        "showAllChecklist": true
+      },
+      "area_ids": [
+        "C_G3_town",
+        "G3_town"
       ]
     },
     {

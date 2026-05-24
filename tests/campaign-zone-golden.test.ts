@@ -173,16 +173,6 @@ const LOCKED_CAMPAIGN_ZONES: LockedCampaignZone[] = [
     ]
   },
   {
-    "id": "a2_ardura_caravan",
-    "act": 2,
-    "zoneRu": "Караван Ардура",
-    "zoneEn": "Ardura Caravan",
-    "areaIds": [
-      "C_G2_town",
-      "G2_town"
-    ]
-  },
-  {
     "id": "a2_vastiri_outskirts",
     "act": 2,
     "zoneRu": "Окраины Вастири",
@@ -190,6 +180,16 @@ const LOCKED_CAMPAIGN_ZONES: LockedCampaignZone[] = [
     "areaIds": [
       "C_G2_1",
       "G2_1"
+    ]
+  },
+  {
+    "id": "a2_ardura_caravan",
+    "act": 2,
+    "zoneRu": "Караван Ардура",
+    "zoneEn": "Ardura Caravan",
+    "areaIds": [
+      "C_G2_town",
+      "G2_town"
     ]
   },
   {
@@ -363,16 +363,6 @@ const LOCKED_CAMPAIGN_ZONES: LockedCampaignZone[] = [
     ]
   },
   {
-    "id": "a3_ziggurat_encampment",
-    "act": 3,
-    "zoneRu": "Лагерь на зиккурате",
-    "zoneEn": "The Ziggurat Encampment",
-    "areaIds": [
-      "C_G3_town",
-      "G3_town"
-    ]
-  },
-  {
     "id": "a3_sandswept_marsh",
     "act": 3,
     "zoneRu": "Занесённое песком болото",
@@ -380,6 +370,16 @@ const LOCKED_CAMPAIGN_ZONES: LockedCampaignZone[] = [
     "areaIds": [
       "C_G3_1",
       "G3_1"
+    ]
+  },
+  {
+    "id": "a3_ziggurat_encampment",
+    "act": 3,
+    "zoneRu": "Лагерь на зиккурате",
+    "zoneEn": "The Ziggurat Encampment",
+    "areaIds": [
+      "C_G3_town",
+      "G3_town"
     ]
   },
   {

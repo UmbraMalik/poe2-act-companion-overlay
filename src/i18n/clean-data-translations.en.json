@@ -1241,5 +1241,19 @@
   "Водные пути Матлана → Затопленный город → Расплавленные залы → Осквернённая вершина → Храм Копека → Чёрные палаты": "Matlan Waterways → Drowned City → Molten Vault → Apex of Filth → Temple of Kopec → Black Chambers",
   "Храм Хаоса — опционально для Trial of Chaos / восхождения": "Temple of Chaos is optional for Trial of Chaos / Ascendancy.",
   "Если запутался, идти по карточкам Акта 3 сверху вниз; не считать Храм Хаоса обязательным прогрессом.": "If you get lost, follow the Act 3 cards from top to bottom; do not treat Temple of Chaos as mandatory progress.",
-  "Храм Хаоса находится как боковая ветка: быстрое прохождение кампании обычно идёт мимо него.": "Temple of Chaos is a side branch; fast campaign routing usually skips it."
+  "Храм Хаоса находится как боковая ветка: быстрое прохождение кампании обычно идёт мимо него.": "Temple of Chaos is a side branch; fast campaign routing usually skips it.",
+  "После Окраин Вастири попасть в Караван Ардура, затем выходить в Каменоломню Маудун.": "After Vastiri Outskirts, enter the Ardura Caravan, then leave for Mawdun Quarry.",
+  "После Окраин Вастири из Каравана идти в Каменоломню Маудун → Шахта Маудун → Тропа Изменницы → Ворота Халани": "After Vastiri Outskirts, leave the Caravan for Mawdun Quarry → Mawdun Mine → Traitor’s Passage → Halani Gates.",
+  "Окраины Вастири → Караван Ардура → Каменоломня Маудун → Шахта Маудун → Тропа Изменницы → Ворота Халани": "Vastiri Outskirts → Ardura Caravan → Mawdun Quarry → Mawdun Mine → Traitor’s Passage → Halani Gates",
+  "Акт 2 начинается с Окраин Вастири; после входа в Караван идти в Каменоломню Маудун.": "Act 2 starts in Vastiri Outskirts; after entering the Caravan, head to Mawdun Quarry.",
+  "Караван Ардура — хаб после стартовой зоны; не вести его перед Окраинами Вастири.": "Ardura Caravan is the hub after the starting zone; do not route it before Vastiri Outskirts.",
+  "Авангард Дредноута больше не возвращать в маршрут 0.5.": "Do not add Dreadnought Vanguard back into the 0.5 route.",
+  "Если потерял порядок: сначала Окраины Вастири и Караван, потом Маудун/Халани, затем мастодонты и Кет, затем Титаны/Дешар/Дредноут.": "If you lose the order: first Vastiri Outskirts and the Caravan, then Mawdun/Halani, then Mastodons and Keth, then Titans/Deshar/Dreadnought.",
+  "После стартовой зоны попасть в Лагерь на зиккурате, затем идти в Развалины в джунглях.": "After the starting zone, enter the Ziggurat Encampment, then head to Jungle Ruins.",
+  "После Занесённого песком болота из хаба идти в Развалины в джунглях → Ядовитые крипты": "After Sandswept Marsh, leave the hub for Jungle Ruins → Venom Crypts.",
+  "Занесённое песком болото → Лагерь на зиккурате → Развалины в джунглях → Ядовитые крипты": "Sandswept Marsh → Ziggurat Encampment → Jungle Ruins → Venom Crypts",
+  "Акт 3 стартует с Занесённого песком болота; Лагерь на зиккурате — хаб после стартовой зоны.": "Act 3 starts in Sandswept Marsh; the Ziggurat Encampment is the hub after the starting zone.",
+  "Храм Хаоса — боковая опциональная зона.": "The Temple of Chaos is an optional side zone.",
+  "Лагерь на зиккурате — хаб после стартовой зоны; из него дальше идти в Развалины в джунглях.": "Ziggurat Encampment is the hub after the starting zone; from there, head to Jungle Ruins.",
+  "Если запутался, после хаба идти по карточкам Акта 3 сверху вниз; не считать Храм Хаоса обязательным прогрессом.": "If you get lost, after the hub follow the Act 3 cards from top to bottom; do not treat the Temple of Chaos as mandatory progress."
 }
