@@ -711,7 +711,7 @@ const LOCKED_CAMPAIGN_ZONES: LockedCampaignZone[] = [
   {
     "id": "interlude_selvari_sanctuary",
     "act": 5,
-    "zoneRu": "Храм Селхари",
+    "zoneRu": "Храм Селари",
     "zoneEn": "Sel Khari Sanctuary",
     "areaIds": [
       "C_P2_3",
@@ -821,6 +821,16 @@ const LOCKED_CAMPAIGN_ZONES: LockedCampaignZone[] = [
     "zoneRu": "Финальная интерлюдия / Тьма",
     "zoneEn": "Final Interlude",
     "areaIds": []
+  },
+  {
+    "id": "interlude_scorched_farmlands",
+    "act": 5,
+    "zoneRu": "Выжженные фермерские земли",
+    "zoneEn": "Scorched Farmlands",
+    "areaIds": [
+      "C_P1_1",
+      "P1_1"
+    ]
   },
   {
     "id": "interlude_stones_of_serle",

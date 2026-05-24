@@ -28,6 +28,10 @@ const ignoredDirs = new Set([
   '.tmp-tests',
   '.tmp-appdata'
 ]);
+const ignoredFiles = new Set([
+  // Historical release asset names/URLs are immutable GitHub data, not active UI branding.
+  path.join('docs', 'stats', 'downloads-state.json')
+]);
 const textExtensions = new Set([
   '.ts', '.tsx', '.js', '.cjs', '.json', '.md', '.html', '.css', '.txt', '.yml', '.yaml'
 ]);
@@ -51,6 +55,7 @@ function walk(dir) {
 
 const matches = [];
 for (const file of walk(root)) {
+  if (ignoredFiles.has(path.relative(root, file))) continue;
   const text = fs.readFileSync(file, 'utf8');
   for (const needle of banned) {
     if (text.includes(needle)) {

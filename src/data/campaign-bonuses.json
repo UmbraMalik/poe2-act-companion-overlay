@@ -869,7 +869,48 @@
             "2 очка пассивных умений для набора оружия"
           ],
           "zoneIds": [
-            "i_final_wolvenholt"
+            "i_final_wolvenholt",
+            "i_final_holten"
+          ]
+        },
+        {
+          "all": [
+            "received",
+            "2 Weapon Set Passive Skill Points"
+          ],
+          "zoneIds": [
+            "i_final_wolvenholt",
+            "i_final_holten"
+          ]
+        },
+        {
+          "all": [
+            "получили",
+            "2 очка пассивных умений для набора оружия"
+          ],
+          "sceneNames": [
+            "Вольфенхолд",
+            "Вольфелхонд",
+            "Волвенхолд",
+            "Wolvenhold",
+            "Wolvenholt",
+            "Холтен",
+            "Holten"
+          ]
+        },
+        {
+          "all": [
+            "received",
+            "2 Weapon Set Passive Skill Points"
+          ],
+          "sceneNames": [
+            "Вольфенхолд",
+            "Вольфелхонд",
+            "Волвенхолд",
+            "Wolvenhold",
+            "Wolvenholt",
+            "Холтен",
+            "Holten"
           ]
         }
       ]

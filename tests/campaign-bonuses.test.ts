@@ -98,6 +98,17 @@ test('Khari Crossing molten shrine life reward matches by scene name', () => {
   assert.deepEqual(getDoneBonusIds(app), ['int2_khari_crossing_life_percent']);
 });
 
+test('Olswin weapon-set reward can be claimed after checkpoint return to Holten', () => {
+  const app = createTestAppInstance();
+  applyAppLogLine(app as never, '2026/05/24 03:10:10 123 [DEBUG Client] Generating level 58 area "C_P1_5" with seed 1');
+  applyAppLogLine(app as never, '[SCENE] Set Source [Вольфенхолд]');
+  applyAppLogLine(app as never, '2026/05/24 03:12:10 123 [DEBUG Client] Generating level 57 area "C_P1_4" with seed 2');
+  applyAppLogLine(app as never, '[SCENE] Set Source [Холтен]');
+  applyAppLogLine(app as never, ': Вы получили 2 очка пассивных умений для набора оружия.');
+
+  assert.deepEqual(getDoneBonusIds(app), ['int1_wolvenholt_olswin_weapon_points']);
+});
+
 test('reward in town uses last gameplay zone context instead of the first matching bonus', () => {
   const app = createTestAppInstance();
   applyAppLogLine(app as never, '2026/05/16 22:10:10 123 [DEBUG Client] Generating level 6 area "G1_2" with seed 1');
