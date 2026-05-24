@@ -1043,6 +1043,14 @@ export function OverlayPage() {
     snapshot?.config.overlayScale,
     snapshot?.config.overlayTextSize,
     snapshot?.config.overlayDensity,
+    snapshot?.config.overlayVisibleSections.nearby,
+    snapshot?.config.overlayVisibleSections.zoneInfo,
+    snapshot?.config.overlayVisibleSections.zoneBonuses,
+    snapshot?.config.overlayVisibleSections.league,
+    snapshot?.config.overlayVisibleSections.next,
+    snapshot?.config.overlayVisibleSections.skip,
+    snapshot?.config.overlayVisibleSections.speedrun,
+    snapshot?.config.overlayVisibleSections.important,
     isOverlayCollapsed,
     snapshot?.config.mainOverlaySettings.showOverlaySkip,
     snapshot?.config.mainOverlaySettings.showOverlayCriticalImportant,
@@ -1246,11 +1254,12 @@ export function OverlayPage() {
   // Always keep near-level vendor/power reminders visible in the main overlay.
   // Rule: show reminders from the current level up to +2 levels, and hide them after the target level is passed.
   const upcomingOverlayReminders = getOverlayUpcomingReminders(snapshot, language);
+  const visibleSections = config.overlayVisibleSections;
   const skipLines =
-    config.mainOverlaySettings.showOverlaySkip && guide
+    visibleSections.skip && guide
       ? (guideView?.skip ?? []).slice(0, 3)
       : [];
-  const speedrunLines = getOverlaySpeedrunLines(guide, language);
+  const speedrunLines = visibleSections.speedrun ? getOverlaySpeedrunLines(guide, language) : [];
   const actTitle = formatActTitle(currentZone.actHint ?? guide?.act ?? null, language);
   const overlayTitle = guide ? `${actTitle} · ${sceneName}` : sceneName;
   const overlayZoneName = sceneName;
@@ -1784,7 +1793,7 @@ export function OverlayPage() {
           </section>
         )}
 
-        {!isCompactOverlay && upcomingOverlayReminders.length > 0 && (
+        {visibleSections.nearby && !isCompactOverlay && upcomingOverlayReminders.length > 0 && (
           <section className="hud-block reminder-section upcoming-overlay-section">
             <div className="reminder-header-row">
               <h2>{t('overlay.nearby')}</h2>
@@ -1812,7 +1821,8 @@ export function OverlayPage() {
           </section>
         )}
 
-        <section className="hud-block checklist-section">
+        {visibleSections.zoneInfo && (
+          <section className="hud-block checklist-section">
           <h2>{t('overlay.inThisZone')}</h2>
           {guide ? (
             guideChecklist.length > 0 ? (
@@ -1836,9 +1846,10 @@ export function OverlayPage() {
           ) : (
             shouldShowNoGuideForZone ? overlayNoGuideBlock : overlayOnboardingBlock
           )}
-        </section>
+          </section>
+        )}
 
-        {!isCompactOverlay && zoneBonusItems.length > 0 && (
+        {visibleSections.zoneBonuses && !isCompactOverlay && zoneBonusItems.length > 0 && (
           <section className="hud-block zone-bonuses-section">
             <h2>{t('overlay.zoneBonuses')}</h2>
             <ul className="section-list compact-list overlay-bonus-list">
@@ -1855,7 +1866,7 @@ export function OverlayPage() {
             </ul>
           </section>
         )}
-        {!isCompactOverlay && leagueRewardItem && (
+        {visibleSections.league && !isCompactOverlay && leagueRewardItem && (
           <section className="hud-block league-reward-section">
             <h2>{t('overlay.league')}</h2>
             <div className="league-reward-line">
@@ -1873,12 +1884,14 @@ export function OverlayPage() {
           </section>
         )}
 
-        <section className="hud-block hud-next-block">
-          <h2>{t('overlay.next')}</h2>
-          <p className="hud-next-zone">{guideView?.nextZoneName || t('common.notAvailable')}</p>
-        </section>
+        {visibleSections.next && (
+          <section className="hud-block hud-next-block">
+            <h2>{t('overlay.next')}</h2>
+            <p className="hud-next-zone">{guideView?.nextZoneName || t('common.notAvailable')}</p>
+          </section>
+        )}
 
-        {!isCompactOverlay && skipLines.length > 0 && (
+        {visibleSections.skip && !isCompactOverlay && skipLines.length > 0 && (
           <section className="hud-block skip-section">
             <h2>{t('common.skip')}</h2>
             <ul className="section-list compact-list">
@@ -1889,7 +1902,7 @@ export function OverlayPage() {
           </section>
         )}
 
-        {!isCompactOverlay && speedrunLines.length > 0 && (
+        {visibleSections.speedrun && !isCompactOverlay && speedrunLines.length > 0 && (
           <section className="hud-block speedrun-section">
             <h2>{t('overlay.speedrun')}</h2>
             <ul className="section-list compact-list">
@@ -1900,7 +1913,7 @@ export function OverlayPage() {
           </section>
         )}
 
-        {!isCompactOverlay && importantLines.length > 0 && (
+        {visibleSections.important && !isCompactOverlay && importantLines.length > 0 && (
           <section className="hud-block info-section">
             <h2>{t('common.important')}</h2>
             <ul className="section-list compact-list">

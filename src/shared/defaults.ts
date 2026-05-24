@@ -85,12 +85,18 @@ export const DEFAULT_CONFIG: AppConfig = {
   overlayTextSize: 0,
   overlayDensity: 'normal',
   overlayVisibleSections: {
-    rewards: true,
+    nearby: true,
+    zoneInfo: true,
+    zoneBonuses: true,
+    league: true,
+    next: true,
+    skip: true,
+    speedrun: true,
     important: true,
+    rewards: true,
     boss_tips: true,
     xp_notes: true,
     crafting_tips: true,
-    skip: true,
     after: false
   },
   mainOverlaySettings: {

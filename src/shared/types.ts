@@ -53,12 +53,27 @@ export type OverlayMode = 'full' | 'timer_only';
 export type AppLanguage = 'ru' | 'en';
 
 export interface OverlayVisibleSections {
-  rewards: boolean;
+  /** Compact reminder cards above the current-zone content. */
+  nearby: boolean;
+  /** Main "What is in this zone" card with checklist/no-guide text. */
+  zoneInfo: boolean;
+  /** Campaign bonus card for the current zone. */
+  zoneBonuses: boolean;
+  /** Guaranteed league reward card for the current zone. */
+  league: boolean;
+  /** Next-zone card. */
+  next: boolean;
+  /** Optional skip notes card. */
+  skip: boolean;
+  /** Speedrun/navigation notes card. */
+  speedrun: boolean;
+  /** "Important now" card. */
   important: boolean;
+  // Legacy per-line toggles kept for older user configs and future fine tuning.
+  rewards: boolean;
   boss_tips: boolean;
   xp_notes: boolean;
   crafting_tips: boolean;
-  skip: boolean;
   after: boolean;
 }
 

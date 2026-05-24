@@ -22,14 +22,15 @@ export const HOTKEY_LABELS: Array<{ key: keyof HotkeySettings; labelKey: string;
   { key: 'toggleOverlayMode', labelKey: 'settings.hotkeyOverlayMode', noteKey: 'settings.hotkeyAlways' }
 ];
 
-export const OVERLAY_VISIBILITY_LABELS = [
-  ['showOverlaySkip', 'settings.overlayShowSkip'],
-  ['showOverlayCriticalImportant', 'settings.overlayShowImportant'],
-  ['showOverlayBossTip', 'settings.overlayShowBossTips'],
-  ['showOverlayVendorReminder', 'settings.overlayShowVendor'],
-  ['showOverlayXpStatus', 'settings.overlayShowXp'],
-  ['showOverlayPowerSpike', 'settings.overlayShowPower'],
-  ['overlayTimerOnlyMode', 'settings.overlayTimerOnly']
+export const OVERLAY_SECTION_VISIBILITY_LABELS = [
+  ['nearby', 'settings.overlayShowNearby'],
+  ['zoneInfo', 'settings.overlayShowZoneInfo'],
+  ['zoneBonuses', 'settings.overlayShowZoneBonuses'],
+  ['league', 'settings.overlayShowLeague'],
+  ['next', 'settings.overlayShowNext'],
+  ['skip', 'settings.overlayShowSkip'],
+  ['speedrun', 'settings.overlayShowSpeedrun'],
+  ['important', 'settings.overlayShowImportant']
 ] as const;
 
 export function hotkeyFromKeyboardEvent(event: KeyboardEvent<HTMLInputElement>): string | null {

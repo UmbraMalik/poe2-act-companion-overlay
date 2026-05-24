@@ -52,7 +52,9 @@ test('normalizeAppConfig hardens corrupted user config values', () => {
     },
     overlayVisibleSections: {
       rewards: 'yes',
-      important: false
+      important: false,
+      zoneInfo: false,
+      league: 'bad'
     },
     mainOverlaySettings: {
       overlayMode: 'floating',
@@ -116,6 +118,8 @@ test('normalizeAppConfig hardens corrupted user config values', () => {
   });
   assert.equal(normalized.overlayVisibleSections.rewards, DEFAULT_CONFIG.overlayVisibleSections.rewards);
   assert.equal(normalized.overlayVisibleSections.important, false);
+  assert.equal(normalized.overlayVisibleSections.zoneInfo, false);
+  assert.equal(normalized.overlayVisibleSections.league, DEFAULT_CONFIG.overlayVisibleSections.league);
   assert.equal(normalized.mainOverlaySettings.overlayMode, DEFAULT_CONFIG.mainOverlaySettings.overlayMode);
   assert.equal(normalized.mainOverlaySettings.showOverlayBossTip, DEFAULT_CONFIG.mainOverlaySettings.showOverlayBossTip);
   assert.equal(normalized.hotkeys.markChecklistDone, DEFAULT_HOTKEYS.markChecklistDone);

@@ -22,6 +22,7 @@ import type {
   OverlayDensity,
   OverlayScale,
   OverlayTextSize,
+  OverlayVisibleSections,
   RunTimerAutoStartMode,
   RunTimerStatus,
   UpdateCheckResult,
@@ -56,14 +57,15 @@ const HOTKEY_LABELS: Array<{ key: keyof HotkeySettings; labelKey: string; noteKe
   { key: 'toggleOverlayMode', labelKey: 'settings.hotkeyOverlayMode', noteKey: 'settings.hotkeyAlways' }
 ];
 
-const OVERLAY_VISIBILITY_LABELS = [
-  ['showOverlaySkip', 'settings.overlayShowSkip'],
-  ['showOverlayCriticalImportant', 'settings.overlayShowImportant'],
-  ['showOverlayBossTip', 'settings.overlayShowBossTips'],
-  ['showOverlayVendorReminder', 'settings.overlayShowVendor'],
-  ['showOverlayXpStatus', 'settings.overlayShowXp'],
-  ['showOverlayPowerSpike', 'settings.overlayShowPower'],
-  ['overlayTimerOnlyMode', 'settings.overlayTimerOnly']
+const OVERLAY_SECTION_VISIBILITY_LABELS = [
+  ['nearby', 'settings.overlayShowNearby'],
+  ['zoneInfo', 'settings.overlayShowZoneInfo'],
+  ['zoneBonuses', 'settings.overlayShowZoneBonuses'],
+  ['league', 'settings.overlayShowLeague'],
+  ['next', 'settings.overlayShowNext'],
+  ['skip', 'settings.overlayShowSkip'],
+  ['speedrun', 'settings.overlayShowSpeedrun'],
+  ['important', 'settings.overlayShowImportant']
 ] as const;
 
 function hotkeyFromKeyboardEvent(event: KeyboardEvent<HTMLInputElement>): string | null {
@@ -1149,22 +1151,36 @@ export function SettingsPage() {
           <div className="settings-subsection">
             <h3 className="settings-subtitle">{t('settings.overlayShowTitle')}</h3>
             <div className="checkbox-grid">
-              {OVERLAY_VISIBILITY_LABELS.map(([key, labelKey]) => (
+              {OVERLAY_SECTION_VISIBILITY_LABELS.map(([key, labelKey]) => (
                 <label className="toggle-card" key={key}>
                   <input
                     type="checkbox"
-                    checked={config.mainOverlaySettings[key]}
+                    checked={config.overlayVisibleSections[key]}
                     onChange={(event) => {
                       void window.poe2Overlay.updateSettings({
-                        mainOverlaySettings: {
+                        overlayVisibleSections: {
                           [key]: event.target.checked
-                        }
+                        } as Partial<OverlayVisibleSections>
                       });
                     }}
                   />
                   <span>{t(labelKey)}</span>
                 </label>
               ))}
+              <label className="toggle-card">
+                <input
+                  type="checkbox"
+                  checked={config.mainOverlaySettings.overlayTimerOnlyMode}
+                  onChange={(event) => {
+                    void window.poe2Overlay.updateSettings({
+                      mainOverlaySettings: {
+                        overlayTimerOnlyMode: event.target.checked
+                      }
+                    });
+                  }}
+                />
+                <span>{t('settings.overlayTimerOnly')}</span>
+              </label>
             </div>
           </div>
 
