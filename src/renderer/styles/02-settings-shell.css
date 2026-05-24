@@ -1011,6 +1011,11 @@ textarea {
   padding-right: 4px;
 }
 
+.summary-scroll-body--full {
+  grid-auto-rows: max-content;
+  padding-bottom: 10px;
+}
+
 .summary-meta-grid {
   display: grid;
   grid-template-columns: minmax(240px, 0.95fr) minmax(0, 1.05fr);

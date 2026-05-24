@@ -1585,9 +1585,9 @@ export function CompanionPage() {
 
   const summaryTab = (
     <div className="companion-tab-layout companion-summary-layout">
-      {summaryHero}
+      <div className="summary-scroll-body summary-scroll-body--full">
+        {summaryHero}
 
-      <div className="summary-scroll-body">
         <div className="summary-meta-grid">
           <section className="companion-block summary-best-card">
             <h3>{t('companion.bestRun')}</h3>

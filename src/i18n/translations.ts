@@ -169,7 +169,7 @@ const baseTranslations = {
       logHintWaiting: 'Ожидание лог-файла',
       timerOnlyCountdownLabel: 'СТАРТ ЧЕРЕЗ',
       endgameT15CompleteTitle: 'Т15 открыт',
-      endgameT15CompleteMessage: 'Поздравляем, ты дошёл до Т15 карт. Таймер остановлен, забег сохранён во «Времени актов». Спасибо, что использовал оверлей.',
+      endgameT15CompleteMessage: 'Поздравляем, ты дошёл до Т15 карт. Таймер остановлен, забег сохранён во «Времени актов». Спасибо, что использовал(а) оверлей.',
       endgameT15CompleteTime: 'Результат: {duration}',
       endgameT15CompleteSaved: 'Сохранено автоматически',
       dismissEndgameNotice: 'Скрыть поздравление'
