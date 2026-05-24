@@ -858,17 +858,29 @@ export function OverlayPage() {
   const overlayShellRef = useRef<HTMLElement | null>(null);
   const autoResizeFrameRef = useRef<OverlayRenderTask | null>(null);
   const adaptiveOverlayHeightSuspendedUntilRef = useRef(0);
+  const [isOverlayCollapsed, setIsOverlayCollapsed] = useState(false);
+  const isTimerOnlySnapshot = snapshot?.runtime.overlayMode === 'timer_only';
   const autoResizeMinimumHeight = snapshot
-    ? getOverlayMinimumSize(
-        snapshot.runtime.overlayMode,
-        snapshot.config.overlayDensity,
-        snapshot.config.overlayScale
-      ).height
+    ? isOverlayCollapsed && !isTimerOnlySnapshot
+      ? snapshot.config.overlayDensity === 'compact'
+        ? 52
+        : 56
+      : getOverlayMinimumSize(
+          snapshot.runtime.overlayMode,
+          snapshot.config.overlayDensity,
+          snapshot.config.overlayScale
+        ).height
     : DEFAULT_OVERLAY_MINIMUM_SIZE.height;
 
   useEffect(() => {
     overlayMovementLockedRef.current = Boolean(snapshot?.config.overlayMovementLocked);
   }, [snapshot?.config.overlayMovementLocked]);
+
+  useEffect(() => {
+    if (snapshot?.runtime.overlayMode === 'timer_only' && isOverlayCollapsed) {
+      setIsOverlayCollapsed(false);
+    }
+  }, [isOverlayCollapsed, snapshot?.runtime.overlayMode]);
 
   const isAdaptiveOverlayHeightSuspended = useCallback(() => (
     Date.now() < adaptiveOverlayHeightSuspendedUntilRef.current
@@ -992,6 +1004,7 @@ export function OverlayPage() {
     snapshot?.config.overlayScale,
     snapshot?.config.overlayTextSize,
     snapshot?.config.overlayDensity,
+    isOverlayCollapsed,
     snapshot?.config.mainOverlaySettings.showOverlaySkip,
     snapshot?.config.mainOverlaySettings.showOverlayCriticalImportant,
     snapshot?.config.mainOverlaySettings.showOverlayBossTip,
@@ -1332,6 +1345,12 @@ export function OverlayPage() {
     await api.toggleOverlayMode();
   };
 
+  const handleOverlayCollapsedToggle = (event: ReactMouseEvent<HTMLButtonElement>) => {
+    stopOverlayControlPropagation(event);
+    setIsOverlayCollapsed((value) => !value);
+    window.setTimeout(scheduleAdaptiveOverlayHeight, 0);
+  };
+
   const handleLanguageChange = (nextLanguage: AppLanguage) => {
     if (nextLanguage === language) {
       return;
@@ -1417,6 +1436,22 @@ export function OverlayPage() {
       <span className="overlay-icon-glyph overlay-icon-glyph-close" aria-hidden="true">×</span>
     </button>
   );
+  const overlayCollapseButton = (
+    <button
+      className={`overlay-icon-button overlay-collapse-icon-button no-drag${isOverlayCollapsed ? ' is-collapsed' : ''}`}
+      type="button"
+      title={t(isOverlayCollapsed ? 'overlay.expandPanel' : 'overlay.collapsePanel')}
+      aria-label={t(isOverlayCollapsed ? 'overlay.expandPanel' : 'overlay.collapsePanel')}
+      aria-expanded={!isOverlayCollapsed}
+      onPointerDown={stopOverlayControlPropagation}
+      onMouseDown={stopOverlayControlPropagation}
+      onClick={handleOverlayCollapsedToggle}
+    >
+      <span className="overlay-icon-glyph overlay-icon-glyph-collapse" aria-hidden="true">
+        {isOverlayCollapsed ? '▾' : '▴'}
+      </span>
+    </button>
+  );
   const overlayLanguageToggle = (
     <div
       className={`overlay-language-toggle is-${language} no-drag`}
@@ -1452,6 +1487,7 @@ export function OverlayPage() {
   const overlayQuickActions = (
     <div className="overlay-quick-actions no-drag" aria-label={t('overlay.quickActions')}>
       {overlayLanguageToggle}
+      {!isTimerOnlyMode && overlayCollapseButton}
       {overlayLockButton}
       {overlayOpenCompanionButton}
       {overlayOpenSettingsButton}
@@ -1580,6 +1616,29 @@ export function OverlayPage() {
             tabIndex={-1}
             onPointerDown={beginResize}
           />
+        </section>
+      </main>
+    );
+  }
+
+  if (isOverlayCollapsed) {
+    return (
+      <main
+        ref={overlayPageRef}
+        className={`overlay-page is-overlay-collapsed density-${config.overlayDensity} scale-${config.overlayScale} text-size-${config.overlayTextSize}`}
+        onPointerDownCapture={beginOverlayDrag}
+      >
+        <section ref={overlayShellRef} className="overlay-shell overlay-hud overlay-main-compact overlay-collapsed-shell">
+          <header className="hud-collapsed-bar">
+            <div className="hud-collapsed-main">
+              <span className="hud-zone-act-pill">{overlayActLabel}</span>
+              {timerPrimaryButton}
+              <h1 className="hud-collapsed-zone-name" title={overlayZoneName}>{overlayZoneName}</h1>
+            </div>
+            <div className="hud-title-actions no-drag">
+              {overlayQuickActions}
+            </div>
+          </header>
         </section>
       </main>
     );

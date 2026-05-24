@@ -653,3 +653,140 @@
   hyphens: none !important;
 }
 
+
+
+/* === Quick collapse: keep the overlay as a tiny draggable bar above inventory/skill panels. === */
+.overlay-page:not(.overlay-page-timer-only) .hud-header {
+  --hud-utility-actions-width: 216px;
+}
+
+.overlay-page.density-compact:not(.overlay-page-timer-only) .hud-header {
+  --hud-utility-actions-width: 208px;
+}
+
+.overlay-collapse-icon-button {
+  color: rgba(224, 238, 255, 0.90) !important;
+}
+
+.overlay-collapse-icon-button:hover,
+.overlay-collapse-icon-button:focus-visible {
+  border-color: rgba(112, 190, 255, 0.70) !important;
+  background:
+    radial-gradient(circle at 50% 22%, rgba(124, 205, 255, 0.22), transparent 58%),
+    linear-gradient(180deg, rgba(35, 79, 115, 0.38), rgba(18, 38, 58, 0.30)) !important;
+  color: #e0f4ff !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(201, 235, 255, 0.11),
+    0 0 0 1px rgba(112, 190, 255, 0.14),
+    0 0 14px rgba(82, 170, 255, 0.20) !important;
+}
+
+.overlay-collapse-icon-button.is-collapsed {
+  border-color: rgba(112, 190, 255, 0.42) !important;
+  background:
+    radial-gradient(circle at 50% 22%, rgba(124, 205, 255, 0.16), transparent 58%),
+    linear-gradient(180deg, rgba(35, 79, 115, 0.30), rgba(18, 38, 58, 0.24)) !important;
+}
+
+.overlay-icon-glyph-collapse {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-1px);
+}
+
+.overlay-page.is-overlay-collapsed {
+  height: 100vh;
+  padding: 5px;
+}
+
+.overlay-page.is-overlay-collapsed .overlay-collapsed-shell {
+  min-height: 0;
+  max-height: none;
+  padding: 6px 8px;
+  overflow: hidden;
+  border-radius: 14px;
+}
+
+.hud-collapsed-bar {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.hud-collapsed-main {
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.hud-collapsed-main .hud-zone-act-pill,
+.hud-collapsed-main .overlay-timer-icon-control {
+  flex: 0 0 auto;
+}
+
+.hud-collapsed-zone-name {
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #fff4d6;
+  font-family: var(--font-display);
+  font-size: clamp(16px, calc(var(--font-title) * 0.82), 21px);
+  font-weight: 950;
+  line-height: 1.05;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.65);
+}
+
+.overlay-page.is-overlay-collapsed .hud-title-actions {
+  position: static !important;
+  flex: 0 0 auto;
+  max-width: none !important;
+}
+
+.overlay-page.is-overlay-collapsed .overlay-quick-actions {
+  gap: 5px !important;
+}
+
+.overlay-page.is-overlay-collapsed .overlay-icon-button,
+.overlay-page.is-overlay-collapsed .overlay-timer-icon-control {
+  width: 24px;
+  min-width: 24px;
+  height: 24px;
+  min-height: 24px;
+}
+
+.overlay-page.is-overlay-collapsed .overlay-language-toggle,
+.overlay-page.is-overlay-collapsed .overlay-language-toggle-hitarea {
+  width: 54px !important;
+  min-width: 54px !important;
+  height: 26px !important;
+  min-height: 26px !important;
+}
+
+.overlay-page.is-overlay-collapsed.density-compact .overlay-collapsed-shell {
+  padding: 5px 7px;
+}
+
+.overlay-page.is-overlay-collapsed.density-compact .hud-collapsed-bar {
+  gap: 6px;
+}
+
+.overlay-page.is-overlay-collapsed.density-compact .hud-collapsed-zone-name {
+  font-size: clamp(15px, calc(var(--font-title) * 0.78), 19px);
+}
+
+@media (max-width: 380px) {
+  .overlay-page.is-overlay-collapsed .hud-collapsed-bar {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 6px;
+  }
+
+  .overlay-page.is-overlay-collapsed .hud-title-actions {
+    justify-self: end;
+  }
+}
