@@ -10,7 +10,8 @@
     "2026-05-15: current RU scene names patched: Вольфенхолд -> i_final_wolvenholt; Машинариум Джиквани -> a3_jiquani_machinarium.",
     "2026-05-16: fixed Act 1 internal area mapping: G1_11/C_G1_11 -> Hunting Grounds, G1_12/C_G1_12 -> Freythorn, G1_13_1 -> Ogham Farmlands; also synced G1_5/G1_6 and G1_8/G1_9 with conservative mapping.",
     "2026-05-17: added guide cards for Mud Burrow, Lightless Passage, Temple of Chaos, Trial of the Ancestors, Plunder's Point, and Interlude side zones; Kedge Bay/Kid's Bay wording intentionally unchanged.",
-    "2026-05-24: added P1_1/C_P1_1 -> Scorched Farmlands and fixed Interlude 1/2 route chain names."
+    "2026-05-24: added P1_1/C_P1_1 -> Scorched Farmlands and fixed Interlude 1/2 route chain names.",
+    "2026-05-24: added P3_Town/C_P3_Town -> The Glade and P3_1/C_P3_1 -> Ashen Forest for the Kriar branch route."
   ],
   "areaToGuideId": {
     "abyss_intro": "a2_lightless_passage",
@@ -190,7 +191,11 @@
     "p3_6": "interlude_etched_ravine",
     "p3_7": "interlude_cuachic_vault",
     "c_p1_1": "interlude_scorched_farmlands",
-    "p1_1": "interlude_scorched_farmlands"
+    "p1_1": "interlude_scorched_farmlands",
+    "c_p3_town": "interlude_the_glade",
+    "p3_town": "interlude_the_glade",
+    "c_p3_1": "interlude_ashen_forest",
+    "p3_1": "interlude_ashen_forest"
   },
   "knownTownAreaIds": [
     "g1_town",

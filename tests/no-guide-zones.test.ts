@@ -90,12 +90,12 @@ test('no-guide zone without explicit area id falls back to the last gameplay act
   });
 
   withMockedNow(2_000, () => {
-    applyAppLogLine(app as never, '[SCENE] Set Source [The Glade]');
+    applyAppLogLine(app as never, '[SCENE] Set Source [Forgotten Causeway]');
   });
 
   const runTimer = (app as any).config.runTimer;
   assert.equal((app as any).currentZone.guide, null);
-  assert.equal((app as any).currentZone.rawZoneName, 'The Glade');
+  assert.equal((app as any).currentZone.rawZoneName, 'Forgotten Causeway');
   assert.equal((app as any).currentZone.actHint, 3);
   assert.equal((app as any).runtime.lastGameplayAct, 3);
   assert.equal(getCurrentActElapsedMsForAct(runTimer, 3, 2_000), 1_000);

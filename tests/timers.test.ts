@@ -166,7 +166,7 @@ test('no-guide gameplay zones preserve current act timer and do not create false
 
   withMockedNow(2_000, () => {
     applyAppLogLine(app as never, '2026/05/16 22:10:10 123 [DEBUG Client] Generating level 12 area "G1_unknown_test" with seed 1');
-    applyAppLogLine(app as never, '[SCENE] Set Source [The Glade]');
+    applyAppLogLine(app as never, '[SCENE] Set Source [Misty Side Zone]');
   });
 
   const runTimer = (app as any).config.runTimer;

@@ -1,5 +1,5 @@
 2026/05/16 23:10:00 123 [DEBUG Client] Generating level 8 area "G1_unknown_test" with seed 1
-2026/05/16 23:10:01 [SCENE] Set Source [The Glade]
+2026/05/16 23:10:01 [SCENE] Set Source [Misty Glade]
 2026/05/16 23:10:30 123 [DEBUG Client] Generating level 18 area "G2_unknown_test" with seed 1
 2026/05/16 23:10:31 [SCENE] Set Source [Dusty Cut]
 2026/05/16 23:11:00 123 [DEBUG Client] Generating level 35 area "G3_unknown_test" with seed 1

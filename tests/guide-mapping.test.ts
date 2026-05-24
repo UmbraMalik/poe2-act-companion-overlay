@@ -176,6 +176,8 @@ test('known regression pairs stay separated and do not cross-map', () => {
     ['P2_7', 'Qimah Reservoir'],
     ['P1_4', 'Holten'],
     ['P1_6', 'Holten Estate'],
+    ['P3_Town', 'The Glade'],
+    ['P3_1', 'Ashen Forest'],
     ['P3_2', 'Kriar Village'],
     ['P3_5', 'Kriar Peaks'],
     ['P3_4', 'Howling Caves'],
@@ -218,9 +220,28 @@ test('automatically detected similar zones still resolve correctly by exact area
   }
 });
 
+
+test('Interlude Kriar branch route keeps audited order', () => {
+  const zonesById = new Map(getGuideZones().map((zone) => [zone.id, zone]));
+  const route = [
+    ['i2_kima_reservoir', 'Опушка'],
+    ['interlude_the_glade', 'Пепельный лес'],
+    ['interlude_ashen_forest', 'Деревня Криар'],
+    ['i2_mount_cryer', 'Ледниковое озеро'],
+    ['interlude_glacial_tarn', 'Воющие пещеры'],
+    ['i2_glacial_tarn', 'Пики Криар'],
+    ['i2_kriar_peaks', 'Высеченное ущелье'],
+    ['interlude_etched_ravine', 'Убежище Куачик']
+  ] as const;
+
+  for (const [guideId, nextZoneRu] of route) {
+    assert.equal(zonesById.get(guideId)?.next_zone_ru, nextZoneRu, `${guideId} must point to ${nextZoneRu}`);
+  }
+});
+
 test('explicit no-guide English names stay unmapped to guide cards', () => {
   const service = loadGuideService();
-  for (const rawZoneName of ['The Glade', 'Uncharted Vault', 'Forgotten Causeway']) {
+  for (const rawZoneName of ['Uncharted Vault', 'Forgotten Causeway', 'Silent Fen']) {
     const match = service.resolveZoneMatch({
       rawLine: rawZoneName,
       extractedInternalAreaId: null,

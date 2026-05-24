@@ -6218,7 +6218,7 @@
       "boss_tips": [],
       "xp_notes": [],
       "crafting_tips": [],
-      "next_zone_ru": "Деревня Криар",
+      "next_zone_ru": "Опушка",
       "details": {
         "route": [
           "Флаконы у колодцев — опционально для высокоуровневой валюты",
@@ -6238,10 +6238,10 @@
           "Vials можно использовать на колодцах ради валюты, если попались по пути."
         ],
         "navigation": [
-          "Главная цель — убить Asmody и двигаться к Деревне Криар."
+          "После Водохранилища Кима перейти в Опушку, затем идти в Пепельный лес."
         ],
         "time_saves": [
-          "Не забыть нажать/забрать главную barrier/награду после босса."
+          "Не забыть нажать/забрать главную barrier/награду после босса, затем сразу в Опушку."
         ]
       },
       "display": {
@@ -6251,6 +6251,167 @@
       "area_ids": [
         "C_P2_7",
         "P2_7"
+      ]
+    },
+    {
+      "id": "interlude_the_glade",
+      "act": 5,
+      "zone_en": "The Glade",
+      "zone_ru": "Опушка",
+      "aliases": [
+        "The Glade",
+        "Опушка"
+      ],
+      "recommended_level": 54,
+      "recommended_level_label": "54+",
+      "is_good_xp_zone": false,
+      "checklist": [
+        {
+          "id": "interlude_the_glade_task_1",
+          "text": "Использовать Опушку как транзитный хаб после Водохранилища Кима",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "interlude_the_glade_task_2",
+          "text": "Выйти в Пепельный лес",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        }
+      ],
+      "rewards": [],
+      "skip": [
+        "Не задерживаться в хабе: цель — сразу открыть путь в Пепельный лес"
+      ],
+      "important": [
+        "Маршрут после Водохранилища Кима идёт через Опушку, а не сразу в Деревню Криар"
+      ],
+      "after": [],
+      "boss_tips": [],
+      "xp_notes": [],
+      "crafting_tips": [],
+      "next_zone_ru": "Пепельный лес",
+      "details": {
+        "route": [
+          "Использовать Опушку как транзитный хаб после Водохранилища Кима",
+          "Выйти в Пепельный лес"
+        ],
+        "rewards": [],
+        "skip": [
+          "Не задерживаться в хабе: цель — сразу открыть путь в Пепельный лес"
+        ],
+        "important": [
+          "Маршрут после Водохранилища Кима идёт через Опушку, а не сразу в Деревню Криар"
+        ],
+        "after": [],
+        "boss_tips": [],
+        "xp_notes": [],
+        "crafting_tips": [],
+        "navigation": [
+          "Маршрут: Водохранилище Кима → Опушка → Пепельный лес."
+        ],
+        "time_saves": [
+          "Опушка — короткий транзитный хаб: не тратить время, сразу идти дальше."
+        ]
+      },
+      "display": {
+        "wideModeRecommended": true,
+        "showAllChecklist": true
+      },
+      "area_ids": [
+        "C_P3_Town",
+        "P3_Town"
+      ]
+    },
+    {
+      "id": "interlude_ashen_forest",
+      "act": 5,
+      "zone_en": "Ashen Forest",
+      "zone_ru": "Пепельный лес",
+      "aliases": [
+        "Ashen Forest",
+        "Пепельный лес"
+      ],
+      "recommended_level": 54,
+      "recommended_level_label": "54+",
+      "is_good_xp_zone": false,
+      "checklist": [
+        {
+          "id": "interlude_ashen_forest_task_1",
+          "text": "Пройти Пепельный лес после Опушки",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "interlude_ashen_forest_task_2",
+          "text": "Проверить Древний монумент, если он по пути",
+          "type": "reward",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "interlude_ashen_forest_task_3",
+          "text": "Найти переход в Деревню Криар",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        }
+      ],
+      "rewards": [
+        "Древний монумент / награда зоны по пути"
+      ],
+      "skip": [
+        "Не чистить боковые карманы, если переход в Деревню Криар уже найден"
+      ],
+      "important": [
+        "Пепельный лес стоит между Опушкой и Деревней Криар"
+      ],
+      "after": [],
+      "boss_tips": [],
+      "xp_notes": [],
+      "crafting_tips": [],
+      "next_zone_ru": "Деревня Криар",
+      "details": {
+        "route": [
+          "Пройти Пепельный лес после Опушки",
+          "Проверить Древний монумент, если он по пути",
+          "Найти переход в Деревню Криар"
+        ],
+        "rewards": [
+          "Древний монумент / награда зоны по пути"
+        ],
+        "skip": [
+          "Не чистить боковые карманы, если переход в Деревню Криар уже найден"
+        ],
+        "important": [
+          "Пепельный лес стоит между Опушкой и Деревней Криар"
+        ],
+        "after": [],
+        "boss_tips": [],
+        "xp_notes": [],
+        "crafting_tips": [],
+        "navigation": [
+          "Маршрут: Опушка → Пепельный лес → Деревня Криар."
+        ],
+        "time_saves": [
+          "Древний монумент брать по пути; если уводит в долгую сторону — не ломать темп."
+        ]
+      },
+      "display": {
+        "wideModeRecommended": true,
+        "showAllChecklist": true
+      },
+      "area_ids": [
+        "C_P3_1",
+        "P3_1"
       ]
     },
     {
@@ -6297,7 +6458,7 @@
       ],
       "xp_notes": [],
       "crafting_tips": [],
-      "next_zone_ru": "Воющие пещеры",
+      "next_zone_ru": "Ледниковое озеро",
       "details": {
         "route": [
           "Дойти до Литары и убить",
@@ -6319,7 +6480,7 @@
         "xp_notes": [],
         "crafting_tips": [],
         "navigation": [
-          "После Деревни Криар двигаться к Воющим пещерам."
+          "После Деревни Криар идти в Ледниковое озеро."
         ]
       },
       "display": {
@@ -6381,7 +6542,7 @@
       ],
       "xp_notes": [],
       "crafting_tips": [],
-      "next_zone_ru": "Воющие пещеры / Пики Криар",
+      "next_zone_ru": "Воющие пещеры",
       "details": {
         "route": [
           "Забрать waypoint/переходы, если попал сюда по ветке Криар",
@@ -6404,10 +6565,10 @@
         "xp_notes": [],
         "crafting_tips": [],
         "navigation": [
-          "Использовать как развилку к Воющим пещерам и Пикам Криар."
+          "После Ледникового озера идти в Воющие пещеры."
         ],
         "time_saves": [
-          "Если нужный переход найден — не добирать лишние круги по озеру."
+          "Если переход в Воющие пещеры найден — не добирать лишние круги по озеру."
         ]
       },
       "display": {
@@ -6431,7 +6592,7 @@
       "checklist": [
         {
           "id": "i2_glacial_tarn_task_1",
-          "text": "Держаться правой стены до Воющих пещер",
+          "text": "Пройти Воющие пещеры по ветке Йети",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -6447,7 +6608,7 @@
         },
         {
           "id": "i2_glacial_tarn_task_3",
-          "text": "Вернуть клыки Хильде за 2 пассивных очка",
+          "text": "Вернуть клыки Хильде за +2 пассивных очка и идти в Пики Криар",
           "type": "reward",
           "required": true,
           "autoCompleteKeywords": [],
@@ -6463,12 +6624,12 @@
       "boss_tips": [],
       "xp_notes": [],
       "crafting_tips": [],
-      "next_zone_ru": "Пики Криар / Финальная интерлюдия",
+      "next_zone_ru": "Пики Криар",
       "details": {
         "route": [
-          "Держаться правой стены до Воющих пещер",
+          "Пройти Воющие пещеры по ветке Йети",
           "Забрать клыки с Abominable Yeti",
-          "Вернуть клыки Хильде за 2 пассивных очка"
+          "Вернуть клыки Хильде за +2 пассивных очка и идти в Пики Криар"
         ],
         "rewards": [
           "2 пассивных очка за клыки Йети"
@@ -6480,10 +6641,10 @@
         "xp_notes": [],
         "crafting_tips": [],
         "navigation": [
-          "Держаться стены/пути к берлоге Йети; после клыков вернуться к Хильде за +2 пассивки."
+          "После Воющих пещер идти в Пики Криар."
         ],
         "time_saves": [
-          "После сдачи клыков возвращаться через waypoint/чекпоинт, не бежать пешком лишний круг."
+          "После сдачи клыков возвращаться через waypoint/чекпоинт и идти в Пики Криар, не бежать пешком лишний круг."
         ],
         "opportunistic": [
           "В этой ветке может быть Мэдокс/уник — брать только если по пути."
@@ -6515,6 +6676,14 @@
           "required": false,
           "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "i2_kriar_peaks_task_2",
+          "text": "После Пиков Криар идти в Высеченное ущелье",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
         }
       ],
       "rewards": [
@@ -6530,10 +6699,11 @@
       "boss_tips": [],
       "xp_notes": [],
       "crafting_tips": [],
-      "next_zone_ru": "Финальная интерлюдия / Тьма",
+      "next_zone_ru": "Высеченное ущелье",
       "details": {
         "route": [
-          "Если заходишь в Пики Криар, добраться до старейшины Мэдокса"
+          "Если заходишь в Пики Криар, добраться до старейшины Мэдокса",
+          "После Пиков Криар идти в Высеченное ущелье"
         ],
         "rewards": [
           "Опционально: старейшина Мэдокс дарит один уникальный предмет на выбор из нескольких случайных."
@@ -6550,6 +6720,9 @@
         "crafting_tips": [],
         "opportunistic": [
           "Брать только если по пути или если хочется шанс на полезный уник."
+        ],
+        "navigation": [
+          "Маршрут: Пики Криар → Высеченное ущелье → Убежище Куачик."
         ]
       },
       "display": {

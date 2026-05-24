@@ -48,12 +48,12 @@ test('unknown zone does not reuse the previous guide card and keeps the act time
 
   withMockedNow(2_000, () => {
     applyAppLogLine(app as never, '2026/05/16 22:01:10 123 [DEBUG Client] Generating level 12 area "G1_unknown_test" with seed 1');
-    applyAppLogLine(app as never, '[SCENE] Set Source [The Glade]');
+    applyAppLogLine(app as never, '[SCENE] Set Source [Misty Side Zone]');
   });
 
   const runTimer = (app as any).config.runTimer;
   assert.equal((app as any).currentZone.guide, null);
-  assert.equal((app as any).currentZone.rawZoneName, 'The Glade');
+  assert.equal((app as any).currentZone.rawZoneName, 'Misty Side Zone');
   assert.equal((app as any).runtime.lastGameplayGuideId, 'a1_hunting_grounds');
   assert.equal(getCurrentActElapsedMsForAct(runTimer, 1, 2_000), 1_000);
 });
@@ -95,11 +95,11 @@ test('unknown interlude zones stay no-guide while preserving act timers', () => 
 
   withMockedNow(2_000, () => {
     applyAppLogLine(app as never, '2026/05/16 22:21:10 123 [DEBUG Client] Generating level 65 area "P2_unknown_test" with seed 1');
-    applyAppLogLine(app as never, '[SCENE] Set Source [The Glade]');
+    applyAppLogLine(app as never, '[SCENE] Set Source [Silent Summit]');
   });
 
   assert.equal((app as any).currentZone.guide, null);
-  assert.equal((app as any).currentZone.rawZoneName, 'The Glade');
+  assert.equal((app as any).currentZone.rawZoneName, 'Silent Summit');
   assert.equal(getCurrentActElapsedMsForAct((app as any).config.runTimer, 5, 2_000), 1_000);
 
   withMockedNow(3_000, () => {
@@ -119,6 +119,8 @@ test('similar-zone regression pairs stay separated by exact area id', () => {
     ['P2_7', 'Qimah Reservoir'],
     ['P1_4', 'Holten'],
     ['P1_6', 'Holten Estate'],
+    ['P3_Town', 'The Glade'],
+    ['P3_1', 'Ashen Forest'],
     ['P3_2', 'Kriar Village'],
     ['P3_5', 'Kriar Peaks'],
     ['P3_4', 'Howling Caves'],

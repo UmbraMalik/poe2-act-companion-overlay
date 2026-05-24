@@ -756,6 +756,26 @@ const LOCKED_CAMPAIGN_ZONES: LockedCampaignZone[] = [
     ]
   },
   {
+    "id": "interlude_the_glade",
+    "act": 5,
+    "zoneRu": "Опушка",
+    "zoneEn": "The Glade",
+    "areaIds": [
+      "C_P3_Town",
+      "P3_Town"
+    ]
+  },
+  {
+    "id": "interlude_ashen_forest",
+    "act": 5,
+    "zoneRu": "Пепельный лес",
+    "zoneEn": "Ashen Forest",
+    "areaIds": [
+      "C_P3_1",
+      "P3_1"
+    ]
+  },
+  {
     "id": "i2_mount_cryer",
     "act": 5,
     "zoneRu": "Деревня Криар",
