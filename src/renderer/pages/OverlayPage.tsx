@@ -1155,10 +1155,10 @@ export function OverlayPage() {
   const sceneName = getSceneDisplayName(snapshot, language);
   const levelState = getLevelState(snapshot);
   const currentActTimerAct =
-    guide && typeof guide.act === 'number'
-      ? guide.act
-      : typeof currentZone.actHint === 'number'
-        ? currentZone.actHint
+    typeof currentZone.actHint === 'number'
+      ? currentZone.actHint
+      : guide && typeof guide.act === 'number'
+        ? guide.act
         : runtime.lastGameplayAct ?? null;
   const currentActTimerLabel =
     currentActTimerAct !== null

@@ -81,6 +81,23 @@ test('Una lute reward can be claimed after Ogham Manor town return', () => {
   assert.deepEqual(getDoneBonusIds(app), ['act1_ogham_farmlands_unas_lute_weapon_points']);
 });
 
+
+test('Khari Crossing Risu turn-in can be claimed from Khari Bazaar town', () => {
+  const app = createTestAppInstance();
+  applyAppLogLine(app as never, '2026/05/24 02:25:08 123 [INFO Client] [SCENE] Set Source [Кхарийский базар]');
+  applyAppLogLine(app as never, ': Вы получили 2 очка пассивных умений для набора оружия.');
+
+  assert.deepEqual(getDoneBonusIds(app), ['int2_khari_crossing_aktu_anundr_weapon_points']);
+});
+
+test('Khari Crossing molten shrine life reward matches by scene name', () => {
+  const app = createTestAppInstance();
+  applyAppLogLine(app as never, '2026/05/24 02:27:40 123 [INFO Client] [SCENE] Set Source [Кхарийский перевал]');
+  applyAppLogLine(app as never, ': Игрок Umbra получил +5% к максимуму здоровья.');
+
+  assert.deepEqual(getDoneBonusIds(app), ['int2_khari_crossing_life_percent']);
+});
+
 test('reward in town uses last gameplay zone context instead of the first matching bonus', () => {
   const app = createTestAppInstance();
   applyAppLogLine(app as never, '2026/05/16 22:10:10 123 [DEBUG Client] Generating level 6 area "G1_2" with seed 1');

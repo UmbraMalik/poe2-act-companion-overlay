@@ -935,6 +935,28 @@
           "zoneIds": [
             "interlude_khari_crossing"
           ]
+        },
+        {
+          "all": [
+            "получил",
+            "+5",
+            "максимуму здоровья"
+          ],
+          "sceneNames": [
+            "Кхарийский перевал",
+            "The Khari Crossing"
+          ]
+        },
+        {
+          "all": [
+            "received",
+            "+5%",
+            "maximum life"
+          ],
+          "sceneNames": [
+            "The Khari Crossing",
+            "Кхарийский перевал"
+          ]
         }
       ]
     },
@@ -962,6 +984,26 @@
           ],
           "zoneIds": [
             "interlude_khari_crossing"
+          ]
+        },
+        {
+          "all": [
+            "получили",
+            "2 очка пассивных умений для набора оружия"
+          ],
+          "sceneNames": [
+            "Кхарийский базар",
+            "Khari Bazaar"
+          ]
+        },
+        {
+          "all": [
+            "received",
+            "2 Weapon Set Passive Skill Points"
+          ],
+          "sceneNames": [
+            "Khari Bazaar",
+            "Кхарийский базар"
           ]
         }
       ]
