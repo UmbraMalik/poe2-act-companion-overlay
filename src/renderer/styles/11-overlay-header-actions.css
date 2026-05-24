@@ -805,3 +805,41 @@
     justify-self: auto !important;
   }
 }
+
+/* === Adaptive height hardening: full/compact/timer-only must size by content. ===
+   The older chrome pass forced overlay-shell/overlay-hud to 100vh. That made
+   compact and timer-only keep a stale tall black body after a mode switch and
+   also stopped the overlay from growing/shrinking when useful text changed. */
+.overlay-page:not(.is-overlay-collapsed) {
+  height: auto !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+.overlay-page:not(.is-overlay-collapsed) .overlay-shell,
+.overlay-page:not(.is-overlay-collapsed) .overlay-hud,
+.overlay-page:not(.is-overlay-collapsed).overlay-page-timer-only .overlay-shell,
+.overlay-page:not(.is-overlay-collapsed).overlay-page-timer-only .overlay-hud {
+  height: auto !important;
+  min-height: 0 !important;
+}
+
+.overlay-page:not(.is-overlay-collapsed) .overlay-hud,
+.overlay-page:not(.is-overlay-collapsed).overlay-page-timer-only .overlay-hud {
+  max-height: 100vh !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
+
+.overlay-page:not(.is-overlay-collapsed) .overlay-shell {
+  max-height: none !important;
+}
+
+.overlay-page:not(.is-overlay-collapsed) .overlay-main-compact,
+.overlay-page:not(.is-overlay-collapsed) .overlay-timer-only-card {
+  flex: 0 0 auto !important;
+}
+
+.overlay-page.density-compact:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-hud {
+  max-height: 100vh !important;
+}

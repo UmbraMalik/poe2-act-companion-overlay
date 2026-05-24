@@ -1195,8 +1195,16 @@ export function OverlayPage() {
     // final snapshot. Avoid an extra pre-switch auto-height IPC here, because it
     // can save stale timer-only/full heights and briefly render the old layout in
     // the new window size.
-    void window.poe2Overlay?.toggleOverlayMode();
-  }, []);
+    void window.poe2Overlay?.toggleOverlayMode().then(() => {
+      const forceResize = () => {
+        scheduleAdaptiveOverlayHeight({ force: true, allowBelowMinimum: false });
+      };
+
+      window.requestAnimationFrame(forceResize);
+      window.setTimeout(forceResize, 90);
+      window.setTimeout(forceResize, 240);
+    });
+  }, [scheduleAdaptiveOverlayHeight]);
 
   useDocumentTitle(t('titles.overlay'));
 
@@ -1362,13 +1370,18 @@ export function OverlayPage() {
       return;
     }
 
-    await api.resizeOverlayHeight(getRendererViewportHeight());
-
     await api.updateSettings({
       overlayDensity: isCompactOverlay ? 'normal' : 'compact'
     });
 
-    window.setTimeout(scheduleAdaptiveOverlayHeight, 0);
+    const forceResize = () => {
+      scheduleAdaptiveOverlayHeight({ force: true, allowBelowMinimum: false });
+    };
+
+    forceResize();
+    window.requestAnimationFrame(forceResize);
+    window.setTimeout(forceResize, 80);
+    window.setTimeout(forceResize, 220);
   };
 
   const handleTimerOnlyExpand = async () => {
@@ -1381,6 +1394,14 @@ export function OverlayPage() {
     // process also restores normal density when leaving timer-only mode, so this
     // avoids the old three-step sequence: resize -> density update -> mode update.
     await api.toggleOverlayMode();
+
+    const forceResize = () => {
+      scheduleAdaptiveOverlayHeight({ force: true, allowBelowMinimum: false });
+    };
+
+    window.requestAnimationFrame(forceResize);
+    window.setTimeout(forceResize, 90);
+    window.setTimeout(forceResize, 240);
   };
 
   const handleOverlayCollapsedToggle = (event: ReactMouseEvent<HTMLButtonElement>) => {
