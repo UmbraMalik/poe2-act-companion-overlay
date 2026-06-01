@@ -127,6 +127,8 @@ const TEXT_TRANSLATIONS_EN = {
   'Твитч стример': 'Twitch streamer',
   'Тестирует overlay, показывает проект на стриме и помогает с продвижением.': 'Tests the overlay, shows the project on stream, and helps spread the word.',
   'Проект уже использовали / упоминали': 'Already used / mentioned',
+  'Открыть Telegram-канал Path of Exile 2': 'Open the Path of Exile 2 Telegram channel',
+  'Telegram-канал': 'Telegram channel',
   'Ваш канал': 'Your channel',
   'Написать в Telegram': 'Message on Telegram',
   'поддержали проект': 'project supporters',
