@@ -1,0 +1,819 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <link rel="icon" href="./favicon.ico" sizes="any">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>POE2 Act Companion Overlay — оверлей для кампании и эндгейма POE2</title>
+  <meta name="description" content="Безопасный оверлей для Path of Exile 2: RU/EN клиент, маршруты актов, бонусы, таймер, сплиты, итоги забега, гибкие настройки блоков и трекинг эндгейма до T15." />
+  <meta property="og:title" content="POE2 Act Companion Overlay" />
+  <meta property="og:description" content="POE2 Act Companion Overlay: подсказки по зонам, маршруты, бонусы, таймер актов, итоги забега и трекинг до T15." />
+  <meta property="og:type" content="website" />
+  <meta name="theme-color" content="#0b0f14" />
+  <link rel="stylesheet" href="./styles.css" />
+  <!-- Yandex.Metrika counter -->
+  <script type="text/javascript">
+      (function(m,e,t,r,i,k,a){
+          m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+          m[i].l=1*new Date();
+          for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+          k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+      })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=109325832', 'ym');
+
+      ym(109325832, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<!-- /Yandex.Metrika counter -->
+</head>
+<body>
+  <!-- Yandex.Metrika counter (noscript) -->
+  <noscript><div><img src="https://mc.yandex.ru/watch/109210180" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+  <!-- /Yandex.Metrika counter (noscript) -->
+  <div class="ambient ambient-one"></div>
+  <div class="ambient ambient-two"></div>
+
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="POE2 Act Companion Overlay">
+      <span class="brand-mark">A</span>
+      <span>
+        <strong>POE2 Act Companion</strong>
+        <small>Overlay · RU/EN beta</small>
+      </span>
+    </a>
+
+    <div class="header-controls">
+      <nav class="top-nav" aria-label="Навигация">
+        <a href="#features">Что умеет</a>
+        <a href="#v040">v0.4.0</a>
+        <a href="#demo">Демо</a>
+        <a href="#source">Исходники</a>
+        <a href="#screens">Скрины</a>
+        <a href="#install">Установка</a>
+        <a href="#updates">Обновления</a>
+        <a href="#safety">Безопасность</a>
+        <a href="#mentions">Сообщество</a>
+        <a href="#support">Поддержать</a>
+      </nav>
+
+      <button class="language-toggle" type="button" data-language-toggle aria-label="Switch language" title="Switch language">
+        <span class="language-toggle-pill" aria-hidden="true"></span>
+        <span class="language-toggle-option" data-language-label="ru">RU</span>
+        <span class="language-toggle-option" data-language-label="en">EN</span>
+      </button>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero section">
+      <div class="hero-copy">
+        <div class="eyebrow">
+          <span class="dot"></span>
+          v0.4.0 · RU/EN клиент · кампания + До Т15 · работает по логам игры
+        </div>
+        <h1>Оверлей для быстрого прохождения актов Path of Exile 2</h1>
+        <p class="lead">
+          POE2 Act Companion Overlay читает лог-файл игры, определяет текущую зону и показывает памятку “Что в локации”,
+          следующий переход, скипы, бонусы, статус уровня, таймер забега, время актов, итоги и путь до T15 — без инжекта в клиент игры.
+        </p>
+
+        <div class="hero-actions">
+          <a class="button primary" href="https://github.com/UmbraMalik/poe2-act-companion-overlay/releases/latest" target="_blank" rel="noopener noreferrer" data-latest-download data-fallback-text="Скачать через GitHub">Скачать через GitHub</a>
+          <a class="button secondary" href="#install">Как установить</a>
+          <a class="button ghost" href="#support">Поддержать</a>
+        </div>
+
+        <div class="hero-release-card" aria-label="Статистика скачиваний и актуального релиза">
+          <div class="hero-release-stats">
+            <div class="hero-release-stat">
+              <span>Загрузок приложения и обновлений</span>
+              <strong data-installer-downloads-total>—</strong>
+            </div>
+            <div class="hero-release-stat">
+              <span>Актуальная версия</span>
+              <strong data-latest-release-version>—</strong>
+            </div>
+          </div>
+          <div class="hero-release-note">
+            <div class="hero-release-note-head">
+              <span>Последний релиз</span>
+              <a
+                class="release-details-link"
+                href="https://github.com/UmbraMalik/poe2-act-companion-overlay/releases/latest"
+                target="_blank"
+                rel="noopener noreferrer"
+                data-latest-release-link
+              >
+                Подробности
+              </a>
+            </div>
+            <ul class="hero-release-list" data-latest-release-notes>
+              <li>Подтягиваем изменения с GitHub Releases…</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="trust-row" aria-label="Ключевые особенности">
+          <span>Без чтения памяти</span>
+          <span>Без инжекта</span>
+          <span>LatestClient.txt</span>
+          <span>До Т15</span>
+          <span>Автообновления</span>
+          <span>Windows</span>
+        </div>
+      </div>
+
+      <div class="hero-panel" aria-label="Реальный скриншот оверлея">
+        <figure class="hero-shot-card">
+          <img src="./assets/screens/overlay-real-reference-full.png" data-image-ru="./assets/screens/overlay-real-reference-full.png" data-image-en="./assets/screens/en-hero-overlay.png" alt="Реальный скриншот POE2 Act Companion Overlay в игре" loading="eager" />
+        </figure>
+      </div>
+    </section>
+
+    <section id="features" class="section">
+      <div class="section-head">
+        <p class="eyebrow">зачем оно нужно</p>
+        <h2>Чтобы не держать всю кампанию в голове</h2>
+        <p>
+          Вся рутина кампании собирается в один боевой HUD: что важно в зоне, что забрать,
+          что скипнуть, куда идти дальше, когда добрать уровень, сколько времени ушло на акт и как быстро ты дошёл до T15.
+        </p>
+      </div>
+
+      <div class="feature-grid">
+        <article class="feature-card">
+          <span class="icon">⌖</span>
+          <h3>Текущая зона по логам</h3>
+          <p>Оверлей читает <code>LatestClient.txt</code>, распознаёт зоны русского и английского клиента и обновляет локацию без вмешательства в игру.</p>
+        </article>
+        <article class="feature-card">
+          <span class="icon">☰</span>
+          <h3>Памятка “Что в локации”</h3>
+          <p>Не трекер действий, а обычная памятка по зоне: важные награды, боссы, переходы и то, что не стоит забыть.</p>
+        </article>
+        <article class="feature-card">
+          <span class="icon">✦</span>
+          <h3>Бонусы актов</h3>
+          <p>Отдельная вкладка с постоянными наградами: пассивки оружия, резисты, дух, здоровье, мана и выборные бонусы.</p>
+        </article>
+        <article class="feature-card">
+          <span class="icon">⏱</span>
+          <h3>Таймер забега</h3>
+          <p>Общее время, текущий акт, сплиты, итоги, история забегов, сравнение с лучшим результатом и отдельный сегмент “До Т15”.</p>
+        </article>
+        <article class="feature-card">
+          <span class="icon">T15</span>
+          <h3>Эндгейм до T15</h3>
+          <p>После кампании оверлей продолжает отдельный трек “До Т15”, а при входе в карту 79 уровня автоматически останавливает таймер и сохраняет результат.</p>
+        </article>
+        <article class="feature-card">
+          <span class="icon">☑</span>
+          <h3>Настраиваемые блоки</h3>
+          <p>Можно включать и выключать отдельные карточки оверлея: ближайшее, бонусы, лигу, маршрут, скипы, спидран и важные подсказки.</p>
+        </article>
+        <article class="feature-card">
+          <span class="icon">⇡</span>
+          <h3>Напоминания по уровням</h3>
+          <p>Статус уровня подсвечивается прямо в строке таймера: низкий уровень, ок или неизвестно. Плюс ближайшие важные уровни и power spikes.</p>
+        </article>
+        <article class="feature-card">
+          <span class="icon">⚡</span>
+          <h3>Спидран-подсказки</h3>
+          <p>Городские планы, “если по пути”, навигация, скипы лишней зачистки и короткие заметки для быстрого прохождения.</p>
+        </article>
+        <article class="feature-card">
+          <span class="icon">▣</span>
+          <h3>Подробная панель</h3>
+          <p>Отдельное окно с маршрутом, бонусами, таймером, временем актов, напоминаниями, итогами забега и историей результатов.</p>
+        </article>
+        <article class="feature-card">
+          <span class="icon">↧</span>
+          <h3>Быстрое сворачивание</h3>
+          <p>Оверлей можно свернуть в компактную строку, быстро освободить место под инвентарь или гемы и развернуть обратно.</p>
+        </article>
+        <article class="feature-card">
+          <span class="icon">Aa</span>
+          <h3>Размер текста</h3>
+          <p>Размер полезного текста регулируется отдельно от масштаба интерфейса — удобно для широких и высоких разрешений.</p>
+        </article>
+        <article class="feature-card">
+          <span class="icon">↻</span>
+          <h3>Автообновления</h3>
+          <p>Приложение проверяет GitHub Releases, скачивает обновление внутри приложения и ставит его только после подтверждения.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="v040" class="section release-section">
+      <div class="section-head">
+        <p class="eyebrow">v0.4.0</p>
+        <h2>Теперь это не просто подсказки по актам</h2>
+        <p>
+          Версия 0.4.0 превращает оверлей в полноценную панель забега: хаб-гайды, гибкая настройка блоков,
+          путь до T15, автофиниш, история результатов и аккуратные режимы для игры на любом экране.
+        </p>
+      </div>
+
+      <div class="release-grid">
+        <article class="release-card release-card-main">
+          <span class="release-tag">До Т15</span>
+          <h3>Кампания больше не заканчивается на Актах</h3>
+          <p>
+            После входа в эндгейм-хаб запускается отдельный сегмент “До Т15”. Когда в логах появляется карта 79 уровня,
+            таймер останавливается сам, результат сохраняется, а оверлей показывает компактное поздравление.
+          </p>
+        </article>
+        <article class="release-card">
+          <span class="release-tag">Хабы</span>
+          <h3>Гайды для ключевых городов</h3>
+          <p>
+            Добавлены хаб-гайды для Лагеря Клирфелл, Каравана Ардура, Лагеря на зиккурате и Кингсмарша,
+            чтобы порядок прохождения был понятен ещё до выхода в следующую зону.
+          </p>
+        </article>
+        <article class="release-card">
+          <span class="release-tag">UI</span>
+          <h3>Оверлей под себя</h3>
+          <p>
+            Можно скрывать отдельные блоки, менять размер полезного текста и быстро сворачивать панель,
+            когда она мешает инвентарю, гемам или интерфейсу игры.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section id="demo" class="section demo-section">
+      <div class="section-head">
+        <p class="eyebrow">демонстрация</p>
+        <h2>Посмотреть оверлей в действии</h2>
+        <p>Короткая видео-демонстрация текущей версии POE2 Act Companion Overlay: как выглядит основной overlay, таймер, компактный режим и подробная панель прямо в работе.</p>
+      </div>
+
+      <div class="demo-card">
+        <div class="demo-card-head">
+          <div class="demo-card-title-wrap">
+            <span class="demo-badge">Демонстрация</span>
+            <div>
+              <h3>Видеообзор текущей beta-версии</h3>
+              <p>Смотри прямо на сайте или открой ролик на YouTube.</p>
+            </div>
+          </div>
+
+          <div class="demo-quick-actions" aria-label="Быстрые действия">
+            <a class="button primary" href="https://youtu.be/-7vTEI6enmU" target="_blank" rel="noopener noreferrer">Смотреть на YouTube</a>
+          </div>
+        </div>
+
+        <div class="demo-video-frame">
+          <div class="screen-window demo-window">
+            <div class="screen-window-bar">
+              <div class="screen-window-dots" aria-hidden="true">
+                <span></span><span></span><span></span>
+              </div>
+              <span class="screen-window-title">POE2 Act Companion Overlay · Demo</span>
+            </div>
+            <div class="demo-video-shell">
+              <iframe
+                src="https://www.youtube.com/embed/-7vTEI6enmU"
+                title="POE2 Act Companion Overlay — демонстрация"
+                loading="lazy"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerpolicy="strict-origin-when-cross-origin"
+                allowfullscreen
+              ></iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="source" class="section source-section">
+      <div class="source-card">
+        <div class="source-copy">
+          <p class="eyebrow">open source</p>
+          <h2>Открытый исходный код</h2>
+          <p>
+            Исходники POE2 Act Companion Overlay открыты на GitHub: можно посмотреть код, проверить как работает приложение,
+            предложить правки или просто убедиться, что оверлей читает только лог-файлы игры и не лезет в клиент.
+          </p>
+          <div class="source-actions">
+            <a class="button primary" href="https://github.com/UmbraMalik/poe2-act-companion-overlay" target="_blank" rel="noopener noreferrer">Открыть GitHub</a>
+            <a class="button ghost" href="#safety">Про безопасность</a>
+          </div>
+        </div>
+
+        <a
+          class="source-visual-link"
+          href="https://github.com/UmbraMalik/poe2-act-companion-overlay"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Открыть исходный код POE2 Act Companion Overlay на GitHub"
+        >
+          <img src="./assets/open-source-github-card.svg" data-image-ru="./assets/open-source-github-card.svg" data-image-en="./assets/open-source-github-card-en.png" alt="POE2 Act Companion Overlay — открытый исходный код на GitHub" loading="lazy" />
+        </a>
+      </div>
+    </section>
+
+    <section id="screens" class="section">
+      <div class="section-head">
+        <p class="eyebrow">как выглядит</p>
+        <h2>Скриншоты приложения</h2>
+        <p>Актуальный вид основного оверлея, подробной панели, бонусов актов, режима “Только таймер” и компактного режима в версии 0.4.0.</p>
+      </div>
+
+      <div class="screens-showcase">
+        <div class="screen-switcher" role="tablist" aria-label="Переключение скриншотов приложения">
+          <button
+            class="screen-tab is-active"
+            type="button"
+            role="tab"
+            aria-selected="true"
+            data-screen-image="./assets/screens/overlay-real-reference.png"
+            data-screen-image-ru="./assets/screens/overlay-real-reference.png"
+            data-screen-image-en="./assets/screens/en-overlay-main.png"
+            data-screen-alt="Основной overlay: текущая зона, памятка, следующий переход, скипы, статус уровня и настраиваемые блоки"
+            data-screen-title="Основной overlay"
+            data-screen-key="main-overlay"
+            data-screen-text="Текущая зона, памятка “Что в локации”, следующий переход, скипы, важные подсказки, статус уровня и блоки, которые можно включать или скрывать."
+            data-screen-variant="portrait"
+          >
+            Основной overlay
+          </button>
+          <button
+            class="screen-tab"
+            type="button"
+            role="tab"
+            aria-selected="false"
+            data-screen-image="./assets/screens/companion-panel-reference.png"
+            data-screen-image-ru="./assets/screens/companion-panel-reference.png"
+            data-screen-image-en="./assets/screens/en-companion-panel.png"
+            data-screen-alt="Подробная панель: маршрут, бонусы, таймер, напоминания и итоги забега"
+            data-screen-title="Подробная панель"
+            data-screen-key="companion-panel"
+            data-screen-text="Отдельное окно с маршрутом, бонусами, таймером, временем актов, сегментом “До Т15”, напоминаниями, итогами и историей забегов."
+            data-screen-variant="landscape"
+          >
+            Подробная панель
+          </button>
+          <button
+            class="screen-tab"
+            type="button"
+            role="tab"
+            aria-selected="false"
+            data-screen-image="./assets/screens/timer-mode-reference.png"
+            data-screen-image-ru="./assets/screens/timer-mode-reference.png"
+            data-screen-image-en="./assets/screens/en-timer-mode.png"
+            data-screen-alt="Режим только таймер: вид с таймером, уровнем и следующим переходом"
+            data-screen-title="Режим “только таймер”"
+            data-screen-key="timer-mode"
+            data-screen-text="Режим для тех, кто хочет держать на экране таймер, уровень и ближайший переход без подробной панели."
+            data-screen-variant="timer"
+          >
+            Только таймер
+          </button>
+          <button
+            class="screen-tab"
+            type="button"
+            role="tab"
+            aria-selected="false"
+            data-screen-image="./assets/screens/compact-mode-reference.png"
+            data-screen-image-ru="./assets/screens/compact-mode-reference.png"
+            data-screen-image-en="./assets/screens/en-compact-mode.png"
+            data-screen-alt="Компактный режим: узкая панель с общим временем, актом, уровнем и рекомендацией"
+            data-screen-title="Компактный режим"
+            data-screen-key="compact-mode"
+            data-screen-text="Самый компактный вариант: узкая панель с ключевой информацией для тех, кому нужен минимум визуального шума."
+            data-screen-variant="compact"
+          >
+            Компактный режим
+          </button>
+        </div>
+
+        <figure class="screen-stage">
+          <div class="screen-stage-media">
+            <div class="screen-window" id="screen-window" data-variant="portrait">
+              <div class="screen-window-bar">
+                <div class="screen-window-dots" aria-hidden="true">
+                  <span></span><span></span><span></span>
+                </div>
+                <span class="screen-window-title" id="screen-window-label">POE2 Act Companion Overlay</span>
+              </div>
+              <div class="screen-window-body">
+                <img
+                  id="screen-preview-image"
+                  class="screen-preview-image"
+                  src="./assets/screens/overlay-real-reference.png"
+                  data-image-ru="./assets/screens/overlay-real-reference.png"
+                  data-image-en="./assets/screens/en-overlay-main.png"
+                  alt="Основной overlay: текущая зона, памятка, следующий переход, скипы, статус уровня и настраиваемые блоки"
+                  loading="lazy"
+                />
+              </div>
+            </div>
+            <button class="screen-gallery-arrow screen-gallery-arrow-prev" type="button" data-screen-gallery-prev aria-label="Предыдущий экран">‹</button>
+            <button class="screen-gallery-arrow screen-gallery-arrow-next" type="button" data-screen-gallery-next aria-label="Следующий экран">›</button>
+          </div>
+          <div class="screen-gallery-tabs" data-screen-gallery-tabs aria-label="Разделы подробной панели" hidden></div>
+          <figcaption class="screen-stage-caption">
+            <div class="screen-stage-caption-main">
+              <h3 id="screen-preview-title">Основной overlay</h3>
+              <p id="screen-preview-text">Текущая зона, памятка “Что в локации”, следующий переход, скипы, важные подсказки, статус уровня и блоки, которые можно включать или скрывать.</p>
+            </div>
+            <div class="screen-gallery-meta" data-screen-gallery-meta hidden>
+              <span data-screen-gallery-label>Экран 1 из 1</span>
+            </div>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="download" class="section download-section">
+      <div class="download-card">
+        <div class="download-copy">
+          <p class="eyebrow">beta build</p>
+          <h2>Скачать POE2 Act Companion Overlay</h2>
+          <p>
+            Все сборки публикуются на GitHub Releases. Основная кнопка ниже сама подставляет актуальный installer из последнего релиза и ведёт прямо на скачивание <code>.exe</code>.
+            После установки выбери лог-файл игры в настройках. Дальше приложение само проверит новые версии и предложит обновиться через GitHub Releases.
+          </p>
+        </div>
+
+        <div class="download-actions" aria-label="Ссылки для скачивания">
+          <a
+            id="latest-download-button"
+            class="button primary large"
+            data-latest-download
+            href="https://github.com/UmbraMalik/poe2-act-companion-overlay/releases/latest"
+            target="_blank"
+            rel="noopener noreferrer"
+            data-fallback-text="Скачать через GitHub"
+          >
+            Скачать через GitHub
+          </a>
+          <a
+            class="button secondary large"
+            href="https://github.com/UmbraMalik/poe2-act-companion-overlay/releases/latest"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Последний релиз
+          </a>
+          <a
+            class="button ghost large"
+            href="https://t.me/POE2ActCompanion/4"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Пост в Telegram
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section id="updates" class="section updates-section">
+      <div class="section-head">
+        <p class="eyebrow">обновления</p>
+        <h2>Новые версии приходят через GitHub Releases</h2>
+        <p>
+          Приложение само проверяет наличие обновлений. Если новая версия доступна, оно покажет окно,
+          скачает обновление внутри приложения и предложит установить его только после подтверждения.
+        </p>
+      </div>
+
+      <div class="updates-grid">
+        <article class="feature-card">
+          <span class="icon">1</span>
+          <h3>Проверка</h3>
+          <p>При запуске и вручную из настроек приложение проверяет последний релиз на GitHub.</p>
+        </article>
+        <article class="feature-card">
+          <span class="icon">2</span>
+          <h3>Загрузка</h3>
+          <p>Обновление скачивается внутри приложения. Прогресс отображается в окне обновления и настройках.</p>
+        </article>
+        <article class="feature-card">
+          <span class="icon">3</span>
+          <h3>Установка</h3>
+          <p>Ничего не ставится молча: установка начинается только после кнопки “Установить и перезапустить”.</p>
+        </article>
+      </div>
+
+      <div class="update-vpn-note">
+        <span class="icon">!</span>
+        <div>
+          <strong>Важно про VPN</strong>
+          <p>
+            Если открыть приложение, а потом включить VPN, проверка GitHub Releases может отвалиться.
+            В этом случае в блоке обновлений может появиться статус “Не удалось проверить обновления”,
+            а вместо автообновления приложение предложит открыть релиз и скачать установщик вручную.
+            Это не проблема версии: обновлятор просто не смог стабильно достучаться до GitHub через текущий VPN-маршрут.
+            Отключи VPN и нажми “Проверить обновления” ещё раз либо скачай свежий установщик вручную через кнопку “Последний релиз”.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="install" class="section">
+      <div class="section-head">
+        <p class="eyebrow">установка</p>
+        <h2>Запуск за пару минут</h2>
+      </div>
+
+      <div class="steps">
+        <article>
+          <span>01</span>
+          <h3>Скачай установщик</h3>
+          <p class="step-copy">Нажми “Скачать через GitHub” — сайт сам подставит installer <strong>.exe</strong> из последнего GitHub Release.</p>
+          <div class="step-hint">Рекомендуемый файл: <code>POE2-Act-Companion-Overlay-Setup-*.exe</code></div>
+        </article>
+        <article>
+          <span>02</span>
+          <h3>Запусти установщик</h3>
+          <p class="step-copy">Открой скачанный файл и пройди обычную установку в Windows.</p>
+          <div class="step-hint">Windows SmartScreen может показать предупреждение, потому что приложение пока не подписано платным цифровым сертификатом. Запускай файл только если понимаешь, что скачал его с официального GitHub Releases.</div>
+        </article>
+        <article>
+          <span>03</span>
+          <h3>Выбери лог-файл</h3>
+          <p class="step-copy">После первого запуска открой настройки и укажи путь к игровому логу.</p>
+          <div class="step-hint"><code>Path of Exile 2/logs/LatestClient.txt</code></div>
+        </article>
+        <article>
+          <span>04</span>
+          <h3>Играй</h3>
+          <p class="step-copy">Оверлей начнёт обновляться по логам и сразу покажет нужный контекст по текущей зоне.</p>
+          <div class="step-hint">Зоны RU/EN клиента, уровень, маршрут, подсказки, бонусы, таймер, время актов и “До Т15” — всё в одном месте.</div>
+        </article>
+      </div>
+    </section>
+
+    <section id="safety" class="section safety">
+      <div class="section-head">
+        <p class="eyebrow">безопасность</p>
+        <h2>Безопасность и доверие</h2>
+        <p>
+          POE2 Act Companion Overlay — локальный overlay-помощник. Он не вмешивается в клиент Path of Exile 2
+          и работает через обычный лог-файл игры.
+        </p>
+      </div>
+
+      <div class="safety-card safety-summary-card">
+        <div>
+          <p class="eyebrow">что приложение не делает</p>
+          <h3>Без чтения памяти, инжекта и слежки за экраном</h3>
+          <p>
+            Overlay определяет текущую зону по строкам из <code>Client.txt</code> / <code>LatestClient.txt</code>
+            и показывает подсказки поверх экрана. Он не читает память игры, не перехватывает сеть и не выполняет действия за игрока.
+          </p>
+        </div>
+
+        <ul class="safety-list safety-checks">
+          <li>Не читает память игры</li>
+          <li>Не делает инжект в клиент</li>
+          <li>Не перехватывает сетевой трафик</li>
+          <li>Не нажимает кнопки за игрока</li>
+          <li>Не скринит экран</li>
+          <li>Не использует OCR</li>
+          <li>Читает только Client.txt / LatestClient.txt</li>
+          <li>Определяет зоны по RU/EN названиям из логов</li>
+        </ul>
+      </div>
+
+      <div class="feature-grid safety-trust-grid">
+        <article class="feature-card warning-card">
+          <span class="icon">!</span>
+          <p class="eyebrow">почему Windows может ругаться</p>
+          <h3>SmartScreen и антивирусы</h3>
+          <p>
+            Приложение пока не подписано платным цифровым сертификатом. Из-за этого Windows SmartScreen
+            и некоторые антивирусы могут относиться к installer-файлу осторожно, особенно пока проект новый и у файла мало скачиваний.
+          </p>
+          <p>
+            Это не означает автоматически, что внутри вирус, но я не прошу отключать антивирус или запускать то,
+            чему вы не доверяете. Если есть сомнения — лучше проверить файл самостоятельно, дождаться следующих версий или не использовать приложение.
+          </p>
+        </article>
+
+        <article class="feature-card github-card">
+          <span class="icon">#</span>
+          <p class="eyebrow">откуда скачивать</p>
+          <h3>Только GitHub Releases</h3>
+          <p>
+            Все релизы публикуются через GitHub Releases. Лучше скачивать только верхний релиз с пометкой <strong>Latest</strong>
+            и не использовать перезаливы со сторонних сайтов.
+          </p>
+          <p>
+            Для каждого релиза можно указывать SHA256-хэш installer-файла, чтобы пользователь мог проверить, что файл не был подменён.
+          </p>
+          <code class="hash-command">Get-FileHash "POE2-Act-Companion-Overlay-Setup-*.exe" -Algorithm SHA256</code>
+        </article>
+
+        <article class="feature-card project-card">
+          <span class="icon">U</span>
+          <p class="eyebrow">кто делает проект</p>
+          <h3>Один человек + фидбек сообщества</h3>
+          <p>
+            POE2 Act Companion Overlay — независимый community-проект от UmbraMalik.
+          </p>
+          <p>
+            Проект делает один человек. В некоторых случаях я использую AI-инструменты и фидбек игроков,
+            чтобы быстрее находить ошибки, править зоны, структурировать данные и улучшать overlay.
+          </p>
+          <p>
+            Это не официальный инструмент Grinding Gear Games и не коммерческий продукт.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section id="mentions" class="section community-section">
+      <p class="eyebrow community-eyebrow">сообщество</p>
+      <div class="mentions-card mentions-card-compact community-used-card">
+        <div class="mentions-head">
+          <div>
+            <h2>Проект уже использовали / упоминали
+              <span class="info-tooltip" tabindex="0" aria-label="Если вы стримили с оверлеем, делали пост о проекте или делились им в своём канале — напишите мне. Я могу добавить ваш канал / стрим / сообщество в этот блок как место, где проект уже показывали или упоминали.">i</span>
+            </h2>
+          </div>
+          <a
+            class="mention-contact-button"
+            href="https://t.me/POE2ActCompanion?direct"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Написать в Telegram, чтобы добавить свой канал или стрим"
+            title="Написать в Telegram"
+          >
+            ✉
+          </a>
+        </div>
+
+        <div class="mentions-list-compact community-used-list" aria-label="Где уже показывали или упоминали проект">
+          <a class="mention-card mention-card-compact" href="https://t.me/pathofexile_pub" target="_blank" rel="noopener noreferrer" aria-label="Открыть Telegram-канал Path of Exile 2">
+            <span class="mention-link-icon" aria-hidden="true">↗</span>
+            <span class="mention-avatar mention-avatar-image" aria-hidden="true">
+              <img src="./assets/mentions/pathofexile2.jpg" alt="" loading="lazy" />
+            </span>
+            <span class="mention-info">
+              <strong>Path of Exile 2</strong>
+              <small>Telegram-канал</small>
+            </span>
+          </a>
+
+          <a class="mention-card mention-card-compact mention-card-placeholder" href="https://t.me/POE2ActCompanion?direct" target="_blank" rel="noopener noreferrer" aria-label="Написать в Telegram, чтобы добавить свой канал или стрим">
+            <span class="mention-link-icon mention-plus-icon" aria-hidden="true">+</span>
+            <span class="mention-avatar mention-avatar-text" aria-hidden="true">?</span>
+            <span class="mention-info">
+              <strong>Ваш канал</strong>
+              <small>Написать в Telegram</small>
+            </span>
+          </a>
+        </div>
+      </div>
+
+
+
+      <div class="mentions-card mentions-card-compact community-supporters-card">
+        <div class="mentions-head">
+          <div>
+            <p class="eyebrow">поддержали проект</p>
+            <h2>Рамка поддержавших донатом</h2>
+            <p>
+              Если отправляешь поддержку и хочешь попасть сюда — укажи ник в комментарии к переводу или донату.
+              Добавляю вручную после проверки. Формат в рамке: ник — сумма.
+            </p>
+          </div>
+        </div>
+
+        <div class="supporters-frame" aria-label="Пользователи, поддержавшие проект переводом">
+          <span class="supporter-chip supporter-chip-placeholder">
+            <span class="supporter-chip-name">Ваш ник</span>
+            <span class="supporter-chip-separator" aria-hidden="true">—</span>
+            <span class="supporter-chip-amount">сумма</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="community-links-grid" aria-label="Ссылки сообщества">
+        <a class="community-link-card" href="https://t.me/POE2ActCompanion" target="_blank" rel="noopener noreferrer">
+          <span class="community-link-icon" aria-hidden="true">TG</span>
+          <span>
+            <strong>Telegram</strong>
+            <small>Новости, релизы и обновления проекта</small>
+          </span>
+        </a>
+        <a class="community-link-card" href="https://t.me/POE2ActCompanionChat" target="_blank" rel="noopener noreferrer">
+          <span class="community-link-icon" aria-hidden="true">💬</span>
+          <span>
+            <strong>Чат проекта</strong>
+            <small>Вопросы, обсуждение и помощь с установкой</small>
+          </span>
+        </a>
+        <a class="community-link-card" href="https://t.me/POE2ActCompanion?direct" target="_blank" rel="noopener noreferrer">
+          <span class="community-link-icon" aria-hidden="true">✉</span>
+          <span>
+            <strong>Обратная связь</strong>
+            <small>Баги, фидбек и предложения</small>
+          </span>
+        </a>
+      </div>
+    </section>
+
+    <section id="support" class="section support">
+      <div class="section-head">
+        <p class="eyebrow">поддержка</p>
+        <h2>Если оверлей помог — можно поддержать</h2>
+        <p>
+          Доступ к beta не планируется закрывать за донатом. Поддержка — это просто “спасибо”
+          за время, нервы, правки под русский клиент и вечную борьбу с Electron.
+        </p>
+      </div>
+
+      <div class="support-donate-card">
+        <div class="support-copy">
+          <p class="eyebrow">добровольная поддержка</p>
+          <h3>Поддержать проект удобным способом</h3>
+          <p>
+            Можно перевести по QR через Альфа-Банк или отправить донат через DonationAlerts.
+            Это не покупка доступа и не подписка — просто способ сказать “спасибо” и помочь развитию проекта.
+          </p>
+
+          <div class="support-methods" aria-label="Способы поддержки проекта">
+            <div class="support-method-card support-method-card-qr">
+              <div class="support-method-head">
+                <span class="support-method-icon support-method-icon-image support-method-icon-alfa" aria-hidden="true"><img src="./assets/support/alfa-bank-logo.png" alt="" loading="lazy" /></span>
+                <div>
+                  <p class="eyebrow">Альфа-Банк</p>
+                  <strong>Перевод по QR</strong>
+                </div>
+              </div>
+              <p>
+                Отсканируй QR-код в приложении банка — реквизиты подтянутся автоматически.
+                Любая сумма добровольная.
+              </p>
+              <div class="support-note-box compact">
+                <strong>Комментарий:</strong>
+                <span>Act</span>
+              </div>
+            </div>
+
+            <a
+              class="support-method-card support-method-card-link"
+              href="https://www.donationalerts.com/r/umbramalik"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Открыть DonationAlerts для поддержки проекта"
+            >
+              <div class="support-method-head">
+                <span class="support-method-icon support-method-icon-image support-method-icon-da" aria-hidden="true"><img src="./assets/support/donationalerts-logo.png" alt="" loading="lazy" /></span>
+                <div>
+                  <p class="eyebrow">DonationAlerts</p>
+                  <strong>Поддержать через донат</strong>
+                </div>
+              </div>
+              <p>
+                Подойдёт, если удобнее поддержать через DonationAlerts. Откроется отдельная страница доната.
+              </p>
+              <span class="support-method-action">Открыть DonationAlerts ↗</span>
+            </a>
+          </div>
+
+          <p class="support-helper-text support-nick-note">
+            Если хочешь попасть в рамку поддержавших проект — укажи свой ник в комментарии к переводу или в сообщении к донату.
+          </p>
+
+          <div class="support-tags" aria-label="Детали поддержки">
+            <span>Альфа-Банк</span>
+            <span>DonationAlerts</span>
+            <span>Добровольно</span>
+          </div>
+        </div>
+
+        <div class="qr-card" aria-label="QR-код для перевода через Альфа-Банк">
+          <div class="qr-card-label">QR-перевод</div>
+          <div class="qr-frame">
+            <img src="./assets/support/alfa-qr-placeholder.png" alt="QR-код для перевода через Альфа-Банк" loading="lazy" />
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+<footer class="site-footer">
+  <p>
+    © 2026 UmbraMalik. POE2 Act Companion Overlay · public beta · fan-made tool.
+  </p>
+  <p>
+    Проект делает один человек. В некоторых случаях — при поддержке AI-инструментов и фидбека игроков.
+  </p>
+  <p>
+    Неофициальный фанатский инструмент для Path of Exile 2. Проект не связан с Grinding Gear Games,
+    не одобрен и не поддерживается ими.
+  </p>
+  <p>
+    Path of Exile 2, Path of Exile и связанные названия принадлежат их правообладателям.
+    Сайт и приложение не используют официальные ассеты игры.
+  </p>
+</footer>
+
+  <script src="./script.js"></script>
+</body>
+</html>
