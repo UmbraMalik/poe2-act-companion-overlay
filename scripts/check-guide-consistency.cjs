@@ -37,6 +37,47 @@ for (const relativePath of files) {
   });
 }
 
+
+const guidePath = path.join(root, 'src/data/guide.json');
+if (fs.existsSync(guidePath)) {
+  const guide = JSON.parse(fs.readFileSync(guidePath, 'utf8'));
+  const zones = Array.isArray(guide?.zones) ? guide.zones : [];
+  const byId = new Map(zones.map((zone) => [zone.id, zone]));
+  const expectedGuideLocks = [
+    {
+      id: 'a3_vaal_heart',
+      field: 'zone_ru',
+      expected: 'Ваальская часть / жертвенное сердце',
+      reason: 'This combined Act 3 guide card must keep the audited RU name used by route resolution tests.',
+    },
+    {
+      id: 'a3_temple_kopec',
+      field: 'next_zone_ru',
+      expected: 'Ваальская часть / жертвенное сердце',
+      reason: 'Temple of Kopec must point to the audited combined Vaal Heart card.',
+    },
+    {
+      id: 'a4_heart_of_the_tribe',
+      field: 'next_zone_ru',
+      expected: 'Кхарийский базар',
+      reason: 'Act 4 must enter the audited Interlude page order through Khari Bazaar.',
+    },
+  ];
+
+  for (const lock of expectedGuideLocks) {
+    const zone = byId.get(lock.id);
+    const actual = zone?.[lock.field];
+    if (actual !== lock.expected) {
+      offenders.push({
+        file: 'src/data/guide.json',
+        line: 0,
+        text: `${lock.id}.${lock.field} = ${JSON.stringify(actual)}`,
+        reason: `${lock.reason} Expected ${JSON.stringify(lock.expected)}.`,
+      });
+    }
+  }
+}
+
 if (offenders.length > 0) {
   console.error('[check:guide-consistency] Contradictory guide text found:');
   for (const offender of offenders) {
