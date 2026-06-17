@@ -1,18 +1,19 @@
 {
-  "version": "league-mechanic-rewards-0.4-2026-05-15",
+  "version": "league-mechanic-rewards-0.5-recheck-2026-06-17",
   "feature": "leagueMechanicRewards",
   "source": {
-    "title": "[0.4] League Mechanic Reward Cheat Sheet",
+    "title": "[0.5 recheck] League Mechanic Reward Cheat Sheet",
     "author": "GuyThatDies",
-    "url": "https://mobalytics.gg/poe-2/profile/guythatdies/guides/0-4-league-mechanic-reward-cheat-sheet",
-    "updated": "2026-04-06",
-    "note": "Guaranteed reward for completing league mechanic in the zone. Guaranteed only once; resetting zone does not refresh the guarantee."
+    "url": "https://mobalytics.gg/poe-2/guides/league-mechanic-campaign-reward-cheat-sheet",
+    "updated": "2026-05-24",
+    "note": "Guaranteed reward for completing league mechanic in the zone. Guaranteed only once; resetting zone does not refresh the guarantee. Rechecked against 0.5.0/0.5.1 campaign state on 2026-06-17."
   },
   "notes": [
     "Keep this file separate from campaign-bonuses.json: these are temporary/loot rewards, not permanent character bonuses.",
     "duplicateInCurrentGuide marks legacy guide overlap; overlay still shows the guaranteed league reward for consistency.",
     "For long-term cleanup, move old hardcoded league reward texts out of guide.json and render them from this file instead.",
-    "Some Interlude locations are missing as separate guide cards in current guide.json; use raw scene/aliases for detection when possible."
+    "Some Interlude locations are missing as separate guide cards in current guide.json; use raw scene/aliases for detection when possible.",
+    "0.5 recheck: Scorched Farmlands remains Level 5 in this project based on prior in-game verification; some public tables still list Level 4, so do not downgrade without a fresh in-game screenshot."
   ],
   "rewards": [
     {

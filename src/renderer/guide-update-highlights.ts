@@ -15,7 +15,19 @@ const GUIDE_UPDATE_MARKERS = [
   'финальная часть уже осуш',
   'final section is already drained',
   'новый выход к болоту азак',
-  'new exit toward azak bog'
+  'new exit toward azak bog',
+  'shark fin',
+  'акуль',
+  'kaom',
+  'rakiata',
+  'farrow',
+  'runes of aldur',
+  'runeforging',
+  'ancient beacons',
+  'fate of the vaal',
+  'маяк',
+  'маяки',
+  'vaal ruins'
 ];
 
 export function isGuideUpdateText(value: string | null | undefined): boolean {

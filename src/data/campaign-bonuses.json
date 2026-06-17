@@ -673,6 +673,56 @@
       ]
     },
     {
+      "id": "act4_whakapanu_shark_fin_choice",
+      "act": 4,
+      "zoneId": "a4_whakapanu_island",
+      "zone_ru": "Остров Вакапану",
+      "title": "Выбор Kaom/Rakiata за Shark Fin",
+      "category": "choice",
+      "source": "Great White One → Shark Fin → Каймана",
+      "details": [
+        "Убить Great White One в Акульей яме на Острове Вакапану.",
+        "Подобрать Shark Fin и сдать Каймане в Нгакану или на корабле Каруи в Кингсмарше.",
+        "Выбор постоянный: Kaom’s Lesson или Rakiata’s Lesson."
+      ],
+      "reward": {
+        "type": "choice",
+        "value": 1
+      },
+      "eventRules": [
+        {
+          "all": [
+            "Kaom's Lesson"
+          ]
+        },
+        {
+          "all": [
+            "Kaom’s Lesson"
+          ]
+        },
+        {
+          "all": [
+            "Rakiata's Lesson"
+          ]
+        },
+        {
+          "all": [
+            "Rakiata’s Lesson"
+          ]
+        },
+        {
+          "all": [
+            "Урок Каома"
+          ]
+        },
+        {
+          "all": [
+            "Урок Ракиаты"
+          ]
+        }
+      ]
+    },
+    {
       "id": "act4_halls_dead_fire_choice",
       "act": 4,
       "zoneId": "a4_halls_of_the_dead",
