@@ -189,7 +189,7 @@ const CURATED_DATA_TRANSLATION_OVERRIDES: Record<string, string> = {
   "Через город поговорить с Уной и пройти блокировку": "Go through town, talk to Una, and clear the blocker.",
   "Чистить тотемы с волнами монстров": "Clear the totems and monster waves.",
   "Экзальт из лиги": "Exalted Orb from the league encounter",
-  "Это боковая Expedition-награда, не обязательная линия прохождения": "This is a side Expedition reward, not required campaign progress.",
+  "Это не обычная боковая экспедиция: в 0.5 здесь закрывается цепочка Фарроу и древние руны.": "This is not a normal side Expedition: in 0.5 it closes Farrow's chain and the Ancient Runes.",
   "Это боковой заход из Бесплодных земель мастодонтов, не основной маршрут акта": "This is a side route from the Mastodon Badlands, not the act's main route.",
   "Это опциональное испытание, а не обязательный маршрут Акта 2": "This is an optional trial, not a required Act 2 route.",
   "уже есть в guide.json/campaign-bonuses: большие руны уже упомянуты": "Already exists in guide.json/campaign-bonuses: greater runes are already mentioned.",
