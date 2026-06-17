@@ -677,13 +677,13 @@
       "act": 4,
       "zoneId": "a4_whakapanu_island",
       "zone_ru": "Остров Вакапану",
-      "title": "Выбор Kaom/Rakiata за Shark Fin",
+      "title": "Выбор Урока Каома/Урока Ракиаты за Акулий плавник",
       "category": "choice",
-      "source": "Great White One → Shark Fin → Kaimana",
+      "source": "Великая белая туша → Акулий плавник → Каймана",
       "details": [
-        "Убить Great White One в Shark Pit на Whakapanu Island.",
-        "Подобрать Shark Fin и сдать Kaimana в Ngakanu / Medicine Circle или позже на Karui ship в Kingsmarch.",
-        "Выбор постоянный: Kaom’s Lesson или Rakiata’s Lesson."
+        "Убить Великую белую тушу в Акульей яме на Острове Вакапану.",
+        "Подобрать Акулий плавник и сдать Каймане в Нгакану / лекарский круг или позже на корабле каруи в Кингсмарше.",
+        "Выбор постоянный: Урок Каома или Урок Ракиаты."
       ],
       "reward": {
         "type": "choice",
@@ -1155,7 +1155,7 @@
       "zone_ru": "Деревня Криар",
       "title": "+40 духа",
       "category": "spirit",
-      "source": "Литара / Lythara",
+      "source": "Литара / Литара",
       "details": [
         "Убить босса Литару.",
         "Награда: +40 к максимуму духа и камень духа 14 уровня."
