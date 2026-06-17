@@ -100,7 +100,7 @@
       "checklist": [
         {
           "id": "a1_clearfell_encampment_task_1",
-          "text": "После Миллера взять награду/камень и сразу выйти в Клирфелл",
+          "text": "После Миллера взять камень у Ренли и сразу выйти в Клирфелл",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -108,7 +108,7 @@
         },
         {
           "id": "a1_clearfell_encampment_task_2",
-          "text": "Основной порядок: Клирфелл → Грельвуд → Красная Долина → Мрачные заросли → Кладбище Вечных → Супружеская гробница → Мавзолей претора",
+          "text": "Поговорить с Farrow / взять цепочку Runes of Aldur, если он доступен в лагере",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -116,7 +116,7 @@
         },
         {
           "id": "a1_clearfell_encampment_task_3",
-          "text": "Дальше: Охотничьи угодья → Фрейторн → Фермерские земли Огама → Деревня Огам → Стены замка → Замок Огам",
+          "text": "Основной порядок: Клирфелл → Грельвуд → Красная Долина → Мрачные заросли → Кладбище Вечных",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -124,7 +124,15 @@
         },
         {
           "id": "a1_clearfell_encampment_task_4",
-          "text": "Грязевая нора — опционально, заходить только если нужен ранний камень поддержки",
+          "text": "Дальше: Охотничьи угодья → Фрейторн → Фермерские земли Огама → Деревня Огам → Замок Огам",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a1_clearfell_encampment_task_5",
+          "text": "Грязевая нора — опционально, только если нужен ранний камень",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -138,8 +146,8 @@
         "Не зависать в городе: забрал награду, проверил торговцев и сразу в маршрут"
       ],
       "important": [
-        "Порядок Акта 1 держать через основные зоны; Грязевая нора не обязательна для быстрого прохождения.",
-        "0.5: Farrow открывает Verisium Runeforging в Акте 1; если он появился в лагере/зоне, поговорить и забрать квестовый прогресс."
+        "Акт 1 держать по основному маршруту; Грязевая нора не обязательна для быстрого прохождения.",
+        "0.5: Farrow запускает Runes of Aldur / Runeseeker; в акте нужно собрать 3 Runestones и открыть Verisium Anvil."
       ],
       "after": [],
       "boss_tips": [],
@@ -148,9 +156,9 @@
       "next_zone_ru": "Клирфелл",
       "details": {
         "route": [
-          "Клирфелл → Грельвуд → Красная Долина → Мрачные заросли → Кладбище Вечных → Супружеская гробница → Мавзолей претора",
+          "Клирфелл → Грельвуд → Красная Долина → Мрачные заросли → Кладбище Вечных",
           "Охотничьи угодья → Фрейторн → Фермерские земли Огама → Деревня Огам → Стены замка → Замок Огам",
-          "Грязевая нора — опционально, не ломать темп ради неё без нужды"
+          "Runeseeker: Grim Tangle + Hunting Grounds + Ogham Farmlands → Grelwood / Tree of Souls → Lost Catacombs → Verisium Anvil"
         ],
         "rewards": [
           "Хаб Акта 1 и ранние торговцы"
@@ -160,8 +168,7 @@
           "Долгие проверки города после каждого портала"
         ],
         "important": [
-          "Лагерь Клирфелл — памятка маршрута: сам прогресс начинается в Клирфелле, дальше идти по карточкам акта.",
-          "0.5: Farrow открывает Verisium Runeforging в Акте 1; если он появился в лагере/зоне, поговорить и забрать квестовый прогресс."
+          "Лагерь Клирфелл — памятка маршрута: сам прогресс начинается в Клирфелле, дальше идти по карточкам акта."
         ],
         "after": [],
         "boss_tips": [],
@@ -171,10 +178,8 @@
           "Проверить раннее оружие/броню у торговцев, поставить камни и выйти из города без лишних кругов."
         ],
         "navigation": [
-          "Если сбился: основной маршрут начинается с Клирфелла; Грязевая нора — боковая опционалка."
-        ],
-        "opportunistic": [
-          "Runes of Aldur: если Farrow стоит в зоне, пользоваться его подсказкой — он указывает и раскрывает руны поблизости."
+          "Если сбился: основной маршрут начинается с Клирфелла; Грязевая нора — боковая опционалка.",
+          "Runes of Aldur: если Farrow стоит в зоне, говорить с ним — после 0.5.1 он помогает найти руны/Runestones."
         ]
       },
       "display": {
@@ -616,37 +621,35 @@
       "is_good_xp_zone": false,
       "checklist": [
         {
-          "id": "grim_spikes_tree",
-          "text": "Вставить шипы в дерево",
+          "id": "a1_grim_tangle_task_1",
+          "text": "Вставить шипы в дерево и поговорить с Уной через город",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
         },
         {
-          "id": "grim_una_skip",
-          "text": "Через город поговорить с Уной и пройти блокировку",
+          "id": "a1_grim_tangle_task_2",
+          "text": "Забрать Runestone 1/3 для Farrow / Runeseeker",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
         },
         {
-          "id": "grim_boss",
-          "text": "Убить босса",
-          "type": "boss",
+          "id": "a1_grim_tangle_task_3",
+          "text": "Убить босса и забрать камень поддержки",
+          "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
         },
         {
-          "id": "grim_support",
-          "text": "Забрать камень поддержки",
-          "type": "reward",
-          "required": true,
-          "autoCompleteKeywords": [
-            "камень поддержки"
-          ],
+          "id": "a1_grim_tangle_task_4",
+          "text": "Выйти в Кладбище Вечных",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
         }
       ],
@@ -659,7 +662,8 @@
       ],
       "important": [
         "Зона узкая, грибные зомби взрываются",
-        "Желательно выйти 5+ уровнем"
+        "Желательно выйти 5+ уровнем",
+        "0.5: это первый Runestone Акта 1; не пропустить, иначе Verisium Anvil не откроется."
       ],
       "after": [],
       "boss_tips": [
@@ -676,7 +680,8 @@
           "Забрать камень поддержки"
         ],
         "rewards": [
-          "Камень поддержки — усилить основной навык урона"
+          "Камень поддержки — усилить основной навык урона",
+          "Runestone 1/3 для Verisium Anvil"
         ],
         "skip": [
           "Стоять на трупах грибных зомби",
@@ -696,7 +701,8 @@
           "После разговора с Уной отойди к чекпоинту/барьеру: можно не ждать весь хвост её песни/сцены."
         ],
         "navigation": [
-          "Зона узкая: держи маршрут к боссу, не стой на трупах грибных зомби — они взрываются."
+          "Зона узкая: держи маршрут к боссу, не стой на трупах грибных зомби — они взрываются.",
+          "0.5: грибы ведут к Druid/боссу, гробы — к выходу на Кладбище Вечных; Runestone забрать по пути."
         ],
         "town_plan": [
           "После босса/перед выходом: если кастер — чекнуть Уну, на сдачу докупить свитки."
@@ -990,39 +996,43 @@
       "is_good_xp_zone": true,
       "checklist": [
         {
-          "id": "hunt_crowbell",
-          "text": "Убить Crowbell за 2 пассивных очка",
-          "type": "passive",
-          "required": true,
-          "autoCompleteKeywords": [
-            "пассив"
-          ],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
-        },
-        {
-          "id": "hunt_freythorn",
-          "text": "Найти Фрейторн",
+          "id": "a1_hunting_grounds_task_1",
+          "text": "Поговорить с Delwyn / взять ориентир по зоне",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
         },
         {
-          "id": "hunt_dryadic",
-          "text": "По пути взять Дриадический ритуал, если встретил",
-          "type": "reward",
+          "id": "a1_hunting_grounds_task_2",
+          "text": "Забрать Runestone 2/3 для Farrow, если он стоит в зоне",
+          "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
         },
         {
-          "id": "hunt_league_exalt",
+          "id": "a1_hunting_grounds_task_3",
+          "text": "Убить Crowbell за 2 пассивных очка",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a1_hunting_grounds_task_4",
+          "text": "Малый ритуал: по саранче найти Фрейторн",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a1_hunting_grounds_task_5",
           "text": "Сделать лигу за экзальт, если по пути",
-          "type": "currency",
-          "required": true,
-          "autoCompleteKeywords": [
-            "экзальт"
-          ],
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
         }
       ],
@@ -1035,8 +1045,8 @@
         "Лишнюю зачистку"
       ],
       "important": [
-        "После камня 3 уровня взять Pounce; нужен талисман",
-        "Устаревшие ранние навыки к этому моменту можно убрать, если основной сетап уже сильнее"
+        "0.5: саранча после малого ритуала ведёт к Фрейторну, трупы скота помогают найти Crowbell, указатель показывает путь к деревне.",
+        "Runestone 2/3 нужен для цепочки Farrow / Verisium Anvil."
       ],
       "after": [],
       "boss_tips": [
@@ -1077,10 +1087,12 @@
           "Dryadic Ritual — быстрый саппорт, если попался по пути; специально далеко не бегать."
         ],
         "time_saves": [
-          "Crowbell: бей по пути к следующей арене, чтобы ускорить его перемещение между фазами."
+          "Crowbell: бей по пути к следующей арене, чтобы ускорить его перемещение между фазами.",
+          "После малого ритуала не блуждать: идти за саранчой к Фрейторну."
         ],
         "navigation": [
-          "0.5: указатель помогает найти путь к Деревне Огам, трупы скота ведут к боссу за пассивные очки, а после ритуала рой саранчи показывает дорогу к Фрейторну."
+          "0.5: указатель помогает найти путь к Деревне Огам, трупы скота ведут к Crowbell, а после ритуала рой саранчи показывает дорогу к Фрейторну.",
+          "Runes of Aldur: если Farrow стоит в зоне, забрать Runestone 2/3 до ухода."
         ]
       },
       "display": {
@@ -1191,7 +1203,7 @@
       "checklist": [
         {
           "id": "a1_ogham_farmlands_task_1",
-          "text": "Найти добычу Уны",
+          "text": "Найти лютню Уны и сдать в город за +2 пассивных очка",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -1199,7 +1211,7 @@
         },
         {
           "id": "a1_ogham_farmlands_task_2",
-          "text": "Взять камень умения 4 уровня через лигу или редкого моба у круга посевов",
+          "text": "Забрать Runestone 3/3 в поле / crop area",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -1207,7 +1219,23 @@
         },
         {
           "id": "a1_ogham_farmlands_task_3",
-          "text": "Улучшить основной атакующий навык",
+          "text": "Если все 3 Runestones собраны: вернуться в Грельвуд к Tree of Souls и пройти Lost Catacombs",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a1_ogham_farmlands_task_4",
+          "text": "После Lost Catacombs открыть Verisium Anvil в Клирфелле",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a1_ogham_farmlands_task_5",
+          "text": "Взять камень умения 4 уровня через лигу или редкого моба, если нужен апгрейд",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -1220,7 +1248,8 @@
       ],
       "skip": [],
       "important": [
-        "На круге посевов использовать AoE/контроль и водить мобов через зону урона"
+        "Лютня Уны = обязательные +2 пассивных очка.",
+        "0.5: третий Runestone завершает цепочку Farrow; после него открыть Verisium Anvil через Грельвуд / Lost Catacombs."
       ],
       "after": [],
       "boss_tips": [],
@@ -1229,12 +1258,14 @@
       "next_zone_ru": "Деревня Огам",
       "details": {
         "route": [
-          "Найти добычу Уны",
-          "Взять камень умения 4 уровня через лигу или редкого моба у круга посевов",
-          "Улучшить основной атакующий навык"
+          "Найти лютню Уны и сдать в город за +2 пассивных очка",
+          "Забрать Runestone 3/3 в поле",
+          "Все 3 Runestones → Грельвуд / Tree of Souls → Lost Catacombs → Liquid Verisium → Verisium Anvil",
+          "Взять камень умения 4 уровня через лигу или редкого моба у круга посевов, если нужен апгрейд"
         ],
         "rewards": [
-          "Добыча Уны за пассивные очки",
+          "2 пассивных очка за лютню Уны",
+          "Runestone 3/3 и открытие Verisium Anvil",
           "Камень умения 4 уровня"
         ],
         "skip": [],
@@ -1246,7 +1277,8 @@
         "xp_notes": [],
         "crafting_tips": [],
         "navigation": [
-          "Лютня Уны обычно за тележками по прямой; crop circle/редкий моб — источник камня 4 уровня."
+          "Лютня Уны обычно за тележками по прямой; crop circle/редкий моб — источник камня 4 уровня.",
+          "После третьего Runestone не забыть короткий возврат в Грельвуд и Lost Catacombs — это открывает Verisium Anvil."
         ],
         "time_saves": [
           "У круга посевов стой рядом со своим AoE/контролем: мобы сами вбегают в зону урона."
@@ -1663,8 +1695,8 @@
       ],
       "important": [
         "Акт 2 начинается с Окраин Вастири; после входа в Караван идти в Каменоломню Маудун.",
-        "0.5: Авангард Дредноута убран из актуального маршрута; финал акта закрывается через Дредноут.",
-        "0.5: у Farrow во 2 акте открываются Alloys; если он появился в караване/зоне, не пропускать разговор."
+        "0.5: Авангард Дредноута убран; финал акта закрывается прямо в Дредноуте.",
+        "0.5 Runes of Aldur: ключевые Runestones/цепочка Farrow в акте идут через Bone Pits, Keth и Deshar → Runic Vault."
       ],
       "after": [],
       "boss_tips": [],
@@ -1674,8 +1706,9 @@
       "details": {
         "route": [
           "Окраины Вастири → Караван Ардура → Каменоломня Маудун → Шахта Маудун → Тропа Изменницы → Ворота Халани",
-          "Бесплодные земли мастодонтов → Бессветный проход → Костяные ямы → Кет → Затерянный город → Захоронённые святилища",
-          "Долина Титанов → Грот Титанов → Дешар → Путь скорби → Шпили Дешара → Дредноут"
+          "Бесплодные земли мастодонтов → Бессветный проход / Well of Souls → Костяные ямы → Кет → Затерянный город → Захоронённые святилища",
+          "Долина Титанов → Грот Титанов → Дешар → Путь скорби → Шпили Дешара → Trial на 28 → Дредноут",
+          "Runes of Aldur: Bone Pits + Keth + Deshar → Skull of the Titan / Runic Vault → Runic Inscriptions"
         ],
         "rewards": [
           "Хаб Акта 2 и быстрые возвраты к торговцам"
@@ -1686,8 +1719,7 @@
         ],
         "important": [
           "Караван Ардура — хаб после стартовой зоны; не вести его перед Окраинами Вастири.",
-          "Авангард Дредноута больше не возвращать в маршрут 0.5.",
-          "0.5: у Farrow во 2 акте открываются Alloys; если он появился в караване/зоне, не пропускать разговор."
+          "Авангард Дредноута больше не возвращать в маршрут 0.5."
         ],
         "after": [],
         "boss_tips": [],
@@ -1697,10 +1729,8 @@
           "Пока караван едет, сдавать квесты, проверять торговцев и не стоять в пустой анимации."
         ],
         "navigation": [
-          "Если потерял порядок: сначала Окраины Вастири и Караван, потом Маудун/Халани, затем мастодонты и Кет, затем Титаны/Дешар/Дредноут."
-        ],
-        "opportunistic": [
-          "Runes of Aldur: если Farrow стоит в зоне, пользоваться его подсказкой — он указывает и раскрывает руны поблизости."
+          "Если потерял порядок: сначала Маудун/Халани, затем мастодонты и Кет, затем Титаны/Дешар/Trial на 28, затем Дредноут.",
+          "0.5: Risu открывает shortcut к Traitor’s Passage; не возвращай старый лишний круг через Halani Gates без нужды."
         ]
       },
       "display": {
@@ -2082,7 +2112,8 @@
       ],
       "important": [
         "Обязательно найти Бессветный проход и открыть Abyss-механику.",
-        "Разница между старой бронёй и текущей огромная"
+        "Разница между старой бронёй и текущей огромная",
+        "0.5: Lightless Passage / Well of Souls ищется по трещинам в земле; открыть Abyss и идти дальше."
       ],
       "after": [],
       "boss_tips": [],
@@ -2114,7 +2145,8 @@
           "После открытия Abyss лишние Бездны обычно скипать, если XP хватает; если сильно отстал — можно использовать как догон."
         ],
         "navigation": [
-          "Сначала найти Бессветный проход для открытия Abyss, затем возвращаться в основной маршрут к Костяным ямам."
+          "Сначала найти Бессветный проход для открытия Abyss, затем возвращаться в основной маршрут к Костяным ямам.",
+          "0.5: для Lightless Passage смотри на трещины в земле — они ведут к логову и Well of Souls."
         ]
       },
       "display": {
@@ -2214,24 +2246,32 @@
       "is_good_xp_zone": false,
       "checklist": [
         {
-          "id": "a2_trial_sekhemas_task_1",
-          "text": "Опционально: идти, если готов закрывать Trial of the Sekhemas / восхождение",
+          "id": "a2_trial_of_the_sekhemas_task_1",
+          "text": "Лучше вернуться на 28 уровне, а не проходить сразу после Balbala",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
         },
         {
-          "id": "a2_trial_sekhemas_task_2",
-          "text": "Если билд слабый или мало выживаемости — лучше вернуться позже",
+          "id": "a2_trial_of_the_sekhemas_task_2",
+          "text": "На входе вручную выбрать Djinn Barya 28 из Deshar, не дефолтную 22",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
         },
         {
-          "id": "a2_trial_sekhemas_task_3",
-          "text": "Для быстрого прохождения не задерживаться, если испытание сейчас не закрываешь",
+          "id": "a2_trial_of_the_sekhemas_task_3",
+          "text": "Комнаты: Ritual > Chalice > Hourglass > Gauntlet",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a2_trial_of_the_sekhemas_task_4",
+          "text": "После Trial получить первое восхождение и идти в Дредноут",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -2245,20 +2285,20 @@
         "Можно отложить, если на старте кампании важнее темп или билд ещё слабый"
       ],
       "important": [
-        "Опционально: можно отложить, если цель — быстро закрыть кампанию.",
-        "Это опциональное испытание, а не обязательный маршрут Акта 2",
-        "Лучше заходить, когда хватает урона, контроля и выживаемости"
+        "Speedrun-мета 0.5: отложить Trial до 28 уровня и использовать Barya из Deshar.",
+        "Если билд слабый — не насиловать Trial раньше времени; вернуться после Deshar/Spires."
       ],
       "after": [],
       "boss_tips": [],
       "xp_notes": [],
       "crafting_tips": [],
-      "next_zone_ru": "Костяные ямы",
+      "next_zone_ru": "Дредноут",
       "details": {
         "route": [
-          "Опционально: идти, если готов закрывать Trial of the Sekhemas / восхождение",
-          "Если билд слабый или мало выживаемости — лучше вернуться позже",
-          "Для быстрого прохождения не задерживаться, если испытание сейчас не закрываешь"
+          "Вернуться на 28 уровне",
+          "На входе вручную выбрать Djinn Barya 28 из Deshar, не дефолтную 22",
+          "Комнаты: Ritual > Chalice > Hourglass > Gauntlet",
+          "После Trial получить первое восхождение"
         ],
         "rewards": [
           "Прогресс восхождения через Trial of the Sekhemas"
@@ -2276,8 +2316,7 @@
         "xp_notes": [],
         "crafting_tips": [],
         "navigation": [
-          "Опционально: возвращаться только когда готов к испытанию.",
-          "После проверки/попытки возвращаться в основной маршрут Акта 2."
+          "0.5: Reforging Bench стоит у входа Trial, а Runic Ward добавляется к стартовой Honour."
         ]
       },
       "display": {
@@ -2301,7 +2340,7 @@
       "checklist": [
         {
           "id": "a2_bone_pits_task_1",
-          "text": "Найти реликвию с гиен",
+          "text": "Забрать Runestone / вызвать Farrow, если он стоит в зоне",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -2309,8 +2348,24 @@
         },
         {
           "id": "a2_bone_pits_task_2",
-          "text": "Убить босса",
-          "type": "boss",
+          "text": "Найти Sun Clan Relic с гиен / Goliaths",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a2_bone_pits_task_3",
+          "text": "Убить Iktab и Ekbab, забрать Mastodon Tusks",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a2_bone_pits_task_4",
+          "text": "Вернуться в караван и идти в Keth",
+          "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
@@ -2324,7 +2379,8 @@
         "Сброс зоны при поиске реликвии"
       ],
       "important": [
-        "Если реликвию не нашёл — проверить пропущенные стаи, не reset"
+        "Tall hyenas / Goliaths имеют лучший шанс дропа реликвии; если не выпала — проверить пропущенные стаи.",
+        "0.5: здесь один из Runestones цепочки Farrow для Act 2."
       ],
       "after": [],
       "boss_tips": [],
@@ -2333,12 +2389,14 @@
       "next_zone_ru": "Кет",
       "details": {
         "route": [
-          "Найти реликвию с гиен",
-          "Убить босса"
+          "Забрать Runestone / Farrow, если он стоит в зоне",
+          "Найти Sun Clan Relic с гиен",
+          "Убить Iktab и Ekbab, забрать Mastodon Tusks"
         ],
         "rewards": [
-          "Реликвия",
-          "Камень поддержки после города"
+          "Runestone цепочки Farrow",
+          "Sun Clan Relic",
+          "Mastodon Tusks"
         ],
         "skip": [
           "Сброс зоны при поиске реликвии"
@@ -2380,15 +2438,15 @@
       "checklist": [
         {
           "id": "a2_keth_task_1",
-          "text": "Забрать пассивки Кабалы",
-          "type": "reward",
-          "required": true,
+          "text": "Забрать Runestone / вызвать Farrow, если он стоит в зоне",
+          "type": "route_task",
+          "required": false,
           "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
         },
         {
           "id": "a2_keth_task_2",
-          "text": "Забрать гарантированный амулет",
+          "text": "Убивать змей до Kabala Clan Relic",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -2396,7 +2454,15 @@
         },
         {
           "id": "a2_keth_task_3",
-          "text": "Убивать змей ради реликвии +1 чарм",
+          "text": "Убить Kabala за +2 пассивных очка",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a2_keth_task_4",
+          "text": "Дальше идти в Затерянный город",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -2410,7 +2476,8 @@
       ],
       "skip": [],
       "important": [
-        "Змеи в Кете и следующей зоне — источник +1 charm relic"
+        "Если Mastodon Badlands закрыт до Keth, Kabala даёт камень умения выше уровнем — это заметный power spike.",
+        "0.5: здесь один из Runestones цепочки Farrow для Act 2."
       ],
       "after": [],
       "boss_tips": [],
@@ -2419,14 +2486,15 @@
       "next_zone_ru": "Затерянный город",
       "details": {
         "route": [
-          "Забрать пассивки Кабалы",
-          "Забрать гарантированный амулет",
-          "Убивать змей ради реликвии +1 чарм"
+          "Забрать Runestone / Farrow, если он стоит в зоне",
+          "Убивать змей до Kabala Clan Relic",
+          "Убить Kabala, Constrictor Queen за +2 пассивных очка",
+          "Дальше идти в Затерянный город"
         ],
         "rewards": [
+          "Runestone цепочки Farrow",
           "2 пассивных очка",
-          "Амулет",
-          "+1 charm relic"
+          "Kabala Clan Relic"
         ],
         "skip": [],
         "important": [
@@ -2784,32 +2852,40 @@
       "is_good_xp_zone": true,
       "checklist": [
         {
-          "id": "a2_deshar_task_1",
-          "text": "Обновить фласки до giant",
+          "id": "a2_deshar_early_task_1",
+          "text": "Забрать письмо Fallen Dekhara и позже сдать за +2 пассивных очка",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
         },
         {
-          "id": "a2_deshar_task_2",
-          "text": "Забрать письмо",
+          "id": "a2_deshar_early_task_2",
+          "text": "Взять Djinn Barya с двух Vultures / Watchful Twins под Trial 28",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
         },
         {
-          "id": "a2_deshar_task_3",
-          "text": "Взять барью у Watchful Twins, если нужна 2-я проба",
+          "id": "a2_deshar_early_task_3",
+          "text": "Забрать Runestone и открыть цепочку Skull of the Titan → Runic Vault",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
         },
         {
-          "id": "a2_deshar_task_4",
-          "text": "Искать сферу ремесленника у стены",
+          "id": "a2_deshar_early_task_4",
+          "text": "После Runic Vault / Farrow открыть Runic Inscriptions",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a2_deshar_early_task_5",
+          "text": "Идти в Path of Mourning",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -2825,7 +2901,8 @@
         "Trial, если восхождение не нужно"
       ],
       "important": [
-        "Перед уходом желательно быть около 24.5"
+        "Deshar — ключевой кусок Акта 2: письмо на пассивки, Djinn Barya 28 и Runic Vault для Farrow.",
+        "Для быстрого восхождения чаще проще взять Barya здесь и идти в Trial на 28, чем драться с Balbala раньше."
       ],
       "after": [],
       "boss_tips": [],
@@ -2834,15 +2911,15 @@
       "next_zone_ru": "Путь скорби",
       "details": {
         "route": [
-          "Обновить фласки до giant",
-          "Забрать письмо",
-          "Взять барью у Watchful Twins, если нужна 2-я проба",
-          "Искать сферу ремесленника у стены"
+          "Забрать письмо Fallen Dekhara и позже сдать за +2 пассивных очка",
+          "Убить двух Vultures / Watchful Twins за Djinn Barya 28",
+          "Runestone → Skull of the Titan → cave mouth → Runic Vault → Farrow → Runic Inscriptions",
+          "Идти в Path of Mourning"
         ],
         "rewards": [
-          "Письмо за 2 пассивных очка",
-          "Сфера ремесленника",
-          "Барья"
+          "Письмо за +2 пассивных очка",
+          "Djinn Barya 28",
+          "Runic Inscriptions / Farrow"
         ],
         "skip": [
           "Trial, если восхождение не нужно"
@@ -2858,7 +2935,7 @@
           "Artificer orb вдоль стены; barrier/twins можно взять под trial, если нужна лаба."
         ],
         "navigation": [
-          "Ищи письмо/труп и проход к Шпилям; здание прохода может читаться по ярким/оранжевым ориентирам."
+          "Trust overworld map: выход в Path of Mourning достаточно прямой; Runic Vault закрыть до ухода, если собираешь цепочку Farrow."
         ],
         "town_plan": [
           "Пока караван едет, сдавай письмо Шамбрин и чекай торговцев — так не стоишь в анимации."
@@ -3227,7 +3304,7 @@
       "checklist": [
         {
           "id": "a3_ziggurat_encampment_task_1",
-          "text": "После Занесённого песком болота из хаба идти в Развалины в джунглях → Ядовитые крипты",
+          "text": "Старт: Sandswept Marsh → Ziggurat Encampment → Jungle Ruins",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -3235,7 +3312,7 @@
         },
         {
           "id": "a3_ziggurat_encampment_task_2",
-          "text": "Дальше: Заражённые земли → Топи химеридов → Машинариум Джиквани → Святилище Джиквани",
+          "text": "Акт 3 0.5: Jungle Ruins → Venom Crypts → Infested Barrens → Chimeral Wetlands",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -3243,7 +3320,7 @@
         },
         {
           "id": "a3_ziggurat_encampment_task_3",
-          "text": "Финал: Водные пути Матлана → Болото Азак → Затопленный город → Расплавленные залы → Осквернённая вершина → Храм Копека → Чёрные палаты",
+          "text": "Дальше: Jiquani’s Machinarium → Sanctum → Jungle Return → Matlan Waterways → Azak Bog",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -3251,7 +3328,7 @@
         },
         {
           "id": "a3_ziggurat_encampment_task_4",
-          "text": "Храм Хаоса — опционально, заходить только если нужен Trial of Chaos / восхождение",
+          "text": "Финал: Drowned City → Molten Vault → Apex of Filth → Temple of Kopec → Utzaal/Aggorat → Black Chambers",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -3265,10 +3342,8 @@
         "Храм Хаоса в быстром маршруте, если не нужен Trial of Chaos"
       ],
       "important": [
-        "Акт 3 стартует с Занесённого песком болота; Лагерь на зиккурате — хаб после стартовой зоны.",
-        "Храм Хаоса — боковая опциональная зона.",
-        "0.5: после Ядовитых крипт маршрут ведёт в Заражённые земли и Топи химеридов; Болото Азак теперь закрывается позже через Водные пути Матлана.",
-        "0.5: Farrow в Акте 3 ведёт к Unique Verisium Runeforging; в 0.5.1 он ещё и показывает руны в зоне."
+        "0.5: порядок Акта 3 перестроен; Azak Bog теперь идёт после Matlan Waterways, не до Chimeral Wetlands.",
+        "Farrow в Акте 3 ведёт к Unique Verisium Runeforging; Act 3 также открывает Fate of the Vaal через 6 Beacons."
       ],
       "after": [],
       "boss_tips": [],
@@ -3277,9 +3352,10 @@
       "next_zone_ru": "Развалины в джунглях",
       "details": {
         "route": [
-          "Занесённое песком болото → Лагерь на зиккурате → Развалины в джунглях → Ядовитые крипты",
-          "Заражённые земли → Топи химеридов → Машинариум Джиквани → Святилище Джиквани",
-          "Водные пути Матлана → Болото Азак → Затопленный город → Расплавленные залы → Осквернённая вершина → Храм Копека → Чёрные палаты"
+          "Sandswept Marsh → Ziggurat Encampment → Jungle Ruins → Venom Crypts",
+          "Infested Barrens → Chimeral Wetlands → Jiquani’s Machinarium → Jiquani’s Sanctum",
+          "Jungle Return → Matlan Waterways → Azak Bog → The Drowned City",
+          "Molten Vault → Apex of Filth → Temple of Kopec → Utzaal/Aggorat → Black Chambers"
         ],
         "rewards": [
           "Хаб Акта 3 и быстрый ориентир по порядку зон"
@@ -3289,20 +3365,15 @@
         ],
         "important": [
           "Лагерь на зиккурате — хаб после стартовой зоны; из него дальше идти в Развалины в джунглях.",
-          "Если запутался, после хаба идти по карточкам Акта 3 сверху вниз; не считать Храм Хаоса обязательным прогрессом.",
-          "0.5: после Ядовитых крипт маршрут ведёт в Заражённые земли и Топи химеридов; Болото Азак теперь закрывается позже через Водные пути Матлана.",
-          "0.5: Farrow в Акте 3 ведёт к Unique Verisium Runeforging; в 0.5.1 он ещё и показывает руны в зоне."
+          "Если запутался, после хаба идти по карточкам Акта 3 сверху вниз; не считать Храм Хаоса обязательным прогрессом."
         ],
         "after": [],
         "boss_tips": [],
         "xp_notes": [],
         "crafting_tips": [],
         "navigation": [
-          "Храм Хаоса находится как боковая ветка: быстрое прохождение кампании обычно идёт мимо него.",
-          "0.5 порядок середины акта: Ядовитые крипты → Заражённые земли → Топи химеридов → Машинариум/Святилище Джиквани → Водные пути Матлана → Болото Азак."
-        ],
-        "opportunistic": [
-          "Runes of Aldur: если Farrow стоит в зоне, пользоваться его подсказкой — он указывает и раскрывает руны поблизости."
+          "0.5: Explorer camps в джунглях подсказывают следующую зону и открывают цель на миникарте.",
+          "Не учить старые лэйауты Акта 3 наизусть: после 0.5 маршруты и подсказки сильно переработаны."
         ]
       },
       "display": {
@@ -3326,15 +3397,15 @@
       "checklist": [
         {
           "id": "a3_jungle_ruins_task_1",
-          "text": "Убить обезьяну за пассивки",
-          "type": "boss",
-          "required": true,
+          "text": "Поговорить с исследователями: они показывают следующую цель на миникарте",
+          "type": "route_task",
+          "required": false,
           "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
         },
         {
           "id": "a3_jungle_ruins_task_2",
-          "text": "Забрать сундук с редкими перчатками у NPC",
+          "text": "Поговорить с Farrow и забрать Runestone 1/3 Акта 3",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -3342,7 +3413,7 @@
         },
         {
           "id": "a3_jungle_ruins_task_3",
-          "text": "Сделать лигу за алхимку, если нужна валюта",
+          "text": "Зажечь Vaal Beacon 1/6, если встретил красное кольцо/плотную пачку",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -3350,7 +3421,23 @@
         },
         {
           "id": "a3_jungle_ruins_task_4",
-          "text": "Если нашёл могилу — призвать Сервея и взять редкий пояс",
+          "text": "Убить Mighty Silverfist за +2 пассивных очка",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a3_jungle_ruins_task_5",
+          "text": "Забрать редкие перчатки/редкий пояс, если POI по пути",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a3_jungle_ruins_task_6",
+          "text": "Найти waypoint у Venom Crypts и войти в крипты",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -3365,7 +3452,9 @@
       ],
       "skip": [],
       "important": [
-        "Если в билде есть стан/контроль, используй его для безопасных окон по боссам"
+        "0.5: исследователи больше не просто торговцы — они показывают направление и цель на миникарте.",
+        "Runestone 1/3 Акта 3 нужен для Unique Verisium Runeforging.",
+        "Fate of the Vaal: первый Beacon обычно начинается здесь; всего нужно 6 Beacons в Акте 3."
       ],
       "after": [],
       "boss_tips": [],
@@ -3374,16 +3463,16 @@
       "next_zone_ru": "Ядовитые крипты",
       "details": {
         "route": [
-          "Убить обезьяну за пассивки",
-          "Забрать сундук с редкими перчатками у NPC",
-          "Сделать лигу за алхимку, если нужна валюта",
-          "Если нашёл могилу — призвать Сервея и взять редкий пояс"
+          "Исследователи → Farrow / Runestone 1/3 → Vaal Beacon 1/6",
+          "Mighty Silverfist за +2 пассивных очка",
+          "Troubled Camp / rare gloves и Servi rare belt брать только по пути",
+          "Waypoint у Venom Crypts → войти в крипты"
         ],
         "rewards": [
-          "Пассивные очки",
-          "Редкие перчатки",
-          "Сфера алхимии",
-          "Редкий пояс"
+          "+2 пассивных очка",
+          "Runestone 1/3 Акта 3",
+          "Vaal Beacon 1/6",
+          "Редкие перчатки/пояс по пути"
         ],
         "skip": [],
         "important": [
@@ -3394,8 +3483,8 @@
         "xp_notes": [],
         "crafting_tips": [],
         "navigation": [
-          "0.5: лагеря исследователей в джунглях указывают следующую зону и открывают направление на миникарте; вход в Водные пути Матлана теперь ожидается со стороны Развалин в джунглях.",
-          "Убить Mighty Silverfist/гориллу за пассивки; рядом может быть лагерь с гарантированными редкими перчатками и вендором."
+          "Explorer camps дают направление к следующей зоне и открывают destination на миникарте.",
+          "После крипт маршрут вернёт тебя к Infested Barrens; не ищи старый вход в Matlan/Azak здесь раньше времени."
         ],
         "opportunistic": [
           "Лига за алхимку/редкий пояс с могилы — брать, если по пути или нужен крафт."
@@ -3428,7 +3517,7 @@
       "checklist": [
         {
           "id": "a3_venom_crypts_task_1",
-          "text": "Забрать змеиный яд",
+          "text": "Забрать Orok Poison / змеиный яд и выйти в безопасную точку A Reprieve",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -3436,7 +3525,31 @@
         },
         {
           "id": "a3_venom_crypts_task_2",
-          "text": "Вернуть яд Сервею",
+          "text": "Забрать Runestone 2/3 Акта 3, если Farrow стоит в зоне",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a3_venom_crypts_task_3",
+          "text": "Зажечь Vaal Beacon 2/6, если встретил",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a3_venom_crypts_task_4",
+          "text": "Сдать яд Servi: выбор постоянный, чаще берут Stun Threshold",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a3_venom_crypts_task_5",
+          "text": "После сдачи идти в Infested Barrens через Jungle Ruins",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -3448,7 +3561,8 @@
       ],
       "skip": [],
       "important": [
-        "После снова проверить торговцев на свежую базу оружия"
+        "Выбор Servi постоянный: чаще всего берут +25% Stun Threshold; elemental ailment threshold — если билду нужно; mana regen редко.",
+        "Runestone 2/3 Акта 3 и Vaal Beacon 2/6 не пропускать, если они на маршруте."
       ],
       "after": [],
       "boss_tips": [],
@@ -3457,8 +3571,10 @@
       "next_zone_ru": "Заражённые земли",
       "details": {
         "route": [
-          "Забрать змеиный яд",
-          "Вернуть яд Сервею"
+          "Забрать Orok Poison / змеиный яд",
+          "Runestone 2/3 Акта 3",
+          "Vaal Beacon 2/6",
+          "Сдать яд Servi и идти в Infested Barrens"
         ],
         "rewards": [
           "Пассивная награда — часто удобно Stun Threshold"
@@ -3472,8 +3588,8 @@
         "xp_notes": [],
         "crafting_tips": [],
         "navigation": [
-          "0.5: после получения яда держать путь обратно через Развалины в джунглях к Заражённым землям; Водные пути Матлана открываются позже после Святилища Джиквани.",
-          "Собрать яд/бутылку и сдать Серви; выбор постоянного бонуса потом не меняется."
+          "После яда искать safe zone A Reprieve / выход, затем сдавать Servi.",
+          "0.5: после крипт идти к Infested Barrens; Matlan и Azak идут позже."
         ],
         "opportunistic": [
           "Саркофаг/третий саппорт брать, если попался по пути."
@@ -3504,7 +3620,7 @@
       "checklist": [
         {
           "id": "a3_infested_barrens_task_1",
-          "text": "Взять путевую точку",
+          "text": "Взять waypoint и поговорить с Alva",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -3512,7 +3628,7 @@
         },
         {
           "id": "a3_infested_barrens_task_2",
-          "text": "Пройти к Топям химеридов",
+          "text": "Зажечь Vaal Beacon 3/6, если встретил",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -3520,8 +3636,16 @@
         },
         {
           "id": "a3_infested_barrens_task_3",
-          "text": "На 31 уровне обновить камни до 9 уровня и усилить основной сетап по боссам",
-          "type": "boss",
+          "text": "Забрать редкие ботинки у Troubled Camp / Sebastian, если по пути",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a3_infested_barrens_task_4",
+          "text": "Идти в Chimeral Wetlands",
+          "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
@@ -3533,7 +3657,8 @@
       ],
       "skip": [],
       "important": [
-        "Если нужен опыт — зайти в пещеру по пути"
+        "0.5: Infested Barrens идёт после Venom Crypts и перед Chimeral Wetlands.",
+        "Старый поиск Azak/Matlan отсюда больше не считать основным маршрутом."
       ],
       "after": [],
       "boss_tips": [],
@@ -3542,9 +3667,10 @@
       "next_zone_ru": "Топи химеридов",
       "details": {
         "route": [
-          "Взять путевую точку",
-          "Пройти к Топям химеридов",
-          "На 31 уровне обновить камни до 9 уровня и усилить основной сетап по боссам"
+          "Waypoint + Alva",
+          "Vaal Beacon 3/6",
+          "Troubled Camp / rare boots по пути",
+          "Выход в Chimeral Wetlands"
         ],
         "rewards": [
           "Маршрут дальше",
@@ -3559,7 +3685,7 @@
         "xp_notes": [],
         "crafting_tips": [],
         "navigation": [
-          "0.5: старый поиск Болота Азак и Водных путей Матлана через Заражённые земли больше не считать основным маршрутом; после путевой точки держи курс к Топям химеридов."
+          "0.5: идти к Chimeral Wetlands; Azak Bog закрывается позже через Matlan Waterways."
         ],
         "xp_strategy": [
           "Если не хватает XP, можно зайти в пещеру/плотные зоны, но не превращать это в полный клир."
@@ -3594,15 +3720,39 @@
       "checklist": [
         {
           "id": "a3_chimera_wetlands_task_1",
-          "text": "Пройти к боссу",
-          "type": "boss",
+          "text": "Зажечь Vaal Beacon 4/6, если встретил",
+          "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
         },
         {
           "id": "a3_chimera_wetlands_task_2",
-          "text": "Использовать подготовку/дебафф перед основным комбо",
+          "text": "Ravaged Camp / Lost Temple Logbook открывает Temple of Chaos",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a3_chimera_wetlands_task_3",
+          "text": "Trial of Chaos взять waypoint и вернуться, если восхождение пока не делаешь",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a3_chimera_wetlands_task_4",
+          "text": "Убить Xyclucian, взять Inscribed Ultimatum",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a3_chimera_wetlands_task_5",
+          "text": "Войти в Jiquani’s Machinarium за боссом",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -3617,7 +3767,8 @@
         "Мелкие гарантированные награды, если не по пути"
       ],
       "important": [
-        "Trial of Chaos обычно скипается"
+        "Trial of Chaos можно отложить; главная линия — убить Xyclucian и войти в Jiquani’s Machinarium.",
+        "Vaal Beacon 4/6 — часть Fate of the Vaal в Акте 3."
       ],
       "after": [],
       "boss_tips": [],
@@ -3626,8 +3777,10 @@
       "next_zone_ru": "Машинариум Джиквани",
       "details": {
         "route": [
-          "Пройти к боссу",
-          "Использовать подготовку/дебафф перед основным комбо"
+          "Vaal Beacon 4/6",
+          "Ravaged Camp / Lost Temple Logbook, если по пути",
+          "Trial of Chaos waypoint → вернуться",
+          "Xyclucian → Jiquani’s Machinarium"
         ],
         "rewards": [
           "Прогресс к Механарию"
@@ -3646,7 +3799,7 @@
         "xp_notes": [],
         "crafting_tips": [],
         "opportunistic": [
-          "Trial of Chaos и мелкие гарантированные награды обычно можно скипнуть, если не по пути."
+          "Trial of Chaos и мелкие POI брать по готовности; если нужен только прогресс — не разворачивать зону ради амулета/случайной редкой вещи."
         ],
         "time_saves": [
           "Если нужен только прогресс — не разворачивать зону ради амулета/случайной редкой вещи."
@@ -3881,7 +4034,8 @@
       ],
       "skip": [],
       "important": [
-        "Босс огромный — AoE и стабильный урон попадают отлично"
+        "Босс огромный — AoE и стабильный урон попадают отлично",
+        "0.5: после Sanctum вернуться в Jungle Ruins и вставить Large Soul Core в Stone Altar, чтобы поднять Matlan Waterways."
       ],
       "after": [],
       "boss_tips": [],
@@ -3890,10 +4044,11 @@
       "next_zone_ru": "Водные пути Матлана",
       "details": {
         "route": [
-          "Пробежать в одну сторону до КП, сброситься и проверить другую",
-          "Поставить ядра",
-          "Вернуться к старту и убить босса",
-          "Забрать большое ядро души"
+          "Поставить 2 Medium Soul Cores в генераторы",
+          "Вернуться к старту и убить Zicoatl, Warden of the Core",
+          "Забрать Large Soul Core",
+          "Зажечь Vaal Beacon 5/6, если встретил",
+          "Вернуться в Jungle Ruins и открыть Matlan Waterways через Stone Altar"
         ],
         "rewards": [
           "Большое ядро души для прогресса"
@@ -3912,7 +4067,8 @@
           "Пробежать в одну сторону до чекпоинта, сброситься, проверить другую; после второго ядра вернуться к старту на босса."
         ],
         "navigation": [
-          "0.5: после Святилища вернуться в Развалины в джунглях, использовать Large Soul Core на каменном алтаре и открыть Водные пути Матлана."
+          "0.5: после Sanctum возвращайся не в Drowned City, а в Jungle Ruins; Large Soul Core открывает Matlan Waterways через Stone Altar.",
+          "Paquate’s Mechanism / corruption altar можно использовать по пути, но не ломать темп."
         ]
       },
       "display": {
@@ -3944,7 +4100,7 @@
         },
         {
           "id": "a3_matlan_waterways_task_2",
-          "text": "Финальная часть уже осушена — старый трюк с порталом не нужен",
+          "text": "Финальная часть уже осушена — старый portal-skip не нужен",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -3952,7 +4108,23 @@
         },
         {
           "id": "a3_matlan_waterways_task_3",
-          "text": "После Водных путей проверить новый выход к Болоту Азак",
+          "text": "Зажечь Vaal Beacon 6/6 и зайти в Vaal Ruins, если портал открылся",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a3_matlan_waterways_task_4",
+          "text": "У входа в Azak Bog можно призвать Servi с ravaged corpse за rare belt",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a3_matlan_waterways_task_5",
+          "text": "Войти в Azak Bog side entrance",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -3964,7 +4136,8 @@
       ],
       "skip": [],
       "important": [
-        "0.5: рычаги заменены нажимными плитами, финальная часть уже осушена, трюк с порталом у последнего рычага больше не нужен."
+        "0.5: рычаги заменены нажимными плитами, финальная часть уже осушена, старый portal-skip больше не нужен.",
+        "Fate of the Vaal: Beacon 6/6 завершает набор Акта 3; если портал открылся — лучше зайти сразу, чтобы не словить пропажу входа."
       ],
       "after": [],
       "boss_tips": [],
@@ -3973,9 +4146,10 @@
       "next_zone_ru": "Болото Азак",
       "details": {
         "route": [
-          "Пройти по нажимным плитам вместо старых рычагов",
-          "Финальная часть уже осушена — старый трюк с порталом не нужен",
-          "После Водных путей проверить новый выход к Болоту Азак"
+          "Pressure plates → финальная осушенная часть",
+          "Vaal Beacon 6/6 → Vaal Ruins, если портал открылся",
+          "Servi/ravaged corpse у входа в Azak Bog, если по пути",
+          "Azak Bog side entrance"
         ],
         "rewards": [
           "Доступ к Коронному городу"
@@ -3992,7 +4166,8 @@
           "0.5: старый портал перед последним рычагом больше не нужен — финальная часть Водных путей уже осушена."
         ],
         "navigation": [
-          "0.5: после Святилища Джиквани вернуться в Развалины в джунглях, поднять вход в Водные пути Матлана через Large Soul Core и каменный алтарь; внутри пройти по нажимным плитам и взять боковой выход к Болоту Азак."
+          "0.5: идти через Matlan к Azak Bog; старый поиск Азак в Infested Barrens не использовать.",
+          "Если Vaal portal появился после 6-го Beacon — зайти сразу, потом вернуться к маршруту."
         ],
         "time_saves": [
           "0.5: не трать время на старый трюк с порталом у последнего рычага — механика рычагов заменена."
@@ -4019,7 +4194,7 @@
       "checklist": [
         {
           "id": "a3_azak_bog_task_1",
-          "text": "Найти ритуал огненной кожи / плотную открытую область",
+          "text": "Поговорить с Farrow и забрать Runestone 3/3 Акта 3",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -4027,7 +4202,7 @@
         },
         {
           "id": "a3_azak_bog_task_2",
-          "text": "Фармить плотность: зачистить, воскреснуть на чекпоинте и повторить",
+          "text": "Если нужен XP — сделать Flameskin rituals / плотные magic packs",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -4035,15 +4210,31 @@
         },
         {
           "id": "a3_azak_bog_task_3",
-          "text": "После фарма убить босса",
-          "type": "boss",
+          "text": "Убить Ignagduk, the Bog Witch",
+          "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
         },
         {
           "id": "a3_azak_bog_task_4",
-          "text": "Сдать призрачное копьё Сервею за оберег",
+          "text": "Использовать Gemrot Skull за +30 духа и камень духа",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a3_azak_bog_task_5",
+          "text": "Сдать Ghastly Spear Servi за charm choice",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a3_azak_bog_task_6",
+          "text": "После 3 Runestones вернуться в Infested Barrens → Mystic Refuge → Farrow / Unique Runeforging",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -4057,8 +4248,9 @@
       ],
       "skip": [],
       "important": [
-        "Фармить хотя бы до 31.5, комфортно до 32+; можно воскреснуть на чекпоинте, чтобы сбросить темп боя и перезайти безопаснее",
-        "0.5: вход в Болото Азак идёт боковой веткой от Водных путей Матлана; после босса/Runestone возвращайся в город и продолжай в Затопленный город."
+        "0.5: Azak Bog теперь side-zone после Matlan Waterways; это не старая ветка до Chimeral Wetlands.",
+        "Runestone 3/3 завершает цепочку Act 3 Farrow; после неё открыть Mystic Refuge и Unique Verisium Runeforging.",
+        "Flameskin rituals — хороший догон XP, но не превращать зону в бесконечный фарм без причины."
       ],
       "after": [],
       "boss_tips": [],
@@ -4067,20 +4259,22 @@
       "next_zone_ru": "Затопленный город",
       "details": {
         "route": [
-          "Найти ритуал огненной кожи / плотную открытую область",
-          "Фармить плотность: зачистить, воскреснуть на чекпоинте и повторить",
-          "После фарма убить босса",
-          "Сдать призрачное копьё Сервею за оберег"
+          "Farrow / Runestone 3/3",
+          "Flameskin rituals / XP по необходимости",
+          "Ignagduk → Gemrot Skull → +30 духа",
+          "Ghastly Spear → Servi / charm choice",
+          "3 Runestones → Infested Barrens → Mystic Refuge → Unique Verisium Runeforging"
         ],
         "rewards": [
-          "Очень быстрый опыт",
-          "Оберег от Сервея",
-          "Gemrot skull"
+          "Runestone 3/3 Акта 3",
+          "+30 духа и камень духа",
+          "Charm choice от Servi",
+          "Unique Verisium Runeforging"
         ],
         "skip": [],
         "important": [
           "Фармить хотя бы до 31.5, комфортно до 32+; можно воскреснуть на чекпоинте, чтобы сбросить темп боя и перезайти безопаснее",
-          "0.5: вход в Болото Азак идёт боковой веткой от Водных путей Матлана; после босса/Runestone возвращайся в город и продолжай в Затопленный город."
+          "0.5: вход в Болото Азак ожидается после Водных путей Матлана, а не через долгий поиск в Заражённых землях."
         ],
         "after": [],
         "boss_tips": [],
@@ -4090,7 +4284,8 @@
           "Flame Skin ritual — один из лучших догонов XP: можно чистить, ресаться на чекпоинте и повторять."
         ],
         "navigation": [
-          "0.5: Болото Азак — боковая ветка Водных путей Матлана; после фарма, Ignagduk и Runestone возвращайся в город, затем в Затопленный город."
+          "0.5: вход в Azak Bog искать от Matlan Waterways; после закрытия вернуться в город/к Drowned City по маршруту.",
+          "Mystic Refuge открывается после трёх Act 3 Runestones — это отдельная короткая цепочка Farrow."
         ],
         "opportunistic": [
           "Лагерь с редкими ботинками/вендором оружия — взять, если рядом."
@@ -4405,7 +4600,7 @@
       "boss_tips": [],
       "xp_notes": [],
       "crafting_tips": [],
-      "next_zone_ru": "Ваальская часть / жертвенное сердце",
+      "next_zone_ru": "Утцааль / Аггорат",
       "details": {
         "route": [
           "На 2 этаже сначала проверить дальний угол",
@@ -4446,8 +4641,8 @@
     {
       "id": "a3_vaal_heart",
       "act": 3,
-      "zone_en": "Vaal Pyre / Sacrificial Heart",
-      "zone_ru": "Ваальская часть / жертвенное сердце",
+      "zone_en": "Utzaal / Aggorat",
+      "zone_ru": "Утцааль / Аггорат",
       "aliases": [],
       "recommended_level": 40,
       "recommended_level_label": "40+",
@@ -4455,7 +4650,7 @@
       "checklist": [
         {
           "id": "a3_vaal_heart_task_1",
-          "text": "Убивать всех Голиафов",
+          "text": "В Utzaal держаться мощёной дороги и убить Viper Napuatzi",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -4463,7 +4658,7 @@
         },
         {
           "id": "a3_vaal_heart_task_2",
-          "text": "Добыть жертвенное сердце",
+          "text": "В Aggorat искать Vaal Goliaths с канистрой на плече — с них падает Sacrificial Heart",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -4471,7 +4666,7 @@
         },
         {
           "id": "a3_vaal_heart_task_3",
-          "text": "Найти алтарь во второй половине зоны",
+          "text": "Найти Sacrificial Altar в верхней части карты",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -4479,7 +4674,15 @@
         },
         {
           "id": "a3_vaal_heart_task_4",
-          "text": "Забрать камень поддержки 3 тира",
+          "text": "Положить Sacrificial Heart, ударить dagger и забрать +2 пассивных очка",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a3_vaal_heart_task_5",
+          "text": "Войти в Black Chambers",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -4492,8 +4695,8 @@
       ],
       "skip": [],
       "important": [
-        "Сердце может падать только с Голиафов во второй половине; на Vaal Pyre использовать доступный контроль/стан-окна",
-        "0.5: Fate of the Vaal теперь core — в Акте 3 встречается первая цепочка Ancient Beacons; если видишь маяки по маршруту, активируй их, не воспринимай как старую временную лигу."
+        "Sacrificial Heart падает не с любых мобов, а с Vaal Goliaths / больших ваальских мобов с канистрой.",
+        "В Aggorat край пирамиды и голос глашатая помогают держать направление к финалу."
       ],
       "after": [],
       "boss_tips": [],
@@ -4502,20 +4705,17 @@
       "next_zone_ru": "Чёрные палаты",
       "details": {
         "route": [
-          "Убивать всех Голиафов",
-          "Добыть жертвенное сердце",
-          "Найти алтарь во второй половине зоны",
-          "Забрать камень поддержки 3 тира"
+          "Utzaal: дорога → Viper Napuatzi",
+          "Aggorat: Vaal Goliaths → Sacrificial Heart",
+          "Sacrificial Altar → dagger → +2 пассивных очка",
+          "Black Chambers"
         ],
         "rewards": [
-          "2 пассивных очка",
-          "Камень поддержки 3 тира",
-          "Сердце отнести к алтарю и заколоть ножом рядом — +2 пассивки."
+          "+2 пассивных очка за Sacrificial Heart"
         ],
         "skip": [],
         "important": [
-          "Сердце может падать только с Голиафов во второй половине; на Vaal Pyre использовать доступный контроль/стан-окна",
-          "0.5: Fate of the Vaal теперь core — в Акте 3 встречается первая цепочка Ancient Beacons; если видишь маяки по маршруту, активируй их, не воспринимай как старую временную лигу."
+          "Сердце может падать только с Голиафов во второй половине; на Vaal Pyre использовать доступный контроль/стан-окна"
         ],
         "after": [],
         "boss_tips": [
@@ -4524,10 +4724,8 @@
         "xp_notes": [],
         "crafting_tips": [],
         "navigation": [
-          "Убивать всех Голиафов: sacrificial heart часто нужен именно из второй половины зоны."
-        ],
-        "opportunistic": [
-          "Ancient Beacons / Energised Crystals делать, если они на маршруте: это теперь core-система Fate of the Vaal."
+          "Utzaal зеркалит Drowned City: держись дороги до Viper.",
+          "В Aggorat слушай направление/ориентируйся по краю пирамиды; алтарь часто в верхней части карты."
         ]
       },
       "display": {
@@ -4622,13 +4820,13 @@
       "aliases": [
         "Кингсмарк"
       ],
-      "recommended_level": 40,
-      "recommended_level_label": "Акт 4 / хаб",
+      "recommended_level": 42,
+      "recommended_level_label": "42 / хаб",
       "is_good_xp_zone": false,
       "checklist": [
         {
           "id": "a4_kingsmarch_task_1",
-          "text": "Открыть корабль и идти в Кеджский залив",
+          "text": "Поговорить с Doryani, Alva/Rog, Tujen и Makoru",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -4636,7 +4834,7 @@
         },
         {
           "id": "a4_kingsmarch_task_2",
-          "text": "Дальше закрывать острова по порядку: Остров Рода → Остров Вакапану → Заброшенная тюрьма → Остров криков → Глаз Хинекоры → Арастас → Нгакану",
+          "text": "Поговорить с Farrow: Act 4 chain ведёт к 13 Ancient Runes",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -4644,7 +4842,7 @@
         },
         {
           "id": "a4_kingsmarch_task_3",
-          "text": "Мыс грабителя — опционально, делать только если собрана карта сокровищ и не ломаешь темп",
+          "text": "Начать корабль с Whakapanu Island",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -4652,8 +4850,16 @@
         },
         {
           "id": "a4_kingsmarch_task_4",
-          "text": "Если Shark Fin остался после Вакапану — сдать Каймане на корабле Каруи",
-          "type": "reward",
+          "text": "Собрать 4 Torn Map Pieces на островах; Plunder’s Point открыть после сдачи всех 4 Makoru",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a4_kingsmarch_task_5",
+          "text": "Порядок 0.5: Whakapanu → Shrike → Abandoned Prison → Isle of Kin → Eye/Halls → Kedge/Journey → Plunder → Arastas → Ngakanu",
+          "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
@@ -4666,20 +4872,21 @@
         "Не зависать в хабе: выбрать следующий остров и сразу отплывать"
       ],
       "important": [
-        "Порядок корабля: Кеджский залив → Остров Рода → Остров Вакапану → Заброшенная тюрьма → Остров криков → Глаз Хинекоры → Арастас → Мыс грабителя (опционально) → Нгакану",
-        "0.5: Shark Fin с Вакапану даёт вечный Kaom/Rakiata бафф; если не сдал в Нгакану, проверить корабль Каруи в Кингсмарше.",
-        "0.5: Farrow в Акте 4 открывает Ancient Runes; после 0.5.1 он подсвечивает руны в тех зонах, где находится."
+        "0.5: старт Акта 4 через Whakapanu Island; старый старт через Kedge Bay больше не держим основным маршрутом.",
+        "Farrow в Акте 4 открывает Ancient Runes через Plunder’s Point / Deserted Post; не скипать эту цепочку.",
+        "Rog не рулит чартером корабля в 0.5: маршрут ведёт через Makoru."
       ],
       "after": [],
       "boss_tips": [],
       "xp_notes": [],
       "crafting_tips": [],
-      "next_zone_ru": "Кеджский залив",
+      "next_zone_ru": "Остров Вакапану",
       "details": {
         "route": [
-          "С корабля сначала идти в Кеджский залив",
-          "Потом закрывать основные острова: Остров Рода → Остров Вакапану → Заброшенная тюрьма → Остров криков → Глаз Хинекоры → Арастас → Нгакану",
-          "Мыс грабителя оставить как опциональную Expedition-точку после карты сокровищ"
+          "Kingsmarch → Whakapanu Island → Singing Caverns → Shoreline Hideout",
+          "Shrike Island → Abandoned Prison → Solitary Confinement → Isle of Kin → Volcanic Warrens",
+          "Eye of Hinekora → Halls of the Dead → Trial of Ancestors → Kedge Bay → Journey’s End",
+          "4 Torn Map Pieces → Plunder’s Point / Deserted Post / Farrow → Arastas → Excavation → Ngakanu → Heart of the Tribe"
         ],
         "rewards": [
           "Хаб корабля Акта 4"
@@ -4689,21 +4896,15 @@
           "Не возвращаться в уже закрытые острова без причины"
         ],
         "important": [
-          "Кингсмарш — только хаб: сам маршрут по зонам ниже остаётся прежним, эта карточка нужна как памятка порядка отплытия.",
-          "0.5: Shark Fin с Вакапану даёт вечный Kaom/Rakiata бафф; если не сдал в Нгакану, проверить корабль Каруи в Кингсмарше.",
-          "0.5: Farrow в Акте 4 открывает Ancient Runes; после 0.5.1 он подсвечивает руны в тех зонах, где находится."
+          "Кингсмарш — только хаб: сам маршрут по зонам ниже остаётся прежним, эта карточка нужна как памятка порядка отплытия."
         ],
         "after": [],
         "boss_tips": [],
         "xp_notes": [],
         "crafting_tips": [],
         "navigation": [
-          "Если запутался на карте Акта 4: порядок корабля — Кеджский залив, Остров Рода, Остров Вакапану, Заброшенная тюрьма, Остров криков, Глаз Хинекоры, Арастас, Нгакану.",
-          "Мыс грабителя отмечать как боковую точку: идти туда только после Torn Map Pieces / карты сокровищ.",
-          "После Вакапану/Нгакану не забыть Кайману: Shark Fin больше не мусорная опционалка, а постоянный defensive choice."
-        ],
-        "opportunistic": [
-          "Runes of Aldur: если Farrow стоит в зоне, пользоваться его подсказкой — он указывает и раскрывает руны поблизости."
+          "Если запутался на карте Акта 4: сначала Whakapanu, потом Shrike/Prison/Isle of Kin, затем Eye/Halls, потом Kedge/Journey, затем Plunder/Arastas/Ngakanu.",
+          "Plunder’s Point доступен после сдачи 4 Torn Map Pieces; это не мусорная опционалка в 0.5, а цепочка Ancient Runes."
         ]
       },
       "display": {
@@ -4718,18 +4919,35 @@
     {
       "id": "a4_kids_bay",
       "act": 4,
-      "zone_en": "Kid's Bay",
+      "zone_en": "Kedge Bay",
       "zone_ru": "Кеджский залив",
       "aliases": [
-        "Kedge Bay"
+        "Kedge Bay",
+        "Kid's Bay"
       ],
-      "recommended_level": 40,
-      "recommended_level_label": "40+",
+      "recommended_level": 47,
+      "recommended_level_label": "47-48",
       "is_good_xp_zone": false,
       "checklist": [
         {
           "id": "a4_kids_bay_task_1",
-          "text": "Сразу идти в Конец странствия",
+          "text": "Найти Dead Man’s Chest / Smuggler’s Stash и забрать Torn Map Piece, если по пути",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a4_kids_bay_task_2",
+          "text": "Abandoned Ship / Tidal Cay / Doran — только если рядом и нужен loot",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a4_kids_bay_task_3",
+          "text": "Идти в Journey’s End",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -4740,7 +4958,9 @@
         "Переход к капитану Хартлину"
       ],
       "skip": [],
-      "important": [],
+      "important": [
+        "Kedge Bay в 0.5 идёт после Halls/Trial of Ancestors, не первым островом Акта 4."
+      ],
       "after": [],
       "boss_tips": [],
       "xp_notes": [],
@@ -4748,10 +4968,13 @@
       "next_zone_ru": "Конец странствия",
       "details": {
         "route": [
-          "Сразу идти в Конец странствия"
+          "Torn Map Piece по пути",
+          "Side POI только если рядом",
+          "Journey’s End"
         ],
         "rewards": [
-          "Переход к капитану Хартлину"
+          "Torn Map Piece",
+          "Переход в Journey’s End"
         ],
         "skip": [],
         "important": [],
@@ -4786,13 +5009,13 @@
       "aliases": [
         "Конец пути"
       ],
-      "recommended_level": 40,
-      "recommended_level_label": "40+",
+      "recommended_level": 48,
+      "recommended_level_label": "48-49",
       "is_good_xp_zone": false,
       "checklist": [
         {
           "id": "a4_journeys_end_task_1",
-          "text": "Найти капитана Хартлина и взять Виридиан",
+          "text": "Поговорить с Tujen",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -4800,7 +5023,7 @@
         },
         {
           "id": "a4_journeys_end_task_2",
-          "text": "TP в город, обменять Виридиан у Деннига на шипы",
+          "text": "Убить Captain Harlin и забрать Verisium",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -4808,7 +5031,7 @@
         },
         {
           "id": "a4_journeys_end_task_3",
-          "text": "Вернуться и пройти Делириум",
+          "text": "Town → Dannig → Verisium Spikes",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -4816,8 +5039,24 @@
         },
         {
           "id": "a4_journeys_end_task_4",
-          "text": "Убить Омнифобию",
-          "type": "boss",
+          "text": "Вернуться к Freya / Totem и убить Omniphobia",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a4_journeys_end_task_5",
+          "text": "Сдать Tujen за +2 пассивных очка",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a4_journeys_end_task_6",
+          "text": "Если собраны 4 Torn Map Pieces — открыть Plunder’s Point у Makoru",
+          "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
@@ -4829,24 +5068,27 @@
       ],
       "skip": [],
       "important": [
-        "Делириум-валюту сохранить под амулет из Поющих пещер"
+        "Omniphobia теперь даёт +2 пассивных очка через Tujen; не уходить без сдачи.",
+        "После Journey’s End проверить 4 Torn Map Pieces: они нужны для Plunder’s Point и Ancient Runes цепочки Farrow."
       ],
       "after": [],
       "boss_tips": [],
       "xp_notes": [],
       "crafting_tips": [],
-      "next_zone_ru": "Остров Рода",
+      "next_zone_ru": "Мыс грабителя",
       "details": {
         "route": [
-          "Найти капитана Хартлина и взять Виридиан",
-          "TP в город, обменять Виридиан у Деннига на шипы",
-          "Вернуться и пройти Делириум",
-          "Убить Омнифобию"
+          "Tujen",
+          "Captain Harlin → Verisium",
+          "Dannig → Verisium Spikes",
+          "Freya / Totem → Omniphobia",
+          "Tujen → +2 пассивных очка",
+          "4 Torn Map Pieces → Plunder’s Point"
         ],
         "rewards": [
-          "2 пассивных очка",
-          "Делириум-валюта",
-          "Omniphobia/Делириум — +2 пассивки и делириум-валюта."
+          "+2 пассивных очка",
+          "Verisium / Verisium Spikes",
+          "Переход к Plunder’s Point"
         ],
         "skip": [],
         "important": [
@@ -4878,21 +5120,45 @@
       "zone_en": "Isle of Kin",
       "zone_ru": "Остров Рода",
       "aliases": [],
-      "recommended_level": 41,
-      "recommended_level_label": "41+",
+      "recommended_level": 45,
+      "recommended_level_label": "45",
       "is_good_xp_zone": true,
       "checklist": [
         {
-          "id": "a4_isle_kin_task_1",
-          "text": "Искать окаменевшую формацию по внешним стенам",
+          "id": "a4_isle_of_kin_task_1",
+          "text": "Найти Flayed Sailor / Torn Map Piece, если по пути",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
         },
         {
-          "id": "a4_isle_kin_task_2",
-          "text": "Забрать большую руну с Blind Beast, если встретил",
+          "id": "a4_isle_of_kin_task_2",
+          "text": "Doomed Mine / Fossilised Formation — взять Lesser Jeweller’s Orb, если рядом",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a4_isle_of_kin_task_3",
+          "text": "Beast Pen: убить Mimok the Enslaved за Tier 4 Support Gem",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a4_isle_of_kin_task_4",
+          "text": "Primal Arena / Blind Beast — Greater Blank Rune по желанию",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a4_isle_of_kin_task_5",
+          "text": "Войти в Volcanic Warrens",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -4904,7 +5170,9 @@
         "Большая руна"
       ],
       "skip": [],
-      "important": [],
+      "important": [
+        "Mimok the Enslaved в Beast Pen даёт гарантированный Tier 4 Support Gem — хороший апгрейд сетапа."
+      ],
       "after": [],
       "boss_tips": [],
       "xp_notes": [],
@@ -4912,12 +5180,15 @@
       "next_zone_ru": "Вулканические лабиринты",
       "details": {
         "route": [
-          "Искать окаменевшую формацию по внешним стенам",
-          "Забрать большую руну с Blind Beast, если встретил"
+          "Torn Map Piece по пути",
+          "Beast Pen → Mimok / Tier 4 Support Gem",
+          "Primal Arena / Blind Beast по желанию",
+          "Volcanic Warrens"
         ],
         "rewards": [
-          "Малая сфера ювелира",
-          "Большая руна"
+          "Tier 4 Support Gem",
+          "Torn Map Piece",
+          "Greater Blank Rune, если Blind Beast по пути"
         ],
         "skip": [],
         "important": [],
@@ -4947,21 +5218,21 @@
       "zone_en": "Volcanic Warrens",
       "zone_ru": "Вулканические лабиринты",
       "aliases": [],
-      "recommended_level": 41,
-      "recommended_level_label": "41+",
+      "recommended_level": 45,
+      "recommended_level_label": "45-46",
       "is_good_xp_zone": false,
       "checklist": [
         {
           "id": "a4_volcanic_warrens_task_1",
-          "text": "Убить двух големов",
-          "type": "boss",
+          "text": "Volcanic Nest / Magma Twins: kill order даёт Ruby или Topaz Ring",
+          "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
         },
         {
           "id": "a4_volcanic_warrens_task_2",
-          "text": "Выбрать сильное кольцо: огненный последним = рубиновое, молниевый последним = топазовое",
+          "text": "Убить Krutog, Lord of Kin",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -4969,8 +5240,8 @@
         },
         {
           "id": "a4_volcanic_warrens_task_3",
-          "text": "Убить Крука",
-          "type": "boss",
+          "text": "Вернуться в Kingsmarch и идти к Eye of Hinekora",
+          "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
@@ -4981,22 +5252,22 @@
       ],
       "skip": [],
       "important": [
-        "Одна из лучших optional rewards кампании — не скипать"
+        "Magma Twins: убьёшь Lightning первым — Ruby Ring; Fire первым — Topaz Ring."
       ],
       "after": [],
       "boss_tips": [],
       "xp_notes": [],
       "crafting_tips": [],
-      "next_zone_ru": "Остров Вакапану",
+      "next_zone_ru": "Глаз Хинекоры",
       "details": {
         "route": [
-          "Убить двух големов",
-          "Выбрать сильное кольцо: огненный последним = рубиновое, молниевый последним = топазовое",
-          "Убить Крука"
+          "Magma Twins по необходимости",
+          "Krutog, Lord of Kin",
+          "Kingsmarch → Eye of Hinekora"
         ],
         "rewards": [
-          "Очень сильное кольцо с quality",
-          "Два голема: кого убьёшь последним, такое кольцо и получишь — огненный последним → ruby, молниевый → topaz."
+          "Ruby/Topaz Ring по kill order",
+          "Прогресс к Eye of Hinekora"
         ],
         "skip": [],
         "important": [
@@ -5026,36 +5297,52 @@
       "zone_ru": "Остров Вакапану",
       "aliases": [],
       "recommended_level": 42,
-      "recommended_level_label": "42+",
+      "recommended_level_label": "42-43",
       "is_good_xp_zone": false,
       "checklist": [
         {
-          "id": "a4_whakapanu_task_1",
-          "text": "Найти Акулью яму и убить Great White One",
-          "type": "boss",
-          "required": true,
+          "id": "a4_whakapanu_island_task_1",
+          "text": "Найти Petrified Pirate / Torn Map Piece, если попался по берегу",
+          "type": "route_task",
+          "required": false,
           "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
         },
         {
-          "id": "a4_whakapanu_task_2",
-          "text": "Подобрать Shark Fin / акульий плавник",
-          "type": "reward",
-          "required": true,
+          "id": "a4_whakapanu_island_task_2",
+          "text": "Обязательно зайти в Shark Pit и убить Great White One",
+          "type": "route_task",
+          "required": false,
           "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
         },
         {
-          "id": "a4_whakapanu_task_3",
-          "text": "Позже сдать плавник Каймане в Нгакану или на корабле в Кингсмарше",
-          "type": "reward",
-          "required": true,
+          "id": "a4_whakapanu_island_task_3",
+          "text": "Подобрать Shark Fin — теперь это постоянный бафф, не скипать",
+          "type": "route_task",
+          "required": false,
           "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
         },
         {
-          "id": "a4_whakapanu_task_4",
-          "text": "После плавника идти к Поющим пещерам",
+          "id": "a4_whakapanu_island_task_4",
+          "text": "Сдать Shark Fin Kaimana в Ngakanu или позже на Karui ship в Kingsmarch",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a4_whakapanu_island_task_5",
+          "text": "Crabshell Cavern / Clawcrunch — только если нужен быстрый Support Gem",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a4_whakapanu_island_task_6",
+          "text": "Идти в Singing Caverns",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -5063,13 +5350,17 @@
         }
       ],
       "rewards": [
-        "Shark Fin: вечный выбор Kaom’s Lesson или Rakiata’s Lesson",
-        "Переход к амулету"
+        "Shark Fin → Kaom’s Lesson / Rakiata’s Lesson",
+        "Torn Map Piece",
+        "Переход к Singing Caverns"
       ],
-      "skip": [],
+      "skip": [
+        "Не скипать Shark Pit: в 0.5 это постоянный защитный бафф."
+      ],
       "important": [
-        "0.5: Акулью яму больше не скипать — Shark Fin даёт сильный вечный бафф через Кайману.",
-        "Выбор Kaom/Rakiata постоянный: перед кликом решить под билд."
+        "Shark Pit / Great White One теперь обязателен для нормального маршрута: Shark Fin даёт выбор постоянного баффа.",
+        "Kaom’s Lesson — простой выбор на 30% increased Armour/Evasion/Energy Shield; Rakiata’s Lesson — гибридный защитный вариант через Armour/Evasion/ES.",
+        "Если Kaimana ещё не на корабле, сдавать Shark Fin в Ngakanu; после финала Акта 4 она может стоять на Karui ship в Kingsmarch."
       ],
       "after": [],
       "boss_tips": [],
@@ -5078,38 +5369,31 @@
       "next_zone_ru": "Поющие пещеры",
       "details": {
         "route": [
-          "Найти Акулью яму и убить Great White One",
-          "Подобрать Shark Fin / акульий плавник",
-          "Позже сдать плавник Каймане в Нгакану или на корабле в Кингсмарше",
-          "После плавника идти к Поющим пещерам"
+          "Petrified Pirate / Torn Map Piece по пути",
+          "Shark Pit → Great White One → Shark Fin",
+          "Kaimana в Ngakanu или Karui ship → Kaom’s/Rakiata’s Lesson",
+          "Singing Caverns"
         ],
         "rewards": [
-          "Shark Fin: вечный выбор Kaom’s Lesson или Rakiata’s Lesson",
-          "Kaom’s Lesson: +30% к Armour, Evasion и Energy Shield.",
-          "Rakiata’s Lesson: 15% Armour работает против Elemental Damage, Deflection Rating от 12% Evasion и 12% быстрее старт перезарядки Energy Shield.",
-          "Переход к амулету"
+          "Постоянный бафф за Shark Fin",
+          "Torn Map Piece",
+          "Support Gem из Clawcrunch, если нужен"
         ],
-        "skip": [],
-        "important": [
-          "0.5: Акулью яму больше не скипать — Shark Fin даёт сильный вечный бафф через Кайману.",
-          "Выбор Kaom/Rakiata постоянный: перед кликом решить под билд."
+        "skip": [
+          "Не скипать Shark Pit: награда в 0.5 стала вечным защитным баффом."
         ],
-        "after": [
-          "Если Каймана ещё не доступна, держать плавник и сдать позже: Нгакану или корабль Каруи в Кингсмарше."
-        ],
+        "important": [],
+        "after": [],
         "boss_tips": [
-          "Great White One появляется у воды внутри Акульей ямы; если арена пустая, выйти и зайти в зону заново.",
-          "Босс в основном физический: держать движение, не ловить bleed/charge и играть от телеграфов под песком."
+          "Great White One — физический урон; держать движение, не стоять под sand-swim/рывками, ranged-билдам проще."
         ],
         "xp_notes": [],
         "crafting_tips": [],
         "time_saves": [
-          "Теперь это не time save: скип Акульей ямы = потеря вечного баффа.",
-          "После Shark Fin не чистить весь остров, сразу продолжать маршрут к Поющим пещерам."
+          "Акулью яму можно скипнуть: награда обычно не стоит времени."
         ],
         "navigation": [
-          "Акулья яма — большая песчаная арена у воды; подойти к кромке воды, чтобы поднять босса.",
-          "Сдать Shark Fin можно Каймане в Нгакану или позже на корабле Каруи в Кингсмарше."
+          "Great White One появляется в Shark Pit у воды; после убийства Shark Fin занимает место в инвентаре, лучше сдать Kaimana при первой удобной возможности."
         ]
       },
       "display": {
@@ -5128,12 +5412,12 @@
       "zone_ru": "Поющие пещеры",
       "aliases": [],
       "recommended_level": 42,
-      "recommended_level_label": "42+",
+      "recommended_level_label": "42-43",
       "is_good_xp_zone": false,
       "checklist": [
         {
           "id": "a4_singing_caverns_task_1",
-          "text": "Найти Манящую раковину",
+          "text": "Найти Beckoning Clam и взять Humming Pearl",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -5141,7 +5425,7 @@
         },
         {
           "id": "a4_singing_caverns_task_2",
-          "text": "Получить жемчужину и обменять у Рога на all res amulet",
+          "text": "Сдать Humming Pearl Rog за all-res amulet, если амулет полезен",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -5149,8 +5433,24 @@
         },
         {
           "id": "a4_singing_caverns_task_3",
-          "text": "Убить босса",
-          "type": "boss",
+          "text": "Убить Diamora, Song of Death и забрать fragment/прогресс",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a4_singing_caverns_task_4",
+          "text": "Вернуться в Kingsmarch, открыть Shoreline Hideout у Ange",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a4_singing_caverns_task_5",
+          "text": "Дальше плыть на Shrike Island",
+          "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
@@ -5161,22 +5461,24 @@
       ],
       "skip": [],
       "important": [
-        "Сыр со скипом подводной фазы есть, но специально учить необязательно"
+        "Humming Pearl → all-res amulet у Rog — хорошая страховка по резистам для новичка."
       ],
       "after": [],
       "boss_tips": [],
       "xp_notes": [],
       "crafting_tips": [],
-      "next_zone_ru": "Заброшенная тюрьма",
+      "next_zone_ru": "Кингсмарш / Остров Шрайка",
       "details": {
         "route": [
-          "Найти Манящую раковину",
-          "Получить жемчужину и обменять у Рога на all res amulet",
-          "Убить босса"
+          "Beckoning Clam → Humming Pearl",
+          "Diamora, Song of Death",
+          "Kingsmarch → Ange → Shoreline Hideout",
+          "Shrike Island"
         ],
         "rewards": [
-          "Амулет на все сопротивления",
-          "Манящая раковина/жемчужина → all res амулет у Рога."
+          "All-res amulet у Rog",
+          "Фрагмент/прогресс острова",
+          "Shoreline Hideout после возврата"
         ],
         "skip": [],
         "important": [
@@ -5207,13 +5509,13 @@
       "zone_en": "Abandoned Prison",
       "zone_ru": "Заброшенная тюрьма",
       "aliases": [],
-      "recommended_level": 42,
-      "recommended_level_label": "42+",
+      "recommended_level": 44,
+      "recommended_level_label": "44",
       "is_good_xp_zone": false,
       "checklist": [
         {
           "id": "a4_abandoned_prison_task_1",
-          "text": "Найти ключ часовни у некромантов",
+          "text": "Убивать мобов до Chapel Key",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -5221,7 +5523,7 @@
         },
         {
           "id": "a4_abandoned_prison_task_2",
-          "text": "Открыть ворота",
+          "text": "Боковые зоны Armoury / Forgotten Cells — только если по пути нужен loot",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -5229,9 +5531,17 @@
         },
         {
           "id": "a4_abandoned_prison_task_3",
-          "text": "Выбрать восстановление здоровья от фласок",
-          "type": "reward",
-          "required": true,
+          "text": "Открыть Chapel, убить Forael и выбрать Goddess of Justice Flask reward",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a4_abandoned_prison_task_4",
+          "text": "Войти в Solitary Confinement",
+          "type": "route_task",
+          "required": false,
           "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
         }
@@ -5250,9 +5560,9 @@
       "next_zone_ru": "Одиночные камеры",
       "details": {
         "route": [
-          "Найти ключ часовни у некромантов",
-          "Открыть ворота",
-          "Выбрать восстановление здоровья от фласок"
+          "Chapel Key",
+          "Forael → Flask reward",
+          "Solitary Confinement"
         ],
         "rewards": [
           "Восстановление здоровья от фласок",
@@ -5271,6 +5581,9 @@
         ],
         "time_saves": [
           "После награды — сразу в следующую зону, не чистить тюрьму полностью."
+        ],
+        "opportunistic": [
+          "Armoury / Forgotten Cells брать только по пути; не чистить тюрьму полностью без причины."
         ]
       },
       "display": {
@@ -5290,13 +5603,13 @@
       "aliases": [
         "Solitary Confinement"
       ],
-      "recommended_level": 42,
-      "recommended_level_label": "42+",
+      "recommended_level": 44,
+      "recommended_level_label": "44",
       "is_good_xp_zone": false,
       "checklist": [
         {
           "id": "a4_solitary_chambers_task_1",
-          "text": "Держаться стены со стороны океана",
+          "text": "Держаться океанской стороны / короткого маршрута",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -5304,8 +5617,16 @@
         },
         {
           "id": "a4_solitary_chambers_task_2",
-          "text": "На боссе стоять у баллисты и прожимать её, когда просят",
-          "type": "boss",
+          "text": "Убить The Prisoner за fragment/прогресс",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a4_solitary_chambers_task_3",
+          "text": "Вернуться на корабль и плыть на Isle of Kin",
+          "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
@@ -5324,11 +5645,12 @@
       "boss_tips": [],
       "xp_notes": [],
       "crafting_tips": [],
-      "next_zone_ru": "Остров криков",
+      "next_zone_ru": "Остров Рода",
       "details": {
         "route": [
-          "Держаться стены со стороны океана",
-          "На боссе стоять у баллисты и прожимать её, когда просят"
+          "Короткий путь вдоль океанской стороны",
+          "The Prisoner",
+          "Корабль → Isle of Kin"
         ],
         "rewards": [
           "Переход дальше"
@@ -5361,26 +5683,36 @@
     {
       "id": "a4_isle_of_screams",
       "act": 4,
-      "zone_en": "Isle of Screams",
-      "zone_ru": "Остров криков",
+      "zone_en": "Shrike Island",
+      "zone_ru": "Остров Шрайка",
       "aliases": [
-        "Shrike Island"
+        "Shrike Island",
+        "Остров криков",
+        "Остров крика"
       ],
       "recommended_level": 43,
-      "recommended_level_label": "43+",
+      "recommended_level_label": "43-44",
       "is_good_xp_zone": false,
       "checklist": [
         {
-          "id": "a4_isle_screams_task_1",
-          "text": "Можно сначала к боссу, потом сброситься, взять shrine и зайти с баффом",
-          "type": "boss",
+          "id": "a4_isle_of_screams_task_1",
+          "text": "Найти Corpse Nest / Impaled Karui и забрать Torn Map Piece, если по пути",
+          "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
         },
         {
-          "id": "a4_isle_screams_task_2",
-          "text": "Поговорить с NPC и открыть Глаз Хинекоры",
+          "id": "a4_isle_of_screams_task_2",
+          "text": "Убить Scourge of the Skies за fragment/прогресс острова",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a4_isle_of_screams_task_3",
+          "text": "Вернуться к Hooded One / на корабль и плыть в Abandoned Prison",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -5392,21 +5724,22 @@
       ],
       "skip": [],
       "important": [
-        "Если shrine даёт урон — босс сильно ускоряется"
+        "0.5 маршрут: Shrike Island идёт после Whakapanu/Singing и перед Abandoned Prison."
       ],
       "after": [],
       "boss_tips": [],
       "xp_notes": [],
       "crafting_tips": [],
-      "next_zone_ru": "Глаз Хинекоры",
+      "next_zone_ru": "Заброшенная тюрьма",
       "details": {
         "route": [
-          "Можно сначала к боссу, потом сброситься, взять shrine и зайти с баффом",
-          "Поговорить с NPC и открыть Глаз Хинекоры"
+          "Corpse Nest / Torn Map Piece по пути",
+          "Scourge of the Skies",
+          "Корабль → Abandoned Prison"
         ],
         "rewards": [
-          "Открытие Глаза Хинекоры",
-          "После босса поговорить с НПЦ, чтобы открыть Глаз Хинекоры."
+          "Torn Map Piece",
+          "Fragment/прогресс острова"
         ],
         "skip": [],
         "important": [
@@ -5438,13 +5771,13 @@
       "zone_en": "Eye of Hinekora",
       "zone_ru": "Глаз Хинекоры",
       "aliases": [],
-      "recommended_level": 44,
-      "recommended_level_label": "44+",
+      "recommended_level": 46,
+      "recommended_level_label": "46-47",
       "is_good_xp_zone": false,
       "checklist": [
         {
           "id": "a4_eye_hinekora_task_1",
-          "text": "Победить воинов Намаху, Тапуа и Тасалио",
+          "text": "Поговорить с Matiki у колодца и кликнуть well",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -5452,7 +5785,7 @@
         },
         {
           "id": "a4_eye_hinekora_task_2",
-          "text": "Забрать +5% максимум маны из колодца",
+          "text": "Опционально: сундук за водопадом = Spirit Gem 12",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -5460,7 +5793,23 @@
         },
         {
           "id": "a4_eye_hinekora_task_3",
-          "text": "После колодца respawn at checkpoint и идти в Залы мёртвых",
+          "text": "Закрыть 3 теста: Fire / Nature / Cold",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a4_eye_hinekora_task_4",
+          "text": "Silent Hall altar / Pay Respects → Navali → +5% максимум маны",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a4_eye_hinekora_task_5",
+          "text": "Войти в Halls of the Dead",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -5471,7 +5820,9 @@
         "+5% максимум маны"
       ],
       "skip": [],
-      "important": [],
+      "important": [
+        "Matiki стоит у well, не в городе; +5% максимум маны обязательно забрать перед Halls."
+      ],
       "after": [],
       "boss_tips": [],
       "xp_notes": [],
@@ -5479,13 +5830,15 @@
       "next_zone_ru": "Залы мёртвых",
       "details": {
         "route": [
-          "Победить воинов Намаху, Тапуа и Тасалио",
-          "Забрать +5% максимум маны из колодца",
-          "После колодца respawn at checkpoint и идти в Залы мёртвых"
+          "Matiki у well",
+          "Сундук за водопадом по пути",
+          "3 теста",
+          "Pay Respects → +5% максимум маны",
+          "Halls of the Dead"
         ],
         "rewards": [
           "+5% максимум маны",
-          "Это постоянный бонус, обязательно забрать перед Залами мёртвых."
+          "Spirit Gem 12 из сундука за водопадом"
         ],
         "skip": [],
         "important": [],
@@ -5512,37 +5865,37 @@
       "zone_en": "Halls of the Dead",
       "zone_ru": "Залы мёртвых",
       "aliases": [],
-      "recommended_level": 44,
-      "recommended_level_label": "44+",
+      "recommended_level": 47,
+      "recommended_level_label": "47",
       "is_good_xp_zone": false,
       "checklist": [
         {
-          "id": "a4_halls_dead_task_1",
-          "text": "Чистить тотемы с волнами монстров",
+          "id": "a4_halls_of_the_dead_task_1",
+          "text": "Trial of Ngakanu: пройти 3 теста в clover-leaf layout",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
         },
         {
-          "id": "a4_halls_dead_task_2",
-          "text": "Забрать татуировки, лучше на резисты",
+          "id": "a4_halls_of_the_dead_task_2",
+          "text": "Выбрать тату: чаще +5% Fire/Cold/Lightning Res, либо +5 Str/Dex/Int под билд",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
         },
         {
-          "id": "a4_halls_dead_task_3",
-          "text": "Убить Яну Белую",
-          "type": "boss",
+          "id": "a4_halls_of_the_dead_task_3",
+          "text": "Убить Yama the White",
+          "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
         },
         {
-          "id": "a4_halls_dead_task_4",
-          "text": "Забрать серебряную монету для Навали",
+          "id": "a4_halls_of_the_dead_task_4",
+          "text": "Войти в Trial of Ancestors",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -5556,25 +5909,22 @@
       ],
       "skip": [],
       "important": [
-        "Татуировки чаще выгоднее брать на сопротивления"
+        "Татуировки чаще выгоднее брать на резисты; атрибуты брать только если билд упирается в требования."
       ],
       "after": [],
       "boss_tips": [],
       "xp_notes": [],
       "crafting_tips": [],
-      "next_zone_ru": "Арастас",
+      "next_zone_ru": "Испытание предков",
       "details": {
         "route": [
-          "Чистить тотемы с волнами монстров",
-          "Забрать татуировки, лучше на резисты",
-          "Убить Яну Белую",
-          "Забрать серебряную монету для Навали"
+          "3 теста Trial of Ngakanu",
+          "Tattoo choice",
+          "Yama the White",
+          "Trial of Ancestors"
         ],
         "rewards": [
-          "Татуировки на резисты",
-          "Серебряная монета",
-          "2 пассивных очка у Навали",
-          "Три испытания дают выборы татуировок: +стат или +5% сопротивления; после Ямы Белой — серебряная монета Навали за +2 пассивки."
+          "Tattoo choice: +5% резист или +5 атрибут"
         ],
         "skip": [],
         "important": [
@@ -5606,30 +5956,30 @@
       "zone_en": "Trial of the Ancestors",
       "zone_ru": "Испытание предков",
       "aliases": [],
-      "recommended_level": 51,
-      "recommended_level_label": "51+",
+      "recommended_level": 47,
+      "recommended_level_label": "47-48",
       "is_good_xp_zone": false,
       "checklist": [
         {
-          "id": "a4_trial_ancestors_task_1",
-          "text": "Закрыть финальное испытание цепочки предков",
+          "id": "a4_trial_of_ancestors_task_1",
+          "text": "Поговорить с Navali и Hinekora",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
         },
         {
-          "id": "a4_trial_ancestors_task_2",
-          "text": "Убить Яму Белую",
-          "type": "boss",
+          "id": "a4_trial_of_ancestors_task_2",
+          "text": "Забрать +2 пассивных очка",
+          "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
         },
         {
-          "id": "a4_trial_ancestors_task_3",
-          "text": "Проверить награды/татуировки перед выходом",
-          "type": "reward",
+          "id": "a4_trial_of_ancestors_task_3",
+          "text": "Вернуться на корабль и плыть в Kedge Bay",
+          "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
@@ -5643,7 +5993,7 @@
         "Не задерживаться после закрытия испытания и наград"
       ],
       "important": [
-        "Выбор татуировок чаще выгоднее заранее держать под резисты/атрибуты билда"
+        "После Halls не забыть Navali/Hinekora: это +2 пассивных очка перед продолжением Акта 4."
       ],
       "after": [],
       "boss_tips": [
@@ -5651,16 +6001,15 @@
       ],
       "xp_notes": [],
       "crafting_tips": [],
-      "next_zone_ru": "Арастас / основной маршрут Акта 4",
+      "next_zone_ru": "Кеджский залив",
       "details": {
         "route": [
-          "Закрыть финальное испытание цепочки предков",
-          "Убить Яму Белую",
-          "Проверить награды/татуировки перед выходом"
+          "Navali + Hinekora",
+          "+2 пассивных очка",
+          "Корабль → Kedge Bay"
         ],
         "rewards": [
-          "Финал цепочки предков",
-          "Татуировки / постоянные бонусы по ветке"
+          "+2 пассивных очка"
         ],
         "skip": [
           "Не задерживаться после закрытия испытания и наград"
@@ -5696,13 +6045,13 @@
       "zone_en": "Arastas",
       "zone_ru": "Арастас",
       "aliases": [],
-      "recommended_level": 46,
-      "recommended_level_label": "46+",
+      "recommended_level": 49,
+      "recommended_level_label": "49-50",
       "is_good_xp_zone": false,
       "checklist": [
         {
           "id": "a4_arastas_task_1",
-          "text": "Сломать пузырь быстрым основным навыком",
+          "text": "Missionari Lorandis: следовать и сломать shield",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -5710,25 +6059,17 @@
         },
         {
           "id": "a4_arastas_task_2",
-          "text": "Убить всех мобов, чтобы reset checkpoint не забагался",
-          "type": "boss",
-          "required": false,
-          "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
-        },
-        {
-          "id": "a4_arastas_task_3",
-          "text": "Забрать колокола: 3 экза + 3 сферы царей",
+          "text": "Evening/Morning Bells: Evening = 3 Exalted, Morning = 3 Regal, если по пути",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
         },
         {
-          "id": "a4_arastas_task_4",
-          "text": "Убить Толмана",
-          "type": "boss",
-          "required": true,
+          "id": "a4_arastas_task_3",
+          "text": "Убить Torvian и войти в Excavation",
+          "type": "route_task",
+          "required": false,
           "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
         }
@@ -5748,10 +6089,9 @@
       "next_zone_ru": "Раскопки",
       "details": {
         "route": [
-          "Сломать пузырь быстрым основным навыком",
-          "Убить всех мобов, чтобы reset checkpoint не забагался",
-          "Забрать колокола: 3 экза + 3 сферы царей",
-          "Убить Толмана"
+          "Missionari Lorandis → shield",
+          "Evening/Morning Bells по пути",
+          "Torvian → Excavation"
         ],
         "rewards": [
           "3 экзальта",
@@ -5791,21 +6131,21 @@
       "zone_en": "Excavation",
       "zone_ru": "Раскопки",
       "aliases": [],
-      "recommended_level": 46,
-      "recommended_level_label": "46+",
+      "recommended_level": 50,
+      "recommended_level_label": "50-51",
       "is_good_xp_zone": true,
       "checklist": [
         {
           "id": "a4_excavation_task_1",
-          "text": "Использовать shrine trick перед боссом, если удобно",
-          "type": "boss",
+          "text": "Убить Benedictus в Precursor Forge",
+          "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
         },
         {
           "id": "a4_excavation_task_2",
-          "text": "Войти в арену и respawn at checkpoint, чтобы скипнуть длинный диалог",
+          "text": "Поговорить со Скрытым / Hooded One",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -5813,15 +6153,15 @@
         },
         {
           "id": "a4_excavation_task_3",
-          "text": "Убить босса",
-          "type": "boss",
+          "text": "Опционально: Excavated Cache у checkpoint",
+          "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
         },
         {
           "id": "a4_excavation_task_4",
-          "text": "Когда появится objective speak to Hooded One — respawn и portal town",
+          "text": "Вернуться в Kingsmarch и плыть в Ngakanu",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -5842,10 +6182,10 @@
       "next_zone_ru": "Нгакану",
       "details": {
         "route": [
-          "Использовать shrine trick перед боссом, если удобно",
-          "Войти в арену и respawn at checkpoint, чтобы скипнуть длинный диалог",
-          "Убить босса",
-          "Когда появится objective speak to Hooded One — respawn и portal town"
+          "Benedictus / Precursor Forge",
+          "Hooded One",
+          "Excavated Cache по пути",
+          "Kingsmarch → Ngakanu"
         ],
         "rewards": [
           "Прогресс к Нгакану"
@@ -5882,13 +6222,13 @@
       "zone_en": "Plunder's Point",
       "zone_ru": "Мыс грабителя",
       "aliases": [],
-      "recommended_level": 53,
-      "recommended_level_label": "53+",
+      "recommended_level": 49,
+      "recommended_level_label": "49-50",
       "is_good_xp_zone": false,
       "checklist": [
         {
           "id": "a4_plunders_point_task_1",
-          "text": "Идти сюда после сбора Torn Map Pieces / карты сокровищ",
+          "text": "Идти сюда после сдачи всех 4 Torn Map Pieces у Makoru",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -5896,7 +6236,7 @@
         },
         {
           "id": "a4_plunders_point_task_2",
-          "text": "Поговорить с Деннигом и расставить взрывчатку",
+          "text": "Поговорить с Dannig, пройти Expedition и открыть Deserted Post",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -5904,8 +6244,24 @@
         },
         {
           "id": "a4_plunders_point_task_3",
-          "text": "Зачистить появившихся врагов и забрать добычу",
-          "type": "reward",
+          "text": "В Deserted Post вызвать Farrow",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a4_plunders_point_task_4",
+          "text": "Получить Runesmithing of Knowledge / 13 Ancient Runes",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a4_plunders_point_task_5",
+          "text": "После цепочки идти в Arastas",
+          "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
@@ -5918,24 +6274,28 @@
         "Опциональная зона: можно пропустить, если цель — только быстрый прогресс кампании"
       ],
       "important": [
-        "Это боковая Expedition-награда, не обязательная линия прохождения"
+        "0.5: Plunder’s Point больше не просто боковой лут — это самая часто пропускаемая часть Farrow chain на Ancient Runes.",
+        "Если пропустить Deserted Post / Farrow, 13 Ancient Runes не откроются."
       ],
       "after": [],
       "boss_tips": [],
       "xp_notes": [],
       "crafting_tips": [],
-      "next_zone_ru": "Нгакану",
+      "next_zone_ru": "Арастас",
       "details": {
         "route": [
-          "Идти сюда после сбора Torn Map Pieces / карты сокровищ",
-          "Поговорить с Деннигом и расставить взрывчатку",
-          "Зачистить появившихся врагов и забрать добычу"
+          "4 Torn Map Pieces → Makoru",
+          "Dannig / Expedition",
+          "Deserted Post → Farrow",
+          "Ancient Runes unlock",
+          "Arastas"
         ],
         "rewards": [
-          "Квест Forgotten Bounty / дополнительная добыча"
+          "13 Ancient Runes / Farrow",
+          "Expedition loot"
         ],
         "skip": [
-          "Опциональная зона: можно пропустить, если цель — только быстрый прогресс кампании"
+          "Не скипать, если нужен полный 0.5 unlock Ancient Runes."
         ],
         "important": [
           "Это боковая Expedition-награда, не обязательная линия прохождения"
@@ -5966,29 +6326,29 @@
       "zone_en": "Ngakanu",
       "zone_ru": "Нгакану",
       "aliases": [],
-      "recommended_level": 47,
-      "recommended_level_label": "47+",
+      "recommended_level": 51,
+      "recommended_level_label": "51",
       "is_good_xp_zone": false,
       "checklist": [
         {
-          "id": "a4_ngakanu_task_0",
-          "text": "Если Shark Fin ещё в сумке — сдать Каймане и выбрать Kaom/Rakiata бафф",
-          "type": "reward",
-          "required": false,
-          "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
-        },
-        {
           "id": "a4_ngakanu_task_1",
-          "text": "Забрать лиговую большую сферу ювелира",
-          "type": "crafting",
+          "text": "Если Shark Fin ещё в инвентаре — сдать Kaimana здесь или позже на корабле",
+          "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
         },
         {
           "id": "a4_ngakanu_task_2",
-          "text": "Держаться правой стены до Сердца племени",
+          "text": "Abyss / Abyssal Depths и Mad Butcher — только если по пути нужен loot",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a4_ngakanu_task_3",
+          "text": "Идти в Heart of the Tribe",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -5996,13 +6356,11 @@
         }
       ],
       "rewards": [
-        "Сдача Shark Fin Каймане: вечный выбор Kaom/Rakiata",
         "Большая сфера ювелира под 52 уровень"
       ],
       "skip": [],
       "important": [
-        "Если плавник с Вакапану ещё не сдан — не забыть Кайману в Нгакану.",
-        "Сохранить для ключевого сетапа на 52 уровне"
+        "Kaimana может стоять в Ngakanu / Medicine Circle или позже на Karui ship; Shark Fin лучше сдать при первой удобной возможности."
       ],
       "after": [],
       "boss_tips": [],
@@ -6011,18 +6369,16 @@
       "next_zone_ru": "Сердце племени",
       "details": {
         "route": [
-          "Если Shark Fin ещё в сумке — сдать Каймане и выбрать Kaom/Rakiata бафф",
-          "Забрать лиговую большую сферу ювелира",
-          "Держаться правой стены до Сердца племени"
+          "Kaimana / Shark Fin, если ещё не сдан",
+          "Optional Abyss / Mad Butcher по пути",
+          "Heart of the Tribe"
         ],
         "rewards": [
-          "Сдача Shark Fin Каймане: вечный выбор Kaom/Rakiata",
           "Большая сфера ювелира под 52 уровень",
           "Лига-награда/Greater Jeweller Orb — сохранить под ключевой сетап на 52 уровне."
         ],
         "skip": [],
         "important": [
-          "Если плавник с Вакапану ещё не сдан — не забыть Кайману в Нгакану.",
           "Сохранить для ключевого сетапа на 52 уровне"
         ],
         "after": [],
@@ -6030,8 +6386,7 @@
         "xp_notes": [],
         "crafting_tips": [],
         "navigation": [
-          "Спам mobility/прыжок, чтобы скипнуть медленную ходьбу/roleplay-переходы.",
-          "Каймана может быть в деревне/Medicine Circle по прогрессу Акта 4; если уже ушла — проверить корабль Каруи в Кингсмарше."
+          "Спам mobility/прыжок, чтобы скипнуть медленную ходьбу/roleplay-переходы."
         ]
       },
       "display": {
@@ -6051,21 +6406,37 @@
       "zone_en": "Heart of the Tribe",
       "zone_ru": "Сердце племени",
       "aliases": [],
-      "recommended_level": 47,
-      "recommended_level_label": "47+ / конец 48",
+      "recommended_level": 52,
+      "recommended_level_label": "52 / конец Акта 4",
       "is_good_xp_zone": false,
       "checklist": [
         {
-          "id": "a4_heart_tribe_task_1",
-          "text": "Убить Тарукая",
-          "type": "boss",
+          "id": "a4_heart_of_the_tribe_task_1",
+          "text": "Убить Tavakai / финального босса Акта 4",
+          "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
         },
         {
-          "id": "a4_heart_tribe_task_2",
-          "text": "Вернуться в город и перейти в Кхарийский базар",
+          "id": "a4_heart_of_the_tribe_task_2",
+          "text": "Поговорить с ним после боя",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a4_heart_of_the_tribe_task_3",
+          "text": "Вернуться и поговорить со Скрытым",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "a4_heart_of_the_tribe_task_4",
+          "text": "Открыть интерлюдии; рекомендуемый порядок: Mount Kriar → Ogham Refuge → Khari Bazaar",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -6077,20 +6448,23 @@
       ],
       "skip": [],
       "important": [
-        "Перед появлением босса подготовить основной burst; во 2 фазе играть от угла"
+        "После Tavakai открываются Interludes; их можно делать в любом порядке, но Domistae рекомендует Mount Kriar первым ради +40 Spirit.",
+        "Перед входом в интерлюдии помнить: сопротивления падают сразу при входе."
       ],
       "after": [],
       "boss_tips": [],
       "xp_notes": [],
       "crafting_tips": [],
-      "next_zone_ru": "Кхарийский базар",
+      "next_zone_ru": "Опушка / интерлюдии",
       "details": {
         "route": [
-          "Убить Тарукая",
-          "Вернуться в город и перейти в Кхарийский базар"
+          "Tavakai",
+          "Диалог после боя",
+          "Hooded One",
+          "Interludes: Mount Kriar → Ogham Refuge → Khari Bazaar"
         ],
         "rewards": [
-          "Переход в интерлюдии"
+          "Открытие Interludes"
         ],
         "skip": [],
         "important": [
@@ -6116,556 +6490,6 @@
       "area_ids": [
         "C_G4_11_2",
         "G4_11_2"
-      ]
-    },
-    {
-      "id": "interlude_khari_bazaar",
-      "act": 5,
-      "zone_en": "Khari Bazaar",
-      "zone_ru": "Кхарийский базар",
-      "aliases": [
-        "Khari Bazaar",
-        "Khari Bazaar Town"
-      ],
-      "recommended_level": 48,
-      "recommended_level_label": "48+",
-      "is_good_xp_zone": false,
-      "checklist": [
-        {
-          "id": "interlude_khari_bazaar_task_1",
-          "text": "Начать вторую страницу акта: идти в Кхарийский перевал",
-          "type": "route_task",
-          "required": false,
-          "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
-        },
-        {
-          "id": "interlude_khari_bazaar_task_2",
-          "text": "Порядок страниц: 2-я страница → 3-я страница → 1-я страница",
-          "type": "route_task",
-          "required": false,
-          "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
-        },
-        {
-          "id": "interlude_khari_bazaar_task_3",
-          "text": "После ветки Опушки и Убежища Куачик вернуться к Пристанищу",
-          "type": "route_task",
-          "required": false,
-          "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
-        }
-      ],
-      "rewards": [],
-      "skip": [],
-      "important": [
-        "Это хаб начала интерлюдии: сначала закрыть ветку Кхарийского базара, затем Опушку, затем Пристанище."
-      ],
-      "after": [],
-      "boss_tips": [],
-      "xp_notes": [],
-      "crafting_tips": [],
-      "next_zone_ru": "Кхарийский перевал",
-      "details": {
-        "route": [
-          "Старт интерлюдии: сначала проходится 2-я страница акта — ветка Кхарийского базара.",
-          "После Кима и Водохранилища Кима маршрут переходит на 3-ю страницу: Опушка → Пепельный лес → ветка Криар.",
-          "После Убежища Куачик вернуться на 1-ю страницу через Пристанище и идти к финалу в Поместье Холтен."
-        ],
-        "important": [
-          "Не прыгать сразу в старые/первые локации: порядок страниц нужен, чтобы маршрут в оверлее не вёл назад-вперёд."
-        ],
-        "navigation": [
-          "Кхарийский базар → Кхарийский перевал → Воды Хаталя → Храм Селари → Врата Галаи."
-        ],
-        "town_plan": [
-          "Хаб-памятка: 2-я страница начинается здесь, 3-я — Опушка, 1-я — Пристанище."
-        ]
-      },
-      "display": {
-        "wideModeRecommended": true,
-        "showAllChecklist": true
-      },
-      "area_ids": [
-        "C_P2_Town",
-        "P2_Town"
-      ]
-    },
-    {
-      "id": "interlude_khari_crossing",
-      "act": 5,
-      "zone_en": "The Khari Crossing",
-      "zone_ru": "Кхарийский перевал",
-      "aliases": [
-        "Khari Crossing"
-      ],
-      "recommended_level": 48,
-      "recommended_level_label": "48+",
-      "is_good_xp_zone": false,
-      "checklist": [
-        {
-          "id": "i2_khari_crossing_life_task",
-          "text": "Найти расплавленную святыню и взять +5% максимум здоровья",
-          "type": "reward",
-          "required": true,
-          "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
-        },
-        {
-          "id": "i2_khari_crossing_bosses_task",
-          "text": "Убить Актхи и Анундра",
-          "type": "boss",
-          "required": true,
-          "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
-        },
-        {
-          "id": "i2_khari_crossing_weapon_points_task",
-          "text": "Поговорить с Рису в городе и забрать +2 пассивных очка набора оружия",
-          "type": "reward",
-          "required": true,
-          "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
-        }
-      ],
-      "rewards": [
-        "+5% максимум здоровья",
-        "+2 пассивных очка набора оружия"
-      ],
-      "skip": [],
-      "important": [],
-      "after": [],
-      "boss_tips": [],
-      "xp_notes": [],
-      "crafting_tips": [],
-      "next_zone_ru": "Воды Хаталя",
-      "details": {
-        "route": [
-          "Найти расплавленную святыню и взять +5% максимум здоровья.",
-          "Убить Актхи и Анундра.",
-          "Поговорить с Рису в городе и забрать +2 пассивных очка набора оружия."
-        ],
-        "rewards": [
-          "+5% максимум здоровья — расплавленная святыня в Кхарийском перевале.",
-          "+2 пассивных очка набора оружия — Актхи и Анундр, затем Рису в городе."
-        ],
-        "skip": [],
-        "important": [],
-        "after": [],
-        "boss_tips": [],
-        "xp_notes": [],
-        "crafting_tips": [],
-        "navigation": [
-          "После Кхарийского перевала идти в Воды Хаталя, а уже потом в Храм Селари."
-        ]
-      },
-      "display": {
-        "wideModeRecommended": true,
-        "showAllChecklist": true
-      },
-      "area_ids": [
-        "C_P2_1",
-        "P2_1"
-      ],
-      "campaign_bonus_ids": [
-        "int2_khari_crossing_life_percent",
-        "int2_khari_crossing_aktu_anundr_weapon_points"
-      ]
-    },
-    {
-      "id": "interlude_pools_of_khatal",
-      "act": 5,
-      "zone_en": "Pools of Khatal",
-      "zone_ru": "Воды Хаталя",
-      "aliases": [],
-      "recommended_level": 55,
-      "recommended_level_label": "55+",
-      "is_good_xp_zone": false,
-      "checklist": [
-        {
-          "id": "interlude_pools_khatal_task_1",
-          "text": "Пройти транзитом между Кхарийским перевалом и Храмом Селари",
-          "type": "route_task",
-          "required": false,
-          "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
-        },
-        {
-          "id": "interlude_pools_khatal_task_2",
-          "text": "Не чистить полностью, если нет просадки по опыту",
-          "type": "route_task",
-          "required": false,
-          "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
-        }
-      ],
-      "rewards": [
-        "Переход по ветке Хаталя / Селари"
-      ],
-      "skip": [
-        "Не разворачивать карту ради полной зачистки"
-      ],
-      "important": [
-        "Проходная зона: главная задача — быстро найти следующий переход"
-      ],
-      "after": [],
-      "boss_tips": [],
-      "xp_notes": [],
-      "crafting_tips": [],
-      "next_zone_ru": "Храм Селари",
-      "details": {
-        "route": [
-          "Пройти транзитом между Кхарийским перевалом и Храмом Селари",
-          "Не чистить полностью, если нет просадки по опыту"
-        ],
-        "rewards": [
-          "Переход по ветке Хаталя / Селари"
-        ],
-        "skip": [
-          "Не разворачивать карту ради полной зачистки"
-        ],
-        "important": [
-          "Проходная зона: главная задача — быстро найти следующий переход"
-        ],
-        "after": [],
-        "boss_tips": [],
-        "xp_notes": [],
-        "crafting_tips": [],
-        "navigation": [
-          "Держать темп и искать переход в Храм Селари."
-        ],
-        "time_saves": [
-          "Если XP в норме — не стопориться на боковых карманах."
-        ]
-      },
-      "display": {
-        "wideModeRecommended": true,
-        "showAllChecklist": true
-      },
-      "area_ids": [
-        "C_P2_2",
-        "P2_2"
-      ]
-    },
-    {
-      "id": "interlude_selvari_sanctuary",
-      "act": 5,
-      "zone_en": "Sel Khari Sanctuary",
-      "zone_ru": "Храм Селари",
-      "aliases": [
-        "Selvari Sanctuary",
-        "Святилище Селвари",
-        "Святилище Селхари",
-        "Храм Селари",
-        "Храм Селхари"
-      ],
-      "recommended_level": 49,
-      "recommended_level_label": "49+",
-      "is_good_xp_zone": false,
-      "checklist": [
-        {
-          "id": "i2_selvari_sanctuary_task_1",
-          "text": "Найти 2 барьера и поставить в пьедесталы вдоль внешней стены",
-          "type": "route_task",
-          "required": false,
-          "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
-        },
-        {
-          "id": "i2_selvari_sanctuary_task_2",
-          "text": "Выбрать амулет и кольцо",
-          "type": "route_task",
-          "required": false,
-          "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
-        },
-        {
-          "id": "i2_selvari_sanctuary_task_3",
-          "text": "Убить Альзура за барью 60 уровня",
-          "type": "boss",
-          "required": true,
-          "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
-        }
-      ],
-      "rewards": [
-        "Выбор амулета/кольца",
-        "Барья 60 уровня для третьего восхождения"
-      ],
-      "skip": [],
-      "important": [],
-      "after": [],
-      "boss_tips": [],
-      "xp_notes": [],
-      "crafting_tips": [],
-      "next_zone_ru": "Врата Галаи",
-      "details": {
-        "route": [
-          "Найти 2 барьера и поставить в пьедесталы вдоль внешней стены",
-          "Выбрать амулет и кольцо",
-          "Убить Альзура за барью 60 уровня"
-        ],
-        "rewards": [
-          "Выбор амулета/кольца",
-          "Барья 60 уровня для третьего восхождения",
-          "Alzur даёт barrier 60 уровня под третье восхождение."
-        ],
-        "skip": [],
-        "important": [],
-        "after": [],
-        "boss_tips": [],
-        "xp_notes": [],
-        "crafting_tips": [],
-        "navigation": [
-          "Две barrier вставить в пьедесталы по внешней стене, выбрать кольцо/амулет и идти дальше во Врата Галаи."
-        ],
-        "time_saves": [
-          "После босса поговорить, забрать выбор и двигаться во Врата Галаи без лишнего фарма."
-        ]
-      },
-      "display": {
-        "wideModeRecommended": true,
-        "showAllChecklist": true
-      },
-      "area_ids": [
-        "C_P2_3",
-        "P2_3"
-      ]
-    },
-    {
-      "id": "interlude_galai_gates",
-      "act": 5,
-      "zone_en": "The Galai Gates",
-      "zone_ru": "Ворота Галаи",
-      "aliases": [
-        "Galai Gates",
-        "Ворота Галаи",
-        "Врата Голай",
-        "Ворота Голай",
-        "Врата Галаи"
-      ],
-      "recommended_level": 56,
-      "recommended_level_label": "56+",
-      "is_good_xp_zone": false,
-      "checklist": [
-        {
-          "id": "interlude_galai_gates_task_1",
-          "text": "Пройти через ворота по ветке к Киме",
-          "type": "route_task",
-          "required": false,
-          "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
-        },
-        {
-          "id": "interlude_galai_gates_task_2",
-          "text": "Убить Ворнаса, Падшее пламя",
-          "type": "boss",
-          "required": false,
-          "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
-        },
-        {
-          "id": "interlude_galai_gates_task_3",
-          "text": "Проверить Abyss objective только если он по пути",
-          "type": "route_task",
-          "required": false,
-          "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
-        }
-      ],
-      "rewards": [
-        "Босс Ворнас и дополнительная добыча / Abyss objective по пути"
-      ],
-      "skip": [
-        "Abyss objective можно пропустить, если он уводит с маршрута"
-      ],
-      "important": [
-        "Не путать с Кхарийским перевалом: бонусы Кхарийского перевала здесь не закрываются"
-      ],
-      "after": [],
-      "boss_tips": [
-        "На Ворнасе держать дистанцию от опасных огненных окон и не стоять в земле."
-      ],
-      "xp_notes": [],
-      "crafting_tips": [],
-      "next_zone_ru": "Кима",
-      "details": {
-        "route": [
-          "Пройти через ворота по ветке к Киме",
-          "Убить Ворнаса, Падшее пламя",
-          "Проверить Abyss objective только если он по пути"
-        ],
-        "rewards": [
-          "Босс Ворнас и дополнительная добыча / Abyss objective по пути"
-        ],
-        "skip": [
-          "Abyss objective можно пропустить, если он уводит с маршрута"
-        ],
-        "important": [
-          "Не путать с Кхарийским перевалом: бонусы Кхарийского перевала здесь не закрываются"
-        ],
-        "after": [],
-        "boss_tips": [
-          "На Ворнасе держать дистанцию от опасных огненных окон и не стоять в земле."
-        ],
-        "xp_notes": [],
-        "crafting_tips": [],
-        "navigation": [
-          "После ворот двигаться к Киме."
-        ],
-        "opportunistic": [
-          "Abyss брать только если он рядом и не ломает темп."
-        ]
-      },
-      "display": {
-        "wideModeRecommended": true,
-        "showAllChecklist": true
-      },
-      "area_ids": [
-        "C_P2_5",
-        "P2_5"
-      ]
-    },
-    {
-      "id": "i2_kima",
-      "act": 5,
-      "zone_en": "Qimah",
-      "zone_ru": "Кима",
-      "aliases": [
-        "Kima"
-      ],
-      "recommended_level": 52,
-      "recommended_level_label": "52+",
-      "is_good_xp_zone": false,
-      "checklist": [
-        {
-          "id": "i2_kima_task_1",
-          "text": "Налить воды и взять пассивку",
-          "type": "reward",
-          "required": true,
-          "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
-        },
-        {
-          "id": "i2_kima_task_2",
-          "text": "Обычно выбрать all resists",
-          "type": "route_task",
-          "required": false,
-          "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
-        }
-      ],
-      "rewards": [
-        "Пассивка / все сопротивления"
-      ],
-      "skip": [],
-      "important": [],
-      "after": [],
-      "boss_tips": [],
-      "xp_notes": [],
-      "crafting_tips": [],
-      "next_zone_ru": "Водохранилище Кима",
-      "details": {
-        "route": [
-          "Налить воды и взять пассивку",
-          "Обычно выбрать all resists"
-        ],
-        "rewards": [
-          "Пассивка / все сопротивления",
-          "Налить воду/активировать колонны и выбрать постоянный бонус; часто берут all res или нужный utility-бонус."
-        ],
-        "skip": [],
-        "important": [],
-        "after": [],
-        "boss_tips": [],
-        "xp_notes": [],
-        "crafting_tips": [],
-        "opportunistic": [
-          "Выбор можно позже изменить, но на забеге лучше заранее понимать, что берёшь."
-        ]
-      },
-      "display": {
-        "wideModeRecommended": true,
-        "showAllChecklist": true
-      },
-      "area_ids": [
-        "C_P2_6",
-        "P2_6"
-      ]
-    },
-    {
-      "id": "i2_kima_reservoir",
-      "act": 5,
-      "zone_en": "Qimah Reservoir",
-      "zone_ru": "Водохранилище Кима",
-      "aliases": [
-        "Kima Reservoir",
-        "Резервуар Кимы"
-      ],
-      "recommended_level": 53,
-      "recommended_level_label": "53+",
-      "is_good_xp_zone": false,
-      "checklist": [
-        {
-          "id": "i2_kima_reservoir_task_1",
-          "text": "Флаконы у колодцев — опционально для высокоуровневой валюты",
-          "type": "route_task",
-          "required": false,
-          "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
-        },
-        {
-          "id": "i2_kima_reservoir_task_2",
-          "text": "Главное — убить Асмоди",
-          "type": "boss",
-          "required": false,
-          "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
-        }
-      ],
-      "rewards": [
-        "Возможные exalts/chaos из флаконов",
-        "Прогресс"
-      ],
-      "skip": [],
-      "important": [],
-      "after": [],
-      "boss_tips": [],
-      "xp_notes": [],
-      "crafting_tips": [],
-      "next_zone_ru": "Опушка",
-      "details": {
-        "route": [
-          "Флаконы у колодцев — опционально для высокоуровневой валюты",
-          "Главное — убить Асмоди"
-        ],
-        "rewards": [
-          "Возможные exalts/chaos из флаконов",
-          "Прогресс"
-        ],
-        "skip": [],
-        "important": [],
-        "after": [],
-        "boss_tips": [],
-        "xp_notes": [],
-        "crafting_tips": [],
-        "opportunistic": [
-          "Vials можно использовать на колодцах ради валюты, если попались по пути."
-        ],
-        "navigation": [
-          "После Водохранилища Кима перейти в Опушку, затем идти в Пепельный лес."
-        ],
-        "time_saves": [
-          "Не забыть нажать/забрать главную barrier/награду после босса, затем сразу в Опушку."
-        ]
-      },
-      "display": {
-        "wideModeRecommended": true,
-        "showAllChecklist": true
-      },
-      "area_ids": [
-        "C_P2_7",
-        "P2_7"
       ]
     },
     {
@@ -6703,7 +6527,8 @@
         "Не задерживаться в хабе: цель — сразу открыть путь в Пепельный лес"
       ],
       "important": [
-        "Маршрут после Водохранилища Кима идёт через Опушку, а не сразу в Деревню Криар"
+        "Domistae 0.5 рекомендует делать Mount Kriar первым ради ранних +40 Spirit; интерлюдии можно проходить в любом порядке.",
+        "Ashen Forest не имеет waypoint — просто пройти через него к Kriar Village."
       ],
       "after": [],
       "boss_tips": [],
@@ -6712,8 +6537,9 @@
       "next_zone_ru": "Пепельный лес",
       "details": {
         "route": [
-          "Использовать Опушку как транзитный хаб после Водохранилища Кима",
-          "Выйти в Пепельный лес"
+          "Старт Mount Kriar через Hooded One",
+          "The Glade → Ashen Forest",
+          "Не задерживаться: цель — Kriar Village и +40 Spirit"
         ],
         "rewards": [],
         "skip": [
@@ -6814,7 +6640,7 @@
         "xp_notes": [],
         "crafting_tips": [],
         "navigation": [
-          "Маршрут: Опушка → Пепельный лес → Деревня Криар."
+          "Ashen Forest без waypoint: идти через The Glade к Kriar Village; Ancient Monument брать, если по пути."
         ],
         "time_saves": [
           "Древний монумент брать по пути; если уводит в долгую сторону — не ломать темп."
@@ -6865,7 +6691,8 @@
       ],
       "skip": [],
       "important": [
-        "Литара похожа на Viper; стараться застанить на половине HP и добить в окне"
+        "Главная причина делать Mount Kriar первым — Lythara даёт +40 духа и Spirit Gem; это сильный power spike перед остальными интерлюдиями.",
+        "За roving wisps обычно нужно следить: они ведут дальше по маршруту."
       ],
       "after": [],
       "boss_tips": [
@@ -6876,8 +6703,10 @@
       "next_zone_ru": "Ледниковое озеро",
       "details": {
         "route": [
-          "Дойти до Литары и убить",
-          "Забрать cursed skull: +40 духа и камень духа 14 уровня"
+          "Следовать wisps к Kriar Village",
+          "Убить Lythara",
+          "Забрать +40 духа, Spirit Gem и Gemcrust Skull",
+          "Идти в Glacial Tarn"
         ],
         "rewards": [
           "+40 духа",
@@ -6949,7 +6778,7 @@
         "Не полная зачистка, если нужен только переход дальше"
       ],
       "important": [
-        "Центральная ледяная зона ветки Криар: важнее навигация, чем зачистка"
+        "Glacial Tarn — центральная зона ветки Kriar: Expedition/Vaal Beacon по пути, затем Howling Caves и Rakkar для прохода к Kriar Peaks."
       ],
       "after": [],
       "boss_tips": [
@@ -6960,9 +6789,10 @@
       "next_zone_ru": "Воющие пещеры",
       "details": {
         "route": [
-          "Забрать waypoint/переходы, если попал сюда по ветке Криар",
-          "Убить Раккара, Ледяной коготь, если идёшь закрывать зону",
-          "Не чистить озеро полностью без причины"
+          "Waypoint / Expedition по пути",
+          "Howling Caves → Yeti tusks",
+          "Вернуть tusks Hilda за +2 пассивных очка",
+          "Вернуться в Glacial Tarn и убить Rakkar для прохода к Kriar Peaks"
         ],
         "rewards": [
           "Босс Раккар и дополнительная добыча"
@@ -7034,7 +6864,9 @@
         "2 пассивных очка за клыки Йети"
       ],
       "skip": [],
-      "important": [],
+      "important": [
+        "Abominable Yeti даёт Icy Tusks; сдача Hilda = +2 пассивных очка."
+      ],
       "after": [],
       "boss_tips": [],
       "xp_notes": [],
@@ -7108,7 +6940,7 @@
         "Можно пропустить, если не нужен случайный уникальный предмет"
       ],
       "important": [
-        "Это опциональная награда, не обязательный прогресс кампании"
+        "Elder Maddox обычно около 10–11 часов; смотреть на синих spirit owls. Награда — бесплатный уник на выбор."
       ],
       "after": [],
       "boss_tips": [],
@@ -7137,7 +6969,7 @@
           "Брать только если по пути или если хочется шанс на полезный уник."
         ],
         "navigation": [
-          "Маршрут: Пики Криар → Высеченное ущелье → Убежище Куачик."
+          "В Kriar Peaks искать Elder Maddox примерно на 10–11 часов; синие spirit owls помогают найти путь."
         ]
       },
       "display": {
@@ -7192,8 +7024,7 @@
         "Не чистить боковые тупики, если переход уже найден"
       ],
       "important": [
-        "Проходная зона к финальной Vaal-ветке",
-        "0.5: во второй половине кампании есть вторая цепочка Ancient Beacons для Fate of the Vaal; маяки по маршруту стоит закрывать."
+        "Stormgore в Etched Ravine открывает Cuachic Vault; это часть Fate of the Vaal в интерлюдиях."
       ],
       "after": [],
       "boss_tips": [
@@ -7216,8 +7047,7 @@
           "Не чистить боковые тупики, если переход уже найден"
         ],
         "important": [
-          "Проходная зона к финальной Vaal-ветке",
-          "0.5: во второй половине кампании есть вторая цепочка Ancient Beacons для Fate of the Vaal; маяки по маршруту стоит закрывать."
+          "Проходная зона к финальной Vaal-ветке"
         ],
         "after": [],
         "boss_tips": [
@@ -7230,9 +7060,6 @@
         ],
         "time_saves": [
           "Если XP в норме — не делать полную зачистку ущелья."
-        ],
-        "opportunistic": [
-          "Если видишь Ancient Beacons/портал Vaal Ruins — это уже core-механика, не старый лиговый мусор."
         ]
       },
       "display": {
@@ -7287,8 +7114,8 @@
         "После сокровищ и боссов не задерживаться на полной зачистке"
       ],
       "important": [
-        "Финальная зона этой Vaal-ветки интерлюдии",
-        "0.5: во второй половине кампании есть вторая цепочка Ancient Beacons для Fate of the Vaal; маяки по маршруту стоит закрывать."
+        "Cuachic Vault — финал ветки Fate of the Vaal в Mount Kriar: закрыть Zolin/Zelina и после этого идти к Ogham Refuge или следующей интерлюдии.",
+        "Ancient Treasures / Sealed Vaults открываются Small Soul Cores — брать, если по пути, без полной зачистки."
       ],
       "after": [],
       "boss_tips": [
@@ -7311,8 +7138,7 @@
           "После сокровищ и боссов не задерживаться на полной зачистке"
         ],
         "important": [
-          "Финальная зона ветки Криар перед возвратом в Пристанище",
-          "0.5: во второй половине кампании есть вторая цепочка Ancient Beacons для Fate of the Vaal; маяки по маршруту стоит закрывать."
+          "Финальная зона ветки Криар перед возвратом в Пристанище"
         ],
         "after": [],
         "boss_tips": [
@@ -7325,9 +7151,6 @@
         ],
         "time_saves": [
           "Это не зона для долгой зачистки: цель — награды и выход."
-        ],
-        "opportunistic": [
-          "Если видишь Ancient Beacons/портал Vaal Ruins — это уже core-механика, не старый лиговый мусор."
         ]
       },
       "display": {
@@ -7372,7 +7195,8 @@
       "rewards": [],
       "skip": [],
       "important": [
-        "Это хаб первой страницы маршрута, после него начинается финальная ветка к Поместью Холтен."
+        "Ogham Refuge / 5.1 лучше делать после Mount Kriar: Scorched Farmlands → Stones of Serle → Blackwood → Holten.",
+        "Blackwood entrance в Scorched Farmlands закрыт Darkness, пока не активируешь Runed Megaliths в Stones of Serle."
       ],
       "after": [],
       "boss_tips": [],
@@ -7381,8 +7205,9 @@
       "next_zone_ru": "Выжженные фермерские земли",
       "details": {
         "route": [
-          "После Убежища Куачик вернуться в Пристанище.",
-          "Дальше идти в Выжженные фермерские земли."
+          "The Refuge → Scorched Farmlands",
+          "Stones of Serle → 6 Runed Megaliths → снять Darkness",
+          "Blackwood → Holten → Wolvenhold + Holten Estate"
         ],
         "important": [
           "Финальная ветка маршрута: Пристанище → Выжженные фермерские земли → Камни Серли → Чернолесье → Холтен → Вольфенхолд → Поместье Холтен."
@@ -7449,7 +7274,8 @@
         "Не чистить лишние карманы после лиг-награды и найденного перехода"
       ],
       "important": [
-        "Это часть основного маршрута из Пристанища к Камням Серли"
+        "Из The Refuge идти в Scorched Farmlands; Blackwood entrance закрыт Darkness, пока не закрыты Stones of Serle.",
+        "Гарант-лига здесь оставлена как Support Gem Lv5 по нашей проектной проверке; не откатывать на Lv4 без свежего скрина из игры."
       ],
       "after": [],
       "boss_tips": [],
@@ -7476,7 +7302,7 @@
         "xp_notes": [],
         "crafting_tips": [],
         "navigation": [
-          "Маршрут: Пристанище → Выжженные фермерские земли → Камни Серли."
+          "The Refuge → Scorched Farmlands → Stones of Serle; Blackwood откроется после 6 Runed Megaliths."
         ],
         "time_saves": [
           "Саппорт забрал — дальше по маршруту, лишние тупики и пачки не чистить."
@@ -7533,7 +7359,7 @@
         "Не разворачивать карту ради полной зачистки"
       ],
       "important": [
-        "Часть основного маршрута перед Чернолесьем"
+        "Активировать 6 Runed Megaliths — это снимает Darkness и открывает путь в Blackwood."
       ],
       "after": [],
       "boss_tips": [],
@@ -7542,9 +7368,9 @@
       "next_zone_ru": "Чернолесье",
       "details": {
         "route": [
-          "Идти дальше по маршруту после Выжженных фермерских земель",
-          "Убить Сиору, Клинок туманов",
-          "После босса вернуться к основной ветке интерлюдии"
+          "Найти и активировать 6 Runed Megaliths",
+          "Снять Darkness curse",
+          "Вернуться к маршруту в Blackwood"
         ],
         "rewards": [
           "Босс и дополнительная добыча"
@@ -7687,7 +7513,7 @@
       ],
       "skip": [],
       "important": [
-        "Подготовить руны под экипировку и следующий weapon upgrade"
+        "В Holten нужно закрыть две ветки: Wolvenhold за Oswin/+2 пассивки и Holten Estate как story-финал 5.1."
       ],
       "after": [],
       "boss_tips": [],
@@ -7764,7 +7590,9 @@
         "+2 пассивных очка набора оружия"
       ],
       "skip": [],
-      "important": [],
+      "important": [
+        "Oswin даёт Warden’s Ledger: использовать/сдать книгу за +2 пассивных очка, не просто убить босса."
+      ],
       "after": [],
       "boss_tips": [],
       "xp_notes": [],
@@ -7845,46 +7673,34 @@
           "required": true,
           "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
-        },
-        {
-          "id": "i_final_holten_estate_task_4",
-          "text": "После всех интерлюдий вернуться к Скрытому в Кингсмарше/Ориате за финальные +2",
-          "type": "reward",
-          "required": true,
-          "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
         }
       ],
       "rewards": [
-        "Выход в Ориат и карты",
-        "Финальные +2 пассивных очка набора оружия у Скрытого после интерлюдий"
+        "Выход в Ориат и карты"
       ],
       "skip": [],
       "important": [
-        "После Альвы ты готов к первой карте",
-        "Не уходить в эндгейм без финального разговора со Скрытым: итог должен быть 24 weapon set passive points."
+        "После Holten Estate, если Khari Bazaar ещё не закрыт, идти туда; если все 3 интерлюдии закрыты — вернуться в Kingsmarch к Hooded One за финальные +2.",
+        "Финальный interlude completion turn-in даёт ещё +2 пассивных очка."
       ],
       "after": [],
       "boss_tips": [],
       "xp_notes": [],
       "crafting_tips": [],
-      "next_zone_ru": "Ориат",
+      "next_zone_ru": "Кхарийский базар",
       "details": {
         "route": [
-          "Обойти к лестнице слева",
-          "В финале сначала убить Леди Алсвит",
-          "Добить остальных",
-          "Ренли → Акт 4 → пассивки у Скрытого → Ориат → карты",
-          "После всех интерлюдий вернуться к Скрытому в Кингсмарше/Ориате за финальные +2"
+          "Holten Estate story bosses",
+          "Вернуться в town",
+          "Если Khari не закрыт — Khari Bazaar",
+          "Если все 3 интерлюдии закрыты — Kingsmarch → Hooded One → +2 пассивки → Oriath/maps"
         ],
         "rewards": [
-          "Выход в Ориат и карты",
-          "Финальные +2 пассивных очка набора оружия у Скрытого после интерлюдий"
+          "Выход в Ориат и карты"
         ],
         "skip": [],
         "important": [
-          "После Альвы ты готов к первой карте",
-          "Не уходить в эндгейм без финального разговора со Скрытым: итог должен быть 24 weapon set passive points."
+          "После Альвы ты готов к первой карте"
         ],
         "after": [],
         "boss_tips": [
@@ -7893,8 +7709,7 @@
         "xp_notes": [],
         "crafting_tips": [],
         "town_plan": [
-          "После боя: Ренли/Ринли → Акт 4 → Скрытый за пассивками → Ориат → карты.",
-          "Финал: Золин/Зелина → город → Скрытый → +2 → Ориат."
+          "После боя: Ренли/Ринли → Акт 4 → Скрытый за пассивками → Ориат → карты."
         ],
         "time_saves": [
           "Финальные диалоги пройти по цепочке без лишних возвратов: Дориани/Кингсмарч/Ориат."
@@ -7907,6 +7722,569 @@
       "area_ids": [
         "C_P1_6",
         "P1_6"
+      ]
+    },
+    {
+      "id": "interlude_khari_bazaar",
+      "act": 5,
+      "zone_en": "Khari Bazaar",
+      "zone_ru": "Кхарийский базар",
+      "aliases": [
+        "Khari Bazaar",
+        "Khari Bazaar Town"
+      ],
+      "recommended_level": 48,
+      "recommended_level_label": "48+",
+      "is_good_xp_zone": false,
+      "checklist": [
+        {
+          "id": "interlude_khari_bazaar_task_1",
+          "text": "Начать вторую страницу акта: идти в Кхарийский перевал",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "interlude_khari_bazaar_task_2",
+          "text": "Порядок страниц: 2-я страница → 3-я страница → 1-я страница",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "interlude_khari_bazaar_task_3",
+          "text": "После ветки Опушки и Убежища Куачик вернуться к Пристанищу",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        }
+      ],
+      "rewards": [],
+      "skip": [],
+      "important": [
+        "Khari Bazaar / 5.2 можно делать в любом порядке, но в рекомендованном маршруте Domistae он идёт после Mount Kriar и Ogham Refuge.",
+        "Orbala’s Pillar в Qimah даёт один из 7 Boons; выбор можно менять, возвращаясь к pillar."
+      ],
+      "after": [],
+      "boss_tips": [],
+      "xp_notes": [],
+      "crafting_tips": [],
+      "next_zone_ru": "Кхарийский перевал",
+      "details": {
+        "route": [
+          "Khari Bazaar → Khari Crossing → Pools of Khatal → Sel Khari Sanctuary",
+          "Molten One’s Gift / Skullmaw Stairway → +5% Maximum Life",
+          "Qimah → Orbala’s Pillar / 7 Boons → Qimah Reservoir"
+        ],
+        "important": [
+          "Не прыгать сразу в старые/первые локации: порядок страниц нужен, чтобы маршрут в оверлее не вёл назад-вперёд."
+        ],
+        "navigation": [
+          "Кхарийский базар → Кхарийский перевал → Воды Хаталя → Храм Селари → Врата Галаи."
+        ],
+        "town_plan": [
+          "Хаб-памятка: 2-я страница начинается здесь, 3-я — Опушка, 1-я — Пристанище."
+        ]
+      },
+      "display": {
+        "wideModeRecommended": true,
+        "showAllChecklist": true
+      },
+      "area_ids": [
+        "C_P2_Town",
+        "P2_Town"
+      ]
+    },
+    {
+      "id": "interlude_khari_crossing",
+      "act": 5,
+      "zone_en": "The Khari Crossing",
+      "zone_ru": "Кхарийский перевал",
+      "aliases": [
+        "Khari Crossing"
+      ],
+      "recommended_level": 48,
+      "recommended_level_label": "48+",
+      "is_good_xp_zone": false,
+      "checklist": [
+        {
+          "id": "i2_khari_crossing_life_task",
+          "text": "Найти расплавленную святыню и взять +5% максимум здоровья",
+          "type": "reward",
+          "required": true,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "i2_khari_crossing_bosses_task",
+          "text": "Убить Актхи и Анундра",
+          "type": "boss",
+          "required": true,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "i2_khari_crossing_weapon_points_task",
+          "text": "Поговорить с Рису в городе и забрать +2 пассивных очка набора оружия",
+          "type": "reward",
+          "required": true,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        }
+      ],
+      "rewards": [
+        "+5% максимум здоровья",
+        "+2 пассивных очка набора оружия"
+      ],
+      "skip": [],
+      "important": [
+        "Akthi & Anundr дают +2 пассивных очка через Risu; Molten One’s Gift / Skullmaw Stairway даёт +5% Maximum Life."
+      ],
+      "after": [],
+      "boss_tips": [],
+      "xp_notes": [],
+      "crafting_tips": [],
+      "next_zone_ru": "Воды Хаталя",
+      "details": {
+        "route": [
+          "Найти расплавленную святыню и взять +5% максимум здоровья.",
+          "Убить Актхи и Анундра.",
+          "Поговорить с Рису в городе и забрать +2 пассивных очка набора оружия."
+        ],
+        "rewards": [
+          "+5% максимум здоровья — расплавленная святыня в Кхарийском перевале.",
+          "+2 пассивных очка набора оружия — Актхи и Анундр, затем Рису в городе."
+        ],
+        "skip": [],
+        "important": [],
+        "after": [],
+        "boss_tips": [],
+        "xp_notes": [],
+        "crafting_tips": [],
+        "navigation": [
+          "После Кхарийского перевала идти в Воды Хаталя, а уже потом в Храм Селари."
+        ]
+      },
+      "display": {
+        "wideModeRecommended": true,
+        "showAllChecklist": true
+      },
+      "area_ids": [
+        "C_P2_1",
+        "P2_1"
+      ],
+      "campaign_bonus_ids": [
+        "int2_khari_crossing_life_percent",
+        "int2_khari_crossing_aktu_anundr_weapon_points"
+      ]
+    },
+    {
+      "id": "interlude_pools_of_khatal",
+      "act": 5,
+      "zone_en": "Pools of Khatal",
+      "zone_ru": "Воды Хаталя",
+      "aliases": [],
+      "recommended_level": 55,
+      "recommended_level_label": "55+",
+      "is_good_xp_zone": false,
+      "checklist": [
+        {
+          "id": "interlude_pools_khatal_task_1",
+          "text": "Пройти транзитом между Кхарийским перевалом и Храмом Селари",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "interlude_pools_khatal_task_2",
+          "text": "Не чистить полностью, если нет просадки по опыту",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        }
+      ],
+      "rewards": [
+        "Переход по ветке Хаталя / Селари"
+      ],
+      "skip": [
+        "Не разворачивать карту ради полной зачистки"
+      ],
+      "important": [
+        "Pools of Khatal: guaranteed Expedition и вход в Sel Khari Sanctuary; это не просто транзитная пустая зона."
+      ],
+      "after": [],
+      "boss_tips": [],
+      "xp_notes": [],
+      "crafting_tips": [],
+      "next_zone_ru": "Храм Селари",
+      "details": {
+        "route": [
+          "Пройти транзитом между Кхарийским перевалом и Храмом Селари",
+          "Не чистить полностью, если нет просадки по опыту"
+        ],
+        "rewards": [
+          "Переход по ветке Хаталя / Селари"
+        ],
+        "skip": [
+          "Не разворачивать карту ради полной зачистки"
+        ],
+        "important": [
+          "Проходная зона: главная задача — быстро найти следующий переход"
+        ],
+        "after": [],
+        "boss_tips": [],
+        "xp_notes": [],
+        "crafting_tips": [],
+        "navigation": [
+          "Держать темп и искать переход в Храм Селари."
+        ],
+        "time_saves": [
+          "Если XP в норме — не стопориться на боковых карманах."
+        ]
+      },
+      "display": {
+        "wideModeRecommended": true,
+        "showAllChecklist": true
+      },
+      "area_ids": [
+        "C_P2_2",
+        "P2_2"
+      ]
+    },
+    {
+      "id": "interlude_selvari_sanctuary",
+      "act": 5,
+      "zone_en": "Sel Khari Sanctuary",
+      "zone_ru": "Храм Селари",
+      "aliases": [
+        "Selvari Sanctuary",
+        "Святилище Селвари",
+        "Святилище Селхари",
+        "Храм Селари",
+        "Храм Селхари"
+      ],
+      "recommended_level": 49,
+      "recommended_level_label": "49+",
+      "is_good_xp_zone": false,
+      "checklist": [
+        {
+          "id": "i2_selvari_sanctuary_task_1",
+          "text": "Найти 2 барьера и поставить в пьедесталы вдоль внешней стены",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "i2_selvari_sanctuary_task_2",
+          "text": "Выбрать амулет и кольцо",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "i2_selvari_sanctuary_task_3",
+          "text": "Убить Альзура за барью 60 уровня",
+          "type": "boss",
+          "required": true,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        }
+      ],
+      "rewards": [
+        "Выбор амулета/кольца",
+        "Барья 60 уровня для третьего восхождения"
+      ],
+      "skip": [],
+      "important": [
+        "Two Wishes: Yoon’s/Rangееn’s Barya дают два rare jewelry выбора; Elzarah открывает дальнейший прогресс к Asala/Jado."
+      ],
+      "after": [],
+      "boss_tips": [],
+      "xp_notes": [],
+      "crafting_tips": [],
+      "next_zone_ru": "Врата Галаи",
+      "details": {
+        "route": [
+          "Найти 2 барьера и поставить в пьедесталы вдоль внешней стены",
+          "Выбрать амулет и кольцо",
+          "Убить Альзура за барью 60 уровня"
+        ],
+        "rewards": [
+          "Выбор амулета/кольца",
+          "Барья 60 уровня для третьего восхождения",
+          "Alzur даёт barrier 60 уровня под третье восхождение."
+        ],
+        "skip": [],
+        "important": [],
+        "after": [],
+        "boss_tips": [],
+        "xp_notes": [],
+        "crafting_tips": [],
+        "navigation": [
+          "Две barrier вставить в пьедесталы по внешней стене, выбрать кольцо/амулет и идти дальше во Врата Галаи."
+        ],
+        "time_saves": [
+          "После босса поговорить, забрать выбор и двигаться во Врата Галаи без лишнего фарма."
+        ]
+      },
+      "display": {
+        "wideModeRecommended": true,
+        "showAllChecklist": true
+      },
+      "area_ids": [
+        "C_P2_3",
+        "P2_3"
+      ]
+    },
+    {
+      "id": "interlude_galai_gates",
+      "act": 5,
+      "zone_en": "The Galai Gates",
+      "zone_ru": "Ворота Галаи",
+      "aliases": [
+        "Galai Gates",
+        "Ворота Галаи",
+        "Врата Голай",
+        "Ворота Голай",
+        "Врата Галаи"
+      ],
+      "recommended_level": 56,
+      "recommended_level_label": "56+",
+      "is_good_xp_zone": false,
+      "checklist": [
+        {
+          "id": "interlude_galai_gates_task_1",
+          "text": "Пройти через ворота по ветке к Киме",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "interlude_galai_gates_task_2",
+          "text": "Убить Ворнаса, Падшее пламя",
+          "type": "boss",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "interlude_galai_gates_task_3",
+          "text": "Проверить Abyss objective только если он по пути",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        }
+      ],
+      "rewards": [
+        "Босс Ворнас и дополнительная добыча / Abyss objective по пути"
+      ],
+      "skip": [
+        "Abyss objective можно пропустить, если он уводит с маршрута"
+      ],
+      "important": [
+        "Galai Gates / Molten Shrine — северный ориентир к Skullmaw Stairway и +5% Maximum Life; при баге seals можно сбросить инстанс."
+      ],
+      "after": [],
+      "boss_tips": [
+        "На Ворнасе держать дистанцию от опасных огненных окон и не стоять в земле."
+      ],
+      "xp_notes": [],
+      "crafting_tips": [],
+      "next_zone_ru": "Кима",
+      "details": {
+        "route": [
+          "Пройти через ворота по ветке к Киме",
+          "Убить Ворнаса, Падшее пламя",
+          "Проверить Abyss objective только если он по пути"
+        ],
+        "rewards": [
+          "Босс Ворнас и дополнительная добыча / Abyss objective по пути"
+        ],
+        "skip": [
+          "Abyss objective можно пропустить, если он уводит с маршрута"
+        ],
+        "important": [
+          "Не путать с Кхарийским перевалом: бонусы Кхарийского перевала здесь не закрываются"
+        ],
+        "after": [],
+        "boss_tips": [
+          "На Ворнасе держать дистанцию от опасных огненных окон и не стоять в земле."
+        ],
+        "xp_notes": [],
+        "crafting_tips": [],
+        "navigation": [
+          "После ворот двигаться к Киме."
+        ],
+        "opportunistic": [
+          "Abyss брать только если он рядом и не ломает темп."
+        ]
+      },
+      "display": {
+        "wideModeRecommended": true,
+        "showAllChecklist": true
+      },
+      "area_ids": [
+        "C_P2_5",
+        "P2_5"
+      ]
+    },
+    {
+      "id": "i2_kima",
+      "act": 5,
+      "zone_en": "Qimah",
+      "zone_ru": "Кима",
+      "aliases": [
+        "Kima"
+      ],
+      "recommended_level": 52,
+      "recommended_level_label": "52+",
+      "is_good_xp_zone": false,
+      "checklist": [
+        {
+          "id": "i2_kima_task_1",
+          "text": "Налить воды и взять пассивку",
+          "type": "reward",
+          "required": true,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "i2_kima_task_2",
+          "text": "Обычно выбрать all resists",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        }
+      ],
+      "rewards": [
+        "Пассивка / все сопротивления"
+      ],
+      "skip": [],
+      "important": [
+        "Orbala’s Pillar: выбрать 1 из 7 Boons; бонус можно менять позже, вернувшись к pillar."
+      ],
+      "after": [],
+      "boss_tips": [],
+      "xp_notes": [],
+      "crafting_tips": [],
+      "next_zone_ru": "Водохранилище Кима",
+      "details": {
+        "route": [
+          "Налить воды и взять пассивку",
+          "Обычно выбрать all resists"
+        ],
+        "rewards": [
+          "Пассивка / все сопротивления",
+          "Налить воду/активировать колонны и выбрать постоянный бонус; часто берут all res или нужный utility-бонус."
+        ],
+        "skip": [],
+        "important": [],
+        "after": [],
+        "boss_tips": [],
+        "xp_notes": [],
+        "crafting_tips": [],
+        "opportunistic": [
+          "Выбор можно позже изменить, но на забеге лучше заранее понимать, что берёшь."
+        ]
+      },
+      "display": {
+        "wideModeRecommended": true,
+        "showAllChecklist": true
+      },
+      "area_ids": [
+        "C_P2_6",
+        "P2_6"
+      ]
+    },
+    {
+      "id": "i2_kima_reservoir",
+      "act": 5,
+      "zone_en": "Qimah Reservoir",
+      "zone_ru": "Водохранилище Кима",
+      "aliases": [
+        "Kima Reservoir",
+        "Резервуар Кимы"
+      ],
+      "recommended_level": 53,
+      "recommended_level_label": "53+",
+      "is_good_xp_zone": false,
+      "checklist": [
+        {
+          "id": "i2_kima_reservoir_task_1",
+          "text": "Флаконы у колодцев — опционально для высокоуровневой валюты",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "i2_kima_reservoir_task_2",
+          "text": "Главное — убить Асмоди",
+          "type": "boss",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        }
+      ],
+      "rewards": [
+        "Возможные exalts/chaos из флаконов",
+        "Прогресс"
+      ],
+      "skip": [],
+      "important": [
+        "Sacred Wells с Vials of Sacred Water — опциональная валюта; Bloodbilge safe to skip, если темп важнее.",
+        "После финального босса Azmadi и всех трёх интерлюдий вернуться в Kingsmarch к Hooded One за финальные +2 пассивки."
+      ],
+      "after": [],
+      "boss_tips": [],
+      "xp_notes": [],
+      "crafting_tips": [],
+      "next_zone_ru": "Кингсмарш / финальная сдача",
+      "details": {
+        "route": [
+          "Sacred Wells / vials по пути",
+          "Bloodbilge — только если хочется loot",
+          "Azmadi final boss",
+          "Grand Barya / Jado / Asala",
+          "Kingsmarch → Hooded One +2, если все interludes закрыты"
+        ],
+        "rewards": [
+          "Возможные exalts/chaos из флаконов",
+          "Прогресс"
+        ],
+        "skip": [],
+        "important": [],
+        "after": [],
+        "boss_tips": [],
+        "xp_notes": [],
+        "crafting_tips": [],
+        "opportunistic": [
+          "Vials можно использовать на колодцах ради валюты, если попались по пути."
+        ],
+        "navigation": [
+          "После Водохранилища Кима перейти в Опушку, затем идти в Пепельный лес."
+        ],
+        "time_saves": [
+          "Не забыть нажать/забрать главную barrier/награду после босса, затем сразу в Опушку."
+        ]
+      },
+      "display": {
+        "wideModeRecommended": true,
+        "showAllChecklist": true
+      },
+      "area_ids": [
+        "C_P2_7",
+        "P2_7"
       ]
     }
   ],
@@ -8111,6 +8489,17 @@
         "title": "Новые базы оружия/брони",
         "items": [
           "Проверить базы оружия/брони у торговцев"
+        ]
+      }
+    ],
+    "campaign_notes": [
+      {
+        "id": "poe2_050_domistae_interludes",
+        "title": "0.5 Interludes order",
+        "items": [
+          "Интерлюдии можно проходить в любом порядке; рекомендуемый порядок для силы: Mount Kriar → Ogham Refuge → Khari Bazaar.",
+          "Сопротивления падают сразу при входе в интерлюдию — заходить только когда готов закрывать ветку.",
+          "После всех трёх интерлюдий вернуться к Hooded One в Kingsmarch за финальные +2 пассивных очка."
         ]
       }
     ]

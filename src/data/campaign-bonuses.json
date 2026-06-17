@@ -540,7 +540,7 @@
       "id": "act3_vaal_heart_weapon_points",
       "act": 3,
       "zoneId": "a3_vaal_heart",
-      "zone_ru": "Ваальская часть / жертвенное сердце",
+      "zone_ru": "Утцааль / Аггорат",
       "title": "+2 пассивных очка за сердце",
       "category": "weapon_set_passive",
       "source": "Сердце ваал → жертвенный алтарь Аггората",
@@ -679,10 +679,10 @@
       "zone_ru": "Остров Вакапану",
       "title": "Выбор Kaom/Rakiata за Shark Fin",
       "category": "choice",
-      "source": "Great White One → Shark Fin → Каймана",
+      "source": "Great White One → Shark Fin → Kaimana",
       "details": [
-        "Убить Great White One в Акульей яме на Острове Вакапану.",
-        "Подобрать Shark Fin и сдать Каймане в Нгакану или на корабле Каруи в Кингсмарше.",
+        "Убить Great White One в Shark Pit на Whakapanu Island.",
+        "Подобрать Shark Fin и сдать Kaimana в Ngakanu / Medicine Circle или позже на Karui ship в Kingsmarch.",
         "Выбор постоянный: Kaom’s Lesson или Rakiata’s Lesson."
       ],
       "reward": {
@@ -708,6 +708,16 @@
         {
           "all": [
             "Rakiata’s Lesson"
+          ]
+        },
+        {
+          "all": [
+            "Shark Fin"
+          ]
+        },
+        {
+          "all": [
+            "Акулий плавник"
           ]
         },
         {
