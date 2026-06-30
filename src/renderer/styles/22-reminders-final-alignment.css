@@ -1,0 +1,146 @@
+/* Reminders final alignment: remove stretched empty panels and make the tab read top-to-bottom. */
+.companion-page .reminders-dashboard-grid {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+  grid-template-areas:
+    "nearest flasks"
+    "bases power" !important;
+  grid-auto-flow: row !important;
+  grid-auto-rows: auto !important;
+  align-items: start !important;
+  align-content: start !important;
+  gap: 12px !important;
+}
+
+.companion-page .reminders-card,
+.companion-page .reminders-card-wide,
+.companion-page .reminders-power-spikes-card {
+  align-self: start !important;
+  height: auto !important;
+  min-height: 0 !important;
+  align-content: start !important;
+  align-items: start !important;
+}
+
+.companion-page .reminders-card-nearest {
+  grid-area: nearest !important;
+}
+
+.companion-page .reminders-dashboard-grid > .reminders-card:not(.reminders-card-nearest):not(.reminders-card-wide):not(.reminders-power-spikes-card) {
+  grid-area: flasks !important;
+}
+
+.companion-page .reminders-card-wide:not(.reminders-power-spikes-card) {
+  grid-area: bases !important;
+}
+
+.companion-page .reminders-power-spikes-card {
+  grid-area: power !important;
+}
+
+.companion-page .reminders-card h3,
+.companion-page .reminders-power-spikes-card h3 {
+  align-self: start !important;
+  margin: 0 0 10px !important;
+}
+
+.companion-page .reminders-card .reminder-list,
+.companion-page .reminder-chip-grid,
+.companion-page .power-spike-timeline {
+  align-self: start !important;
+  width: 100% !important;
+}
+
+.companion-page .reminders-card-nearest .reminder-list {
+  gap: 8px !important;
+}
+
+.companion-page .reminders-card-nearest .reminder-item {
+  min-height: 72px;
+  align-content: center;
+}
+
+.companion-page .reminders-dashboard-grid > .reminders-card:not(.reminders-card-nearest):not(.reminders-card-wide):not(.reminders-power-spikes-card) .reminder-item {
+  min-height: 58px;
+  align-content: center;
+}
+
+.companion-page .reminder-chip-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 8px !important;
+}
+
+.companion-page .reminder-chip {
+  min-height: 58px !important;
+  padding: 8px 10px !important;
+  align-content: center !important;
+}
+
+.companion-page .reminders-power-spikes-card {
+  overflow: hidden !important;
+}
+
+.companion-page .power-spike-timeline {
+  gap: 0 !important;
+  padding-top: 0 !important;
+}
+
+.companion-page .power-spike-timeline::before {
+  top: 16px !important;
+  bottom: 16px !important;
+  left: 18px !important;
+}
+
+.companion-page .power-spike-timeline-item {
+  grid-template-columns: 38px minmax(0, 1fr) !important;
+  gap: 9px !important;
+  padding-bottom: 9px !important;
+}
+
+.companion-page .power-spike-timeline-node {
+  width: 38px !important;
+  min-width: 38px !important;
+}
+
+.companion-page .power-spike-timeline-level {
+  width: 30px !important;
+  height: 30px !important;
+  font-size: 11px !important;
+}
+
+.companion-page .power-spike-timeline-card {
+  min-height: 0 !important;
+  padding: 9px 10px 10px !important;
+  gap: 5px !important;
+}
+
+.companion-page .power-spike-timeline-card strong {
+  font-size: 13px !important;
+  line-height: 1.18 !important;
+}
+
+.companion-page .power-spike-timeline-list {
+  gap: 2px !important;
+  font-size: 11.5px !important;
+  line-height: 1.28 !important;
+}
+
+@media (min-width: 1320px) {
+  .companion-page .reminders-dashboard-grid {
+    grid-template-columns: minmax(0, 0.96fr) minmax(0, 1fr) !important;
+  }
+}
+
+@media (max-width: 980px) {
+  .companion-page .reminders-dashboard-grid {
+    grid-template-columns: 1fr !important;
+    grid-template-areas:
+      "nearest"
+      "flasks"
+      "bases"
+      "power" !important;
+  }
+
+  .companion-page .reminder-chip-grid {
+    grid-template-columns: repeat(auto-fit, minmax(132px, 1fr)) !important;
+  }
+}

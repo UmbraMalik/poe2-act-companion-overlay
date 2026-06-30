@@ -70,6 +70,7 @@ const expected = [
   '19-overlay-control-unified-hover.css',
   '20-reminders-timeline.css',
   '21-reminders-layout-polish.css',
+  '22-reminders-final-alignment.css',
 ];
 
 if (partials.join('\n') !== expected.join('\n')) {
