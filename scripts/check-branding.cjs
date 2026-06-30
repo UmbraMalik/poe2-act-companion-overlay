@@ -30,7 +30,8 @@ const ignoredDirs = new Set([
 ]);
 const ignoredFiles = new Set([
   // Historical release asset names/URLs are immutable GitHub data, not active UI branding.
-  path.join('docs', 'stats', 'downloads-state.json')
+  path.join('docs', 'stats', 'downloads-state.json'),
+  path.join('stats', 'downloads-state.json')
 ]);
 const textExtensions = new Set([
   '.ts', '.tsx', '.js', '.cjs', '.json', '.md', '.html', '.css', '.txt', '.yml', '.yaml'
