@@ -1479,7 +1479,7 @@ export function OverlayPage() {
   );
   const overlayOpenCompanionButton = (
     <button
-      className="overlay-icon-button no-drag"
+      className="overlay-icon-button overlay-companion-icon-button no-drag"
       type="button"
       title={t('overlay.openCompanion', { hotkey: openCompanionHotkey })}
       aria-label={t('overlay.openCompanion', { hotkey: openCompanionHotkey })}
@@ -1490,7 +1490,7 @@ export function OverlayPage() {
   );
   const overlayOpenSettingsButton = (
     <button
-      className="overlay-icon-button no-drag"
+      className="overlay-icon-button overlay-settings-icon-button no-drag"
       type="button"
       title={t('overlay.openSettings')}
       aria-label={t('overlay.openSettings')}
