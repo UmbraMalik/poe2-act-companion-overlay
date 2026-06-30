@@ -27,3 +27,4 @@
 @import './styles/20-reminders-timeline.css'; /* Reminders tab power-spike timeline */
 @import './styles/21-reminders-layout-polish.css'; /* Reminders tab bento layout and ordered power-spike roadmap */
 @import './styles/22-reminders-final-alignment.css'; /* Final reminders alignment: compact bento rows and single roadmap */
+@import './styles/23-results-recap.css'; /* Results recap polish: hero result, metrics, splits and longest zones */
