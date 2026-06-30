@@ -1,0 +1,211 @@
+/* Reminders layout polish: turn the tab into an ordered bento + single-roadmap power timeline. */
+.companion-page .reminders-dashboard-grid {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+  grid-auto-flow: dense;
+  grid-auto-rows: min-content;
+  align-items: start;
+  gap: 12px;
+}
+
+.companion-page .reminders-card,
+.companion-page .reminders-card-wide,
+.companion-page .reminders-power-spikes-card {
+  grid-column: auto !important;
+  align-self: stretch;
+}
+
+.companion-page .reminders-card {
+  min-width: 0;
+}
+
+.companion-page .reminders-card h3 {
+  margin-bottom: 10px;
+}
+
+.companion-page .reminders-card-nearest {
+  min-height: 0;
+}
+
+.companion-page .reminders-card-nearest .reminder-list,
+.companion-page .reminders-card:not(.reminders-card-nearest):not(.reminders-power-spikes-card) .reminder-list {
+  gap: 8px;
+}
+
+.companion-page .reminder-chip-grid {
+  grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+  gap: 8px;
+}
+
+.companion-page .reminder-chip {
+  min-height: 66px;
+  align-content: center;
+}
+
+.companion-page .reminders-power-spikes-card {
+  overflow: visible;
+  min-height: 100%;
+}
+
+.companion-page .reminders-power-spikes-card h3 {
+  margin-bottom: 12px;
+}
+
+.companion-page .power-spike-timeline {
+  position: relative;
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 0 !important;
+  margin: 0;
+  padding: 2px 0 0;
+  list-style: none;
+}
+
+.companion-page .power-spike-timeline::before {
+  content: "";
+  position: absolute;
+  top: 19px;
+  bottom: 19px;
+  left: 19px;
+  width: 2px;
+  border-radius: 999px;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(122, 214, 144, 0.34),
+      rgba(241, 185, 106, 0.24) 58%,
+      rgba(105, 128, 150, 0.14)
+    );
+  box-shadow: 0 0 12px rgba(122, 214, 144, 0.08);
+}
+
+.companion-page .power-spike-timeline-item {
+  position: relative;
+  display: grid !important;
+  grid-template-columns: 40px minmax(0, 1fr) !important;
+  gap: 10px;
+  min-width: 0;
+  padding: 0 0 10px !important;
+}
+
+.companion-page .power-spike-timeline-item:last-child {
+  padding-bottom: 0 !important;
+}
+
+.companion-page .power-spike-timeline-item:not(:last-child)::after {
+  display: none !important;
+}
+
+.companion-page .power-spike-timeline-node {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: start center;
+  width: 40px !important;
+  min-width: 40px !important;
+  padding-top: 2px;
+}
+
+.companion-page .power-spike-timeline-level {
+  width: 32px;
+  height: 32px;
+  font-size: 12px;
+}
+
+.companion-page .power-spike-timeline-card {
+  position: relative;
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  min-height: 92px;
+  padding: 10px 11px 11px;
+  border-radius: 13px;
+  border-color: rgba(205, 220, 237, 0.095);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.034), rgba(255, 255, 255, 0.015)),
+    rgba(7, 12, 18, 0.20);
+}
+
+.companion-page .power-spike-timeline-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 2px;
+  border-radius: 13px 0 0 13px;
+  background: rgba(241, 185, 106, 0.26);
+  opacity: 0.65;
+}
+
+.companion-page .power-spike-timeline-header {
+  align-items: center;
+}
+
+.companion-page .power-spike-timeline-card strong {
+  font-size: 14px;
+  line-height: 1.20;
+}
+
+.companion-page .power-spike-timeline-list {
+  gap: 3px;
+  font-size: 12px;
+  line-height: 1.32;
+}
+
+.companion-page .power-spike-timeline-item.is-nearest .power-spike-timeline-card::before {
+  width: 3px;
+  background: rgba(255, 210, 126, 0.74);
+  opacity: 1;
+  box-shadow: 0 0 14px rgba(241, 185, 106, 0.26);
+}
+
+.companion-page .power-spike-timeline-item.is-past:not(.is-nearest) .power-spike-timeline-card::before {
+  background: rgba(122, 214, 144, 0.30);
+}
+
+.companion-page .power-spike-timeline-item.is-future:not(.is-nearest) .power-spike-timeline-card::before {
+  background: rgba(105, 128, 150, 0.18);
+}
+
+.companion-page .power-spike-timeline-item.is-past:not(.is-nearest) .power-spike-timeline-card,
+.companion-page .power-spike-timeline-item.is-future:not(.is-nearest) .power-spike-timeline-card {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.030),
+    0 7px 16px rgba(0, 0, 0, 0.12);
+}
+
+@media (min-width: 1180px) {
+  .companion-page .reminders-power-spikes-card {
+    grid-column: auto !important;
+  }
+
+  .companion-page .power-spike-timeline {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 980px) {
+  .companion-page .reminders-dashboard-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .companion-page .reminders-card,
+  .companion-page .reminders-card-wide,
+  .companion-page .reminders-power-spikes-card {
+    grid-column: 1 / -1 !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .companion-page .power-spike-timeline::before {
+    left: 18px;
+  }
+
+  .companion-page .power-spike-timeline-item {
+    grid-template-columns: 38px minmax(0, 1fr) !important;
+    gap: 8px;
+  }
+
+  .companion-page .power-spike-timeline-node {
+    width: 38px !important;
+    min-width: 38px !important;
+  }
+}
