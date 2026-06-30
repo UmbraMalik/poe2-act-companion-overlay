@@ -1,0 +1,285 @@
+/* Final overlay control hover pass: one interaction model for normal, compact and timer-only HUDs.
+ * This layer intentionally stays last so older generic icon hover rules cannot flatten intent colors.
+ */
+:root {
+  --overlay-hover-lift-final: -1px;
+  --overlay-hover-shell-border: rgba(205, 220, 237, 0.11);
+  --overlay-hover-shell-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.034), rgba(255, 255, 255, 0.016)), rgba(0, 0, 0, 0.13);
+  --overlay-hover-blue-border: rgba(112, 190, 255, 0.84);
+  --overlay-hover-blue-glow: rgba(82, 170, 255, 0.32);
+  --overlay-hover-gold-border: rgba(241, 185, 106, 0.84);
+  --overlay-hover-gold-glow: rgba(241, 185, 106, 0.32);
+  --overlay-hover-violet-border: rgba(177, 147, 255, 0.84);
+  --overlay-hover-violet-glow: rgba(142, 118, 255, 0.28);
+  --overlay-hover-red-border: rgba(255, 104, 90, 0.94);
+  --overlay-hover-red-glow: rgba(255, 76, 62, 0.34);
+}
+
+.overlay-page .overlay-quick-actions,
+.overlay-page:not(.overlay-page-timer-only) .hud-header .overlay-quick-actions,
+.overlay-page.density-compact .overlay-quick-actions,
+.overlay-page.overlay-page-timer-only .timer-only-top-control-row .overlay-quick-actions,
+.overlay-page.is-overlay-collapsed .overlay-quick-actions {
+  border-color: var(--overlay-hover-shell-border) !important;
+  background: var(--overlay-hover-shell-bg) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.045),
+    0 0 0 1px rgba(255, 255, 255, 0.018) !important;
+}
+
+.overlay-page .overlay-quick-actions > .overlay-icon-button,
+.overlay-page:not(.overlay-page-timer-only) .hud-header .overlay-quick-actions > .overlay-icon-button,
+.overlay-page.density-compact .overlay-quick-actions > .overlay-icon-button,
+.overlay-page.overlay-page-timer-only .timer-only-top-control-row .overlay-quick-actions > .overlay-icon-button,
+.overlay-page.is-overlay-collapsed .overlay-quick-actions > .overlay-icon-button,
+.overlay-page .overlay-language-toggle-hitarea,
+.overlay-page:not(.overlay-page-timer-only) .hud-header .overlay-language-toggle-hitarea,
+.overlay-page.density-compact .overlay-language-toggle-hitarea,
+.overlay-page.overlay-page-timer-only .timer-only-top-control-row .overlay-language-toggle-hitarea,
+.overlay-page.is-overlay-collapsed .overlay-language-toggle-hitarea {
+  transition:
+    border-color 140ms ease,
+    background 140ms ease,
+    color 140ms ease,
+    box-shadow 140ms ease,
+    transform 140ms ease,
+    filter 140ms ease,
+    opacity 140ms ease !important;
+}
+
+.overlay-page .overlay-quick-actions > .overlay-icon-button:hover,
+.overlay-page .overlay-quick-actions > .overlay-icon-button:focus-visible,
+.overlay-page:not(.overlay-page-timer-only) .hud-header .overlay-quick-actions > .overlay-icon-button:hover,
+.overlay-page:not(.overlay-page-timer-only) .hud-header .overlay-quick-actions > .overlay-icon-button:focus-visible,
+.overlay-page.density-compact .overlay-quick-actions > .overlay-icon-button:hover,
+.overlay-page.density-compact .overlay-quick-actions > .overlay-icon-button:focus-visible,
+.overlay-page.overlay-page-timer-only .timer-only-top-control-row .overlay-quick-actions > .overlay-icon-button:hover,
+.overlay-page.overlay-page-timer-only .timer-only-top-control-row .overlay-quick-actions > .overlay-icon-button:focus-visible,
+.overlay-page.is-overlay-collapsed .overlay-quick-actions > .overlay-icon-button:hover,
+.overlay-page.is-overlay-collapsed .overlay-quick-actions > .overlay-icon-button:focus-visible,
+.overlay-page .overlay-language-toggle-hitarea:hover,
+.overlay-page .overlay-language-toggle-hitarea:focus-visible {
+  opacity: 1 !important;
+  transform: translateY(var(--overlay-hover-lift-final)) !important;
+  filter: saturate(1.10) brightness(1.06) !important;
+}
+
+/* Start/pause button: keep the strong green/gold action color in every quick-actions row. */
+.overlay-page .overlay-quick-actions > .overlay-timer-control-start:hover:not(:disabled),
+.overlay-page .overlay-quick-actions > .overlay-timer-control-start:focus-visible:not(:disabled),
+.overlay-page:not(.overlay-page-timer-only) .hud-header .overlay-quick-actions > .overlay-timer-control-start:hover:not(:disabled),
+.overlay-page:not(.overlay-page-timer-only) .hud-header .overlay-quick-actions > .overlay-timer-control-start:focus-visible:not(:disabled),
+.overlay-page.density-compact .overlay-quick-actions > .overlay-timer-control-start:hover:not(:disabled),
+.overlay-page.density-compact .overlay-quick-actions > .overlay-timer-control-start:focus-visible:not(:disabled),
+.overlay-page.overlay-page-timer-only .timer-only-top-control-row .overlay-quick-actions > .overlay-timer-control-start:hover:not(:disabled),
+.overlay-page.overlay-page-timer-only .timer-only-top-control-row .overlay-quick-actions > .overlay-timer-control-start:focus-visible:not(:disabled),
+.overlay-page.is-overlay-collapsed .overlay-quick-actions > .overlay-timer-control-start:hover:not(:disabled),
+.overlay-page.is-overlay-collapsed .overlay-quick-actions > .overlay-timer-control-start:focus-visible:not(:disabled) {
+  border-color: rgba(125, 236, 162, 0.86) !important;
+  background:
+    radial-gradient(circle at 50% 22%, rgba(169, 255, 195, 0.38), transparent 58%),
+    linear-gradient(180deg, rgba(55, 151, 89, 0.48), rgba(24, 84, 52, 0.38)) !important;
+  color: #f2fff5 !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(205, 255, 220, 0.15),
+    0 0 0 1px rgba(125, 236, 162, 0.20),
+    0 0 18px rgba(84, 190, 112, 0.32) !important;
+}
+
+.overlay-page .overlay-quick-actions > .overlay-timer-control-pause:hover:not(:disabled),
+.overlay-page .overlay-quick-actions > .overlay-timer-control-pause:focus-visible:not(:disabled),
+.overlay-page:not(.overlay-page-timer-only) .hud-header .overlay-quick-actions > .overlay-timer-control-pause:hover:not(:disabled),
+.overlay-page:not(.overlay-page-timer-only) .hud-header .overlay-quick-actions > .overlay-timer-control-pause:focus-visible:not(:disabled),
+.overlay-page.density-compact .overlay-quick-actions > .overlay-timer-control-pause:hover:not(:disabled),
+.overlay-page.density-compact .overlay-quick-actions > .overlay-timer-control-pause:focus-visible:not(:disabled),
+.overlay-page.overlay-page-timer-only .timer-only-top-control-row .overlay-quick-actions > .overlay-timer-control-pause:hover:not(:disabled),
+.overlay-page.overlay-page-timer-only .timer-only-top-control-row .overlay-quick-actions > .overlay-timer-control-pause:focus-visible:not(:disabled),
+.overlay-page.is-overlay-collapsed .overlay-quick-actions > .overlay-timer-control-pause:hover:not(:disabled),
+.overlay-page.is-overlay-collapsed .overlay-quick-actions > .overlay-timer-control-pause:focus-visible:not(:disabled) {
+  border-color: rgba(255, 219, 128, 0.86) !important;
+  background:
+    radial-gradient(circle at 50% 22%, rgba(255, 236, 179, 0.38), transparent 58%),
+    linear-gradient(180deg, rgba(161, 106, 37, 0.48), rgba(92, 62, 24, 0.38)) !important;
+  color: #fff4cf !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 239, 192, 0.15),
+    0 0 0 1px rgba(255, 219, 128, 0.20),
+    0 0 18px rgba(241, 185, 106, 0.32) !important;
+}
+
+/* Collapse/expand: violet mode-switch affordance in normal, compact and collapsed views. */
+.overlay-page .overlay-collapse-icon-button:hover,
+.overlay-page .overlay-collapse-icon-button:focus-visible,
+.overlay-page:not(.overlay-page-timer-only) .hud-header .overlay-quick-actions > .overlay-collapse-icon-button:hover,
+.overlay-page:not(.overlay-page-timer-only) .hud-header .overlay-quick-actions > .overlay-collapse-icon-button:focus-visible,
+.overlay-page.density-compact .overlay-quick-actions > .overlay-collapse-icon-button:hover,
+.overlay-page.density-compact .overlay-quick-actions > .overlay-collapse-icon-button:focus-visible,
+.overlay-page.is-overlay-collapsed .overlay-quick-actions > .overlay-collapse-icon-button:hover,
+.overlay-page.is-overlay-collapsed .overlay-quick-actions > .overlay-collapse-icon-button:focus-visible {
+  border-color: var(--overlay-hover-violet-border) !important;
+  background:
+    radial-gradient(circle at 50% 22%, rgba(177, 147, 255, 0.30), transparent 58%),
+    linear-gradient(180deg, rgba(70, 54, 128, 0.48), rgba(35, 29, 64, 0.38)) !important;
+  color: #f1ebff !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(225, 215, 255, 0.13),
+    0 0 0 1px rgba(177, 147, 255, 0.18),
+    0 0 16px var(--overlay-hover-violet-glow) !important;
+}
+
+/* Lock/pin: gold utility affordance in all overlay modes. */
+.overlay-page .overlay-lock-icon-button:hover,
+.overlay-page .overlay-lock-icon-button:focus-visible,
+.overlay-page .overlay-lock-icon-button.is-locked:hover,
+.overlay-page .overlay-lock-icon-button.is-locked:focus-visible,
+.overlay-page:not(.overlay-page-timer-only) .hud-header .overlay-quick-actions > .overlay-lock-icon-button:hover,
+.overlay-page:not(.overlay-page-timer-only) .hud-header .overlay-quick-actions > .overlay-lock-icon-button:focus-visible,
+.overlay-page.density-compact .overlay-quick-actions > .overlay-lock-icon-button:hover,
+.overlay-page.density-compact .overlay-quick-actions > .overlay-lock-icon-button:focus-visible,
+.overlay-page.overlay-page-timer-only .timer-only-top-control-row .overlay-quick-actions > .overlay-lock-icon-button:hover,
+.overlay-page.overlay-page-timer-only .timer-only-top-control-row .overlay-quick-actions > .overlay-lock-icon-button:focus-visible,
+.overlay-page.is-overlay-collapsed .overlay-quick-actions > .overlay-lock-icon-button:hover,
+.overlay-page.is-overlay-collapsed .overlay-quick-actions > .overlay-lock-icon-button:focus-visible {
+  border-color: var(--overlay-hover-gold-border) !important;
+  background:
+    radial-gradient(circle at 50% 22%, rgba(255, 224, 151, 0.32), transparent 58%),
+    linear-gradient(180deg, rgba(114, 79, 32, 0.50), rgba(42, 32, 21, 0.40)) !important;
+  color: #ffe8b7 !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 232, 174, 0.15),
+    0 0 0 1px rgba(241, 185, 106, 0.20),
+    0 0 18px var(--overlay-hover-gold-glow) !important;
+}
+
+/* Details/menu: blue in all modes, including full/compact HUD. */
+.overlay-page .overlay-companion-icon-button:hover,
+.overlay-page .overlay-companion-icon-button:focus-visible,
+.overlay-page:not(.overlay-page-timer-only) .hud-header .overlay-quick-actions > .overlay-companion-icon-button:hover,
+.overlay-page:not(.overlay-page-timer-only) .hud-header .overlay-quick-actions > .overlay-companion-icon-button:focus-visible,
+.overlay-page.density-compact .overlay-quick-actions > .overlay-companion-icon-button:hover,
+.overlay-page.density-compact .overlay-quick-actions > .overlay-companion-icon-button:focus-visible,
+.overlay-page.overlay-page-timer-only .timer-only-top-control-row .overlay-quick-actions > .overlay-companion-icon-button:hover,
+.overlay-page.overlay-page-timer-only .timer-only-top-control-row .overlay-quick-actions > .overlay-companion-icon-button:focus-visible,
+.overlay-page.is-overlay-collapsed .overlay-quick-actions > .overlay-companion-icon-button:hover,
+.overlay-page.is-overlay-collapsed .overlay-quick-actions > .overlay-companion-icon-button:focus-visible {
+  border-color: var(--overlay-hover-blue-border) !important;
+  background:
+    radial-gradient(circle at 50% 22%, rgba(124, 205, 255, 0.30), transparent 58%),
+    linear-gradient(180deg, rgba(35, 79, 115, 0.50), rgba(18, 38, 58, 0.40)) !important;
+  color: #e0f4ff !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(201, 235, 255, 0.14),
+    0 0 0 1px rgba(112, 190, 255, 0.18),
+    0 0 18px var(--overlay-hover-blue-glow) !important;
+}
+
+/* Settings: amber/gold in all modes. */
+.overlay-page .overlay-settings-icon-button:hover,
+.overlay-page .overlay-settings-icon-button:focus-visible,
+.overlay-page:not(.overlay-page-timer-only) .hud-header .overlay-quick-actions > .overlay-settings-icon-button:hover,
+.overlay-page:not(.overlay-page-timer-only) .hud-header .overlay-quick-actions > .overlay-settings-icon-button:focus-visible,
+.overlay-page.density-compact .overlay-quick-actions > .overlay-settings-icon-button:hover,
+.overlay-page.density-compact .overlay-quick-actions > .overlay-settings-icon-button:focus-visible,
+.overlay-page.overlay-page-timer-only .timer-only-top-control-row .overlay-quick-actions > .overlay-settings-icon-button:hover,
+.overlay-page.overlay-page-timer-only .timer-only-top-control-row .overlay-quick-actions > .overlay-settings-icon-button:focus-visible,
+.overlay-page.is-overlay-collapsed .overlay-quick-actions > .overlay-settings-icon-button:hover,
+.overlay-page.is-overlay-collapsed .overlay-quick-actions > .overlay-settings-icon-button:focus-visible {
+  border-color: rgba(255, 204, 112, 0.84) !important;
+  background:
+    radial-gradient(circle at 50% 22%, rgba(255, 226, 151, 0.30), transparent 58%),
+    linear-gradient(180deg, rgba(112, 76, 31, 0.50), rgba(44, 31, 18, 0.40)) !important;
+  color: #ffe4a8 !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 232, 174, 0.15),
+    0 0 0 1px rgba(255, 204, 112, 0.20),
+    0 0 18px rgba(241, 185, 106, 0.30) !important;
+}
+
+/* Close: red danger in all modes, not only timer-only/collapsed. */
+.overlay-page .overlay-close-button:hover,
+.overlay-page .overlay-close-button:focus-visible,
+.overlay-page:not(.overlay-page-timer-only) .hud-header .overlay-quick-actions > .overlay-close-button:hover,
+.overlay-page:not(.overlay-page-timer-only) .hud-header .overlay-quick-actions > .overlay-close-button:focus-visible,
+.overlay-page.density-compact .overlay-quick-actions > .overlay-close-button:hover,
+.overlay-page.density-compact .overlay-quick-actions > .overlay-close-button:focus-visible,
+.overlay-page.overlay-page-timer-only .timer-only-top-control-row .overlay-quick-actions > .overlay-close-button:hover,
+.overlay-page.overlay-page-timer-only .timer-only-top-control-row .overlay-quick-actions > .overlay-close-button:focus-visible,
+.overlay-page.is-overlay-collapsed .overlay-quick-actions > .overlay-close-button:hover,
+.overlay-page.is-overlay-collapsed .overlay-quick-actions > .overlay-close-button:focus-visible {
+  border-color: var(--overlay-hover-red-border) !important;
+  background:
+    radial-gradient(circle at 50% 22%, rgba(255, 112, 98, 0.38), transparent 58%),
+    linear-gradient(180deg, rgba(124, 39, 35, 0.58), rgba(58, 20, 20, 0.50)) !important;
+  color: #fff1ee !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 214, 205, 0.15),
+    0 0 0 1px rgba(255, 94, 82, 0.22),
+    0 0 18px var(--overlay-hover-red-glow) !important;
+}
+
+/* RU/EN toggle: same size and same colored hover model everywhere. */
+.overlay-page .overlay-language-toggle,
+.overlay-page:not(.overlay-page-timer-only) .hud-header .overlay-language-toggle,
+.overlay-page.density-compact .overlay-language-toggle,
+.overlay-page.overlay-page-timer-only .timer-only-top-control-row .overlay-language-toggle,
+.overlay-page.is-overlay-collapsed .overlay-language-toggle {
+  width: 50px !important;
+  min-width: 50px !important;
+  max-width: 50px !important;
+  height: var(--overlay-chrome-size) !important;
+  min-height: var(--overlay-chrome-size) !important;
+  max-height: var(--overlay-chrome-size) !important;
+}
+
+.overlay-page .overlay-language-toggle-hitarea,
+.overlay-page:not(.overlay-page-timer-only) .hud-header .overlay-language-toggle-hitarea,
+.overlay-page.density-compact .overlay-language-toggle-hitarea,
+.overlay-page.overlay-page-timer-only .timer-only-top-control-row .overlay-language-toggle-hitarea,
+.overlay-page.is-overlay-collapsed .overlay-language-toggle-hitarea {
+  width: 50px !important;
+  min-width: 50px !important;
+  height: var(--overlay-chrome-size) !important;
+  min-height: var(--overlay-chrome-size) !important;
+}
+
+.overlay-page .overlay-language-toggle.is-ru .overlay-language-toggle-hitarea:hover,
+.overlay-page .overlay-language-toggle.is-ru .overlay-language-toggle-hitarea:focus-visible,
+.overlay-page:not(.overlay-page-timer-only) .hud-header .overlay-language-toggle.is-ru .overlay-language-toggle-hitarea:hover,
+.overlay-page:not(.overlay-page-timer-only) .hud-header .overlay-language-toggle.is-ru .overlay-language-toggle-hitarea:focus-visible,
+.overlay-page.density-compact .overlay-language-toggle.is-ru .overlay-language-toggle-hitarea:hover,
+.overlay-page.density-compact .overlay-language-toggle.is-ru .overlay-language-toggle-hitarea:focus-visible,
+.overlay-page.overlay-page-timer-only .timer-only-top-control-row .overlay-language-toggle.is-ru .overlay-language-toggle-hitarea:hover,
+.overlay-page.overlay-page-timer-only .timer-only-top-control-row .overlay-language-toggle.is-ru .overlay-language-toggle-hitarea:focus-visible,
+.overlay-page.is-overlay-collapsed .overlay-language-toggle.is-ru .overlay-language-toggle-hitarea:hover,
+.overlay-page.is-overlay-collapsed .overlay-language-toggle.is-ru .overlay-language-toggle-hitarea:focus-visible {
+  border-color: var(--overlay-hover-blue-border) !important;
+  background:
+    radial-gradient(circle at 14% 50%, rgba(100, 190, 255, 0.28), transparent 56%),
+    linear-gradient(180deg, rgba(34, 78, 118, 0.48), rgba(19, 36, 56, 0.38)) !important;
+  color: #e8f7ff !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(201, 235, 255, 0.13),
+    0 0 0 1px rgba(104, 190, 255, 0.18),
+    0 0 16px var(--overlay-hover-blue-glow) !important;
+}
+
+.overlay-page .overlay-language-toggle.is-en .overlay-language-toggle-hitarea:hover,
+.overlay-page .overlay-language-toggle.is-en .overlay-language-toggle-hitarea:focus-visible,
+.overlay-page:not(.overlay-page-timer-only) .hud-header .overlay-language-toggle.is-en .overlay-language-toggle-hitarea:hover,
+.overlay-page:not(.overlay-page-timer-only) .hud-header .overlay-language-toggle.is-en .overlay-language-toggle-hitarea:focus-visible,
+.overlay-page.density-compact .overlay-language-toggle.is-en .overlay-language-toggle-hitarea:hover,
+.overlay-page.density-compact .overlay-language-toggle.is-en .overlay-language-toggle-hitarea:focus-visible,
+.overlay-page.overlay-page-timer-only .timer-only-top-control-row .overlay-language-toggle.is-en .overlay-language-toggle-hitarea:hover,
+.overlay-page.overlay-page-timer-only .timer-only-top-control-row .overlay-language-toggle.is-en .overlay-language-toggle-hitarea:focus-visible,
+.overlay-page.is-overlay-collapsed .overlay-language-toggle.is-en .overlay-language-toggle-hitarea:hover,
+.overlay-page.is-overlay-collapsed .overlay-language-toggle.is-en .overlay-language-toggle-hitarea:focus-visible {
+  border-color: var(--overlay-hover-violet-border) !important;
+  background:
+    radial-gradient(circle at 86% 50%, rgba(178, 124, 255, 0.28), transparent 56%),
+    linear-gradient(180deg, rgba(74, 48, 126, 0.50), rgba(35, 24, 64, 0.40)) !important;
+  color: #f2ebff !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(235, 222, 255, 0.13),
+    0 0 0 1px rgba(184, 132, 255, 0.18),
+    0 0 16px var(--overlay-hover-violet-glow) !important;
+}
