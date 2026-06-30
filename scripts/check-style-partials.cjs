@@ -65,6 +65,7 @@ const expected = [
   '14-visual-hierarchy-polish.css',
   '15-typography-density-polish.css',
   '16-route-states.css',
+  '17-overlay-chrome-pass.css',
 ];
 
 if (partials.join('\n') !== expected.join('\n')) {

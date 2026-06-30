@@ -21,3 +21,4 @@
 @import './styles/14-visual-hierarchy-polish.css'; /* Calmer visual hierarchy for companion dashboard and overlay */
 @import './styles/15-typography-density-polish.css'; /* Final typography, density and danger-state polish */
 @import './styles/16-route-states.css'; /* Route tab state polish: current, completed, pending and missed cards */
+@import './styles/17-overlay-chrome-pass.css'; /* Overlay chrome pass: cleaner top controls, RU/EN toggle and timer-only chrome */
