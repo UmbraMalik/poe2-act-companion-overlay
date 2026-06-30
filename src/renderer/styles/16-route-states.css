@@ -1,0 +1,195 @@
+/* Route states polish: clearer current/completed/pending/missed route cards without global typography changes. */
+:root {
+  --route-current-border: rgba(241, 185, 106, 0.68);
+  --route-current-bg: rgba(241, 185, 106, 0.125);
+  --route-current-edge: rgba(241, 185, 106, 0.78);
+  --route-completed-border: rgba(145, 163, 181, 0.11);
+  --route-completed-bg: rgba(255, 255, 255, 0.014);
+  --route-pending-border: rgba(205, 220, 237, 0.125);
+  --route-pending-bg: rgba(255, 255, 255, 0.026);
+  --route-missed-border: rgba(255, 111, 91, 0.34);
+  --route-missed-bg: rgba(145, 48, 43, 0.14);
+}
+
+/* Keep this scoped to the Route tab. Do not change overlay, type scale or guide data. */
+.companion-page .companion-route-toolbar {
+  border-color: rgba(205, 220, 237, 0.11);
+  background:
+    radial-gradient(circle at 0% 0%, rgba(241, 185, 106, 0.105), transparent 30%),
+    linear-gradient(135deg, rgba(25, 30, 37, 0.90), rgba(9, 13, 18, 0.95));
+}
+
+.companion-page .companion-route-toolbar .button-primary {
+  border-color: rgba(241, 185, 106, 0.54) !important;
+  background:
+    radial-gradient(circle at 8% 0%, rgba(241, 185, 106, 0.22), transparent 50%),
+    linear-gradient(180deg, rgba(241, 185, 106, 0.13), rgba(255, 255, 255, 0.018)) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(241, 185, 106, 0.10),
+    0 10px 24px rgba(0, 0, 0, 0.14) !important;
+}
+
+.companion-page .companion-route-toolbar .button-secondary {
+  border-color: rgba(205, 220, 237, 0.11) !important;
+  background: rgba(255, 255, 255, 0.028) !important;
+}
+
+.companion-page .companion-route-list-card {
+  border-color: rgba(205, 220, 237, 0.105);
+  background:
+    radial-gradient(circle at 86% 0%, rgba(93, 166, 255, 0.07), transparent 34%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.022), rgba(255, 255, 255, 0.007)),
+    rgba(0, 0, 0, 0.12);
+}
+
+.companion-page .companion-route-list-card > h3 {
+  color: rgba(241, 185, 106, 0.88);
+}
+
+.companion-page .route-overview-list.route-overview-grid > .route-overview-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  opacity: 1 !important;
+  border-color: var(--route-pending-border) !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.034), rgba(255, 255, 255, 0.012)),
+    var(--route-pending-bg) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.030),
+    0 10px 22px rgba(0, 0, 0, 0.10) !important;
+  transition:
+    border-color 160ms ease,
+    background 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.companion-page .route-overview-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  border-radius: inherit;
+  background: rgba(205, 220, 237, 0.075);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.companion-page .route-overview-card:hover {
+  border-color: rgba(205, 220, 237, 0.18) !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.043), rgba(255, 255, 255, 0.014)),
+    rgba(255, 255, 255, 0.026) !important;
+  transform: translateY(-1px);
+}
+
+.companion-page .route-overview-card.status-current {
+  opacity: 1 !important;
+  border-color: var(--route-current-border) !important;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(241, 185, 106, 0.24), transparent 46%),
+    linear-gradient(180deg, var(--route-current-bg), rgba(255, 255, 255, 0.016)),
+    rgba(10, 13, 17, 0.44) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(241, 185, 106, 0.18),
+    inset 4px 0 0 var(--route-current-edge),
+    0 14px 30px rgba(241, 185, 106, 0.10),
+    0 12px 28px rgba(0, 0, 0, 0.16) !important;
+}
+
+.companion-page .route-overview-card.status-current::before {
+  width: 5px;
+  background: linear-gradient(180deg, rgba(255, 221, 153, 0.92), rgba(202, 137, 52, 0.72));
+  box-shadow: 0 0 18px rgba(241, 185, 106, 0.34);
+}
+
+.companion-page .route-overview-card.status-completed,
+.companion-page .route-overview-card.status-visited,
+.companion-page .route-overview-card.status-done {
+  opacity: 1 !important;
+  border-color: var(--route-completed-border) !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.016), rgba(255, 255, 255, 0.006)),
+    var(--route-completed-bg) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.018),
+    0 8px 18px rgba(0, 0, 0, 0.08) !important;
+}
+
+.companion-page .route-overview-card.status-completed::before,
+.companion-page .route-overview-card.status-visited::before,
+.companion-page .route-overview-card.status-done::before {
+  background: rgba(122, 214, 144, 0.22);
+}
+
+.companion-page .route-overview-card.status-missed {
+  border-color: var(--route-missed-border) !important;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(255, 111, 91, 0.12), transparent 44%),
+    linear-gradient(180deg, var(--route-missed-bg), rgba(255, 255, 255, 0.010)) !important;
+}
+
+.companion-page .route-overview-card.status-missed::before {
+  background: rgba(255, 111, 91, 0.58);
+  box-shadow: 0 0 16px rgba(255, 111, 91, 0.22);
+}
+
+.companion-page .route-overview-card.status-current .route-zone-name {
+  color: #fff3d0 !important;
+}
+
+.companion-page .route-overview-card.status-completed:not(.status-current) .route-zone-name,
+.companion-page .route-overview-card.status-visited:not(.status-current) .route-zone-name,
+.companion-page .route-overview-card.status-done:not(.status-current) .route-zone-name {
+  color: rgba(226, 216, 197, 0.76) !important;
+}
+
+.companion-page .route-overview-card.status-completed:not(.status-current) .details-list,
+.companion-page .route-overview-card.status-visited:not(.status-current) .details-list,
+.companion-page .route-overview-card.status-done:not(.status-current) .details-list {
+  color: rgba(198, 207, 216, 0.70) !important;
+}
+
+.companion-page .route-overview-card.status-completed:not(.status-current) .route-rec-badge,
+.companion-page .route-overview-card.status-visited:not(.status-current) .route-rec-badge,
+.companion-page .route-overview-card.status-done:not(.status-current) .route-rec-badge {
+  border-color: rgba(205, 220, 237, 0.075) !important;
+  background: rgba(255, 255, 255, 0.024) !important;
+  color: rgba(218, 227, 237, 0.58) !important;
+}
+
+.companion-page .route-overview-card.status-current .route-step-index {
+  color: #fff2ca !important;
+  border-color: rgba(241, 185, 106, 0.52) !important;
+  background: rgba(241, 185, 106, 0.24) !important;
+  box-shadow: 0 0 18px rgba(241, 185, 106, 0.16);
+}
+
+.companion-page .route-overview-card.status-completed .route-step-index,
+.companion-page .route-overview-card.status-visited .route-step-index,
+.companion-page .route-overview-card.status-done .route-step-index {
+  color: rgba(198, 225, 202, 0.70) !important;
+  border-color: rgba(122, 214, 144, 0.14) !important;
+  background: rgba(122, 214, 144, 0.055) !important;
+}
+
+.companion-page .route-overview-card.status-current .route-state-pill {
+  color: #2a1700 !important;
+  border-color: rgba(255, 204, 113, 0.78) !important;
+  background: linear-gradient(180deg, #ffc66f, #d99a47) !important;
+  box-shadow: 0 8px 18px rgba(241, 185, 106, 0.16);
+}
+
+.companion-page .route-overview-card.status-missed .route-state-pill,
+.companion-page .route-warning-inline {
+  border-color: rgba(255, 111, 91, 0.36) !important;
+  background: rgba(145, 48, 43, 0.18) !important;
+  color: rgba(255, 221, 215, 0.92) !important;
+}
+
+.companion-page .route-more-note {
+  border: 1px solid rgba(116, 164, 255, 0.08);
+  background: rgba(116, 164, 255, 0.060) !important;
+  color: rgba(199, 219, 255, 0.78) !important;
+}

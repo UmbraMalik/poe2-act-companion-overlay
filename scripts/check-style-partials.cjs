@@ -64,6 +64,7 @@ const expected = [
   '13-guide-update-highlights.css',
   '14-visual-hierarchy-polish.css',
   '15-typography-density-polish.css',
+  '16-route-states.css',
 ];
 
 if (partials.join('\n') !== expected.join('\n')) {
