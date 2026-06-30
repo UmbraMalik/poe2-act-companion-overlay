@@ -63,6 +63,7 @@ const expected = [
   '12-localization-toggle.css',
   '13-guide-update-highlights.css',
   '14-visual-hierarchy-polish.css',
+  '15-typography-density-polish.css',
 ];
 
 if (partials.join('\n') !== expected.join('\n')) {

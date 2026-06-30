@@ -1,0 +1,251 @@
+/* Typography and density polish: final calm pass before release. */
+:root {
+  --ui-text-primary-soft: rgba(245, 239, 226, 0.92);
+  --ui-text-body-calm: rgba(225, 232, 240, 0.82);
+  --ui-text-muted-calm: rgba(166, 181, 198, 0.66);
+  --ui-text-dim-calm: rgba(139, 151, 166, 0.58);
+  --ui-border-hairline: rgba(205, 220, 237, 0.082);
+  --ui-gold-calm: rgba(226, 166, 78, 0.68);
+  --ui-danger-quiet-bg: rgba(105, 35, 35, 0.18);
+  --ui-danger-quiet-border: rgba(255, 111, 91, 0.24);
+  --ui-success-quiet-bg: rgba(83, 178, 116, 0.052);
+  --ui-success-quiet-border: rgba(122, 214, 144, 0.13);
+}
+
+/* Body copy: keep the fantasy headings, but make long lists easier to read. */
+.companion-page,
+.overlay-page {
+  color: var(--ui-text-body-calm);
+}
+
+.companion-page .section-list li,
+.companion-page .details-list li,
+.companion-page .details-checklist li,
+.companion-page .companion-checklist-list .checklist-item,
+.companion-page .bonus-details-list li,
+.companion-page .reminder-sublist li,
+.companion-page .summary-longest-row,
+.overlay-page .checklist-item,
+.overlay-page .section-list li,
+.overlay-page .section-single-text,
+.overlay-page .details-checklist li {
+  color: var(--ui-text-body-calm) !important;
+  font-family: "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif !important;
+  font-weight: 430 !important;
+  line-height: 1.56;
+  text-shadow: none;
+}
+
+.companion-page .helper-text,
+.companion-page .bonus-meta,
+.companion-page .bonus-detected-line,
+.companion-page .run-metric-card small,
+.companion-page .zone-metric-card small,
+.companion-page .act-time-card-footer,
+.companion-page .summary-section-heading span,
+.overlay-page .hud-footnote,
+.overlay-page .league-reward-note,
+.overlay-page .hud-meta {
+  color: var(--ui-text-muted-calm) !important;
+  font-weight: 420 !important;
+}
+
+.companion-page strong,
+.overlay-page strong,
+.companion-page .bonus-title-line strong,
+.companion-page .route-zone-name,
+.companion-page .reminder-title,
+.overlay-page .league-reward-line {
+  color: var(--ui-text-primary-soft);
+  font-weight: 650 !important;
+}
+
+/* Section labels: still recognizable, less shouty. */
+.companion-page .companion-block h3,
+.companion-page .companion-inline-title,
+.companion-page .zone-section-heading h3,
+.companion-page .summary-section-heading h3,
+.companion-page .bonuses-summary-card h3,
+.companion-page .bonuses-act-card h3,
+.overlay-page .hud-block h2,
+.overlay-page:not(.overlay-page-timer-only) .hud-block h2 {
+  color: var(--ui-gold-calm) !important;
+  letter-spacing: 0.085em !important;
+  font-weight: 680 !important;
+}
+
+/* Hero titles and timer numbers: keep presence, reduce glare. */
+.companion-page .zone-hero-copy h3 {
+  color: rgba(222, 154, 72, 0.78) !important;
+  font-size: clamp(42px, 5.6vw, 56px);
+  letter-spacing: 0.08em !important;
+  text-shadow: 0 14px 34px rgba(0, 0, 0, 0.38);
+}
+
+.companion-page .timer-hero-copy h3,
+.companion-page .act-time-main-value,
+.companion-page .run-metric-card strong,
+.companion-page .zone-metric-card strong,
+.companion-page .summary-best-time,
+.overlay-page .hud-timer,
+.overlay-page .timer-only-time {
+  color: rgba(255, 246, 224, 0.93) !important;
+  text-shadow: 0 8px 24px rgba(0, 0, 0, 0.34);
+}
+
+/* Utility buttons should not compete with the main tabs. */
+.companion-page .settings-header button {
+  min-height: 32px;
+  padding: 7px 11px;
+  border-color: rgba(205, 220, 237, 0.105);
+  background: rgba(255, 255, 255, 0.024);
+  color: rgba(230, 237, 244, 0.76);
+  font-weight: 560 !important;
+}
+
+.companion-page .settings-header button:hover:not(:disabled),
+.companion-page .settings-header button:focus-visible {
+  background: rgba(241, 185, 106, 0.065);
+  color: rgba(255, 242, 211, 0.9);
+}
+
+.companion-card > .companion-tab-row .button-secondary,
+.companion-route-toolbar .button-secondary {
+  border-color: rgba(205, 220, 237, 0.115);
+  background: rgba(255, 255, 255, 0.026);
+  color: rgba(238, 243, 248, 0.82);
+}
+
+.companion-card > .companion-tab-row .button-primary,
+.companion-route-toolbar .button-primary {
+  border-color: rgba(241, 185, 106, 0.34);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(241, 185, 106, 0.16), transparent 58%),
+    linear-gradient(180deg, rgba(94, 62, 25, 0.30), rgba(39, 30, 18, 0.22));
+  box-shadow: inset 0 1px 0 rgba(255, 235, 190, 0.055);
+}
+
+/* Dangerous actions: readable, but not visually tempting until hover/focus. */
+.companion-page .button-danger,
+.companion-page .button-danger-soft,
+.overlay-page .button-danger,
+.overlay-page .button-danger-soft {
+  border-color: var(--ui-danger-quiet-border) !important;
+  background: var(--ui-danger-quiet-bg) !important;
+  color: rgba(255, 216, 207, 0.88) !important;
+  box-shadow: none !important;
+}
+
+.companion-page .button-danger:hover:not(:disabled),
+.companion-page .button-danger-soft:hover:not(:disabled),
+.overlay-page .button-danger:hover:not(:disabled),
+.overlay-page .button-danger-soft:hover:not(:disabled),
+.companion-page .button-danger:focus-visible,
+.companion-page .button-danger-soft:focus-visible,
+.overlay-page .button-danger:focus-visible,
+.overlay-page .button-danger-soft:focus-visible {
+  border-color: rgba(255, 129, 109, 0.48) !important;
+  background: rgba(145, 48, 43, 0.34) !important;
+  color: #ffe0d8 !important;
+}
+
+/* Completed states: progress is visible, but unfinished/current items keep priority. */
+.companion-page .bonus-row.is-done {
+  border-color: var(--ui-success-quiet-border);
+  background:
+    linear-gradient(180deg, var(--ui-success-quiet-bg), rgba(255, 255, 255, 0.010)),
+    rgba(0, 0, 0, 0.11);
+}
+
+.companion-page .bonus-row.is-done .bonus-title-line strong {
+  color: rgba(226, 249, 233, 0.82);
+}
+
+.companion-page .bonus-row.is-done .bonus-status-marker {
+  color: rgba(126, 231, 135, 0.84);
+  background: rgba(122, 214, 144, 0.08);
+  border-color: rgba(122, 214, 144, 0.18);
+}
+
+.companion-page .route-overview-card.status-completed,
+.companion-page .route-overview-card.status-visited,
+.companion-page .route-overview-card.status-done {
+  opacity: 0.52;
+  border-color: var(--ui-border-hairline);
+}
+
+.companion-page .route-overview-card.status-current {
+  opacity: 1;
+  border-color: rgba(241, 185, 106, 0.36);
+}
+
+/* Low-content tabs: the empty lower half should feel intentional, not unfinished. */
+.companion-page .timer-dashboard,
+.companion-page .act-times-dashboard,
+.companion-page .summary-dashboard,
+.companion-page .reminders-dashboard {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.018), rgba(255, 255, 255, 0.004) 44%, rgba(0, 0, 0, 0.08)),
+    radial-gradient(circle at 72% 12%, rgba(93, 166, 255, 0.035), transparent 34%);
+}
+
+.companion-page .timer-card,
+.companion-page .run-save-card,
+.companion-page .act-times-card-list,
+.companion-page .summary-longest-card,
+.companion-page .summary-best-card,
+.companion-page .reminder-card,
+.companion-page .power-spikes-card {
+  border-color: var(--ui-border-hairline);
+}
+
+/* Reminders: reduce duplicate visual alarm feeling. */
+.companion-page .reminder-item.is-nearest {
+  border-color: rgba(241, 185, 106, 0.28);
+  background:
+    radial-gradient(circle at 0% 0%, rgba(241, 185, 106, 0.10), transparent 40%),
+    rgba(255, 255, 255, 0.026);
+}
+
+.companion-page .reminder-badge {
+  background: rgba(241, 185, 106, 0.70);
+  color: rgba(35, 24, 10, 0.94);
+}
+
+/* Small overlay: soften long-session chrome without changing layout. */
+.overlay-shell {
+  border-color: rgba(224, 174, 94, 0.28);
+  box-shadow:
+    0 18px 46px rgba(0, 0, 0, 0.38),
+    inset 0 1px 0 rgba(255, 236, 179, 0.030);
+}
+
+.overlay-page .hud-block,
+.overlay-page .hud-banner,
+.overlay-page .hud-warning {
+  border-color: rgba(224, 174, 94, 0.13);
+}
+
+.overlay-page .speedrun-section {
+  border-color: rgba(205, 220, 237, 0.12);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.030), rgba(255, 255, 255, 0.014)),
+    rgba(0, 0, 0, 0.10);
+}
+
+.overlay-page .compact-mode-button,
+.overlay-page .timer-only-collapse-button,
+.overlay-page .timer-only-expand-button {
+  border-color: rgba(205, 220, 237, 0.13);
+  background: rgba(255, 255, 255, 0.026);
+}
+
+.overlay-page .compact-mode-button:hover,
+.overlay-page .timer-only-collapse-button:hover,
+.overlay-page .timer-only-expand-button:hover,
+.overlay-page .compact-mode-button:focus-visible,
+.overlay-page .timer-only-collapse-button:focus-visible,
+.overlay-page .timer-only-expand-button:focus-visible {
+  border-color: rgba(93, 166, 255, 0.34);
+  background: rgba(93, 166, 255, 0.070);
+}
