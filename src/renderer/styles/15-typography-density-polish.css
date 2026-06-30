@@ -170,8 +170,23 @@
 .companion-page .route-overview-card.status-completed,
 .companion-page .route-overview-card.status-visited,
 .companion-page .route-overview-card.status-done {
-  opacity: 0.52;
+  opacity: 1;
   border-color: var(--ui-border-hairline);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.018), rgba(255, 255, 255, 0.006)),
+    rgba(0, 0, 0, 0.09);
+}
+
+.companion-page .route-overview-card.status-completed:not(.status-current) .route-zone-name,
+.companion-page .route-overview-card.status-visited:not(.status-current) .route-zone-name,
+.companion-page .route-overview-card.status-done:not(.status-current) .route-zone-name {
+  color: rgba(236, 225, 205, 0.72);
+}
+
+.companion-page .route-overview-card.status-completed:not(.status-current) .route-card-preview,
+.companion-page .route-overview-card.status-visited:not(.status-current) .route-card-preview,
+.companion-page .route-overview-card.status-done:not(.status-current) .route-card-preview {
+  color: rgba(198, 207, 216, 0.66);
 }
 
 .companion-page .route-overview-card.status-current {
@@ -248,4 +263,59 @@
 .overlay-page .timer-only-expand-button:focus-visible {
   border-color: rgba(93, 166, 255, 0.34);
   background: rgba(93, 166, 255, 0.070);
+}
+
+/* Restore gameplay level-state colors after the calm typography pass.
+   The status pill is functional feedback: green = level is OK,
+   red = below recommended level, gold = good farming zone. */
+.overlay-page:not(.overlay-page-timer-only) .hud-meta.level-ok,
+.overlay-page-timer-only .timer-only-meta.level-ok {
+  border-color: rgba(116, 206, 139, 0.42) !important;
+  background:
+    linear-gradient(90deg, rgba(54, 132, 82, 0.22), rgba(54, 132, 82, 0.09)) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(116, 206, 139, 0.10),
+    0 0 12px rgba(84, 190, 112, 0.10) !important;
+  color: rgba(224, 250, 230, 0.94) !important;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-meta.level-low,
+.overlay-page-timer-only .timer-only-meta.level-low {
+  border-color: rgba(255, 103, 91, 0.48) !important;
+  background:
+    linear-gradient(90deg, rgba(170, 48, 42, 0.24), rgba(170, 48, 42, 0.10)) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 103, 91, 0.12),
+    0 0 13px rgba(255, 74, 58, 0.12) !important;
+  color: rgba(255, 220, 213, 0.95) !important;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-meta.level-farm,
+.overlay-page-timer-only .timer-only-meta.level-farm {
+  border-color: rgba(241, 185, 106, 0.40) !important;
+  background:
+    linear-gradient(90deg, rgba(190, 126, 45, 0.22), rgba(190, 126, 45, 0.09)) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(241, 185, 106, 0.10),
+    0 0 12px rgba(241, 185, 106, 0.09) !important;
+  color: rgba(255, 230, 188, 0.95) !important;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-meta.level-high,
+.overlay-page-timer-only .timer-only-meta.level-high {
+  border-color: rgba(127, 184, 237, 0.34) !important;
+  background:
+    linear-gradient(90deg, rgba(66, 110, 160, 0.20), rgba(66, 110, 160, 0.09)) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(127, 184, 237, 0.09),
+    0 0 12px rgba(88, 157, 222, 0.08) !important;
+  color: rgba(224, 239, 255, 0.94) !important;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-meta.level-unknown,
+.overlay-page-timer-only .timer-only-meta.level-unknown {
+  border-color: rgba(205, 220, 237, 0.12) !important;
+  background: rgba(255, 255, 255, 0.030) !important;
+  color: var(--ui-text-muted-calm) !important;
+  box-shadow: none !important;
 }
