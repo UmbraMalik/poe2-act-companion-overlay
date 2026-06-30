@@ -68,6 +68,7 @@ const expected = [
   '17-overlay-chrome-pass.css',
   '18-overlay-control-intents.css',
   '19-overlay-control-unified-hover.css',
+  '20-reminders-timeline.css',
 ];
 
 if (partials.join('\n') !== expected.join('\n')) {

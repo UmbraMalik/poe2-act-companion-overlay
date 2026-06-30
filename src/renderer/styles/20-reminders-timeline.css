@@ -1,0 +1,213 @@
+/* Reminders timeline: make power spikes read as a leveling roadmap, not another plain card list. */
+.companion-page .reminders-power-spikes-card {
+  overflow: hidden;
+}
+
+.companion-page .power-spike-timeline {
+  position: relative;
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 2px 0 0;
+  list-style: none;
+}
+
+.companion-page .power-spike-timeline-item {
+  position: relative;
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 10px;
+  min-width: 0;
+  padding: 0 0 13px;
+}
+
+.companion-page .power-spike-timeline-item:last-child {
+  padding-bottom: 0;
+}
+
+.companion-page .power-spike-timeline-item:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 31px;
+  bottom: 2px;
+  left: 21px;
+  width: 2px;
+  border-radius: 999px;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(241, 185, 106, 0.30),
+      rgba(105, 128, 150, 0.12)
+    );
+}
+
+.companion-page .power-spike-timeline-node {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  min-width: 44px;
+  padding-top: 2px;
+}
+
+.companion-page .power-spike-timeline-level {
+  display: inline-grid;
+  place-items: center;
+  width: 33px;
+  height: 33px;
+  border-radius: 999px;
+  border: 1px solid rgba(241, 185, 106, 0.32);
+  background:
+    radial-gradient(circle at 50% 20%, rgba(255, 232, 174, 0.16), transparent 58%),
+    linear-gradient(180deg, rgba(73, 54, 28, 0.68), rgba(28, 24, 19, 0.82));
+  color: #f4cf8a;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 232, 174, 0.08),
+    0 0 10px rgba(241, 185, 106, 0.10);
+}
+
+.companion-page .power-spike-timeline-card {
+  min-width: 0;
+  display: grid;
+  gap: 6px;
+  padding: 9px 10px 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(205, 220, 237, 0.085);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.036), rgba(255, 255, 255, 0.018)),
+    rgba(7, 12, 18, 0.22);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.035),
+    0 8px 18px rgba(0, 0, 0, 0.16);
+}
+
+.companion-page .power-spike-timeline-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+}
+
+.companion-page .power-spike-timeline-label {
+  color: rgba(241, 185, 106, 0.82);
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.companion-page .power-spike-timeline-card strong {
+  min-width: 0;
+  color: #fff1d0;
+  font-size: 14px;
+  line-height: 1.22;
+  font-weight: 800;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+.companion-page .power-spike-timeline-list {
+  display: grid;
+  gap: 3px;
+  margin: 0;
+  padding-left: 17px;
+  color: #d8e2eb;
+  font-size: 12px;
+  line-height: 1.36;
+}
+
+.companion-page .power-spike-timeline-list li {
+  padding-left: 1px;
+}
+
+.companion-page .power-spike-timeline-item.is-nearest .power-spike-timeline-level {
+  border-color: rgba(255, 210, 126, 0.72);
+  background:
+    radial-gradient(circle at 50% 20%, rgba(255, 237, 179, 0.28), transparent 58%),
+    linear-gradient(180deg, rgba(113, 76, 30, 0.78), rgba(47, 34, 20, 0.88));
+  color: #ffe6a8;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 236, 179, 0.13),
+    0 0 16px rgba(241, 185, 106, 0.25);
+}
+
+.companion-page .power-spike-timeline-item.is-nearest .power-spike-timeline-card {
+  border-color: rgba(241, 185, 106, 0.52);
+  background:
+    radial-gradient(circle at 0% 0%, rgba(241, 185, 106, 0.14), transparent 48%),
+    linear-gradient(180deg, rgba(241, 185, 106, 0.085), rgba(255, 255, 255, 0.018)),
+    rgba(7, 12, 18, 0.24);
+  box-shadow:
+    inset 0 0 0 1px rgba(241, 185, 106, 0.13),
+    0 10px 22px rgba(0, 0, 0, 0.18);
+}
+
+.companion-page .power-spike-timeline-item.is-past:not(.is-nearest) .power-spike-timeline-level {
+  border-color: rgba(122, 214, 144, 0.25);
+  color: rgba(176, 229, 190, 0.78);
+  background:
+    radial-gradient(circle at 50% 20%, rgba(122, 214, 144, 0.13), transparent 58%),
+    linear-gradient(180deg, rgba(26, 59, 38, 0.60), rgba(16, 28, 22, 0.78));
+}
+
+.companion-page .power-spike-timeline-item.is-past:not(.is-nearest) .power-spike-timeline-card {
+  border-color: rgba(122, 214, 144, 0.10);
+  background:
+    linear-gradient(180deg, rgba(122, 214, 144, 0.040), rgba(255, 255, 255, 0.014)),
+    rgba(7, 12, 18, 0.18);
+}
+
+.companion-page .power-spike-timeline-item.is-future:not(.is-nearest) .power-spike-timeline-card {
+  border-color: rgba(205, 220, 237, 0.075);
+}
+
+@media (min-width: 1180px) {
+  .companion-page .reminders-power-spikes-card {
+    grid-column: span 2;
+  }
+
+  .companion-page .power-spike-timeline {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 14px;
+  }
+
+  .companion-page .power-spike-timeline-item {
+    grid-template-columns: 42px minmax(0, 1fr);
+    padding-bottom: 0;
+  }
+
+  .companion-page .power-spike-timeline-item:not(:last-child)::after {
+    display: none;
+  }
+
+  .companion-page .power-spike-timeline-node {
+    width: 42px;
+    min-width: 42px;
+  }
+}
+
+@media (max-width: 760px) {
+  .companion-page .power-spike-timeline-item {
+    grid-template-columns: 38px minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .companion-page .power-spike-timeline-item:not(:last-child)::after {
+    left: 18px;
+  }
+
+  .companion-page .power-spike-timeline-node {
+    width: 38px;
+    min-width: 38px;
+  }
+
+  .companion-page .power-spike-timeline-level {
+    width: 30px;
+    height: 30px;
+  }
+}

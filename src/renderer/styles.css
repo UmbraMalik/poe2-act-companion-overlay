@@ -24,3 +24,4 @@
 @import './styles/17-overlay-chrome-pass.css'; /* Overlay chrome pass: cleaner top controls, RU/EN toggle and timer-only chrome */
 @import './styles/18-overlay-control-intents.css'; /* Restore intent-colored overlay control hover/focus states */
 @import './styles/19-overlay-control-unified-hover.css'; /* Final unified overlay control hover/focus states */
+@import './styles/20-reminders-timeline.css'; /* Reminders tab power-spike timeline */

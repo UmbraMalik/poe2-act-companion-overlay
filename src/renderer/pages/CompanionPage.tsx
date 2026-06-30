@@ -526,6 +526,62 @@ function renderCompactReminderList(
   );
 }
 
+
+function renderPowerSpikeTimeline(
+  items: { id: string; level: number; title: string; items?: string[] }[],
+  language: AppLanguage,
+  currentLevel: number | null,
+  highlightedId?: string | null
+) {
+  const visible = [...items].sort((left, right) => left.level - right.level);
+
+  if (visible.length === 0) {
+    return <p className="helper-text">{translate(language, 'companion.remindersEmpty')}</p>;
+  }
+
+  return (
+    <ol className="power-spike-timeline">
+      {visible.map((entry) => {
+        const isHighlighted = highlightedId === entry.id;
+        const isPast = currentLevel !== null && entry.level < currentLevel;
+        const isFuture = currentLevel !== null && entry.level > currentLevel;
+
+        return (
+          <li
+            key={entry.id}
+            className={[
+              'power-spike-timeline-item',
+              isHighlighted ? 'is-nearest' : '',
+              isPast ? 'is-past' : '',
+              isFuture ? 'is-future' : ''
+            ].filter(Boolean).join(' ')}
+          >
+            <div className="power-spike-timeline-node" aria-hidden="true">
+              <span className="power-spike-timeline-level">{entry.level}</span>
+            </div>
+            <div className="power-spike-timeline-card">
+              <div className="power-spike-timeline-header">
+                <span className="power-spike-timeline-label">
+                  {translate(language, 'common.level')} {entry.level}
+                </span>
+                {isHighlighted && <span className="reminder-badge">{translate(language, 'overlay.currentBadge')}</span>}
+              </div>
+              <strong>{translateDataText(entry.title, language)}</strong>
+              {entry.items && entry.items.length > 0 && (
+                <ul className="power-spike-timeline-list">
+                  {entry.items.slice(0, 3).map((item) => (
+                    <li key={`${entry.id}-${item}`}>{translateDataText(item, language)}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </li>
+        );
+      })}
+    </ol>
+  );
+}
+
 function renderDetails(
   details: GuideEntry['details'] | ReturnType<typeof getGuideView>['details'],
   language: AppLanguage
@@ -1405,9 +1461,9 @@ export function CompanionPage() {
           </div>
         </section>
 
-        <section className="companion-block reminders-card reminders-card-wide">
+        <section className="companion-block reminders-card reminders-card-wide reminders-power-spikes-card">
           <h3>{t('companion.powerSpikes')}</h3>
-          {renderCompactReminderList(filteredPowerSpikes, language)}
+          {renderPowerSpikeTimeline(filteredPowerSpikes, language, config.currentLevel, nearestPowerSpike?.id ?? null)}
         </section>
       </div>
 
