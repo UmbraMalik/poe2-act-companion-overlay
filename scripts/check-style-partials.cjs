@@ -66,6 +66,7 @@ const expected = [
   '15-typography-density-polish.css',
   '16-route-states.css',
   '17-overlay-chrome-pass.css',
+  '18-overlay-control-intents.css',
 ];
 
 if (partials.join('\n') !== expected.join('\n')) {
