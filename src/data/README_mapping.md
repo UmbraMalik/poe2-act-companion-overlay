@@ -76,7 +76,7 @@ Generating level 52 area "P2_6" with seed 123456789
 ```text
 Generating level 55 area "P3_3" with seed 123456789
 ```
-Ожидание: `АКТ 5 · Ледниковая заводь`.
+Ожидание: `АКТ 5 · Ледниковое озеро`.
 
 ```text
 Generating level 56 area "P1_3" with seed 123456789

@@ -1381,9 +1381,9 @@
       "section": "interlude1",
       "actLabel": "Интерлюдия 1",
       "zone_en": "Holten",
-      "zone_ru": "Холтон",
+      "zone_ru": "Холтен",
       "guideZoneId": "i_final_holten",
-      "guideZoneRu": "Холтон",
+      "guideZoneRu": "Холтен",
       "aliases_ru": [
         "Холтен"
       ],
@@ -1429,9 +1429,9 @@
       "section": "interlude1",
       "actLabel": "Интерлюдия 1",
       "zone_en": "Holten Estate",
-      "zone_ru": "Поместье Холтон",
+      "zone_ru": "Поместье Холтен",
       "guideZoneId": "i_final_holten_estate",
-      "guideZoneRu": "Поместье Холтон",
+      "guideZoneRu": "Поместье Холтен",
       "aliases_ru": [
         "Поместье Холтен"
       ],
@@ -1566,9 +1566,9 @@
       "section": "interlude2",
       "actLabel": "Интерлюдия 2",
       "zone_en": "Qimah Reservoir",
-      "zone_ru": "Резервуар Кимы",
+      "zone_ru": "Водохранилище Кима",
       "guideZoneId": "i2_kima_reservoir",
-      "guideZoneRu": "Резервуар Кимы",
+      "guideZoneRu": "Водохранилище Кима",
       "aliases_ru": [
         "Водохранилище Кима"
       ],
@@ -1631,11 +1631,11 @@
       "section": "interlude3",
       "actLabel": "Интерлюдия 3",
       "zone_en": "Glacial Tarn",
-      "zone_ru": "Ледниковая заводь",
+      "zone_ru": "Ледниковое озеро",
       "guideZoneId": "interlude_glacial_tarn",
       "guideZoneRu": "Ледниковое озеро",
       "aliases_ru": [
-        "Ледниковая заводь"
+        "Ледниковое озеро"
       ],
       "reward_en": "Greater Orb of Augmentation",
       "reward_ru": "Большая сфера усиления",

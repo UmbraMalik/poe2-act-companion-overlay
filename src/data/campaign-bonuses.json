@@ -925,41 +925,6 @@
       ]
     },
     {
-      "id": "int1_blackwood_omens_optional",
-      "act": 5,
-      "zoneId": "i_final_blackwood",
-      "zone_ru": "Чернолесье",
-      "title": "Опционально: предзнаменования",
-      "category": "item",
-      "source": "Алтари Чернолесья",
-      "details": [
-        "Опционально: несколько алтарей дропают случайное предзнаменование."
-      ],
-      "reward": {
-        "type": "item",
-        "value": 1
-      },
-      "eventRules": []
-    },
-    {
-      "id": "int1_holten_ferryman_runes_optional",
-      "act": 5,
-      "zoneId": "i_final_holten",
-      "zone_ru": "Холтен",
-      "title": "Опционально: большие руны у Паромщика",
-      "category": "item",
-      "source": "Паромщик",
-      "details": [
-        "У Паромщика можно купить большие руны.",
-        "Цена каждой: 2000 золота."
-      ],
-      "reward": {
-        "type": "item",
-        "value": 1
-      },
-      "eventRules": []
-    },
-    {
       "id": "int2_khari_crossing_life_percent",
       "act": 5,
       "zoneId": "interlude_khari_crossing",
@@ -1177,23 +1142,6 @@
           ]
         }
       ]
-    },
-    {
-      "id": "int3_kriar_peaks_unique_optional",
-      "act": 5,
-      "zone_ru": "Пики Криар",
-      "title": "Опционально: уникальный предмет на выбор",
-      "category": "item",
-      "source": "Старейшина Мэдокс",
-      "details": [
-        "Опционально: старейшина Мэдокс дарит один уникальный предмет на выбор из нескольких случайных."
-      ],
-      "reward": {
-        "type": "item",
-        "value": 1
-      },
-      "eventRules": [],
-      "zoneId": "i2_kriar_peaks"
     },
     {
       "id": "int3_final_zolin_zelina_weapon_points",
