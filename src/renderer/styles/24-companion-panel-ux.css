@@ -206,12 +206,12 @@
 }
 
 .companion-page .route-polish-layout {
-  height: auto;
+  height: 100%;
+  min-height: 0;
   display: grid;
-  align-content: start;
-  grid-auto-rows: max-content;
+  grid-template-rows: auto minmax(0, 1fr);
   gap: 12px;
-  overflow-y: auto;
+  overflow: hidden;
 }
 
 .companion-page .companion-route-toolbar {
@@ -262,6 +262,9 @@
 
 .companion-page .companion-route-list-card {
   position: relative;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  align-content: stretch;
   min-height: 0;
   padding: 16px;
   overflow: hidden;
@@ -292,8 +295,11 @@
 
 .companion-page .route-overview-list.route-overview-grid {
   gap: 12px !important;
-  max-height: calc(100vh - 315px);
-  min-height: 420px;
+  height: 100%;
+  min-height: 0;
+  max-height: none;
+  align-content: flex-start !important;
+  overflow-y: auto !important;
   padding: 0 8px 10px 0 !important;
   scrollbar-color: rgba(241, 185, 106, 0.56) rgba(255, 255, 255, 0.05);
 }
@@ -1069,7 +1075,7 @@
   }
 
   .companion-page .route-overview-list.route-overview-grid {
-    min-height: 360px;
+    min-height: 0;
     max-height: none;
   }
 
