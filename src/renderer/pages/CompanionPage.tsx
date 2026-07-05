@@ -1396,7 +1396,7 @@ export function CompanionPage() {
   );
 
   const routeTab = (
-    <div className="companion-tab-layout">
+    <div className="companion-tab-layout route-polish-layout">
       <section className="companion-block companion-route-toolbar">
         <div className="companion-tab-row">
           {routeActs.map((entry) => (
