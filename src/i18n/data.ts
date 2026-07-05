@@ -208,8 +208,8 @@ const REVERSE_DATA_TRANSLATION_OVERRIDES: Record<string, string> = {
   'Support Gem': 'Камень поддержки',
   'Ancient Treasures': 'Древние сокровища',
   'Essence of Water': 'Сущность воды',
-  'Gemrot skull': 'Череп Гемрота',
-  'Gemrot Skull': 'Череп Гемрота',
+  'Gemrot skull': 'Изъеденный кристаллом череп',
+  'Gemrot Skull': 'Изъеденный кристаллом череп',
   'Soul core': 'Ядро души',
   'Soul Core': 'Ядро души',
   '+1 charm relic': '+1 реликвия оберега'
