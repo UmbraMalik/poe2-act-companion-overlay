@@ -330,6 +330,20 @@ function formatDelta(ms: number): string {
   return `${ms > 0 ? '+' : '-'}${formatDuration(Math.abs(ms))}`;
 }
 
+function getDeltaClass(ms: number): string {
+  return ms <= 0 ? 'delta-good' : 'delta-bad';
+}
+
+function formatBestDeltaLabel(deltaMs: number, language: AppLanguage): string {
+  if (deltaMs === 0) {
+    return translate(language, 'companion.bestDeltaTied');
+  }
+
+  return deltaMs < 0
+    ? translate(language, 'companion.bestDeltaFaster', { time: formatDuration(Math.abs(deltaMs)) })
+    : translate(language, 'companion.bestDeltaSlower', { time: formatDuration(deltaMs) });
+}
+
 function renderActTimesDashboard(
   rows: ActTimeRow[],
   totalElapsedMs: number,
@@ -386,7 +400,46 @@ function renderActTimesDashboard(
 }
 
 
-function renderRunComparison(
+function renderActBreakdownTable(
+  rows: ActTimeRow[],
+  bestRows: ActTimeRow[],
+  emptyMessage: string,
+  language: AppLanguage
+) {
+  if (rows.length === 0) {
+    return <p className="helper-text">{emptyMessage}</p>;
+  }
+
+  const bestRowsByAct = new Map(bestRows.map((row) => [row.act, row]));
+
+  return (
+    <div className="summary-act-breakdown-table" role="table" aria-label={translate(language, 'companion.actSplitCards')}>
+      <div className="summary-act-breakdown-head" role="row">
+        <span role="columnheader">{translate(language, 'companion.actColumn')}</span>
+        <span role="columnheader">{translate(language, 'companion.segmentTime')}</span>
+        <span role="columnheader">{translate(language, 'companion.cumulativeTime')}</span>
+        <span role="columnheader">{translate(language, 'companion.delta')}</span>
+      </div>
+      {rows.map((row) => {
+        const best = bestRowsByAct.get(row.act);
+        const delta = best ? row.elapsedMs - best.elapsedMs : null;
+
+        return (
+          <div key={`summary-act-${row.act}`} className="summary-act-breakdown-row" role="row">
+            <strong role="cell">{formatActLabel(row.act, language)}</strong>
+            <span role="cell">{formatDuration(row.elapsedMs)}</span>
+            <span role="cell">{formatDuration(row.totalElapsedMs)}</span>
+            <small role="cell" className={delta === null ? '' : getDeltaClass(delta)}>
+              {delta === null ? '—' : formatDelta(delta)}
+            </small>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function renderBestComparison(
   history: SavedRunHistoryEntry[],
   currentElapsedMs: number,
   currentRows: ActTimeRow[],
@@ -395,45 +448,48 @@ function renderRunComparison(
   const bestRun = getBestSavedRun(history);
 
   if (!bestRun) {
-    return (
-      <section className="companion-block run-compare-card">
-        <h3>{translate(language, 'companion.runCompareTitle')}</h3>
-        <p className="helper-text">{translate(language, 'companion.runCompareEmpty')}</p>
-      </section>
-    );
+    return null;
   }
 
   const bestRows = getSavedRunActRows(bestRun);
   const bestRowsByAct = new Map(bestRows.map((row) => [row.act, row]));
   const currentRowsByAct = new Map(currentRows.map((row) => [row.act, row]));
   const acts = Array.from(new Set([...bestRowsByAct.keys(), ...currentRowsByAct.keys()])).sort((left, right) => left - right);
+  const totalDelta = currentElapsedMs - bestRun.totalElapsedMs;
+  const actDeltas = acts
+    .map((act) => {
+      const current = currentRowsByAct.get(act);
+      const best = bestRowsByAct.get(act);
+      return current && best ? { act, delta: current.elapsedMs - best.elapsedMs } : null;
+    })
+    .filter((entry): entry is { act: number; delta: number } => entry !== null);
+  const biggestLoss = [...actDeltas].sort((left, right) => right.delta - left.delta)[0] ?? null;
 
   return (
-    <section className="companion-block run-compare-card">
+    <section className="companion-block summary-compare-panel">
       <div className="summary-section-heading">
-        <h3>{translate(language, 'companion.runCompareTitle')}</h3>
+        <h3>{translate(language, 'companion.bestComparisonTitle')}</h3>
         <span>{translate(language, 'companion.runCompareBestDate', { date: formatSavedRunDate(bestRun.savedAt, language) })}</span>
       </div>
-      <div className="run-comparison-total">
-        <span>{translate(language, 'companion.currentRunTime')}: <strong>{formatDuration(currentElapsedMs)}</strong></span>
-        <span>{translate(language, 'companion.bestSavedRun')}: <strong>{formatDuration(bestRun.totalElapsedMs)}</strong></span>
-        <span className={currentElapsedMs <= bestRun.totalElapsedMs ? 'delta-good' : 'delta-bad'}>
-          {translate(language, 'companion.delta')}: <strong>{formatDelta(currentElapsedMs - bestRun.totalElapsedMs)}</strong>
-        </span>
+      <div className="summary-compare-lead">
+        <strong className={getDeltaClass(totalDelta)}>{formatBestDeltaLabel(totalDelta, language)}</strong>
+        <span>{translate(language, 'companion.currentRunTime')}: {formatDuration(currentElapsedMs)} · {translate(language, 'companion.bestSavedRun')}: {formatDuration(bestRun.totalElapsedMs)}</span>
+        {biggestLoss && biggestLoss.delta > 0 && (
+          <small>{translate(language, 'companion.biggestTimeLoss', { act: formatActLabel(biggestLoss.act, language), time: formatDuration(biggestLoss.delta) })}</small>
+        )}
       </div>
       {acts.length > 0 && (
-        <div className="run-comparison-grid">
+        <div className="summary-compare-act-strip">
           {acts.map((act) => {
             const current = currentRowsByAct.get(act);
             const best = bestRowsByAct.get(act);
             const delta = current && best ? current.elapsedMs - best.elapsedMs : null;
             return (
-              <div key={`run-compare-act-${act}`} className="run-comparison-act-row">
+              <div key={`run-compare-act-${act}`} className="summary-compare-act-pill">
                 <span>{formatActLabel(act, language)}</span>
-                <strong>{current ? formatDuration(current.elapsedMs) : '—'}</strong>
-                <small className={delta === null ? '' : delta <= 0 ? 'delta-good' : 'delta-bad'}>
+                <strong className={delta === null ? '' : getDeltaClass(delta)}>
                   {delta === null ? '—' : formatDelta(delta)}
-                </small>
+                </strong>
               </div>
             );
           })}
@@ -443,14 +499,14 @@ function renderRunComparison(
   );
 }
 
-function renderRunHistory(
+function renderCompactRunHistory(
   history: SavedRunHistoryEntry[],
   language: AppLanguage,
   onRestore: (runId: string) => void,
   onDelete: (runId: string) => void
 ) {
   return (
-    <section className="companion-block run-history-card">
+    <section className="companion-block summary-history-panel">
       <div className="summary-section-heading">
         <h3>{translate(language, 'companion.runHistoryTitle')}</h3>
         <span>{translate(language, 'companion.runHistoryCount', { count: history.length })}</span>
@@ -458,24 +514,22 @@ function renderRunHistory(
       {history.length === 0 ? (
         <p className="helper-text">{translate(language, 'companion.runHistoryEmpty')}</p>
       ) : (
-        <div className="run-history-list">
+        <div className="summary-history-list">
           {history.slice(0, 8).map((entry) => {
             const rows = getSavedRunActRows(entry);
-            const slowestAct = getSlowestActRow(rows);
             const longestZone = entry.longestZones[0] ?? null;
             return (
-              <article key={entry.id} className="run-history-item">
-                <div>
+              <article key={entry.id} className="summary-history-row">
+                <div className="summary-history-main">
                   <strong>{entry.label || translate(language, 'companion.savedRunFallback')}</strong>
                   <span>{formatSavedRunDate(entry.savedAt, language)}</span>
                 </div>
-                <div className="run-history-stats">
-                  <span>{translate(language, 'companion.totalTime')}: <b>{formatDuration(entry.totalElapsedMs)}</b></span>
-                  <span>{translate(language, 'companion.completedActs')}: <b>{getCompletedActCount(rows)} / {TOTAL_CAMPAIGN_ACTS}</b></span>
-                  <span>{translate(language, 'companion.longestAct')}: <b>{slowestAct ? `${formatActLabel(slowestAct.act, language)} · ${formatDuration(slowestAct.elapsedMs)}` : '—'}</b></span>
-                  <span>{translate(language, 'companion.longestZone')}: <b>{longestZone ? `${translateDataText(longestZone.zone_ru, language)} · ${formatDuration(longestZone.elapsedMs)}` : '—'}</b></span>
+                <div className="summary-history-stats">
+                  <span><b>{formatDuration(entry.totalElapsedMs)}</b></span>
+                  <span>{getCompletedActCount(rows)} / {TOTAL_CAMPAIGN_ACTS}</span>
+                  <span>{longestZone ? `${translateDataText(longestZone.zone_ru, language)} · ${formatDuration(longestZone.elapsedMs)}` : '—'}</span>
                 </div>
-                <div className="button-row run-history-actions">
+                <div className="button-row summary-history-actions">
                   <button type="button" className="button-secondary" onClick={() => onRestore(entry.id)}>
                     {translate(language, 'companion.continueSavedRun')}
                   </button>
@@ -946,7 +1000,48 @@ function getCurrentZoneCampaignBonuses(snapshot: NonNullable<ReturnType<typeof u
     .sort((left, right) => Number(left.done) - Number(right.done));
 }
 
-function renderSummary(summary: RunSummary | null, language: AppLanguage) {
+function renderSummaryStat(label: string, value: string, hint?: string, className?: string) {
+  return (
+    <div className={`summary-stat ${className ?? ''}`.trim()}>
+      <span>{label}</span>
+      <strong>{value}</strong>
+      {hint && <small>{hint}</small>}
+    </div>
+  );
+}
+
+function renderLiveSummary(
+  totalElapsedMs: number,
+  statusLabel: string,
+  completedActCount: number,
+  currentActLabel: string,
+  currentActElapsedLabel: string,
+  longestZone: { zone_ru: string; elapsedMs: number } | null,
+  language: AppLanguage
+) {
+  return (
+    <section className="companion-block summary-result-panel is-live">
+      <div className="summary-result-main">
+        <span className="eyebrow">{translate(language, 'companion.summaryLiveTitle')}</span>
+        <strong>{formatDuration(totalElapsedMs)}</strong>
+        <small>{statusLabel}</small>
+      </div>
+      <div className="summary-result-facts">
+        {renderSummaryStat(translate(language, 'common.status'), statusLabel)}
+        {renderSummaryStat(translate(language, 'companion.completedActs'), `${completedActCount} / ${TOTAL_CAMPAIGN_ACTS}`)}
+        {renderSummaryStat(translate(language, 'companion.currentAct'), currentActLabel, currentActElapsedLabel)}
+        {renderSummaryStat(
+          translate(language, 'companion.longestZone'),
+          longestZone ? formatDuration(longestZone.elapsedMs) : '—',
+          longestZone ? translateDataText(longestZone.zone_ru, language) : translate(language, 'companion.zoneHistoryEmpty'),
+          'is-muted'
+        )}
+      </div>
+    </section>
+  );
+}
+
+function renderFinishedResults(summary: RunSummary | null, bestRun: SavedRunHistoryEntry | null, language: AppLanguage) {
   if (!summary) {
     return <p className="helper-text">{translate(language, 'companion.summaryEmpty')}</p>;
   }
@@ -954,33 +1049,40 @@ function renderSummary(summary: RunSummary | null, language: AppLanguage) {
   const actTimeRows = getActTimeRowsFromSplits(summary.actSplits, summary.totalElapsedMs);
   const completedActCount = getCompletedActCount(actTimeRows);
   const slowestAct = getSlowestActRow(actTimeRows);
+  const bestRows = bestRun ? getSavedRunActRows(bestRun) : [];
+  const totalDelta = bestRun ? summary.totalElapsedMs - bestRun.totalElapsedMs : null;
 
   return (
     <div className="summary-results-dashboard">
       <section className="companion-block summary-result-panel">
-        <div className="summary-result-copy">
-          <h3>{translate(language, 'companion.summaryTitle')}</h3>
-          <p className="helper-text">{translate(language, 'companion.summaryFinishedIntro')}</p>
+        <div className="summary-result-main">
+          <span className="eyebrow">{translate(language, 'companion.summaryResultTitle')}</span>
+          <strong>{formatDuration(summary.totalElapsedMs)}</strong>
+          <small className={summary.isNewPb ? 'delta-good' : ''}>
+            {summary.isNewPb ? translate(language, 'companion.newRecord') : translate(language, 'companion.noRecordUpdate')}
+          </small>
         </div>
-        <div className="summary-result-metrics">
-          {renderMetricCard(translate(language, 'companion.totalTime'), formatDuration(summary.totalElapsedMs), translate(language, 'companion.finalTime'), 'accent')}
-          {renderMetricCard(translate(language, 'companion.completedActs'), `${completedActCount} / ${TOTAL_CAMPAIGN_ACTS}`, translate(language, 'companion.completedActsHint'))}
-          {renderMetricCard(translate(language, 'companion.pauses'), String(summary.pauseCount), translate(language, 'companion.pauseCountHint'), 'muted')}
-          {renderMetricCard(
+        <div className="summary-result-facts">
+          {renderSummaryStat(translate(language, 'companion.completedActs'), `${completedActCount} / ${TOTAL_CAMPAIGN_ACTS}`)}
+          {renderSummaryStat(translate(language, 'companion.pauses'), String(summary.pauseCount), translate(language, 'companion.pauseCountHint'))}
+          {renderSummaryStat(
             translate(language, 'companion.record'),
             summary.isNewPb ? translate(language, 'companion.newRecord') : translate(language, 'companion.noRecordUpdate'),
             translate(language, 'companion.recordHint')
           )}
+          {totalDelta !== null
+            ? renderSummaryStat(translate(language, 'companion.delta'), formatBestDeltaLabel(totalDelta, language), undefined, getDeltaClass(totalDelta))
+            : renderSummaryStat(translate(language, 'companion.delta'), '—', translate(language, 'companion.runCompareEmpty'), 'is-muted')}
         </div>
       </section>
 
       <div className="summary-breakdown-grid">
-        <section className="companion-block act-times-card-list">
+        <section className="companion-block summary-act-breakdown-panel">
           <div className="summary-section-heading">
-            <h3>{translate(language, 'common.actTimes')}</h3>
+            <h3>{translate(language, 'companion.runBreakdownTitle')}</h3>
             {slowestAct && <span>{translate(language, 'companion.longestActShort', { act: formatActLabel(slowestAct.act, language), time: formatDuration(slowestAct.elapsedMs) })}</span>}
           </div>
-          {renderActTimeCards(actTimeRows, translate(language, 'companion.actTimesEmptyFinished'), language)}
+          {renderActBreakdownTable(actTimeRows, bestRows, translate(language, 'companion.actTimesEmptyFinished'), language)}
         </section>
 
         <section className="companion-block summary-longest-card">
@@ -1735,21 +1837,27 @@ export function CompanionPage() {
     </div>
   );
 
-  const summaryHero = displayRunTimer.status === 'finished' ? (
-    renderSummary(config.lastRunSummary, language)
+  const bestSavedRun = getBestSavedRun(runHistory);
+  const summaryContent = displayRunTimer.status === 'finished' ? (
+    renderFinishedResults(config.lastRunSummary, bestSavedRun, language)
   ) : (
     <div className="summary-results-dashboard">
-      <section className="companion-block summary-result-panel is-live">
-        <div className="summary-result-copy">
-          <h3>{t('companion.summaryLiveTitle')}</h3>
-          <p className="helper-text">{t('companion.summaryLiveIntro')}</p>
+      {renderLiveSummary(
+        currentRunElapsed,
+        formatRunStatus(displayRunTimer.status, language),
+        getCompletedActCount(actTimeRows),
+        nowAct === null ? '—' : formatActTitle(nowAct, language),
+        currentActElapsed !== null ? formatDuration(currentActElapsed) : t('common.notAvailable'),
+        longestZones[0] ?? null,
+        language
+      )}
+
+      <section className="companion-block summary-longest-card summary-diagnostic-card">
+        <div className="summary-section-heading">
+          <h3>{t('companion.longestZones')}</h3>
+          <span>{t('companion.summaryDiagnostic')}</span>
         </div>
-        <div className="summary-result-metrics">
-          {renderMetricCard(t('companion.totalTime'), formatDuration(currentRunElapsed), formatRunStatus(displayRunTimer.status, language), 'accent')}
-          {renderMetricCard(t('companion.completedActs'), `${getCompletedActCount(actTimeRows)} / ${TOTAL_CAMPAIGN_ACTS}`, t('companion.completedActsHint'))}
-          {renderMetricCard(t('companion.currentAct'), nowAct === null ? '—' : formatActTitle(nowAct, language), currentActElapsed !== null ? formatDuration(currentActElapsed) : t('common.notAvailable'))}
-          {renderMetricCard(t('companion.longestZone'), longestZones[0] ? formatDuration(longestZones[0].elapsedMs) : '—', longestZones[0] ? translateDataText(longestZones[0].zone_ru, language) : t('companion.zoneHistoryEmpty'), 'muted')}
-        </div>
+        {renderLongestZoneList(longestZones, language, t('companion.zoneHistoryEmpty'))}
       </section>
     </div>
   );
@@ -1757,33 +1865,9 @@ export function CompanionPage() {
   const summaryTab = (
     <div className="companion-tab-layout companion-summary-layout">
       <div className="summary-scroll-body summary-scroll-body--full">
-        {summaryHero}
-
-        {displayRunTimer.status !== 'finished' && (
-          <div className="summary-support-grid">
-            <section className="companion-block summary-best-card">
-              <h3>{t('companion.bestRun')}</h3>
-              {config.bestRun ? (
-                <div className="best-run-card">
-                  <strong>{formatDuration(config.bestRun.totalElapsedMs)}</strong>
-                  <span>{new Date(config.bestRun.finishedAt).toLocaleString(language === 'en' ? 'en-US' : 'ru-RU')}</span>
-                </div>
-              ) : (
-                <div className="summary-empty-state">
-                  <p className="helper-text">{t('companion.bestRunEmpty')}</p>
-                </div>
-              )}
-            </section>
-
-            <section className="companion-block summary-longest-card">
-              <h3>{t('companion.longestZones')}</h3>
-              {renderLongestZoneList(longestZones, language, t('companion.zoneHistoryEmpty'))}
-            </section>
-          </div>
-        )}
-
-        {renderRunComparison(runHistory, currentRunElapsed, actTimeRows, language)}
-        {renderRunHistory(runHistory, language, restoreSavedRun, deleteSavedRun)}
+        {summaryContent}
+        {renderBestComparison(runHistory, currentRunElapsed, actTimeRows, language)}
+        {renderCompactRunHistory(runHistory, language, restoreSavedRun, deleteSavedRun)}
       </div>
     </div>
   );
