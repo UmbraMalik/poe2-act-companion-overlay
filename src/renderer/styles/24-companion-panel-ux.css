@@ -7,12 +7,19 @@
   gap: 14px;
 }
 
+.companion-page .timer-rework-layout {
+  height: auto;
+  align-content: start;
+  grid-auto-rows: max-content;
+  overflow-y: auto;
+}
+
 .companion-page .timer-cockpit-card {
   display: grid;
   grid-template-columns: minmax(260px, 0.7fr) minmax(0, 1.3fr);
-  align-items: stretch;
-  gap: 18px;
-  padding: 18px;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
   background:
     radial-gradient(circle at 0 0, rgba(241, 185, 106, 0.18), transparent 42%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.034), rgba(255, 255, 255, 0.012)),
@@ -29,7 +36,7 @@
 .companion-page .timer-main-readout h3 {
   margin: 0;
   color: #fff3d6;
-  font-size: clamp(48px, 5.2vw, 74px);
+  font-size: clamp(44px, 5vw, 66px);
   line-height: 0.95;
   font-variant-numeric: tabular-nums;
 }
@@ -62,8 +69,8 @@
 .companion-page .timer-cockpit-details {
   min-width: 0;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
 }
 
 .companion-page .timer-cockpit-details > div,
@@ -71,8 +78,8 @@
   min-width: 0;
   display: grid;
   align-content: start;
-  gap: 6px;
-  padding: 12px;
+  gap: 5px;
+  padding: 10px 11px;
   border: 1px solid rgba(205, 220, 237, 0.085);
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.025);
@@ -126,14 +133,15 @@
 .companion-page .timer-segment-list {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
+  gap: 8px;
 }
 
 .companion-page .timer-action-bar {
   display: grid;
   grid-template-columns: minmax(260px, 1fr) auto;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
+  padding: 12px 14px;
 }
 
 .companion-page .timer-action-buttons {
