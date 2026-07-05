@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "totalDownloads": 411,
-  "latestVersion": "0.4.1",
-  "updatedAt": "2026-05-29T11:43:59.939Z",
+  "totalDownloads": 838,
+  "latestVersion": "0.4.3",
+  "updatedAt": "2026-07-05T11:55:41.131Z",
   "source": "monotonic-github-releases-snapshot",
   "countsOnly": "installer .exe assets; latest.yml, .blockmap and source archives are excluded",
   "currentInstallerDownloads": 0,
-  "githubCurrentInstallerDownloads": 411,
+  "githubCurrentInstallerDownloads": 838,
   "manualAdjustmentDownloads": 0,
   "installerDownloadsByVersion": {
     "0.1.0": 1,
@@ -30,7 +30,7 @@
     "0.2.3": 11,
     "0.2.4": 5,
     "0.2.5": 4,
-    "0.2.6": 31,
+    "0.2.6": 33,
     "0.2.7": 10,
     "0.2.8": 20,
     "0.2.9": 12,
@@ -40,12 +40,23 @@
     "0.3.3": 30,
     "0.3.4": 3,
     "0.3.5": 46,
-    "0.4.0": 135,
-    "0.4.1": 0
+    "0.4.0": 136,
+    "0.4.1": 397,
+    "0.4.2": 27,
+    "0.4.3": 0
   },
-  "trackedInstallerAssets": 33,
-  "visibleInstallerAssets": 33,
+  "trackedInstallerAssets": 36,
+  "visibleInstallerAssets": 35,
   "counterDropDetected": false,
-  "missingAssetDetected": false,
-  "warnings": []
+  "missingAssetDetected": true,
+  "warnings": [
+    {
+      "type": "asset_missing_from_github_api",
+      "assetId": "432982119",
+      "version": "0.4.1",
+      "file": "POE2-Act-Companion-Overlay-Setup-0.4.1.exe",
+      "countedDownloads": 0,
+      "detectedAt": "2026-07-05T11:55:41.131Z"
+    }
+  ]
 }
