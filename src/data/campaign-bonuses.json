@@ -373,24 +373,6 @@
       ]
     },
     {
-      "id": "act3_sandswept_marsh_artificer_orb",
-      "act": 3,
-      "zoneId": "a3_sandswept_marsh",
-      "zone_ru": "Занесённое песком болото",
-      "title": "Сфера златокузнеца",
-      "category": "item",
-      "source": "Редкая корзина в лагере с хижинами",
-      "details": [
-        "Найти редкую корзину с жёлтым названием.",
-        "Убить босса, кликнуть по корзине и забрать сферу златокузнеца."
-      ],
-      "reward": {
-        "type": "item",
-        "value": 1
-      },
-      "eventRules": []
-    },
-    {
       "id": "act3_jungle_ruins_mighty_silverfist_weapon_points",
       "act": 3,
       "zoneId": "a3_jungle_ruins",
@@ -872,41 +854,6 @@
           ]
         }
       ]
-    },
-    {
-      "id": "act4_kids_bay_artificer_orb_optional",
-      "act": 4,
-      "zoneId": "a4_kids_bay",
-      "zone_ru": "Кеджский залив",
-      "title": "Опционально: сфера златокузнеца",
-      "category": "item",
-      "source": "Гарантированный сундук",
-      "details": [
-        "Опционально: найти сундук, из которого гарантированно выпадает сфера златокузнеца."
-      ],
-      "reward": {
-        "type": "item",
-        "value": 1
-      },
-      "eventRules": []
-    },
-    {
-      "id": "act4_arastas_currency_bells_optional",
-      "act": 4,
-      "zoneId": "a4_arastas",
-      "zone_ru": "Арастас",
-      "title": "Опционально: 3 царей и 3 возвышения",
-      "category": "item",
-      "source": "Два колокола",
-      "details": [
-        "Колокол на городской площади даёт 3 сферы царей.",
-        "Колокол у обрыва даёт 3 сферы возвышения."
-      ],
-      "reward": {
-        "type": "item",
-        "value": 1
-      },
-      "eventRules": []
     },
     {
       "id": "int1_wolvenholt_olswin_weapon_points",
