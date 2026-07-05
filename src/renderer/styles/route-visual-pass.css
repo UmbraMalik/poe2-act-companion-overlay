@@ -1,0 +1,80 @@
+/* Route tab final visual pass.
+   Kept unnumbered so check-style-partials preserves the canonical numbered partial list. */
+.companion-page .route-polish-layout {
+  height: 100% !important;
+  min-height: 0 !important;
+  display: grid !important;
+  grid-template-rows: auto minmax(0, 1fr) !important;
+  align-content: stretch !important;
+  grid-auto-rows: initial !important;
+  gap: 12px;
+  overflow: hidden !important;
+}
+
+.companion-page .route-polish-layout .companion-route-list-card {
+  display: grid !important;
+  grid-template-rows: auto minmax(0, 1fr) !important;
+  align-content: stretch !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+.companion-page .route-polish-layout .route-overview-list.route-overview-grid {
+  height: 100% !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  align-content: flex-start !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  padding: 0 8px 10px 0 !important;
+  scrollbar-color: rgba(241, 185, 106, 0.56) rgba(255, 255, 255, 0.05);
+}
+
+.companion-page .route-polish-layout .route-overview-list.route-overview-grid > .route-overview-card {
+  min-height: 108px !important;
+  padding: 12px 13px 11px 15px !important;
+  gap: 8px !important;
+}
+
+.companion-page .route-polish-layout .route-overview-card::after {
+  opacity: 0.32 !important;
+}
+
+.companion-page .route-polish-layout .route-step-index {
+  min-width: 29px !important;
+  height: 29px !important;
+}
+
+.companion-page .route-polish-layout .compact-reward-list {
+  gap: 4px !important;
+}
+
+.companion-page .route-polish-layout .route-overview-card.status-current {
+  min-height: 122px !important;
+}
+
+.companion-page .route-polish-layout .route-overview-card.status-completed,
+.companion-page .route-polish-layout .route-overview-card.status-visited,
+.companion-page .route-polish-layout .route-overview-card.status-done {
+  filter: saturate(0.82) !important;
+  opacity: 0.82 !important;
+}
+
+.companion-page .route-polish-layout .route-overview-card.status-completed:hover,
+.companion-page .route-polish-layout .route-overview-card.status-visited:hover,
+.companion-page .route-polish-layout .route-overview-card.status-done:hover {
+  opacity: 0.94 !important;
+}
+
+.companion-page .route-polish-layout .route-overview-card.status-completed .compact-reward-list li,
+.companion-page .route-polish-layout .route-overview-card.status-visited .compact-reward-list li,
+.companion-page .route-polish-layout .route-overview-card.status-done .compact-reward-list li {
+  color: rgba(197, 209, 220, 0.64) !important;
+}
+
+@media (max-width: 980px) {
+  .companion-page .route-polish-layout .route-overview-list.route-overview-grid {
+    min-height: 0 !important;
+    max-height: none !important;
+  }
+}

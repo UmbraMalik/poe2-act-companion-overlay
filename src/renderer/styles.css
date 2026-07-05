@@ -29,3 +29,4 @@
 @import './styles/22-reminders-final-alignment.css'; /* Final reminders alignment: compact bento rows and single roadmap */
 @import './styles/23-results-recap.css'; /* Results recap polish: hero result, metrics, splits and longest zones */
 @import './styles/24-companion-panel-ux.css'; /* Companion panel UX pass: timer, act times, reminders and summary */
+@import './styles/route-visual-pass.css'; /* Route tab final visual and scroll override */
