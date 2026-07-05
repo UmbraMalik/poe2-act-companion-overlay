@@ -1,49 +1,87 @@
-/* Companion panel UX pass: timer, act times, reminders and run summary. */
-.companion-page .timer-polished-layout {
+/* Companion panel structure: timer, act times, reminders and run summary. */
+.companion-page .timer-rework-layout,
+.companion-page .act-times-dashboard,
+.companion-page .companion-summary-layout .summary-scroll-body--full,
+.companion-page .summary-results-dashboard {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
   gap: 14px;
 }
 
-.companion-page .timer-hero-card {
-  grid-template-columns: minmax(260px, 0.68fr) minmax(0, 1.32fr);
-  align-items: center;
-  min-height: 150px;
-}
-
-.companion-page .timer-hero-copy h3 {
-  font-size: clamp(40px, 4.6vw, 64px);
-}
-
-.companion-page .timer-context-card {
+.companion-page .timer-cockpit-card {
   display: grid;
-  gap: 12px;
-  border-color: rgba(205, 220, 237, 0.105);
+  grid-template-columns: minmax(260px, 0.7fr) minmax(0, 1.3fr);
+  align-items: stretch;
+  gap: 18px;
+  padding: 18px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.034), rgba(255, 255, 255, 0.014)),
-    rgba(0, 0, 0, 0.10);
+    radial-gradient(circle at 0 0, rgba(241, 185, 106, 0.18), transparent 42%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.034), rgba(255, 255, 255, 0.012)),
+    rgba(0, 0, 0, 0.16);
 }
 
-.companion-page .timer-context-grid {
+.companion-page .timer-main-readout {
+  min-width: 0;
+  display: grid;
+  align-content: center;
+  gap: 10px;
+}
+
+.companion-page .timer-main-readout h3 {
+  margin: 0;
+  color: #fff3d6;
+  font-size: clamp(48px, 5.2vw, 74px);
+  line-height: 0.95;
+  font-variant-numeric: tabular-nums;
+}
+
+.companion-page .timer-status-pill {
+  width: fit-content;
+  padding: 6px 10px;
+  border: 1px solid rgba(205, 220, 237, 0.13);
+  border-radius: 999px;
+  color: rgba(232, 240, 248, 0.82);
+  background: rgba(255, 255, 255, 0.035);
+  font-size: 12px;
+  font-weight: 850;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+}
+
+.companion-page .timer-status-pill.is-running {
+  border-color: rgba(122, 214, 144, 0.28);
+  color: #b9f3c6;
+  background: rgba(77, 171, 101, 0.12);
+}
+
+.companion-page .timer-status-pill.is-paused {
+  border-color: rgba(241, 185, 106, 0.34);
+  color: #ffd58f;
+  background: rgba(241, 185, 106, 0.12);
+}
+
+.companion-page .timer-cockpit-details {
+  min-width: 0;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 10px;
 }
 
-.companion-page .timer-context-grid > div {
+.companion-page .timer-cockpit-details > div,
+.companion-page .timer-segment-list > div {
   min-width: 0;
-  min-height: 76px;
   display: grid;
   align-content: start;
   gap: 6px;
-  padding: 11px 12px;
+  padding: 12px;
   border: 1px solid rgba(205, 220, 237, 0.085);
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.024);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.025);
 }
 
-.companion-page .timer-context-grid span,
-.companion-page .act-progress-step small {
+.companion-page .timer-cockpit-details span,
+.companion-page .timer-segment-list span,
+.companion-page .act-split-table-head,
+.companion-page .vendor-checkpoint span {
   color: rgba(204, 216, 228, 0.62);
   font-size: 11px;
   font-weight: 850;
@@ -51,7 +89,8 @@
   text-transform: uppercase;
 }
 
-.companion-page .timer-context-grid strong {
+.companion-page .timer-cockpit-details strong,
+.companion-page .timer-segment-list strong {
   min-width: 0;
   color: #fff4d8;
   font-size: 16px;
@@ -61,101 +100,109 @@
   white-space: nowrap;
 }
 
-.companion-page .timer-context-grid small {
+.companion-page .timer-cockpit-details small {
   color: rgba(210, 224, 238, 0.70);
   font-size: 12px;
   line-height: 1.35;
 }
 
-.companion-page .timer-control-card {
-  grid-template-columns: minmax(260px, 1fr) minmax(420px, auto);
-  border-color: rgba(205, 220, 237, 0.105);
+.companion-page .timer-segment-card,
+.companion-page .timer-action-bar,
+.companion-page .act-times-card-list,
+.companion-page .reminders-next-card,
+.companion-page .vendor-roadmap-card,
+.companion-page .reminders-power-roadmap-card,
+.companion-page .summary-result-panel,
+.companion-page .summary-support-grid > .companion-block,
+.companion-page .summary-breakdown-grid > .companion-block,
+.companion-page .companion-summary-layout .run-compare-card,
+.companion-page .companion-summary-layout .run-history-card {
+  border-color: rgba(205, 220, 237, 0.095);
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.030), rgba(255, 255, 255, 0.012)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.032), rgba(255, 255, 255, 0.014)),
     rgba(0, 0, 0, 0.10);
 }
 
-.companion-page .act-times-dashboard {
+.companion-page .timer-segment-list {
   display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.companion-page .timer-action-bar {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) auto;
+  align-items: center;
   gap: 14px;
 }
 
+.companion-page .timer-action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
 .companion-page .act-times-hero-card {
-  grid-template-columns: minmax(260px, 0.66fr) minmax(0, 1.34fr);
+  grid-template-columns: minmax(260px, 0.62fr) minmax(0, 1.38fr);
   align-items: center;
 }
 
-.companion-page .act-times-card-list {
+.companion-page .act-split-table {
   display: grid;
-  gap: 12px;
-}
-
-.companion-page .act-progress-rail {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 8px;
 }
 
-.companion-page .act-progress-step {
-  position: relative;
-  min-width: 0;
+.companion-page .act-split-table-head,
+.companion-page .act-split-row {
   display: grid;
-  gap: 5px;
-  padding: 10px 11px;
-  border: 1px solid rgba(205, 220, 237, 0.080);
-  border-radius: 12px;
+  grid-template-columns: minmax(130px, 0.9fr) minmax(110px, 0.75fr) minmax(130px, 0.8fr) minmax(92px, auto);
+  align-items: center;
+  gap: 12px;
+}
+
+.companion-page .act-split-table-head {
+  padding: 0 12px;
+}
+
+.companion-page .act-split-row {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid rgba(205, 220, 237, 0.085);
+  border-radius: 10px;
   background: rgba(255, 255, 255, 0.022);
 }
 
-.companion-page .act-progress-step::before {
-  content: "";
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: 2px;
-  border-radius: 12px 0 0 12px;
-  background: rgba(105, 128, 150, 0.28);
-}
-
-.companion-page .act-progress-step.is-finished {
-  opacity: 0.74;
-  border-color: rgba(122, 214, 144, 0.14);
-}
-
-.companion-page .act-progress-step.is-finished::before {
-  background: rgba(122, 214, 144, 0.38);
-}
-
-.companion-page .act-progress-step.is-current {
-  border-color: rgba(241, 185, 106, 0.42);
+.companion-page .act-split-row.is-current {
+  border-color: rgba(241, 185, 106, 0.34);
   background:
-    radial-gradient(circle at 0% 0%, rgba(241, 185, 106, 0.12), transparent 50%),
-    rgba(255, 255, 255, 0.030);
+    radial-gradient(circle at 0 0, rgba(241, 185, 106, 0.12), transparent 48%),
+    rgba(255, 255, 255, 0.028);
 }
 
-.companion-page .act-progress-step.is-current::before {
-  width: 3px;
-  background: rgba(241, 185, 106, 0.72);
-}
-
-.companion-page .act-progress-label {
+.companion-page .act-split-act {
   min-width: 0;
-  color: rgba(255, 255, 255, 0.82);
-  font-size: 13px;
-  font-weight: 850;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  display: grid;
+  gap: 4px;
 }
 
-.companion-page .act-progress-step strong {
-  color: #fff5dc;
-  font-size: 18px;
-  line-height: 1;
+.companion-page .act-split-act small {
+  color: rgba(204, 216, 228, 0.56);
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 0.12em;
+}
+
+.companion-page .act-split-act strong,
+.companion-page .act-split-time,
+.companion-page .act-split-total {
+  color: #fff4d8;
+  font-size: 16px;
   font-variant-numeric: tabular-nums;
 }
 
-.companion-page .act-progress-step.is-pending {
-  opacity: 0.52;
+.companion-page .act-split-total {
+  color: rgba(232, 240, 248, 0.86);
 }
 
 .companion-page .reminders-tab-layout {
@@ -163,72 +210,102 @@
   overflow: visible;
 }
 
-.companion-page .reminders-dashboard-grid {
-  grid-template-columns: minmax(310px, 0.78fr) minmax(0, 1.22fr) !important;
-  grid-template-areas:
-    "nearest power"
-    "flasks power"
-    "bases power" !important;
-  gap: 12px !important;
-  align-items: start !important;
+.companion-page .reminders-rework-grid {
+  display: grid;
+  grid-template-columns: minmax(360px, 0.88fr) minmax(0, 1.12fr);
+  gap: 14px;
+  align-items: start;
 }
 
-.companion-page .reminders-power-spikes-card {
-  grid-area: power !important;
-  overflow: visible !important;
+.companion-page .reminders-next-card .reminder-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
 }
 
-.companion-page .reminders-card-nearest {
-  grid-area: nearest !important;
+.companion-page .reminders-next-card .reminder-item {
+  margin: 0;
 }
 
-.companion-page .reminders-dashboard-grid > .reminders-card:not(.reminders-card-nearest):not(.reminders-card-wide):not(.reminders-power-spikes-card) {
-  grid-area: flasks !important;
+.companion-page .vendor-roadmap-card {
+  display: grid;
+  gap: 14px;
 }
 
-.companion-page .reminders-card-wide:not(.reminders-power-spikes-card) {
-  grid-area: bases !important;
+.companion-page .vendor-roadmap-section {
+  display: grid;
+  gap: 8px;
 }
 
-.companion-page .reminders-card,
-.companion-page .reminders-card-wide,
-.companion-page .reminders-power-spikes-card {
-  position: relative;
+.companion-page .vendor-roadmap-section h4 {
+  margin: 0;
+  color: #c8892d;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.095em;
+  text-transform: uppercase;
+}
+
+.companion-page .vendor-checkpoint-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(106px, 1fr));
+  gap: 8px;
+}
+
+.companion-page .vendor-checkpoint {
   min-width: 0;
-  z-index: 0;
+  min-height: 58px;
+  display: grid;
+  align-content: center;
+  gap: 4px;
+  padding: 9px 10px;
+  border: 1px solid rgba(205, 220, 237, 0.070);
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.020);
+}
+
+.companion-page .vendor-checkpoint strong {
+  color: rgba(232, 240, 248, 0.84);
+  font-size: 12px;
+  line-height: 1.22;
+}
+
+.companion-page .vendor-checkpoint.is-completed {
+  opacity: 0.34;
+}
+
+.companion-page .vendor-checkpoint.is-current {
+  opacity: 1;
+  border-color: rgba(241, 185, 106, 0.38);
+  background:
+    radial-gradient(circle at 0 0, rgba(241, 185, 106, 0.13), transparent 52%),
+    rgba(255, 255, 255, 0.030);
 }
 
 .companion-page .reminder-item,
-.companion-page .reminder-chip {
+.companion-page .power-spike-timeline-item {
   transition: opacity 120ms ease, border-color 120ms ease, background 120ms ease;
 }
 
 .companion-page .reminder-item.is-completed,
-.companion-page .reminder-chip.is-completed,
 .companion-page .power-spike-timeline-item.is-past:not(.is-nearest) {
-  opacity: 0.46;
-}
-
-.companion-page .reminder-item.is-completed,
-.companion-page .reminder-chip.is-completed {
-  border-color: rgba(205, 220, 237, 0.055) !important;
-  background: rgba(255, 255, 255, 0.015) !important;
-}
-
-.companion-page .reminder-item.is-completed .reminder-level,
-.companion-page .reminder-chip.is-completed span,
-.companion-page .reminder-item.is-completed .reminder-title,
-.companion-page .reminder-chip.is-completed strong {
-  color: rgba(190, 202, 214, 0.62) !important;
+  opacity: 0.42;
 }
 
 .companion-page .reminder-item.is-current,
-.companion-page .reminder-chip.is-current {
-  opacity: 1;
+.companion-page .reminder-item.is-nearest {
   border-color: rgba(241, 185, 106, 0.34) !important;
   background:
-    radial-gradient(circle at 0% 0%, rgba(241, 185, 106, 0.12), transparent 48%),
+    radial-gradient(circle at 0 0, rgba(241, 185, 106, 0.12), transparent 48%),
     rgba(255, 255, 255, 0.028) !important;
+}
+
+.companion-page .reminders-power-roadmap-card {
+  overflow: visible;
+}
+
+.companion-page .power-spike-timeline {
+  margin: 0;
 }
 
 .companion-page .power-spike-timeline-item.is-past:not(.is-nearest) .power-spike-timeline-level {
@@ -242,34 +319,37 @@
   background: rgba(255, 255, 255, 0.014);
 }
 
-.companion-page .companion-summary-layout .summary-scroll-body--full {
+.companion-page .summary-result-panel {
   display: grid;
-  gap: 14px;
-}
-
-.companion-page .companion-summary-layout .summary-dashboard {
-  display: grid;
-  gap: 12px;
-}
-
-.companion-page .companion-summary-layout .summary-hero-card {
-  min-height: 132px;
-  grid-template-columns: minmax(240px, 0.66fr) minmax(0, 1.34fr);
-}
-
-.companion-page .companion-summary-layout .summary-meta-grid {
-  grid-template-columns: minmax(260px, 0.74fr) minmax(0, 1.26fr);
-  gap: 12px;
-}
-
-.companion-page .companion-summary-layout .run-compare-card,
-.companion-page .companion-summary-layout .run-history-card,
-.companion-page .companion-summary-layout .summary-best-card,
-.companion-page .companion-summary-layout .summary-longest-card {
-  border-color: rgba(205, 220, 237, 0.095);
+  grid-template-columns: minmax(260px, 0.58fr) minmax(0, 1.42fr);
+  gap: 16px;
+  align-items: center;
   background:
+    radial-gradient(circle at 0 0, rgba(241, 185, 106, 0.17), transparent 42%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.032), rgba(255, 255, 255, 0.014)),
-    rgba(0, 0, 0, 0.10);
+    rgba(0, 0, 0, 0.12);
+}
+
+.companion-page .summary-result-copy {
+  min-width: 0;
+}
+
+.companion-page .summary-result-copy h3 {
+  margin-top: 0;
+}
+
+.companion-page .summary-result-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.companion-page .summary-breakdown-grid,
+.companion-page .summary-support-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.18fr) minmax(280px, 0.82fr);
+  gap: 14px;
+  align-items: start;
 }
 
 .companion-page .companion-summary-layout .run-comparison-total {
@@ -285,44 +365,59 @@
 }
 
 .companion-page .companion-summary-layout .run-history-stats span {
-  min-height: 42px;
+  min-height: 40px;
 }
 
 @media (max-width: 1180px) {
-  .companion-page .timer-hero-card,
-  .companion-page .timer-control-card,
+  .companion-page .timer-cockpit-card,
+  .companion-page .timer-action-bar,
   .companion-page .act-times-hero-card,
-  .companion-page .companion-summary-layout .summary-hero-card,
-  .companion-page .companion-summary-layout .summary-meta-grid {
+  .companion-page .summary-result-panel,
+  .companion-page .summary-breakdown-grid,
+  .companion-page .summary-support-grid {
     grid-template-columns: 1fr;
   }
 
-  .companion-page .timer-context-grid {
+  .companion-page .timer-cockpit-details,
+  .companion-page .summary-result-metrics {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 980px) {
-  .companion-page .reminders-dashboard-grid {
-    grid-template-columns: 1fr !important;
-    grid-template-areas:
-      "nearest"
-      "flasks"
-      "bases"
-      "power" !important;
+  .companion-page .reminders-rework-grid {
+    grid-template-columns: 1fr;
   }
 
-  .companion-page .act-progress-rail {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  .companion-page .reminders-next-card .reminder-list {
+    grid-template-columns: 1fr;
+  }
+
+  .companion-page .act-split-table-head,
+  .companion-page .act-split-row {
+    grid-template-columns: minmax(120px, 1fr) minmax(90px, auto) minmax(82px, auto);
+  }
+
+  .companion-page .act-split-table-head span:nth-child(3),
+  .companion-page .act-split-total {
+    display: none;
   }
 }
 
 @media (max-width: 720px) {
-  .companion-page .timer-metric-grid,
-  .companion-page .timer-context-grid,
-  .companion-page .act-progress-rail,
+  .companion-page .timer-cockpit-details,
+  .companion-page .timer-segment-list,
+  .companion-page .summary-result-metrics,
   .companion-page .companion-summary-layout .run-comparison-total,
   .companion-page .companion-summary-layout .run-comparison-grid {
     grid-template-columns: 1fr;
+  }
+
+  .companion-page .timer-action-buttons {
+    justify-content: stretch;
+  }
+
+  .companion-page .timer-action-buttons .timer-action-button {
+    flex: 1 1 140px;
   }
 }

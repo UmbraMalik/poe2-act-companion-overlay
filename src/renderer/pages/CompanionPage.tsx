@@ -253,53 +253,26 @@ function renderActTimeCards(rows: ActTimeRow[], emptyMessage: string, language: 
   }
 
   return (
-    <div className="act-time-card-grid">
+    <div className="act-split-table" role="table" aria-label={translate(language, 'companion.actSplitCards')}>
+      <div className="act-split-table-head" role="row">
+        <span role="columnheader">{translate(language, 'companion.actColumn')}</span>
+        <span role="columnheader">{translate(language, 'companion.segmentTime')}</span>
+        <span role="columnheader">{translate(language, 'companion.cumulativeTime')}</span>
+        <span role="columnheader">{translate(language, 'common.status')}</span>
+      </div>
       {rows.map((row, index) => {
         const statusLabel = formatActTimeStatus(row.status, language);
         const isCurrent = row.status === 'current';
 
         return (
-          <article key={`act-time-card-${row.act}`} className={`act-time-card ${isCurrent ? 'is-current' : 'is-finished'}`}>
-            <div className="act-time-card-topline">
-              <span className="act-time-index">{String(index + 1).padStart(2, '0')}</span>
-              <span className="act-time-status-pill">{statusLabel}</span>
-            </div>
-            <h4>{formatActLabel(row.act, language)}</h4>
-            <div className="act-time-main-value">{formatDuration(row.elapsedMs)}</div>
-            <div className="act-time-card-footer">
-              <span>{translate(language, 'companion.cumulativeTime')}</span>
-              <strong>{formatDuration(row.totalElapsedMs)}</strong>
-            </div>
-          </article>
-        );
-      })}
-    </div>
-  );
-}
-
-function renderActProgressRail(rows: ActTimeRow[], language: AppLanguage) {
-  const rowsByAct = new Map(rows.map((row) => [row.act, row]));
-  const orderedActs = [1, 2, 3, 4, 5];
-  if (rows.some((row) => isEndgameT15Act(row.act))) {
-    orderedActs.push(6);
-  }
-
-  return (
-    <div className="act-progress-rail" aria-label={translate(language, 'companion.actProgressTitle')}>
-      {orderedActs.map((act) => {
-        const row = rowsByAct.get(act) ?? null;
-        const state = row?.status ?? 'pending';
-        const stateLabel = state === 'finished'
-          ? translate(language, 'companion.actStatusFinished')
-          : state === 'current'
-            ? translate(language, 'companion.actStatusCurrent')
-            : translate(language, 'companion.actStatusPending');
-
-        return (
-          <div key={`act-progress-${act}`} className={`act-progress-step is-${state}`}>
-            <span className="act-progress-label">{formatActLabel(act, language)}</span>
-            <strong>{row ? formatDuration(row.elapsedMs) : '—'}</strong>
-            <small>{stateLabel}</small>
+          <div key={`act-time-row-${row.act}`} className={`act-split-row ${isCurrent ? 'is-current' : 'is-finished'}`} role="row">
+            <span className="act-split-act" role="cell">
+              <small>{String(index + 1).padStart(2, '0')}</small>
+              <strong>{formatActLabel(row.act, language)}</strong>
+            </span>
+            <strong className="act-split-time" role="cell">{formatDuration(row.elapsedMs)}</strong>
+            <span className="act-split-total" role="cell">{formatDuration(row.totalElapsedMs)}</span>
+            <span className="act-time-status-pill" role="cell">{statusLabel}</span>
           </div>
         );
       })}
@@ -404,9 +377,8 @@ function renderActTimesDashboard(
       <section className="companion-block act-times-card-list">
         <div className="summary-section-heading">
           <h3>{translate(language, 'companion.actSplitCards')}</h3>
-          <span>{translate(language, 'companion.actProgressTitle')}</span>
+          <span>{translate(language, 'companion.completedActs')}: {completedActCount} / {TOTAL_CAMPAIGN_ACTS}</span>
         </div>
-        {renderActProgressRail(rows, language)}
         {renderActTimeCards(rows, emptyMessage, language)}
       </section>
     </div>
@@ -579,6 +551,45 @@ function renderCompactReminderList(
         );
       })}
     </ul>
+  );
+}
+
+function getUniqueReminderList(items: { id: string; level: number; title: string; items?: string[] }[]) {
+  const seen = new Set<string>();
+
+  return items.filter((entry) => {
+    const key = `${entry.level}:${entry.title.toLocaleLowerCase('ru')}`;
+    if (seen.has(key)) {
+      return false;
+    }
+
+    seen.add(key);
+    return true;
+  });
+}
+
+function renderVendorCheckpointGrid(
+  items: { id: string; level: number; title: string; items?: string[] }[],
+  language: AppLanguage,
+  currentLevel: number | null
+) {
+  if (items.length === 0) {
+    return <p className="helper-text">{translate(language, 'companion.remindersEmpty')}</p>;
+  }
+
+  return (
+    <div className="vendor-checkpoint-grid">
+      {items.map((entry) => {
+        const stateClass = getReminderStateClass(entry.level, currentLevel);
+
+        return (
+          <div key={entry.id} className={`vendor-checkpoint ${stateClass}`}>
+            <span>{translate(language, 'common.level')} {entry.level}</span>
+            <strong>{translateDataText(entry.title, language)}</strong>
+          </div>
+        );
+      })}
+    </div>
   );
 }
 
@@ -945,13 +956,13 @@ function renderSummary(summary: RunSummary | null, language: AppLanguage) {
   const slowestAct = getSlowestActRow(actTimeRows);
 
   return (
-    <div className="summary-dashboard">
-      <section className="companion-block summary-hero-card">
-        <div>
+    <div className="summary-results-dashboard">
+      <section className="companion-block summary-result-panel">
+        <div className="summary-result-copy">
           <h3>{translate(language, 'companion.summaryTitle')}</h3>
           <p className="helper-text">{translate(language, 'companion.summaryFinishedIntro')}</p>
         </div>
-        <div className="run-metric-grid">
+        <div className="summary-result-metrics">
           {renderMetricCard(translate(language, 'companion.totalTime'), formatDuration(summary.totalElapsedMs), translate(language, 'companion.finalTime'), 'accent')}
           {renderMetricCard(translate(language, 'companion.completedActs'), `${completedActCount} / ${TOTAL_CAMPAIGN_ACTS}`, translate(language, 'companion.completedActsHint'))}
           {renderMetricCard(translate(language, 'companion.pauses'), String(summary.pauseCount), translate(language, 'companion.pauseCountHint'), 'muted')}
@@ -963,18 +974,20 @@ function renderSummary(summary: RunSummary | null, language: AppLanguage) {
         </div>
       </section>
 
-      <section className="companion-block act-times-card-list">
-        <h3>{translate(language, 'common.actTimes')}</h3>
-        {renderActTimeCards(actTimeRows, translate(language, 'companion.actTimesEmptyFinished'), language)}
-      </section>
+      <div className="summary-breakdown-grid">
+        <section className="companion-block act-times-card-list">
+          <div className="summary-section-heading">
+            <h3>{translate(language, 'common.actTimes')}</h3>
+            {slowestAct && <span>{translate(language, 'companion.longestActShort', { act: formatActLabel(slowestAct.act, language), time: formatDuration(slowestAct.elapsedMs) })}</span>}
+          </div>
+          {renderActTimeCards(actTimeRows, translate(language, 'companion.actTimesEmptyFinished'), language)}
+        </section>
 
-      <section className="companion-block summary-longest-card">
-        <div className="summary-section-heading">
+        <section className="companion-block summary-longest-card">
           <h3>{translate(language, 'companion.longestZones')}</h3>
-          {slowestAct && <span>{translate(language, 'companion.longestActShort', { act: formatActLabel(slowestAct.act, language), time: formatDuration(slowestAct.elapsedMs) })}</span>}
-        </div>
-        {renderLongestZoneList(summary.longestZones, language, translate(language, 'companion.zoneHistoryEmpty'))}
-      </section>
+          {renderLongestZoneList(summary.longestZones, language, translate(language, 'companion.zoneHistoryEmpty'))}
+        </section>
+      </div>
     </div>
   );
 }
@@ -1361,57 +1374,70 @@ export function CompanionPage() {
     </div>
   );
 
+  const latestActRow = actTimeRows[actTimeRows.length - 1] ?? null;
+  const slowestActRow = getSlowestActRow(actTimeRows);
+  const activeZoneLabel = guideView?.zoneName ?? sceneName;
   const timerTab = (
-    <div className="companion-tab-layout timer-polished-layout">
-      <section className="companion-block timer-hero-card">
-        <div className="timer-hero-copy">
+    <div className="companion-tab-layout timer-rework-layout">
+      <section className="companion-block timer-cockpit-card">
+        <div className="timer-main-readout">
           <p className="eyebrow">{t('companion.timerTitle')}</p>
           <h3>{formatDuration(currentRunElapsed)}</h3>
-          <p className="helper-text">{t('companion.timerDescription')}</p>
+          <span className={`timer-status-pill is-${displayRunTimer.status}`}>
+            {formatRunStatus(displayRunTimer.status, language)}
+          </span>
         </div>
-        <div className="timer-metric-grid">
-          {renderMetricCard(t('companion.totalTime'), formatDuration(currentRunElapsed), t('companion.totalTimeHint'), 'accent')}
-          {renderMetricCard(t('settings.actTime'), currentActElapsed === null ? '—' : formatDuration(currentActElapsed), nowAct === null ? t('companion.noCurrentAct') : formatActTitle(nowAct, language))}
-          {renderMetricCard(t('common.status'), formatRunStatus(displayRunTimer.status, language), currentZone.sceneKind === 'town' ? t('companion.sceneTownHub') : t('companion.sceneGameplay'))}
-          {renderMetricCard(t('settings.countdown'), countdownMs === null ? '—' : formatDuration(countdownMs), countdownMs === null ? t('common.notAvailable') : t('settings.countdown'), 'muted')}
-        </div>
-      </section>
-
-      <section className="companion-block timer-context-card">
-        <div className="summary-section-heading">
-          <h3>{t('companion.timerContextTitle')}</h3>
-          <span>{formatRunStatus(displayRunTimer.status, language)}</span>
-        </div>
-        <div className="timer-context-grid">
+        <div className="timer-cockpit-details">
           <div>
             <span>{t('companion.currentAct')}</span>
             <strong>{nowAct === null ? '—' : formatActTitle(nowAct, language)}</strong>
             <small>{currentActElapsed === null ? t('common.notAvailable') : formatDuration(currentActElapsed)}</small>
           </div>
           <div>
-            <span>{t('companion.actSplitCards')}</span>
-            <strong>{actTimeRows.length > 0 ? formatActLabel(actTimeRows[actTimeRows.length - 1].act, language) : '—'}</strong>
-            <small>{actTimeRows.length > 0 ? formatDuration(actTimeRows[actTimeRows.length - 1].elapsedMs) : t('companion.noActSplits')}</small>
-          </div>
-          <div>
-            <span>{t('companion.longestZone')}</span>
-            <strong>{longestZones[0] ? translateDataText(longestZones[0].zone_ru, language) : '—'}</strong>
-            <small>{longestZones[0] ? formatDuration(longestZones[0].elapsedMs) : t('companion.zoneHistoryEmpty')}</small>
+            <span>{t('common.currentZone')}</span>
+            <strong>{activeZoneLabel || '—'}</strong>
+            <small>{currentZone.sceneKind === 'town' ? t('companion.sceneTownHub') : t('companion.sceneGameplay')}</small>
           </div>
           <div>
             <span>{t('companion.pauses')}</span>
             <strong>{displayRunTimer.pauseCount}</strong>
             <small>{t('companion.pauseCountHint')}</small>
           </div>
+          <div>
+            <span>{t('settings.countdown')}</span>
+            <strong>{countdownMs === null ? '—' : formatDuration(countdownMs)}</strong>
+            <small>{countdownMs === null ? t('common.notAvailable') : t('settings.countdown')}</small>
+          </div>
         </div>
       </section>
 
-      <section className="companion-block timer-control-card">
-        <div className="timer-control-copy">
+      <section className="companion-block timer-segment-card">
+        <div className="summary-section-heading">
+          <h3>{t('companion.timerNowTitle')}</h3>
+          <span>{displayRunTimer.status === 'finished' ? t('common.finish') : formatRunStatus(displayRunTimer.status, language)}</span>
+        </div>
+        <div className="timer-segment-list">
+          <div>
+            <span>{t('companion.lastRecordedSplit')}</span>
+            <strong>{latestActRow ? `${formatActLabel(latestActRow.act, language)} · ${formatDuration(latestActRow.elapsedMs)}` : '—'}</strong>
+          </div>
+          <div>
+            <span>{t('companion.longestAct')}</span>
+            <strong>{slowestActRow ? `${formatActLabel(slowestActRow.act, language)} · ${formatDuration(slowestActRow.elapsedMs)}` : '—'}</strong>
+          </div>
+          <div>
+            <span>{t('companion.longestZone')}</span>
+            <strong>{longestZones[0] ? `${translateDataText(longestZones[0].zone_ru, language)} · ${formatDuration(longestZones[0].elapsedMs)}` : '—'}</strong>
+          </div>
+        </div>
+      </section>
+
+      <section className="companion-block timer-action-bar">
+        <div>
           <h3>{t('companion.runControlsTitle')}</h3>
           <p className="helper-text">{t('companion.runControlsIntro')}</p>
         </div>
-        <div className="timer-action-grid">
+        <div className="timer-action-buttons">
           {displayRunTimer.status === 'running' ? (
             <button
               type="button"
@@ -1517,41 +1543,40 @@ export function CompanionPage() {
   const filteredPowerSpikes = snapshot.powerSpikes.filter(
     (entry) => !entry.profiles || entry.profiles.includes(config.guideProfile)
   );
+  const nearestReminderItems = getUniqueReminderList([
+    ...(visibleActiveLevelReminder ? [visibleActiveLevelReminder] : []),
+    ...upcomingVendorReminders,
+    ...(nearestPowerSpike ? [nearestPowerSpike] : [])
+  ]).slice(0, 3);
 
   const remindersTab = (
     <div className="companion-tab-layout reminders-tab-layout">
-      <div className="reminders-dashboard-grid">
-        <section className="companion-block reminders-card reminders-card-nearest">
+      <section className="companion-block reminders-next-card">
+        <div className="summary-section-heading">
           <h3>{t('companion.nearest')}</h3>
-          {renderCompactReminderList([
-            ...(visibleActiveLevelReminder ? [visibleActiveLevelReminder] : []),
-            ...upcomingVendorReminders.slice(0, 2),
-            ...(nearestPowerSpike ? [nearestPowerSpike] : [])
-          ], language, config.currentLevel, 4, visibleActiveLevelReminder?.id ?? null)}
-        </section>
+          {config.currentLevel !== null && <span>{t('common.level')} {config.currentLevel}</span>}
+        </div>
+        {renderCompactReminderList(nearestReminderItems, language, config.currentLevel, 3, visibleActiveLevelReminder?.id ?? nearestPowerSpike?.id ?? null)}
+      </section>
 
-        <section className="companion-block reminders-card">
-          <h3>{t('companion.flasks')}</h3>
-          {renderCompactReminderList(reminderFlasks, language, config.currentLevel)}
-        </section>
-
-        <section className="companion-block reminders-card reminders-card-wide">
-          <h3>{t('companion.gearBases')}</h3>
-          <div className="reminder-chip-grid">
-            {reminderBases.map((entry) => {
-              const stateClass = getReminderStateClass(entry.level, config.currentLevel);
-
-              return (
-                <div key={entry.id} className={`reminder-chip ${stateClass}`}>
-                  <span>{t('common.level')} {entry.level}</span>
-                  <strong>{translateDataText(entry.title, language)}</strong>
-                </div>
-              );
-            })}
+      <div className="reminders-rework-grid">
+        <section className="companion-block vendor-roadmap-card">
+          <h3>{t('companion.vendorRoadmap')}</h3>
+          <div className="vendor-roadmap-section">
+            <div className="summary-section-heading">
+              <h4>{t('companion.flasks')}</h4>
+            </div>
+            {renderVendorCheckpointGrid(reminderFlasks, language, config.currentLevel)}
+          </div>
+          <div className="vendor-roadmap-section">
+            <div className="summary-section-heading">
+              <h4>{t('companion.gearBases')}</h4>
+            </div>
+            {renderVendorCheckpointGrid(reminderBases, language, config.currentLevel)}
           </div>
         </section>
 
-        <section className="companion-block reminders-card reminders-card-wide reminders-power-spikes-card">
+        <section className="companion-block reminders-power-roadmap-card">
           <h3>{t('companion.powerSpikes')}</h3>
           {renderPowerSpikeTimeline(filteredPowerSpikes, language, config.currentLevel, nearestPowerSpike?.id ?? null)}
         </section>
@@ -1713,13 +1738,13 @@ export function CompanionPage() {
   const summaryHero = displayRunTimer.status === 'finished' ? (
     renderSummary(config.lastRunSummary, language)
   ) : (
-    <div className="summary-dashboard">
-      <section className="companion-block summary-hero-card">
-        <div>
+    <div className="summary-results-dashboard">
+      <section className="companion-block summary-result-panel is-live">
+        <div className="summary-result-copy">
           <h3>{t('companion.summaryLiveTitle')}</h3>
           <p className="helper-text">{t('companion.summaryLiveIntro')}</p>
         </div>
-        <div className="run-metric-grid">
+        <div className="summary-result-metrics">
           {renderMetricCard(t('companion.totalTime'), formatDuration(currentRunElapsed), formatRunStatus(displayRunTimer.status, language), 'accent')}
           {renderMetricCard(t('companion.completedActs'), `${getCompletedActCount(actTimeRows)} / ${TOTAL_CAMPAIGN_ACTS}`, t('companion.completedActsHint'))}
           {renderMetricCard(t('companion.currentAct'), nowAct === null ? '—' : formatActTitle(nowAct, language), currentActElapsed !== null ? formatDuration(currentActElapsed) : t('common.notAvailable'))}
@@ -1734,26 +1759,28 @@ export function CompanionPage() {
       <div className="summary-scroll-body summary-scroll-body--full">
         {summaryHero}
 
-        <div className="summary-meta-grid">
-          <section className="companion-block summary-best-card">
-            <h3>{t('companion.bestRun')}</h3>
-            {config.bestRun ? (
-              <div className="best-run-card">
-                <strong>{formatDuration(config.bestRun.totalElapsedMs)}</strong>
-                <span>{new Date(config.bestRun.finishedAt).toLocaleString(language === 'en' ? 'en-US' : 'ru-RU')}</span>
-              </div>
-            ) : (
-              <div className="summary-empty-state">
-                <p className="helper-text">{t('companion.bestRunEmpty')}</p>
-              </div>
-            )}
-          </section>
+        {displayRunTimer.status !== 'finished' && (
+          <div className="summary-support-grid">
+            <section className="companion-block summary-best-card">
+              <h3>{t('companion.bestRun')}</h3>
+              {config.bestRun ? (
+                <div className="best-run-card">
+                  <strong>{formatDuration(config.bestRun.totalElapsedMs)}</strong>
+                  <span>{new Date(config.bestRun.finishedAt).toLocaleString(language === 'en' ? 'en-US' : 'ru-RU')}</span>
+                </div>
+              ) : (
+                <div className="summary-empty-state">
+                  <p className="helper-text">{t('companion.bestRunEmpty')}</p>
+                </div>
+              )}
+            </section>
 
-          <section className="companion-block summary-longest-card">
-            <h3>{t('companion.longestZones')}</h3>
-            {renderLongestZoneList(longestZones, language, t('companion.zoneHistoryEmpty'))}
-          </section>
-        </div>
+            <section className="companion-block summary-longest-card">
+              <h3>{t('companion.longestZones')}</h3>
+              {renderLongestZoneList(longestZones, language, t('companion.zoneHistoryEmpty'))}
+            </section>
+          </div>
+        )}
 
         {renderRunComparison(runHistory, currentRunElapsed, actTimeRows, language)}
         {renderRunHistory(runHistory, language, restoreSavedRun, deleteSavedRun)}
