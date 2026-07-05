@@ -242,7 +242,8 @@ export function renderDetails(
       'after',
       'boss_tips',
       'xp_notes',
-      'crafting_tips'
+      'crafting_tips',
+      'overlay_speedrun'
     ]);
 
     const groups = Object.entries(details).filter(

@@ -28,6 +28,7 @@ const GUIDE_ALLOWED_DETAIL_KEYS = new Set([
   'navigation',
   'time_saves',
   'opportunistic',
+  'overlay_speedrun',
   'xp_strategy',
   'craft_plan',
   'danger'

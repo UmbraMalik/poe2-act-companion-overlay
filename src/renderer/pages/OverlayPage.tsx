@@ -439,6 +439,11 @@ function getOverlaySpeedrunLines(
   guide: GuideEntry | null,
   language: AppLanguage
 ): string[] {
+  const overlaySpeedrun = getDetailLines(guide, 'overlay_speedrun', language);
+  if (overlaySpeedrun.length > 0 || guide?.details && !Array.isArray(guide.details) && 'overlay_speedrun' in guide.details) {
+    return overlaySpeedrun.slice(0, 3);
+  }
+
   const groups: Array<[string, string]> = [
     ['checkpoint', 'companion.detailsGroup.checkpoint'],
     ['town_plan', 'companion.detailsGroup.town'],
@@ -1232,7 +1237,7 @@ export function OverlayPage() {
   );
   const guide = currentGuideEntry;
   const guideView = getGuideView(guide, language);
-  const guideChecklist = guideView?.checklist ?? [];
+  const guideChecklist = (guideView?.checklist ?? []).filter((item) => item.displayInOverlay !== false);
   const sceneName = getSceneDisplayName(snapshot, language);
   const levelState = getLevelState(snapshot);
   const currentActTimerAct =

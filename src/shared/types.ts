@@ -37,6 +37,7 @@ export interface ChecklistItemDefinition {
   autoCompleteKeywords: string[];
   autoCompleteMode?: ChecklistAutoCompleteMode;
   linkedChecklistItemIds?: string[];
+  displayInOverlay?: boolean;
 }
 
 export interface ChecklistViewItem extends ChecklistItemDefinition {
@@ -86,6 +87,7 @@ export interface GuideDetails {
   boss_tips?: string[];
   xp_notes?: string[];
   crafting_tips?: string[];
+  overlay_speedrun?: string[];
   [key: string]: unknown;
 }
 

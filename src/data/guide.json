@@ -75,6 +75,9 @@
         ],
         "opportunistic": [
           "В начале собирай с босса всё ценное, чтобы купить ранние апгрейды у торговцев."
+        ],
+        "overlay_speedrun": [
+          "Миллера можно бить почти без пауз: главное не забывать фласку и не уходить в полный клир берега."
         ]
       },
       "display": {
@@ -120,7 +123,8 @@
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
+          "autoCompleteMode": "manual_or_zone_leave_infer",
+          "displayInOverlay": false
         },
         {
           "id": "a1_clearfell_encampment_task_4",
@@ -128,7 +132,8 @@
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
+          "autoCompleteMode": "manual_or_zone_leave_infer",
+          "displayInOverlay": false
         },
         {
           "id": "a1_clearfell_encampment_task_5",
@@ -180,6 +185,9 @@
         "navigation": [
           "Если сбился: основной маршрут начинается с Клирфелла; Грязевая нора — боковая опционалка.",
           "Руны Альдура: если Фарроу стоит в зоне, поговорить с ним; после 0.5.1 он помогает найти руны/рунные камни."
+        ],
+        "overlay_speedrun": [
+          "Проверить раннее оружие/броню у торговцев, поставить камни и выйти из города без лишних кругов."
         ]
       },
       "display": {
@@ -292,6 +300,9 @@
         ],
         "time_saves": [
           "После Бейры сразу в Грельвуд, не добивать обычных мобов без причины."
+        ],
+        "overlay_speedrun": [
+          "После Бейры сразу в Грельвуд, не добивать обычных мобов без причины."
         ]
       },
       "display": {
@@ -382,7 +393,8 @@
         ],
         "navigation": [
           "Вход находится в Клирфелле; после босса вернуться в основной маршрут."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -480,6 +492,10 @@
           "Ариадна обычно недалеко от входа; проход в Мрачные заросли часто ищется относительно путевой точки/чекпоинта в противоположной стороне."
         ],
         "time_saves": [
+          "Саппорт забрал — дальше по маршруту, лишние тупики и пачки не чистить."
+        ],
+        "overlay_speedrun": [
+          "0.5: река ведёт к Красной Долине, светящиеся корни — к Древу душ, грибы — к входу в Мрачные заросли.",
           "Саппорт забрал — дальше по маршруту, лишние тупики и пачки не чистить."
         ]
       },
@@ -599,6 +615,9 @@
         ],
         "opportunistic": [
           "Если нашёл нормальную базу оружия — кинуть сферу превращения; плохую базу не докручивать."
+        ],
+        "overlay_speedrun": [
+          "После Ржавого Короля: портал в город, ID редкие вещи перед продажей, забрать шипы у Ренли, проверить оружие/перчатки/ботинки."
         ]
       },
       "display": {
@@ -706,6 +725,10 @@
         ],
         "town_plan": [
           "После босса/перед выходом: если кастер — чекнуть Уну, на сдачу докупить свитки."
+        ],
+        "overlay_speedrun": [
+          "После разговора с Уной отойди к чекпоинту/барьеру: можно не ждать весь хвост её песни/сцены.",
+          "Зона узкая: держи маршрут к боссу, не стой на трупах грибных зомби — они взрываются."
         ]
       },
       "display": {
@@ -807,6 +830,10 @@
         ],
         "opportunistic": [
           "Кольцо из саркофага можно улучшить сферой превращения, если нужен ранний урон/мана."
+        ],
+        "overlay_speedrun": [
+          "Поставь чекпоинт у ворот; найди два прохода по периметру и поставь чекпоинты рядом с ними.",
+          "Бежать по периметру проще: нужны Гробница, Мавзолей, саркофаг и прогресс ворот."
         ]
       },
       "display": {
@@ -888,7 +915,8 @@
         ],
         "time_saves": [
           "Саппорт забрал — сразу выход, без полного клира."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -974,6 +1002,9 @@
         ],
         "time_saves": [
           "После открытия ворот реснуться на чекпоинте, чтобы быстрее заспавнить/пропустить лишнее ожидание."
+        ],
+        "overlay_speedrun": [
+          "После босса возвращайся через зелёный портал/чекпоинт к воротам кладбища."
         ]
       },
       "display": {
@@ -1033,7 +1064,8 @@
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
+          "autoCompleteMode": "manual_or_zone_leave_infer",
+          "displayInOverlay": false
         }
       ],
       "rewards": [
@@ -1093,6 +1125,10 @@
         "navigation": [
           "0.5: указатель помогает найти путь к Деревне Огам, трупы скота ведут к Колокольщику, а после ритуала рой саранчи показывает дорогу к Фрейторну.",
           "руны Альдура: если Фарроу стоит в зоне, забрать рунный камень 2/3 до ухода."
+        ],
+        "overlay_speedrun": [
+          "Ставь чекпоинты у найденных проходов: Фрейторн и фермы потом быстрее связать маршрутом.",
+          "Колокольщик: бей по пути к следующей арене, чтобы ускорить его перемещение между фазами."
         ]
       },
       "display": {
@@ -1180,6 +1216,10 @@
         ],
         "town_plan": [
           "После Фрейторна: взять charm у Фина, обновить фласки у Уны, чекнуть Ренли на базу/урон."
+        ],
+        "overlay_speedrun": [
+          "Если нашёл большой ритуал/босса раньше трёх малых — активируй чекпоинт, потом вернёшься сразу.",
+          "0.5: после каждого ритуала рой саранчи показывает дорогу к следующему ритуалу."
         ]
       },
       "display": {
@@ -1231,7 +1271,8 @@
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
+          "autoCompleteMode": "manual_or_zone_leave_infer",
+          "displayInOverlay": false
         },
         {
           "id": "a1_ogham_farmlands_task_5",
@@ -1239,7 +1280,8 @@
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
+          "autoCompleteMode": "manual_or_zone_leave_infer",
+          "displayInOverlay": false
         }
       ],
       "rewards": [
@@ -1285,6 +1327,9 @@
         ],
         "opportunistic": [
           "Если камень 4 уровня уже есть и уровень нормальный — не разворачивайся ради лишнего."
+        ],
+        "overlay_speedrun": [
+          "Лютня Уны обычно за тележками по прямой; crop circle/редкий моб — источник камня 4 уровня."
         ]
       },
       "display": {
@@ -1372,6 +1417,9 @@
         ],
         "craft_plan": [
           "Сундук кузнеца/руна/сфера ремесленника — заготовки под оружие 16 уровня, не тратить впустую."
+        ],
+        "overlay_speedrun": [
+          "После Палача: портал, поговорить с Литис/НПЦ, сдать лютню Уне, забрать камень 5 уровня, проверить фласки и оружие."
         ]
       },
       "display": {
@@ -1445,7 +1493,8 @@
         ],
         "navigation": [
           "Двигайся к замку без полного клира; если отстаёшь по XP — добирай плотные пачки."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -1541,6 +1590,10 @@
         ],
         "time_saves": [
           "Лут с Геонора падает долго: после убийства не стоять лишнее, выходить порталом/продолжать переход."
+        ],
+        "overlay_speedrun": [
+          "Зал босса с Candle Mass ищется до перехода по лестнице; сама локация часто идёт зигзагом между этажами.",
+          "Лут с Геонора падает долго: после убийства не стоять лишнее, выходить порталом/продолжать переход."
         ]
       },
       "display": {
@@ -1627,6 +1680,9 @@
           "Raided camp / второй саппорт брать только если по пути или очень нужен камень."
         ],
         "town_plan": [
+          "В караване: через Ctrl+ЛКМ у Скрытого можно быстро идентифицировать вещи; говори с Асалой и сразу на ворота/карьер."
+        ],
+        "overlay_speedrun": [
           "В караване: через Ctrl+ЛКМ у Скрытого можно быстро идентифицировать вещи; говори с Асалой и сразу на ворота/карьер."
         ]
       },
@@ -1731,7 +1787,8 @@
         "navigation": [
           "Если потерял порядок: сначала Маудун/Халани, затем мастодонты и Кет, затем Титаны/Дешар/испытание на 28, затем Дредноут.",
           "0.5: Рису открывает срез к Тропе Изменницы; не возвращай старый лишний круг через Ворота Халани без нужды."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -1809,7 +1866,8 @@
         ],
         "xp_strategy": [
           "Зона плотная и приятная: если немного не хватает до 16, можно быстро добрать уровень."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -1893,7 +1951,8 @@
         ],
         "town_plan": [
           "После Рожи: выпустить Рису, портал/город, поговорить с Рису и Асалой, проверить вендоров."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -1972,6 +2031,9 @@
         ],
         "town_plan": [
           "Продажа мусора и проверка апгрейдов у торговца перед выходом остаются обязательным мини-чеком."
+        ],
+        "overlay_speedrun": [
+          "0.5: в Тропе Изменницы теперь есть гарантированная развилка; пергамент ведёт к Балбале, другой путь — к выходу."
         ]
       },
       "display": {
@@ -2057,6 +2119,9 @@
         ],
         "xp_strategy": [
           "Перед Джамандрой желательно быть около 18 уровня."
+        ],
+        "overlay_speedrun": [
+          "На мостах Асала может застрять: не убегай слишком далеко; перед вторым мостом можно сброситься на чекпоинте."
         ]
       },
       "display": {
@@ -2147,7 +2212,8 @@
         "navigation": [
           "Сначала найти Бессветный проход для открытия Бездна, затем возвращаться в основной маршрут к Костяным ямам.",
           "0.5: для Бессветного прохода смотри на трещины в земле — они ведут к логову и Колодцу душ."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -2222,7 +2288,8 @@
         ],
         "navigation": [
           "После открытия Бездна вернуться в основной маршрут и идти в Костяные ямы."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -2317,7 +2384,8 @@
         "crafting_tips": [],
         "navigation": [
           "0.5: перековочный верстак стоит у входа в испытание, а руническая защита добавляется к стартовой чести."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -2415,7 +2483,8 @@
         ],
         "checkpoint": [
           "Не сбрасывай зону ради реликвии: можно случайно заставить себя чистить всё заново."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -2512,6 +2581,10 @@
         ],
         "opportunistic": [
           "Амулет/второй саппорт/лига-награда — брать, если рядом и не ломает темп."
+        ],
+        "overlay_speedrun": [
+          "Если дошёл до босса, но не собрал всё нужное — поставь чекпоинт у босса и вернись потом.",
+          "Бить змей ради реликвии оберега +1; большая змея/Кабала — книга на +2 пассивки."
         ]
       },
       "display": {
@@ -2583,7 +2656,8 @@
         ],
         "navigation": [
           "Не задерживаться: основная цель — путь к Захоронённым святилищам."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -2669,6 +2743,10 @@
           "У стихийного подношения бери сопротивление, которого меньше; если сомневаешься — молнию."
         ],
         "time_saves": [
+          "После босса не ждать лут: сразу запустить Сущность воды, затем вернуться за лутом."
+        ],
+        "overlay_speedrun": [
+          "У стихийного подношения бери сопротивление, которого меньше; если сомневаешься — молнию.",
           "После босса не ждать лут: сразу запустить Сущность воды, затем вернуться за лутом."
         ]
       },
@@ -2758,6 +2836,10 @@
         ],
         "checkpoint": [
           "После каждой печати используй появившийся портал назад к старту, затем бери КП Грота Титанов."
+        ],
+        "overlay_speedrun": [
+          "После каждой печати используй появившийся портал назад к старту, затем бери КП Грота Титанов.",
+          "0.5: головы титанов видны от входа и показывают направления к каньонам; каньоны стали линейнее, а после печати появляется портал назад к старту."
         ]
       },
       "display": {
@@ -2830,7 +2912,8 @@
         "crafting_tips": [],
         "time_saves": [
           "После босса: город, саппорт, рог/горн, дудка — и сразу Дешар."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -2881,7 +2964,8 @@
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
+          "autoCompleteMode": "manual_or_zone_leave_infer",
+          "displayInOverlay": false
         },
         {
           "id": "a2_deshar_early_task_5",
@@ -2939,6 +3023,10 @@
         ],
         "town_plan": [
           "Пока караван едет, сдавай письмо Шамбрин и чекай торговцев — так не стоишь в анимации."
+        ],
+        "overlay_speedrun": [
+          "Пока караван едет, сдавай письмо Шамбрин и чекай торговцев — так не стоишь в анимации.",
+          "Доверяй карте мира: выход в Путь скорби достаточно прямой; Рунное хранилище закрыть до ухода, если собираешь цепочку Фарроу."
         ]
       },
       "display": {
@@ -3006,7 +3094,8 @@
         ],
         "xp_strategy": [
           "К выходу в Шпили нормально быть около 25; перед Тукохамой лучше 26."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -3082,6 +3171,9 @@
         ],
         "xp_strategy": [
           "Перед Дредноутом цель — не провалиться по уровню, зоны дальше опаснее."
+        ],
+        "overlay_speedrun": [
+          "Забрать +10% молнии у Сестёр Гарухан, затем Тукохама."
         ]
       },
       "display": {
@@ -3178,6 +3270,10 @@
           "0.5: идти до финала внутри Дредноута; старый переход в Авангард Дредноута больше не нужен."
         ],
         "time_saves": [
+          "После босса: Скрытый → экран выбора персонажа для возврата в караван → Акт 3."
+        ],
+        "overlay_speedrun": [
+          "0.5: идти до финала внутри Дредноута; старый переход в Авангард Дредноута больше не нужен.",
           "После босса: Скрытый → экран выбора персонажа для возврата в караван → Акт 3."
         ]
       },
@@ -3277,6 +3373,9 @@
         ],
         "xp_strategy": [
           "Перед городом А3 хорошо иметь 29 уровень: ранний Акт 3 неприятен по XP."
+        ],
+        "overlay_speedrun": [
+          "В середине зоны с одной стороны дерево/труп/кольцо, с другой — дерево-босс с гарантированным skill gem 9."
         ]
       },
       "display": {
@@ -3374,7 +3473,8 @@
         "navigation": [
           "0.5: Лагеря исследователей в джунглях подсказывают следующую зону и открывают цель на миникарте.",
           "Не учить старые лэйауты Акта 3 наизусть: после 0.5 маршруты и подсказки сильно переработаны."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -3417,7 +3517,8 @@
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
+          "autoCompleteMode": "manual_or_zone_leave_infer",
+          "displayInOverlay": false
         },
         {
           "id": "a3_jungle_ruins_task_4",
@@ -3433,7 +3534,8 @@
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
+          "autoCompleteMode": "manual_or_zone_leave_infer",
+          "displayInOverlay": false
         },
         {
           "id": "a3_jungle_ruins_task_6",
@@ -3494,6 +3596,10 @@
         ],
         "time_saves": [
           "0.5: после Ядовитых крипт проверь срез/второй выход — он должен вернуть ближе к дальнейшему маршруту через джунгли."
+        ],
+        "overlay_speedrun": [
+          "Лагеря исследователей дают направление к следующей зоне и открывают цель на миникарте.",
+          "0.5: после Ядовитых крипт проверь срез/второй выход — он должен вернуть ближе к дальнейшему маршруту через джунгли."
         ]
       },
       "display": {
@@ -3537,7 +3643,8 @@
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
+          "autoCompleteMode": "manual_or_zone_leave_infer",
+          "displayInOverlay": false
         },
         {
           "id": "a3_venom_crypts_task_4",
@@ -3597,6 +3704,10 @@
         "time_saves": [
           "0.5: если срез найден, не возвращайся старым длинным путём через всю зону.",
           "Если нужный предмет забран — не чистить крипты полностью."
+        ],
+        "overlay_speedrun": [
+          "После яда искать безопасную точку A Reprieve / выход, затем сдавать Серви.",
+          "0.5: если срез найден, не возвращайся старым длинным путём через всю зону."
         ]
       },
       "display": {
@@ -3695,6 +3806,9 @@
         ],
         "time_saves": [
           "0.5: если Матлан и Азак уже закрыты раньше, не возвращайся к старому поиску этих входов в Заражённых землях."
+        ],
+        "overlay_speedrun": [
+          "0.5: идти к Топям химеридов; Болото Азак закрывается позже через Водотоки Матлан."
         ]
       },
       "display": {
@@ -3724,7 +3838,8 @@
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
+          "autoCompleteMode": "manual_or_zone_leave_infer",
+          "displayInOverlay": false
         },
         {
           "id": "a3_chimera_wetlands_task_2",
@@ -3740,7 +3855,8 @@
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
+          "autoCompleteMode": "manual_or_zone_leave_infer",
+          "displayInOverlay": false
         },
         {
           "id": "a3_chimera_wetlands_task_4",
@@ -3802,6 +3918,9 @@
           "Испытание Хаоса и мелкие точки интереса брать по готовности; если нужен только прогресс — не разворачивать зону ради амулета/случайной редкой вещи."
         ],
         "time_saves": [
+          "Если нужен только прогресс — не разворачивать зону ради амулета/случайной редкой вещи."
+        ],
+        "overlay_speedrun": [
           "Если нужен только прогресс — не разворачивать зону ради амулета/случайной редкой вещи."
         ]
       },
@@ -3878,7 +3997,8 @@
         ],
         "time_saves": [
           "Не разворачивать забег ради испытания, если цель — быстро закрыть акты."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -3969,7 +4089,8 @@
         ],
         "time_saves": [
           "Мобильностью можно проходить через завалы/блокировки."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -4069,7 +4190,8 @@
         "navigation": [
           "0.5: после Святилища возвращайся не в Затопленный город, а в Развалины в джунглях; большое ядро души открывает Водотоки Матлан через каменный алтарь.",
           "Механизм Паквате / алтарь осквернения можно использовать по пути, но не ломать темп."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -4104,7 +4226,8 @@
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
+          "autoCompleteMode": "manual_or_zone_leave_infer",
+          "displayInOverlay": false
         },
         {
           "id": "a3_matlan_waterways_task_3",
@@ -4120,7 +4243,8 @@
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
+          "autoCompleteMode": "manual_or_zone_leave_infer",
+          "displayInOverlay": false
         },
         {
           "id": "a3_matlan_waterways_task_5",
@@ -4171,6 +4295,10 @@
         ],
         "time_saves": [
           "0.5: не трать время на старый трюк с порталом у последнего рычага — механика рычагов заменена."
+        ],
+        "overlay_speedrun": [
+          "0.5: старый портал перед последним рычагом больше не нужен — финальная часть Водных путей уже осушена.",
+          "0.5: идти через Матлан к Болоту Азак; старый поиск Азака в Заражённых землях не использовать."
         ]
       },
       "display": {
@@ -4206,7 +4334,8 @@
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
+          "autoCompleteMode": "manual_or_zone_leave_infer",
+          "displayInOverlay": false
         },
         {
           "id": "a3_azak_bog_task_3",
@@ -4238,7 +4367,8 @@
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
+          "autoCompleteMode": "manual_or_zone_leave_infer",
+          "displayInOverlay": false
         }
       ],
       "rewards": [
@@ -4291,6 +4421,10 @@
           "Лагерь с редкими ботинками/вендором оружия — взять, если рядом."
         ],
         "time_saves": [
+          "0.5: не ищи Болото Азак по старой огромной зоне, если вход уже перенесён ближе к Водным путям Матлана."
+        ],
+        "overlay_speedrun": [
+          "0.5: вход в Болото Азак искать от Водотоков Матлан; после закрытия вернуться в город/к Затопленному городу по маршруту.",
           "0.5: не ищи Болото Азак по старой огромной зоне, если вход уже перенесён ближе к Водным путям Матлана."
         ]
       },
@@ -4375,6 +4509,10 @@
         ],
         "time_saves": [
           "Сначала идти в Расплавленные залы за перековочным верстаком, затем в Осквернённую вершину."
+        ],
+        "overlay_speedrun": [
+          "Взять путевую точку Коронного города обязательно: понадобится позже.",
+          "Сначала идти в Расплавленные залы за перековочным верстаком, затем в Осквернённую вершину."
         ]
       },
       "display": {
@@ -4451,6 +4589,9 @@
         ],
         "opportunistic": [
           "Лига-награда с уникальным предметом — брать только если удобно."
+        ],
+        "overlay_speedrun": [
+          "Линейная зона: быстро к боссу, забрать молот/прогресс перековочного верстака."
         ]
       },
       "display": {
@@ -4532,7 +4673,8 @@
         ],
         "checkpoint": [
           "После босса взять предмет и через чекпоинт вернуться к путевой точке."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -4627,6 +4769,9 @@
         ],
         "opportunistic": [
           "Если есть золото, можно быстро погэмблить перчатки/апгрейды в городе перед опасными зонами."
+        ],
+        "overlay_speedrun": [
+          "На втором этаже сначала проверить дальний угол; выход искать со стороны завала по трещине от центрального солнца."
         ]
       },
       "display": {
@@ -4670,7 +4815,8 @@
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
+          "autoCompleteMode": "manual_or_zone_leave_infer",
+          "displayInOverlay": false
         },
         {
           "id": "a3_vaal_heart_task_4",
@@ -4726,6 +4872,9 @@
         "navigation": [
           "Утцааль зеркалит Затопленный город: держись дороги до Вайпер.",
           "В Аггорате слушай направление и ориентируйся по краю пирамиды; алтарь часто в верхней части карты."
+        ],
+        "overlay_speedrun": [
+          "Утцааль зеркалит Затопленный город: держись дороги до Вайпер."
         ]
       },
       "display": {
@@ -4801,7 +4950,8 @@
         ],
         "town_plan": [
           "После боя: город, Дориани/Альва, переход в Акт 4."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -4862,7 +5012,8 @@
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
+          "autoCompleteMode": "manual_or_zone_leave_infer",
+          "displayInOverlay": false
         }
       ],
       "rewards": [
@@ -4905,6 +5056,9 @@
         "navigation": [
           "Если запутался на карте Акта 4: сначала Вакапану, потом Шрайк/тюрьма/Остров Рода, затем Глаз/Залы, потом Кеджский залив/Конец странствия, затем Мыс грабителя/Арастас/Нгакану.",
           "Мыс грабителя доступен после сдачи 4 частей карты сокровищ; это не мусорная опционалка в 0.5, а цепочка древних рун."
+        ],
+        "overlay_speedrun": [
+          "Если запутался на карте Акта 4: сначала Вакапану, потом Шрайк/тюрьма/Остров Рода, затем Глаз/Залы, потом Кеджский залив/Конец странствия, затем Мыс грабителя/Арастас/Нгакану."
         ]
       },
       "display": {
@@ -4990,6 +5144,9 @@
         ],
         "time_saves": [
           "Пиратов/мелочь по пути не рассматривать как обязательный фарм."
+        ],
+        "overlay_speedrun": [
+          "Найти капитана Хартлина, взять Виридиан, обменять у Деннига на шипы и вернуться в Конец странствия."
         ]
       },
       "display": {
@@ -5019,7 +5176,8 @@
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
+          "autoCompleteMode": "manual_or_zone_leave_infer",
+          "displayInOverlay": false
         },
         {
           "id": "a4_journeys_end_task_2",
@@ -5059,7 +5217,8 @@
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
+          "autoCompleteMode": "manual_or_zone_leave_infer",
+          "displayInOverlay": false
         }
       ],
       "rewards": [
@@ -5104,6 +5263,10 @@
         "time_saves": [
           "После Хартлина использовать портал к Фрейе, если он появился по квесту Тёмные туманы.",
           "После выполнения — сразу корабль/следующий остров."
+        ],
+        "overlay_speedrun": [
+          "После Хартлина использовать портал к Фрейе, если он появился по квесту Тёмные туманы.",
+          "Делириум-валюту сохранить под амулет из Поющих пещер/дальнейший апгрейд."
         ]
       },
       "display": {
@@ -5139,7 +5302,8 @@
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
+          "autoCompleteMode": "manual_or_zone_leave_infer",
+          "displayInOverlay": false
         },
         {
           "id": "a4_isle_of_kin_task_3",
@@ -5155,7 +5319,8 @@
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
+          "autoCompleteMode": "manual_or_zone_leave_infer",
+          "displayInOverlay": false
         },
         {
           "id": "a4_isle_of_kin_task_5",
@@ -5202,6 +5367,9 @@
         ],
         "opportunistic": [
           "Малая сфера ювелира и большая руна от Слепого зверя — сильные находки, если попались."
+        ],
+        "overlay_speedrun": [
+          "Окаменевшую формацию искать по внешним стенам."
         ]
       },
       "display": {
@@ -5280,7 +5448,8 @@
         "crafting_tips": [],
         "time_saves": [
           "Сильное кольцо не скипать, это одна из лучших опциональных наград акта."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -5307,7 +5476,8 @@
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
+          "autoCompleteMode": "manual_or_zone_leave_infer",
+          "displayInOverlay": false
         },
         {
           "id": "a4_whakapanu_island_task_2",
@@ -5339,7 +5509,8 @@
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
+          "autoCompleteMode": "manual_or_zone_leave_infer",
+          "displayInOverlay": false
         },
         {
           "id": "a4_whakapanu_island_task_6",
@@ -5397,6 +5568,10 @@
         ],
         "navigation": [
           "Великая белая туша появляется в Акульей яме у воды; после убийства Акулий плавник занимает место в инвентаре, лучше сдать Каймане при первой удобной возможности."
+        ],
+        "overlay_speedrun": [
+          "Великая белая туша появляется в Акульей яме у воды; после убийства Акулий плавник занимает место в инвентаре, лучше сдать Каймане при первой удобной возможности.",
+          "Акулью яму не скипать: быстро убить Великую белую тушу, забрать Акулий плавник и сразу идти дальше."
         ]
       },
       "display": {
@@ -5432,7 +5607,8 @@
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
+          "autoCompleteMode": "manual_or_zone_leave_infer",
+          "displayInOverlay": false
         },
         {
           "id": "a4_singing_caverns_task_3",
@@ -5494,6 +5670,9 @@
         "xp_notes": [],
         "crafting_tips": [],
         "town_plan": [
+          "После босса: забрать амулет у Рога и руну/награды у нужных НПЦ."
+        ],
+        "overlay_speedrun": [
           "После босса: забрать амулет у Рога и руну/награды у нужных НПЦ."
         ]
       },
@@ -5587,6 +5766,10 @@
         ],
         "opportunistic": [
           "Оружейную / Забытые камеры брать только по пути; не чистить тюрьму полностью без причины."
+        ],
+        "overlay_speedrun": [
+          "Ключ часовни падает с некромантов; открыть ворота и выбрать награду у алтаря.",
+          "После награды — сразу в следующую зону, не чистить тюрьму полностью."
         ]
       },
       "display": {
@@ -5672,7 +5855,8 @@
         "crafting_tips": [],
         "navigation": [
           "Держаться стены со стороны океана, чтобы не уходить в длинные тупики."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -5757,7 +5941,8 @@
         ],
         "opportunistic": [
           "Если святилище на урон — взять перед боссом; если мусорное — можно брать сразу или игнорировать."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -5792,7 +5977,8 @@
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
+          "autoCompleteMode": "manual_or_zone_leave_infer",
+          "displayInOverlay": false
         },
         {
           "id": "a4_eye_hinekora_task_3",
@@ -5852,6 +6038,9 @@
         "xp_notes": [],
         "crafting_tips": [],
         "navigation": [
+          "После воинов Намаху/Тапуа/Тасалио не скипать Безмолвный зал: там +5% максимум маны и Большая руна разума."
+        ],
+        "overlay_speedrun": [
           "После воинов Намаху/Тапуа/Тасалио не скипать Безмолвный зал: там +5% максимум маны и Большая руна разума."
         ]
       },
@@ -5944,7 +6133,8 @@
         ],
         "opportunistic": [
           "Выбор тату лучше заранее решить под билд/резисты, чтобы не думать в моменте."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -6033,7 +6223,8 @@
         ],
         "time_saves": [
           "После финального боя и наград сразу возвращаться в маршрут, не чистить лишнее."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -6117,7 +6308,8 @@
         ],
         "time_saves": [
           "Лучше убить всех важных мобов, чтобы чекпоинт/смерть не откинул странно назад."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -6210,7 +6402,8 @@
         ],
         "time_saves": [
           "Когда появится “поговорить со Скрытым”, реснуться и порталиться в город."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -6261,7 +6454,8 @@
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
+          "autoCompleteMode": "manual_or_zone_leave_infer",
+          "displayInOverlay": false
         },
         {
           "id": "a4_plunders_point_task_5",
@@ -6313,6 +6507,9 @@
           "Есть смысл заходить, если карта уже собрана и зона не ломает темп."
         ],
         "navigation": [
+          "После взрывчатки и лута возвращаться в основной маршрут через путевую точку/портал."
+        ],
+        "overlay_speedrun": [
           "После взрывчатки и лута возвращаться в основной маршрут через путевую точку/портал."
         ]
       },
@@ -6392,7 +6589,8 @@
         "crafting_tips": [],
         "navigation": [
           "Спам мобильность/прыжок, чтобы скипнуть медленную ходьбу/ролеплей-переходы."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -6487,7 +6685,8 @@
         ],
         "town_plan": [
           "После Тавакаи — город/корабль и переход в Кхарийский базар."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -6563,7 +6762,8 @@
         ],
         "time_saves": [
           "Опушка — короткий транзитный хаб: не тратить время, сразу идти дальше."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -6650,7 +6850,8 @@
         ],
         "time_saves": [
           "Древний монумент брать по пути; если уводит в долгую сторону — не ломать темп."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -6731,7 +6932,8 @@
         "crafting_tips": [],
         "navigation": [
           "После Деревни Криар идти в Ледниковое озеро."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -6820,7 +7022,8 @@
         ],
         "time_saves": [
           "Если переход в Воющие пещеры найден — не добирать лишние круги по озеру."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -6901,6 +7104,9 @@
         ],
         "opportunistic": [
           "В этой ветке может быть Мэдокс/уник — брать только если по пути."
+        ],
+        "overlay_speedrun": [
+          "После сдачи клыков возвращаться через путевую точку/чекпоинт и идти в Пики Криар, не бежать пешком лишний круг."
         ]
       },
       "display": {
@@ -6976,7 +7182,8 @@
         ],
         "navigation": [
           "В Пиках Криар искать старейшина Мэддокс примерно на 10–11 часов; синие духовные совы помогают найти путь."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -7066,7 +7273,8 @@
         ],
         "time_saves": [
           "Если XP в норме — не делать полную зачистку ущелья."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -7157,7 +7365,8 @@
         ],
         "time_saves": [
           "Это не зона для долгой зачистки: цель — награды и выход."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -7223,7 +7432,8 @@
         ],
         "town_plan": [
           "Здесь начинается 1-я страница акта; финал всей цепочки — Поместье Холтен."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -7312,7 +7522,8 @@
         ],
         "time_saves": [
           "Саппорт забрал — дальше по маршруту, лишние тупики и пачки не чистить."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -7396,7 +7607,8 @@
         ],
         "navigation": [
           "После Камней Серли идти дальше в Чернолесье."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -7474,7 +7686,8 @@
         ],
         "danger": [
           "Не наступать на красные мины/опасные эффекты по дороге."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -7547,7 +7760,8 @@
         ],
         "town_plan": [
           "Если хватает золота, взять руны под финальное оружие/экипировку перед Вольфенхолдом."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -7624,7 +7838,8 @@
         ],
         "navigation": [
           "После возврата искать другую сторону/лавку/путь дальше к Поместью."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -7719,7 +7934,8 @@
         ],
         "time_saves": [
           "Финальные диалоги пройти по цепочке без лишних возвратов: Дориани/Кингсмарш/Ориат."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -7793,7 +8009,8 @@
         ],
         "town_plan": [
           "Хаб-памятка: 2-я страница начинается здесь, 3-я — Опушка, 1-я — Пристанище."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -7872,7 +8089,8 @@
         "crafting_tips": [],
         "navigation": [
           "После Кхарийского перевала идти в Воды Хаталя, а уже потом в Храм Селари."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -7951,7 +8169,8 @@
         ],
         "time_saves": [
           "Если XP в норме — не стопориться на боковых карманах."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -8038,7 +8257,8 @@
         ],
         "time_saves": [
           "После босса поговорить, забрать выбор и двигаться во Врата Галаи без лишнего фарма."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -8132,7 +8352,8 @@
         ],
         "opportunistic": [
           "Бездну брать только если она рядом и не ломает темп."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -8201,7 +8422,8 @@
         "crafting_tips": [],
         "opportunistic": [
           "Выбор можно позже изменить, но на забеге лучше заранее понимать, что берёшь."
-        ]
+        ],
+        "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
@@ -8281,6 +8503,9 @@
           "После Водохранилища Кима перейти в Опушку, затем идти в Пепельный лес."
         ],
         "time_saves": [
+          "Не забыть забрать главный прогресс после босса, затем сразу в Опушку."
+        ],
+        "overlay_speedrun": [
           "Не забыть забрать главный прогресс после босса, затем сразу в Опушку."
         ]
       },
