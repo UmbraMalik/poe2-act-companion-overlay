@@ -199,6 +199,7 @@ const CURATED_DATA_TRANSLATION_OVERRIDES: Record<string, string> = {
   "Выборный постоянный бонус": "Selectable permanent bonus",
   "Камень поддержки": "Support Gem",
   "Большая руна": "Greater Rune",
+  "Большая руна разума": "Greater Mind Rune",
   "Большие руны": "Greater Runes"
 };
 
