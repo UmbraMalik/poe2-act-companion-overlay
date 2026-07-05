@@ -1,4 +1,210 @@
 /* Companion panel structure: timer, act times, reminders and run summary. */
+.companion-page .companion-zone-polished-layout {
+  height: auto;
+  align-content: start;
+  grid-auto-rows: max-content;
+  overflow-y: auto;
+}
+
+.companion-page .zone-hero-card {
+  grid-template-columns: minmax(300px, 0.72fr) minmax(0, 1.28fr);
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  border-color: rgba(241, 185, 106, 0.16);
+  background:
+    radial-gradient(circle at 0 0, rgba(241, 185, 106, 0.16), transparent 38%),
+    linear-gradient(135deg, rgba(22, 27, 33, 0.96), rgba(8, 11, 15, 0.98));
+}
+
+.companion-page .zone-hero-copy {
+  display: grid;
+  gap: 7px;
+}
+
+.companion-page .zone-hero-copy .eyebrow {
+  margin: 0;
+  color: rgba(255, 214, 145, 0.86);
+}
+
+.companion-page .zone-hero-copy h3 {
+  max-width: 100%;
+  color: #fff3d6;
+  font-size: clamp(30px, 3.2vw, 46px);
+  letter-spacing: -0.028em;
+  overflow-wrap: anywhere;
+}
+
+.companion-page .zone-hero-copy .helper-text {
+  max-width: 620px;
+  color: rgba(205, 220, 237, 0.76);
+  font-size: 13px;
+}
+
+.companion-page .zone-hero-metrics {
+  grid-template-columns: minmax(180px, 1.15fr) repeat(3, minmax(128px, 0.95fr));
+  gap: 8px;
+}
+
+.companion-page .zone-metric-card {
+  min-height: 76px;
+  display: grid;
+  align-content: start;
+  gap: 5px;
+  padding: 11px 12px;
+  border-radius: 10px;
+  border-color: rgba(205, 220, 237, 0.085);
+  background: rgba(255, 255, 255, 0.024);
+}
+
+.companion-page .zone-metric-card.is-accent {
+  border-color: rgba(93, 166, 255, 0.28);
+  background:
+    radial-gradient(circle at 0 0, rgba(93, 166, 255, 0.13), transparent 52%),
+    rgba(255, 255, 255, 0.028);
+}
+
+.companion-page .zone-metric-card dt {
+  margin: 0;
+  color: rgba(204, 216, 228, 0.62);
+  font-size: 10px;
+  letter-spacing: 0.085em;
+}
+
+.companion-page .zone-metric-card dd {
+  min-width: 0;
+  color: #fff4d8;
+  font-size: 14px;
+  line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.companion-page .zone-card-board {
+  grid-template-columns: minmax(310px, 1.18fr) minmax(250px, 0.92fr) minmax(250px, 0.9fr);
+  gap: 12px;
+  align-items: start;
+  align-content: start;
+  grid-auto-rows: max-content;
+}
+
+.companion-page .zone-card-board .companion-column {
+  gap: 10px;
+}
+
+.companion-page .zone-task-card {
+  border-color: rgba(205, 220, 237, 0.080);
+  border-radius: 10px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.030), rgba(255, 255, 255, 0.012)),
+    rgba(0, 0, 0, 0.10);
+}
+
+.companion-page .zone-task-card::before {
+  width: 2px;
+  opacity: 0.34;
+}
+
+.companion-page .zone-task-primary {
+  border-color: rgba(241, 185, 106, 0.24);
+  background:
+    radial-gradient(circle at 0 0, rgba(241, 185, 106, 0.10), transparent 42%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.040), rgba(255, 255, 255, 0.016)),
+    rgba(0, 0, 0, 0.10);
+}
+
+.companion-page .zone-task-primary::before {
+  opacity: 0.85;
+  background: rgba(241, 185, 106, 0.82);
+}
+
+.companion-page .zone-task-primary .zone-section-heading h3 {
+  color: #ffd791;
+}
+
+.companion-page .zone-checklist-list {
+  display: grid;
+  gap: 7px;
+}
+
+.companion-page .zone-checklist-list .checklist-item {
+  padding: 7px 8px 7px 16px;
+  border-radius: 8px;
+  color: rgba(238, 245, 252, 0.90);
+  background: rgba(255, 255, 255, 0.018);
+  line-height: 1.38;
+}
+
+.companion-page .zone-checklist-list .checklist-item::marker {
+  color: rgba(241, 185, 106, 0.92);
+}
+
+.companion-page .zone-bonuses-card {
+  border-color: rgba(93, 166, 255, 0.22);
+  background:
+    radial-gradient(circle at 0 0, rgba(93, 166, 255, 0.09), transparent 42%),
+    rgba(255, 255, 255, 0.018);
+}
+
+.companion-page .zone-bonus-details-list {
+  display: grid;
+  gap: 6px;
+}
+
+.companion-page .zone-bonus-details-list .bonus-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 8px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.018);
+}
+
+.companion-page .zone-bonus-details-list .bonus-line.is-done {
+  color: rgba(185, 243, 198, 0.90);
+}
+
+.companion-page .zone-next-card {
+  border-color: rgba(93, 166, 255, 0.18);
+}
+
+.companion-page .zone-reward-card {
+  border-color: rgba(122, 214, 144, 0.18);
+}
+
+.companion-page .zone-important-card {
+  border-color: rgba(241, 185, 106, 0.18);
+}
+
+.companion-page .zone-card-board .skip-section {
+  border-color: rgba(226, 97, 97, 0.18);
+  background:
+    radial-gradient(circle at 0 0, rgba(226, 97, 97, 0.07), transparent 42%),
+    rgba(255, 255, 255, 0.016);
+}
+
+.companion-page .zone-card-board .companion-column:not(.zone-main-column) .zone-task-card {
+  opacity: 0.94;
+}
+
+.companion-page .zone-card-board .details-list {
+  display: grid;
+  gap: 6px;
+}
+
+.companion-page .zone-card-board .details-list li {
+  line-height: 1.38;
+}
+
+.companion-page .zone-section-heading {
+  margin-bottom: 8px;
+}
+
+.companion-page .zone-section-heading span {
+  border-color: rgba(241, 185, 106, 0.24);
+  background: rgba(241, 185, 106, 0.08);
+}
+
 .companion-page .timer-rework-layout,
 .companion-page .act-times-dashboard,
 .companion-page .companion-summary-layout .summary-scroll-body--full,
@@ -554,6 +760,7 @@
 }
 
 @media (max-width: 1180px) {
+  .companion-page .zone-hero-card,
   .companion-page .timer-cockpit-card,
   .companion-page .timer-action-bar,
   .companion-page .act-times-hero-card,
@@ -567,9 +774,17 @@
   .companion-page .summary-result-facts {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .companion-page .zone-card-board {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 980px) {
+  .companion-page .zone-hero-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .companion-page .reminders-rework-grid {
     grid-template-columns: 1fr;
   }
@@ -590,6 +805,7 @@
 }
 
 @media (max-width: 720px) {
+  .companion-page .zone-hero-metrics,
   .companion-page .timer-cockpit-details,
   .companion-page .timer-segment-list,
   .companion-page .summary-result-facts,
