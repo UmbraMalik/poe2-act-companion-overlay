@@ -28,3 +28,4 @@
 @import './styles/21-reminders-layout-polish.css'; /* Reminders tab bento layout and ordered power-spike roadmap */
 @import './styles/22-reminders-final-alignment.css'; /* Final reminders alignment: compact bento rows and single roadmap */
 @import './styles/23-results-recap.css'; /* Results recap polish: hero result, metrics, splits and longest zones */
+@import './styles/24-companion-panel-ux.css'; /* Companion panel UX pass: timer, act times, reminders and summary */

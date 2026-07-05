@@ -72,6 +72,7 @@ const expected = [
   '21-reminders-layout-polish.css',
   '22-reminders-final-alignment.css',
   '23-results-recap.css',
+  '24-companion-panel-ux.css',
 ];
 
 if (partials.join('\n') !== expected.join('\n')) {

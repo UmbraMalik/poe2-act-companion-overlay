@@ -16,6 +16,7 @@ The app uses the numbered CSS partials in this folder as the single source of tr
 10. `10-typography-refresh.css` — typography refresh and text weight tuning.
 11. `11-overlay-header-actions.css` — header layout, close UX, intent hover/focus colors, compact header fixes.
 12. `12-localization-toggle.css` — very narrow overlay and RU/EN language toggle.
+13. `13-guide-update-highlights.css` and later numbered partials — focused late-stage overlay/companion polish. Keep new overrides at the end of the numbered chain.
 
 Keep imports in `src/renderer/styles.css` in numeric order unless you intentionally change cascade priority.
 

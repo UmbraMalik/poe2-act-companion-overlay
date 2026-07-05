@@ -144,6 +144,26 @@ function formatActTimeStatus(status: ActTimeRow['status'], language: AppLanguage
     : translate(language, 'companion.actStatusCurrent');
 }
 
+function getReminderStateClass(level: number, currentLevel: number | null, isHighlighted = false): string {
+  if (isHighlighted) {
+    return 'is-current';
+  }
+
+  if (currentLevel === null) {
+    return 'is-upcoming';
+  }
+
+  if (level < currentLevel) {
+    return 'is-completed';
+  }
+
+  if (level === currentLevel) {
+    return 'is-current';
+  }
+
+  return 'is-upcoming';
+}
+
 function renderActTimeTable(rows: ActTimeRow[], emptyMessage: string, language: AppLanguage) {
   if (rows.length === 0) {
     return <p className="helper-text">{emptyMessage}</p>;
@@ -257,6 +277,36 @@ function renderActTimeCards(rows: ActTimeRow[], emptyMessage: string, language: 
   );
 }
 
+function renderActProgressRail(rows: ActTimeRow[], language: AppLanguage) {
+  const rowsByAct = new Map(rows.map((row) => [row.act, row]));
+  const orderedActs = [1, 2, 3, 4, 5];
+  if (rows.some((row) => isEndgameT15Act(row.act))) {
+    orderedActs.push(6);
+  }
+
+  return (
+    <div className="act-progress-rail" aria-label={translate(language, 'companion.actProgressTitle')}>
+      {orderedActs.map((act) => {
+        const row = rowsByAct.get(act) ?? null;
+        const state = row?.status ?? 'pending';
+        const stateLabel = state === 'finished'
+          ? translate(language, 'companion.actStatusFinished')
+          : state === 'current'
+            ? translate(language, 'companion.actStatusCurrent')
+            : translate(language, 'companion.actStatusPending');
+
+        return (
+          <div key={`act-progress-${act}`} className={`act-progress-step is-${state}`}>
+            <span className="act-progress-label">{formatActLabel(act, language)}</span>
+            <strong>{row ? formatDuration(row.elapsedMs) : '—'}</strong>
+            <small>{stateLabel}</small>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 function renderLongestZoneList(
   longestZones: { zoneId: string; zone_ru: string; elapsedMs: number; enteredAt: number }[],
   language: AppLanguage,
@@ -352,7 +402,11 @@ function renderActTimesDashboard(
       </section>
 
       <section className="companion-block act-times-card-list">
-        <h3>{translate(language, 'companion.actSplitCards')}</h3>
+        <div className="summary-section-heading">
+          <h3>{translate(language, 'companion.actSplitCards')}</h3>
+          <span>{translate(language, 'companion.actProgressTitle')}</span>
+        </div>
+        {renderActProgressRail(rows, language)}
         {renderActTimeCards(rows, emptyMessage, language)}
       </section>
     </div>
@@ -491,6 +545,7 @@ function renderStringSection(
 function renderCompactReminderList(
   items: { id: string; level: number; title: string; items?: string[] }[],
   language: AppLanguage,
+  currentLevel: number | null,
   limit?: number,
   highlightedId?: string | null
 ) {
@@ -504,9 +559,10 @@ function renderCompactReminderList(
     <ul className="reminder-list">
       {visible.map((entry) => {
         const isHighlighted = highlightedId === entry.id;
+        const stateClass = getReminderStateClass(entry.level, currentLevel, isHighlighted);
 
         return (
-          <li key={entry.id} className={`reminder-item ${isHighlighted ? 'is-nearest' : ''}`}>
+          <li key={entry.id} className={`reminder-item ${isHighlighted ? 'is-nearest' : ''} ${stateClass}`}>
             <div className="reminder-line">
               <span className="reminder-level">{translate(language, 'common.level')} {entry.level}</span>
               <span className="reminder-title">{translateDataText(entry.title, language)}</span>
@@ -1321,6 +1377,35 @@ export function CompanionPage() {
         </div>
       </section>
 
+      <section className="companion-block timer-context-card">
+        <div className="summary-section-heading">
+          <h3>{t('companion.timerContextTitle')}</h3>
+          <span>{formatRunStatus(displayRunTimer.status, language)}</span>
+        </div>
+        <div className="timer-context-grid">
+          <div>
+            <span>{t('companion.currentAct')}</span>
+            <strong>{nowAct === null ? '—' : formatActTitle(nowAct, language)}</strong>
+            <small>{currentActElapsed === null ? t('common.notAvailable') : formatDuration(currentActElapsed)}</small>
+          </div>
+          <div>
+            <span>{t('companion.actSplitCards')}</span>
+            <strong>{actTimeRows.length > 0 ? formatActLabel(actTimeRows[actTimeRows.length - 1].act, language) : '—'}</strong>
+            <small>{actTimeRows.length > 0 ? formatDuration(actTimeRows[actTimeRows.length - 1].elapsedMs) : t('companion.noActSplits')}</small>
+          </div>
+          <div>
+            <span>{t('companion.longestZone')}</span>
+            <strong>{longestZones[0] ? translateDataText(longestZones[0].zone_ru, language) : '—'}</strong>
+            <small>{longestZones[0] ? formatDuration(longestZones[0].elapsedMs) : t('companion.zoneHistoryEmpty')}</small>
+          </div>
+          <div>
+            <span>{t('companion.pauses')}</span>
+            <strong>{displayRunTimer.pauseCount}</strong>
+            <small>{t('companion.pauseCountHint')}</small>
+          </div>
+        </div>
+      </section>
+
       <section className="companion-block timer-control-card">
         <div className="timer-control-copy">
           <h3>{t('companion.runControlsTitle')}</h3>
@@ -1442,23 +1527,27 @@ export function CompanionPage() {
             ...(visibleActiveLevelReminder ? [visibleActiveLevelReminder] : []),
             ...upcomingVendorReminders.slice(0, 2),
             ...(nearestPowerSpike ? [nearestPowerSpike] : [])
-          ], language, 4, visibleActiveLevelReminder?.id ?? null)}
+          ], language, config.currentLevel, 4, visibleActiveLevelReminder?.id ?? null)}
         </section>
 
         <section className="companion-block reminders-card">
           <h3>{t('companion.flasks')}</h3>
-          {renderCompactReminderList(reminderFlasks, language)}
+          {renderCompactReminderList(reminderFlasks, language, config.currentLevel)}
         </section>
 
         <section className="companion-block reminders-card reminders-card-wide">
           <h3>{t('companion.gearBases')}</h3>
           <div className="reminder-chip-grid">
-            {reminderBases.map((entry) => (
-              <div key={entry.id} className="reminder-chip">
-                <span>{t('common.level')} {entry.level}</span>
-                <strong>{translateDataText(entry.title, language)}</strong>
-              </div>
-            ))}
+            {reminderBases.map((entry) => {
+              const stateClass = getReminderStateClass(entry.level, config.currentLevel);
+
+              return (
+                <div key={entry.id} className={`reminder-chip ${stateClass}`}>
+                  <span>{t('common.level')} {entry.level}</span>
+                  <strong>{translateDataText(entry.title, language)}</strong>
+                </div>
+              );
+            })}
           </div>
         </section>
 
@@ -1471,7 +1560,7 @@ export function CompanionPage() {
       {dismissedReminders.length > 0 && (
         <section className="companion-block reminders-dismissed-card">
           <h3>{t('companion.dismissedReminders')}</h3>
-          {renderCompactReminderList(dismissedReminders, language)}
+          {renderCompactReminderList(dismissedReminders, language, config.currentLevel)}
         </section>
       )}
     </div>
