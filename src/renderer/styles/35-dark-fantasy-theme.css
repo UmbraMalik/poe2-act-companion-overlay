@@ -257,6 +257,106 @@
     linear-gradient(180deg, rgba(28, 19, 45, 0.94), rgba(10, 7, 17, 0.92)) !important;
 }
 
+.theme-dark-fantasy.overlay-page:not(.overlay-page-timer-only) .hud-block {
+  border-color: var(--overlay-section-border, var(--theme-border-soft)) !important;
+  background:
+    var(--overlay-section-glow, radial-gradient(circle at 12% 0%, rgba(167, 123, 255, 0.08), transparent 44%)),
+    linear-gradient(180deg, var(--overlay-section-bg-top, rgba(255, 255, 255, 0.028)), var(--overlay-section-bg-bottom, rgba(255, 255, 255, 0.012))),
+    var(--overlay-section-base, var(--theme-card-soft)) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.040),
+    inset 0 0 0 1px var(--overlay-section-inset, rgba(255, 255, 255, 0.020)),
+    0 0 18px var(--overlay-section-shadow, rgba(0, 0, 0, 0)) !important;
+}
+
+.theme-dark-fantasy.overlay-page:not(.overlay-page-timer-only) .hud-block h2 {
+  color: var(--overlay-section-title, var(--theme-gold)) !important;
+}
+
+.theme-dark-fantasy.overlay-page:not(.overlay-page-timer-only) .hud-block h2::after {
+  background: linear-gradient(90deg, var(--overlay-section-rule, rgba(217, 167, 95, 0.18)), transparent) !important;
+}
+
+.theme-dark-fantasy.overlay-page:not(.overlay-page-timer-only) .upcoming-overlay-section {
+  --overlay-section-border: rgba(217, 167, 95, 0.46);
+  --overlay-section-title: rgba(255, 211, 142, 0.94);
+  --overlay-section-rule: rgba(217, 167, 95, 0.34);
+  --overlay-section-glow: radial-gradient(circle at 14% 0%, rgba(217, 167, 95, 0.16), transparent 44%);
+  --overlay-section-bg-top: rgba(72, 45, 22, 0.32);
+  --overlay-section-bg-bottom: rgba(22, 14, 33, 0.66);
+  --overlay-section-base: rgba(11, 7, 18, 0.74);
+  --overlay-section-shadow: rgba(217, 167, 95, 0.09);
+}
+
+.theme-dark-fantasy.overlay-page:not(.overlay-page-timer-only) .checklist-section {
+  --overlay-section-border: rgba(190, 162, 255, 0.24);
+  --overlay-section-title: rgba(232, 218, 255, 0.88);
+  --overlay-section-rule: rgba(190, 162, 255, 0.17);
+  --overlay-section-glow: radial-gradient(circle at 12% 0%, rgba(167, 123, 255, 0.085), transparent 44%);
+  --overlay-section-bg-top: rgba(35, 23, 54, 0.34);
+  --overlay-section-bg-bottom: rgba(12, 8, 20, 0.68);
+}
+
+.theme-dark-fantasy.overlay-page:not(.overlay-page-timer-only) .zone-bonuses-section {
+  --overlay-section-border: rgba(99, 226, 170, 0.34);
+  --overlay-section-title: rgba(135, 255, 191, 0.88);
+  --overlay-section-rule: rgba(99, 226, 170, 0.22);
+  --overlay-section-glow: radial-gradient(circle at 12% 0%, rgba(72, 201, 139, 0.13), transparent 44%);
+  --overlay-section-bg-top: rgba(18, 57, 48, 0.32);
+  --overlay-section-bg-bottom: rgba(10, 12, 22, 0.68);
+  --overlay-section-shadow: rgba(72, 201, 139, 0.075);
+}
+
+.theme-dark-fantasy.overlay-page:not(.overlay-page-timer-only) .league-reward-section {
+  --overlay-section-border: rgba(217, 167, 95, 0.38);
+  --overlay-section-title: rgba(255, 205, 135, 0.90);
+  --overlay-section-rule: rgba(217, 167, 95, 0.24);
+  --overlay-section-glow: radial-gradient(circle at 12% 0%, rgba(217, 167, 95, 0.13), transparent 42%);
+  --overlay-section-bg-top: rgba(62, 40, 20, 0.30);
+  --overlay-section-bg-bottom: rgba(18, 11, 23, 0.68);
+  --overlay-section-shadow: rgba(217, 167, 95, 0.070);
+}
+
+.theme-dark-fantasy.overlay-page:not(.overlay-page-timer-only) .hud-next-block {
+  --overlay-section-border: rgba(96, 174, 255, 0.28);
+  --overlay-section-title: rgba(154, 204, 255, 0.88);
+  --overlay-section-rule: rgba(96, 174, 255, 0.19);
+  --overlay-section-glow: radial-gradient(circle at 12% 0%, rgba(96, 174, 255, 0.095), transparent 44%);
+  --overlay-section-bg-top: rgba(18, 38, 68, 0.28);
+  --overlay-section-bg-bottom: rgba(10, 10, 22, 0.68);
+  --overlay-section-shadow: rgba(96, 174, 255, 0.050);
+}
+
+.theme-dark-fantasy.overlay-page:not(.overlay-page-timer-only) .skip-section {
+  --overlay-section-border: rgba(255, 116, 112, 0.27);
+  --overlay-section-title: rgba(255, 170, 158, 0.84);
+  --overlay-section-rule: rgba(255, 116, 112, 0.18);
+  --overlay-section-glow: radial-gradient(circle at 12% 0%, rgba(255, 116, 112, 0.095), transparent 42%);
+  --overlay-section-bg-top: rgba(62, 24, 32, 0.26);
+  --overlay-section-bg-bottom: rgba(17, 9, 19, 0.70);
+  --overlay-section-shadow: rgba(255, 116, 112, 0.040);
+}
+
+.theme-dark-fantasy.overlay-page:not(.overlay-page-timer-only) .speedrun-section {
+  --overlay-section-border: rgba(192, 145, 85, 0.30);
+  --overlay-section-title: rgba(226, 178, 114, 0.86);
+  --overlay-section-rule: rgba(192, 145, 85, 0.18);
+  --overlay-section-glow: radial-gradient(circle at 12% 0%, rgba(192, 145, 85, 0.090), transparent 42%);
+  --overlay-section-bg-top: rgba(51, 38, 25, 0.25);
+  --overlay-section-bg-bottom: rgba(14, 10, 20, 0.70);
+  --overlay-section-shadow: rgba(192, 145, 85, 0.045);
+}
+
+.theme-dark-fantasy.overlay-page:not(.overlay-page-timer-only) .info-section {
+  --overlay-section-border: rgba(190, 120, 255, 0.32);
+  --overlay-section-title: rgba(220, 190, 255, 0.90);
+  --overlay-section-rule: rgba(190, 120, 255, 0.22);
+  --overlay-section-glow: radial-gradient(circle at 12% 0%, rgba(190, 120, 255, 0.115), transparent 42%);
+  --overlay-section-bg-top: rgba(48, 24, 72, 0.30);
+  --overlay-section-bg-bottom: rgba(14, 8, 22, 0.70);
+  --overlay-section-shadow: rgba(190, 120, 255, 0.060);
+}
+
 @media (max-width: 640px) {
   .app-theme-choice,
   .overlay-theme-preference-actions {
