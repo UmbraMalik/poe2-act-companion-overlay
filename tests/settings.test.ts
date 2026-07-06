@@ -14,6 +14,7 @@ test('normalizeAppConfig keeps defaults, custom settings and strips legacy unkno
     visualFxIntensity: 'rich',
     overlayEffectsEnabled: false,
     theme: 'dark_fantasy',
+    themePreferencePrompted: true,
     overlayDebugLayoutEnabled: true,
     overlayMovementLocked: true,
     realtimePriorityEnabled: true,
@@ -30,6 +31,7 @@ test('normalizeAppConfig keeps defaults, custom settings and strips legacy unkno
   assert.equal(normalized.visualFxIntensity, 'rich');
   assert.equal(normalized.overlayEffectsEnabled, false);
   assert.equal(normalized.theme, 'dark_fantasy');
+  assert.equal(normalized.themePreferencePrompted, true);
   assert.equal(normalized.overlayDebugLayoutEnabled, true);
   assert.equal(normalized.overlayMovementLocked, true);
   assert.equal(normalized.realtimePriorityEnabled, true);
@@ -47,6 +49,7 @@ test('normalizeAppConfig hardens corrupted user config values', () => {
     visualFxIntensity: 'casino',
     overlayEffectsEnabled: 'no',
     theme: 'neon',
+    themePreferencePrompted: 'yes',
     overlayDebugLayoutEnabled: 'yes',
     overlayOpacity: 5,
     realtimePriorityEnabled: 'yes',
@@ -117,6 +120,7 @@ test('normalizeAppConfig hardens corrupted user config values', () => {
   assert.equal(normalized.visualFxIntensity, DEFAULT_CONFIG.visualFxIntensity);
   assert.equal(normalized.overlayEffectsEnabled, DEFAULT_CONFIG.overlayEffectsEnabled);
   assert.equal(normalized.theme, DEFAULT_CONFIG.theme);
+  assert.equal(normalized.themePreferencePrompted, DEFAULT_CONFIG.themePreferencePrompted);
   assert.equal(normalized.overlayDebugLayoutEnabled, DEFAULT_CONFIG.overlayDebugLayoutEnabled);
   assert.equal(normalized.overlayOpacity, 1);
   assert.equal(normalized.realtimePriorityEnabled, DEFAULT_CONFIG.realtimePriorityEnabled);
@@ -275,6 +279,7 @@ test('ConfigStore persists log path and merges settings safely', () => {
     overlayMovementLocked: true,
     overlayEffectsEnabled: false,
     theme: 'dark_fantasy',
+    themePreferencePrompted: true,
     realtimePriorityEnabled: true,
     hotkeys: {
       openCompanion: 'Ctrl+F9'
@@ -289,6 +294,7 @@ test('ConfigStore persists log path and merges settings safely', () => {
   assert.equal(reloaded.overlayMovementLocked, true);
   assert.equal(reloaded.overlayEffectsEnabled, false);
   assert.equal(reloaded.theme, 'dark_fantasy');
+  assert.equal(reloaded.themePreferencePrompted, true);
   assert.equal(reloaded.realtimePriorityEnabled, true);
   assert.equal(reloaded.hotkeys.openCompanion, 'Ctrl+F9');
   assert.equal(reloaded.hotkeys.toggleOverlayMode, DEFAULT_HOTKEYS.toggleOverlayMode);

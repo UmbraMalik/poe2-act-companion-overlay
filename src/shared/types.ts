@@ -401,6 +401,7 @@ export interface AppConfig {
   visualFxIntensity: VisualFxIntensity;
   overlayEffectsEnabled: boolean;
   theme: AppTheme;
+  themePreferencePrompted: boolean;
   overlayDebugLayoutEnabled: boolean;
   overlayVisibleSections: OverlayVisibleSections;
   mainOverlaySettings: MainOverlaySettings;
@@ -567,6 +568,7 @@ export interface SettingsPatch {
   visualFxIntensity?: VisualFxIntensity;
   overlayEffectsEnabled?: boolean;
   theme?: AppTheme;
+  themePreferencePrompted?: boolean;
   overlayDebugLayoutEnabled?: boolean;
   overlayVisibleSections?: Partial<OverlayVisibleSections>;
   mainOverlaySettings?: Partial<MainOverlaySettings>;

@@ -1176,7 +1176,7 @@ export function SettingsPage() {
                     type="button"
                     aria-pressed={config.theme === theme}
                     onClick={() => {
-                      void window.poe2Overlay.updateSettings({ theme });
+                      void window.poe2Overlay.updateSettings({ theme, themePreferencePrompted: true });
                     }}
                   >
                     {formatAppTheme(theme, appLanguage)}

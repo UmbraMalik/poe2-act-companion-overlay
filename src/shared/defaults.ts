@@ -87,6 +87,7 @@ export const DEFAULT_CONFIG: AppConfig = {
   visualFxIntensity: 'normal',
   overlayEffectsEnabled: true,
   theme: 'classic',
+  themePreferencePrompted: false,
   overlayDebugLayoutEnabled: false,
   overlayVisibleSections: {
     nearby: true,

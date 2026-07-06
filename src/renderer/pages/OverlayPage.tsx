@@ -42,13 +42,14 @@ import {
   type OverlayRenderTask
 } from '../render-scheduler';
 import { reportOverlayRenderDiagnostics } from '../render-diagnostics';
-import { getAppThemeClassName, getAppThemeIcon, getNextAppTheme } from '../theme';
+import { getAppThemeClassName } from '../theme';
 import leagueMechanicRewardsData from '../../data/league-mechanic-rewards.json';
 import { getCampaignBonusView, getGuideView, getLevelReminderView, getPowerSpikeView } from '../../i18n/data';
 import { translateSystemText } from '../../i18n/runtime';
 import { translate } from '../../i18n/translations';
 import type {
   AppLanguage,
+  AppTheme,
   CampaignBonusDefinition,
   GuideEntry,
   GuideProfile,
@@ -1612,9 +1613,10 @@ export function OverlayPage() {
   const handleLanguageToggle = () => {
     handleLanguageChange(language === 'en' ? 'ru' : 'en');
   };
-  const handleThemeToggle = () => {
+  const handleThemePreferenceChoice = (theme: AppTheme) => {
     void window.poe2Overlay?.updateSettings({
-      theme: getNextAppTheme(config.theme)
+      theme,
+      themePreferencePrompted: true
     });
   };
 
@@ -1737,26 +1739,6 @@ export function OverlayPage() {
       </button>
     </div>
   );
-  const overlayThemeButtonLabel = t(
-    config.theme === 'dark_fantasy'
-      ? 'overlay.switchToClassicTheme'
-      : 'overlay.switchToDarkFantasyTheme'
-  );
-  const overlayThemeButton = (
-    <button
-      className="overlay-icon-button overlay-theme-icon-button no-drag"
-      type="button"
-      title={overlayThemeButtonLabel}
-      aria-label={overlayThemeButtonLabel}
-      onPointerDown={stopOverlayControlPropagation}
-      onMouseDown={stopOverlayControlPropagation}
-      onClick={handleThemeToggle}
-    >
-      <span className="overlay-icon-glyph overlay-icon-glyph-theme" aria-hidden="true">
-        {getAppThemeIcon(config.theme)}
-      </span>
-    </button>
-  );
   const timerPrimaryButton = (
     <button
       className={`overlay-timer-control overlay-timer-icon-control overlay-timer-control-${timerPrimaryTone} no-drag`}
@@ -1772,7 +1754,6 @@ export function OverlayPage() {
     <div className="overlay-quick-actions no-drag" aria-label={t('overlay.quickActions')}>
       {!isTimerOnlyMode && timerPrimaryButton}
       {overlayLanguageToggle}
-      {overlayThemeButton}
       {!isTimerOnlyMode && overlayCollapseButton}
       {overlayLockButton}
       {overlayOpenCompanionButton}
@@ -1821,6 +1802,21 @@ export function OverlayPage() {
       {timerPrimaryButton}
     </div>
   );
+  const themePreferencePrompt = !config.themePreferencePrompted ? (
+    <section className="overlay-theme-preference-card no-drag" role="dialog" aria-labelledby="overlay-theme-preference-title">
+      <div>
+        <h2 id="overlay-theme-preference-title">{t('overlay.themePromptTitle')}</h2>
+        <p>{t('overlay.themePromptText')}</p>
+      </div>
+      <div className="overlay-theme-preference-actions">
+        {(['classic', 'dark_fantasy'] as AppTheme[]).map((theme) => (
+          <button key={theme} type="button" onClick={() => handleThemePreferenceChoice(theme)}>
+            {t(theme === 'dark_fantasy' ? 'appTheme.darkFantasy' : 'appTheme.classic')}
+          </button>
+        ))}
+      </div>
+    </section>
+  ) : null;
 
   const endgameT15CompletionBlock = showEndgameT15CompletionNotice ? (
     <section className="hud-block overlay-endgame-completion-card no-drag" role="status" aria-live="polite">
@@ -1880,6 +1876,7 @@ export function OverlayPage() {
               {overlayQuickActions}
             </div>
           </header>
+          {themePreferencePrompt}
 
           <section className="timer-only-main-panel" aria-label={t('overlay.mainTimer')}>
             <p className="timer-only-main-label">{timerOnlyPrimaryLabel}</p>
@@ -1941,6 +1938,7 @@ export function OverlayPage() {
               {overlayQuickActions}
             </div>
           </header>
+          {themePreferencePrompt}
         </section>
       </main>
     );
@@ -1982,6 +1980,7 @@ export function OverlayPage() {
             />
           </p>
         </header>
+        {themePreferencePrompt}
 
         {endgameT15CompletionBlock}
 

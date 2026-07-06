@@ -205,17 +205,23 @@ test('app theme is persisted and available in overlay and settings', () => {
 
   assert.match(types, /export type AppTheme = 'classic' \| 'dark_fantasy'/);
   assert.match(defaults, /theme:\s*'classic'/);
+  assert.match(defaults, /themePreferencePrompted:\s*false/);
   assert.match(configStore, /normalizeAppTheme\(rawConfig\.theme\)/);
+  assert.match(configStore, /safeBoolean\(rawConfig\.themePreferencePrompted/);
   assert.match(configStore, /patch\.theme/);
-  assert.match(overlay, /overlay-theme-icon-button/);
-  assert.match(overlay, /getNextAppTheme\(config\.theme\)/);
+  assert.match(configStore, /patch\.themePreferencePrompted/);
+  assert.match(overlay, /overlay-theme-preference-card/);
+  assert.match(overlay, /themePreferencePrompted:\s*true/);
+  assert.doesNotMatch(overlay, /overlay-theme-icon-button/);
   assert.match(settingsPage, /app-theme-choice/);
-  assert.match(settingsPage, /updateSettings\(\{ theme \}\)/);
+  assert.match(settingsPage, /updateSettings\(\{ theme, themePreferencePrompted:\s*true \}\)/);
   assert.match(companionPage, /getAppThemeClassName\(config\.theme\)/);
   assert.match(stylesIndex, /35-dark-fantasy-theme\.css/);
   assert.match(styleCheck, /35-dark-fantasy-theme\.css/);
   assert.match(themeStyles, /\.theme-dark-fantasy/);
+  assert.match(themeStyles, /\.theme-dark-fantasy\.overlay-page\s*\{\s*background:\s*transparent !important;/);
   assert.match(translations, /Тёмное фэнтези/);
+  assert.match(translations, /Выбери тему/);
   assert.match(translations, /Dark fantasy/);
 });
 

@@ -610,6 +610,7 @@ export function normalizeAppConfig(config: Partial<AppConfig> = {}): AppConfig {
     visualFxIntensity: normalizeVisualFxIntensity(rawConfig.visualFxIntensity),
     overlayEffectsEnabled: safeBoolean(rawConfig.overlayEffectsEnabled, DEFAULT_CONFIG.overlayEffectsEnabled),
     theme: normalizeAppTheme(rawConfig.theme),
+    themePreferencePrompted: safeBoolean(rawConfig.themePreferencePrompted, DEFAULT_CONFIG.themePreferencePrompted),
     overlayDebugLayoutEnabled: safeBoolean(
       rawConfig.overlayDebugLayoutEnabled,
       DEFAULT_CONFIG.overlayDebugLayoutEnabled
@@ -707,6 +708,9 @@ export class ConfigStore {
         : {}),
       ...(patch.theme !== undefined
         ? { theme: patch.theme }
+        : {}),
+      ...(patch.themePreferencePrompted !== undefined
+        ? { themePreferencePrompted: patch.themePreferencePrompted }
         : {}),
       ...(patch.overlayDebugLayoutEnabled !== undefined
         ? { overlayDebugLayoutEnabled: patch.overlayDebugLayoutEnabled }

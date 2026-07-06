@@ -27,10 +27,7 @@
 }
 
 .theme-dark-fantasy.overlay-page {
-  background:
-    radial-gradient(circle at 18% 8%, rgba(119, 74, 214, 0.22), transparent 32%),
-    radial-gradient(circle at 92% 18%, rgba(217, 167, 95, 0.10), transparent 30%),
-    transparent;
+  background: transparent !important;
 }
 
 .theme-dark-fantasy .overlay-shell,
@@ -151,6 +148,51 @@
   min-width: 0;
 }
 
+.overlay-theme-preference-card {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(241, 185, 106, 0.30);
+  background:
+    radial-gradient(circle at 16% 0%, rgba(241, 185, 106, 0.14), transparent 38%),
+    linear-gradient(180deg, rgba(26, 21, 31, 0.92), rgba(10, 12, 18, 0.88));
+  box-shadow: 0 14px 26px rgba(0, 0, 0, 0.28);
+}
+
+.overlay-theme-preference-card h2,
+.overlay-theme-preference-card p {
+  margin: 0;
+}
+
+.overlay-theme-preference-card h2 {
+  color: #ffd791;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.overlay-theme-preference-card p {
+  color: rgba(226, 232, 240, 0.78);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.overlay-theme-preference-actions {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.overlay-theme-preference-actions button {
+  min-width: 0;
+  min-height: 34px;
+  padding: 7px 9px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
 .theme-dark-fantasy .overlay-quick-actions,
 .theme-dark-fantasy .overlay-language-toggle-hitarea,
 .theme-dark-fantasy .overlay-icon-button {
@@ -160,25 +202,16 @@
     rgba(13, 8, 23, 0.78) !important;
 }
 
-.theme-dark-fantasy .overlay-theme-icon-button:hover,
-.theme-dark-fantasy .overlay-theme-icon-button:focus-visible {
-  border-color: rgba(191, 151, 255, 0.78) !important;
+.theme-dark-fantasy .overlay-theme-preference-card {
+  border-color: var(--theme-border) !important;
   background:
-    radial-gradient(circle at 50% 22%, rgba(191, 151, 255, 0.34), transparent 58%),
-    linear-gradient(180deg, rgba(83, 50, 151, 0.58), rgba(31, 20, 58, 0.46)) !important;
-  color: #f2ebff !important;
-  box-shadow:
-    inset 0 0 0 1px rgba(235, 222, 255, 0.13),
-    0 0 0 1px rgba(184, 132, 255, 0.18),
-    0 0 16px rgba(142, 118, 255, 0.30) !important;
-}
-
-.theme-dark-fantasy .overlay-icon-glyph-theme {
-  transform: translateY(-1px);
+    radial-gradient(circle at 18% 0%, rgba(167, 123, 255, 0.18), transparent 36%),
+    linear-gradient(180deg, rgba(28, 19, 45, 0.94), rgba(10, 7, 17, 0.92)) !important;
 }
 
 @media (max-width: 640px) {
-  .app-theme-choice {
+  .app-theme-choice,
+  .overlay-theme-preference-actions {
     grid-template-columns: 1fr;
   }
 }
