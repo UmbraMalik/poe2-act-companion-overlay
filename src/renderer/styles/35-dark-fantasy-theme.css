@@ -479,6 +479,9 @@
 }
 
 .theme-dark-fantasy.companion-page .companion-tab-body {
+  border-radius: 14px;
+  overflow: hidden;
+  background-clip: padding-box;
   background:
     radial-gradient(circle at 10% 0%, rgba(167, 123, 255, 0.075), transparent 36%),
     linear-gradient(180deg, rgba(10, 7, 18, 0.44), transparent 42%) !important;
@@ -786,6 +789,77 @@
   background: rgba(17, 11, 29, 0.72) !important;
   color: rgba(229, 216, 255, 0.84) !important;
   box-shadow: none !important;
+}
+
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.status-current,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.is-route-next,
+.theme-dark-fantasy.companion-page.fx-normal .route-polish-layout .route-overview-card.status-current:not(.is-focus-flash),
+.theme-dark-fantasy.companion-page.fx-subtle .route-polish-layout .route-overview-card.status-current:not(.is-focus-flash),
+.theme-dark-fantasy.companion-page.fx-normal .route-polish-layout .route-overview-card.is-route-next:not(.is-focus-flash),
+.theme-dark-fantasy.companion-page.fx-subtle .route-polish-layout .route-overview-card.is-route-next:not(.is-focus-flash),
+.theme-dark-fantasy.companion-page.fx-rich .route-polish-layout .route-overview-card.status-current,
+.theme-dark-fantasy.companion-page.fx-rich .route-polish-layout .route-overview-card.is-route-next {
+  min-height: 108px !important;
+  opacity: 0.82 !important;
+  transform: none !important;
+  filter: saturate(0.82) !important;
+  animation: none !important;
+  border-color: rgba(99, 226, 170, 0.28) !important;
+  background:
+    radial-gradient(circle at 0% 0%, var(--df-companion-green-soft), transparent 42%),
+    rgba(11, 28, 25, 0.54) !important;
+  box-shadow: none !important;
+}
+
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.status-current:hover,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.is-route-next:hover {
+  opacity: 0.94 !important;
+}
+
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.status-current::before,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.status-current::after,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.is-route-next::before,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.is-route-next::after,
+.theme-dark-fantasy.companion-page.fx-normal .route-polish-layout .route-overview-card.status-current:not(.is-focus-flash)::after,
+.theme-dark-fantasy.companion-page.fx-subtle .route-polish-layout .route-overview-card.status-current:not(.is-focus-flash)::after,
+.theme-dark-fantasy.companion-page.fx-rich .route-polish-layout .route-overview-card.status-current::after {
+  width: 0 !important;
+  opacity: 0 !important;
+  animation: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.status-current .route-zone-name,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.is-route-next .route-zone-name,
+.theme-dark-fantasy.companion-page.fx-normal .route-polish-layout .route-overview-card.status-current:not(.is-focus-flash) .route-zone-name,
+.theme-dark-fantasy.companion-page.fx-subtle .route-polish-layout .route-overview-card.status-current:not(.is-focus-flash) .route-zone-name,
+.theme-dark-fantasy.companion-page.fx-rich .route-polish-layout .route-overview-card.status-current .route-zone-name {
+  color: rgba(226, 216, 197, 0.76) !important;
+  animation: none !important;
+  text-shadow: none !important;
+}
+
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.status-current .route-rec-badge,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.is-route-next .route-rec-badge,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.status-current .route-overview-header > span.route-rec-badge,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.is-route-next .route-overview-header > span.route-rec-badge {
+  border-color: rgba(205, 220, 237, 0.075) !important;
+  background: rgba(255, 255, 255, 0.024) !important;
+  color: rgba(218, 227, 237, 0.58) !important;
+}
+
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.status-current .route-step-index,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.is-route-next .route-step-index {
+  border-color: rgba(122, 214, 144, 0.14) !important;
+  background: rgba(122, 214, 144, 0.055) !important;
+  color: rgba(198, 225, 202, 0.70) !important;
+  box-shadow: none !important;
+}
+
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.status-current .compact-reward-list li,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.is-route-next .compact-reward-list li {
+  color: rgba(197, 209, 220, 0.64) !important;
 }
 
 .theme-dark-fantasy.overlay-page.overlay-page-timer-only .timer-only-main-panel .timer-only-time-control-row {
