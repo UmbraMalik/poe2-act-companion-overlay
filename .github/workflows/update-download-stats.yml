@@ -49,7 +49,12 @@ jobs:
           node-version: 20
 
       - name: Update stats files
-        run: node scripts/update-download-stats.mjs
+        shell: bash
+        run: |
+          node scripts/update-download-stats.mjs
+          mkdir -p stats
+          cp docs/stats/downloads.json stats/downloads.json
+          cp docs/stats/downloads-state.json stats/downloads-state.json
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RELEASES_REPO: UmbraMalik/poe2-act-companion-overlay
@@ -59,7 +64,7 @@ jobs:
         id: stats_changes
         shell: bash
         run: |
-          if git diff --quiet -- docs/stats/downloads.json docs/stats/downloads-state.json; then
+          if git diff --quiet -- docs/stats/downloads.json docs/stats/downloads-state.json stats/downloads.json stats/downloads-state.json; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
             echo "Download stats are already up to date."
           else
@@ -73,7 +78,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/stats/downloads.json docs/stats/downloads-state.json
+          git add docs/stats/downloads.json docs/stats/downloads-state.json stats/downloads.json stats/downloads-state.json
           git commit -m "chore(stats): update download counters"
           git push origin HEAD:main
 

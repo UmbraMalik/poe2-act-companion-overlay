@@ -99,6 +99,11 @@ import {
   isSafeExternalUrl
 } from './app-environment';
 
+function normalizeSettingsPatchInput(value: unknown): SettingsPatch {
+    return typeof value === 'object' && value !== null && !Array.isArray(value)
+        ? value as SettingsPatch
+        : {};
+}
 
 export function runRegisterIpc(this: any) {
         ipcMain.handle('app:get-snapshot', async () => this.getSnapshot());
@@ -154,6 +159,7 @@ export function runRegisterIpc(this: any) {
             return selectedPath;
         });
         ipcMain.handle('app:update-settings', async (_event: any, patch: any) => {
+            patch = normalizeSettingsPatchInput(patch);
             const previousOverlayMode = this.overlayMode;
             const previousOverlayDensity = this.config.overlayDensity;
             const previousOverlayScale = this.config.overlayScale;

@@ -55,3 +55,23 @@ test('overlay drag IPC routes absolute movement through the dragMove helper path
   assert.match(moveHandler, /y:\s*nextY/);
   assert.doesNotMatch(moveHandler, /setBounds\(/);
 });
+
+test('update settings IPC normalizes unknown renderer payloads before reading fields', () => {
+  const main = readMainProcessSource();
+  const handlerStart = main.indexOf("ipcMain.handle('app:update-settings'");
+  const handlerEnd = main.indexOf("ipcMain.handle('app:simulate-zone'", handlerStart);
+
+  assert.notEqual(handlerStart, -1);
+  assert.notEqual(handlerEnd, -1);
+  assert.match(main, /function normalizeSettingsPatchInput\(value: unknown\): SettingsPatch/);
+
+  const updateSettingsHandler = main.slice(handlerStart, handlerEnd);
+  const normalizePatchIndex = updateSettingsHandler.indexOf('patch = normalizeSettingsPatchInput(patch)');
+  const firstPatchFieldReadIndex = updateSettingsHandler.search(
+    /\bpatch\.(mainOverlaySettings|overlayDensity|overlayScale|overlayOpacity|companionAlwaysOnTop|realtimePriorityEnabled|hotkeys|manualHotkeysEnabled)/
+  );
+
+  assert.notEqual(normalizePatchIndex, -1);
+  assert.notEqual(firstPatchFieldReadIndex, -1);
+  assert.ok(normalizePatchIndex < firstPatchFieldReadIndex);
+});
