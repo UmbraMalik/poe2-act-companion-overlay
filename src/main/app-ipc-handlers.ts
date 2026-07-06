@@ -201,9 +201,13 @@ export function runRegisterIpc(this: any) {
             }
             if (overlayConstraintsChanged && this.overlayWindow && !this.overlayWindow.isDestroyed()) {
                 const minimumSize = this.getOverlayMinimumSize(this.overlayMode, this.config.overlayDensity, this.config.overlayScale);
-                const nextBounds = overlayLayoutChanged
-                    ? this.getOverlayBoundsForMode(this.overlayMode, this.config.overlayDensity)
-                    : this.normalizeOverlayBoundsForMode(previousOverlayBounds ?? this.overlayWindow.getBounds(), this.overlayMode, this.config.overlayDensity);
+                const currentPositionBounds = previousOverlayBounds ?? this.overlayWindow.getBounds();
+                const targetModeBounds = this.getOverlayBoundsForMode(this.overlayMode, this.config.overlayDensity);
+                const nextBounds = this.normalizeOverlayBoundsForMode({
+                    ...targetModeBounds,
+                    x: currentPositionBounds.x,
+                    y: currentPositionBounds.y
+                }, this.overlayMode, this.config.overlayDensity);
                 this.applyOverlayWindowBounds('modeSwitch', nextBounds, { minimumSize });
             }
             this.refreshTrayMenu();

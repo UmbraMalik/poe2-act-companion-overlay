@@ -25,6 +25,7 @@ import type {
   OverlayVisibleSections,
   RunTimerAutoStartMode,
   RunTimerStatus,
+  VisualFxIntensity,
   UpdateCheckResult,
   AutoUpdateState
 } from '../../shared/types';
@@ -165,6 +166,19 @@ function formatOverlayTextSize(value: OverlayTextSize, language: AppLanguage): s
   }
 
   return translate(language, 'overlayTextSize.plus', { value });
+}
+
+function formatVisualFxIntensity(value: VisualFxIntensity, language: AppLanguage): string {
+  switch (value) {
+    case 'off':
+      return translate(language, 'visualFxIntensity.off');
+    case 'subtle':
+      return translate(language, 'visualFxIntensity.subtle');
+    case 'rich':
+      return translate(language, 'visualFxIntensity.rich');
+    default:
+      return translate(language, 'visualFxIntensity.normal');
+  }
 }
 
 function formatLogSelectionMode(mode: 'auto' | 'manual' | null, language: AppLanguage): string {
@@ -620,7 +634,7 @@ export function SettingsPage() {
   })();
 
   return (
-    <main className="settings-page">
+    <main className={`settings-page fx-${config.visualFxIntensity}`}>
       <header className="settings-header window-drag-strip">
         <div className="settings-header-copy">
           <p className="eyebrow">{t('common.appName')}</p>
@@ -1129,6 +1143,39 @@ export function SettingsPage() {
                 <option value="detailed">{formatOverlayDensity('detailed', appLanguage)}</option>
               </select>
             </label>
+
+            <label className="settings-field">
+              <span>{t('settings.visualFxIntensity')}</span>
+              <select
+                value={config.visualFxIntensity}
+                onChange={(event) => {
+                  void window.poe2Overlay.updateSettings({
+                    visualFxIntensity: event.target.value as VisualFxIntensity
+                  });
+                }}
+              >
+                <option value="off">{formatVisualFxIntensity('off', appLanguage)}</option>
+                <option value="subtle">{formatVisualFxIntensity('subtle', appLanguage)}</option>
+                <option value="normal">{formatVisualFxIntensity('normal', appLanguage)}</option>
+                <option value="rich">{formatVisualFxIntensity('rich', appLanguage)}</option>
+              </select>
+            </label>
+          </div>
+
+          <div className="settings-subsection">
+            <label className="toggle-card">
+              <input
+                type="checkbox"
+                checked={config.overlayEffectsEnabled}
+                onChange={(event) => {
+                  void window.poe2Overlay.updateSettings({
+                    overlayEffectsEnabled: event.target.checked
+                  });
+                }}
+              />
+              <span>{t('settings.overlayEffectsEnabledTitle')}</span>
+            </label>
+            <p className="helper-text">{t('settings.overlayEffectsEnabledDescription')}</p>
           </div>
 
           <div className="settings-subsection">
@@ -1428,6 +1475,18 @@ export function SettingsPage() {
                   }}
                 />
                 <span>{t('settings.showDiagnostics')}</span>
+              </label>
+              <label className="toggle-card">
+                <input
+                  type="checkbox"
+                  checked={config.overlayDebugLayoutEnabled}
+                  onChange={(event) => {
+                    void window.poe2Overlay.updateSettings({
+                      overlayDebugLayoutEnabled: event.target.checked
+                    });
+                  }}
+                />
+                <span>{t('settings.overlayDebugLayout')}</span>
               </label>
             </div>
 

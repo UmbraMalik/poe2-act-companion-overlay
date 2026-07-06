@@ -1,0 +1,239 @@
+/* Feedback polish: make completed actions and system states read clearly. */
+@keyframes poe2-feedback-confirm {
+  0% {
+    filter: saturate(1.22) brightness(1.12);
+    box-shadow:
+      inset 0 0 0 1px rgba(205, 255, 220, 0.28),
+      0 0 0 1px rgba(125, 236, 162, 0.22),
+      0 0 28px rgba(84, 190, 112, 0.30);
+  }
+
+  100% {
+    filter: saturate(1.08) brightness(1.03);
+    box-shadow:
+      inset 0 0 0 1px rgba(205, 255, 220, 0.14),
+      0 0 18px rgba(84, 190, 112, 0.16);
+  }
+}
+
+@keyframes poe2-feedback-warning-glow {
+  0%,
+  100% {
+    filter: saturate(1.02) brightness(1.01);
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 232, 176, 0.08),
+      0 0 16px rgba(241, 185, 106, 0.10);
+  }
+
+  50% {
+    filter: saturate(1.10) brightness(1.05);
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 232, 176, 0.16),
+      0 0 26px rgba(241, 185, 106, 0.20);
+  }
+}
+
+@keyframes poe2-feedback-soft-sheen {
+  from {
+    background-position: 0% 50%;
+  }
+
+  to {
+    background-position: 200% 50%;
+  }
+}
+
+@keyframes poe2-feedback-lock-active {
+  0%,
+  100% {
+    filter: saturate(1.08) brightness(1.04);
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 232, 174, 0.18),
+      0 0 0 1px rgba(255, 204, 112, 0.22),
+      0 0 14px rgba(241, 185, 106, 0.24);
+  }
+
+  50% {
+    filter: saturate(1.18) brightness(1.10);
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 239, 198, 0.26),
+      0 0 0 1px rgba(255, 214, 128, 0.32),
+      0 0 22px rgba(241, 185, 106, 0.38);
+  }
+}
+
+.report-page .report-copy-button.is-copied {
+  animation: poe2-feedback-confirm 520ms var(--motion-ease-out, ease-out) both;
+}
+
+.overlay-page .overlay-lock-icon-button.is-locked,
+.overlay-page .overlay-quick-actions > .overlay-lock-icon-button.is-locked,
+.overlay-page .timer-only-top-control-row .overlay-quick-actions > .overlay-lock-icon-button.is-locked {
+  position: relative;
+  isolation: isolate;
+  overflow: visible;
+  border-color: rgba(255, 204, 112, 0.68) !important;
+  background: rgba(45, 34, 18, 0.38) !important;
+  color: #ffe2a3 !important;
+  opacity: 1 !important;
+  animation: poe2-feedback-lock-active 5.8s ease-in-out infinite;
+}
+
+.overlay-page .overlay-lock-icon-button.is-locked::before,
+.overlay-page .overlay-quick-actions > .overlay-lock-icon-button.is-locked::before,
+.overlay-page .timer-only-top-control-row .overlay-quick-actions > .overlay-lock-icon-button.is-locked::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -2px;
+  border: 1px solid rgba(255, 218, 137, 0.46);
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 35%, rgba(255, 226, 151, 0.34), transparent 58%),
+    linear-gradient(180deg, rgba(112, 76, 31, 0.34), rgba(44, 31, 18, 0.18));
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 239, 198, 0.12),
+    0 0 0 1px rgba(255, 204, 112, 0.18),
+    0 0 16px rgba(241, 185, 106, 0.32);
+  opacity: 0.95;
+}
+
+.overlay-page .overlay-lock-icon-button.is-locked::after,
+.overlay-page .overlay-quick-actions > .overlay-lock-icon-button.is-locked::after,
+.overlay-page .timer-only-top-control-row .overlay-quick-actions > .overlay-lock-icon-button.is-locked::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 1px;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 42%, rgba(255, 244, 210, 0.18), transparent 62%);
+}
+
+.overlay-page .overlay-lock-icon-button.is-locked .overlay-icon-glyph-lock,
+.overlay-page .overlay-icon-glyph-lock.is-locked {
+  position: relative;
+  z-index: 1;
+  color: #ffe9b8 !important;
+  filter:
+    drop-shadow(0 0 4px rgba(255, 226, 151, 0.42))
+    drop-shadow(0 0 9px rgba(241, 185, 106, 0.26));
+}
+
+.overlay-page .overlay-lock-icon-button.is-locked:hover,
+.overlay-page .overlay-lock-icon-button.is-locked:focus-visible {
+  border-color: rgba(255, 220, 145, 0.86) !important;
+}
+
+.overlay-page .overlay-lock-icon-button.is-locked:hover::before,
+.overlay-page .overlay-lock-icon-button.is-locked:focus-visible::before {
+  border-color: rgba(255, 230, 164, 0.66);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 244, 210, 0.18),
+    0 0 0 1px rgba(255, 214, 128, 0.28),
+    0 0 22px rgba(241, 185, 106, 0.44);
+}
+
+.companion-page .run-save-notice {
+  position: relative;
+  padding: 6px 10px;
+  border: 1px solid rgba(125, 236, 162, 0.22);
+  border-radius: 999px;
+  background:
+    linear-gradient(90deg, rgba(84, 190, 112, 0.10), rgba(241, 185, 106, 0.060), rgba(84, 190, 112, 0.10));
+  background-size: 200% 100%;
+  color: rgba(222, 255, 232, 0.94);
+  box-shadow:
+    inset 0 0 0 1px rgba(205, 255, 220, 0.06),
+    0 0 16px rgba(84, 190, 112, 0.12);
+  animation:
+    poe2-feedback-confirm 520ms var(--motion-ease-out, ease-out) both,
+    poe2-feedback-soft-sheen 4.8s linear infinite;
+}
+
+.settings-page .update-inline-message.is-success,
+.update-page .update-inline-message.is-success {
+  border-color: rgba(125, 236, 162, 0.32);
+  background:
+    radial-gradient(circle at 12% 0, rgba(125, 236, 162, 0.13), transparent 46%),
+    rgba(7, 17, 12, 0.36);
+  box-shadow:
+    inset 0 0 0 1px rgba(205, 255, 220, 0.07),
+    0 0 18px rgba(84, 190, 112, 0.10);
+}
+
+.settings-page .update-inline-message.is-warning,
+.update-page .update-inline-message.is-warning,
+.overlay-page .hud-banner,
+.overlay-page .hud-warning {
+  border-color: rgba(241, 185, 106, 0.34);
+  background:
+    radial-gradient(circle at 8% 0, rgba(241, 185, 106, 0.14), transparent 42%),
+    rgba(24, 17, 8, 0.36);
+  animation: poe2-feedback-warning-glow 6.8s ease-in-out infinite;
+}
+
+.settings-page .settings-status-pill.is-success {
+  box-shadow:
+    inset 0 0 0 1px rgba(205, 255, 220, 0.10),
+    0 0 14px rgba(84, 190, 112, 0.12);
+}
+
+.settings-page .settings-status-pill.is-warning,
+.settings-page .settings-status-pill.is-pending {
+  animation: poe2-feedback-warning-glow 7.2s ease-in-out infinite;
+}
+
+.companion-page .timer-status-pill.is-running {
+  box-shadow:
+    inset 0 0 0 1px rgba(205, 255, 220, 0.10),
+    0 0 14px rgba(84, 190, 112, 0.12);
+}
+
+.companion-page .timer-status-pill.is-paused {
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 232, 176, 0.10),
+    0 0 14px rgba(241, 185, 106, 0.13);
+}
+
+.companion-page .route-warning-inline {
+  border-color: rgba(255, 156, 112, 0.28);
+  background:
+    radial-gradient(circle at 8% 0, rgba(255, 104, 90, 0.11), transparent 42%),
+    rgba(24, 9, 7, 0.30);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 214, 205, 0.05),
+    0 0 14px rgba(255, 76, 62, 0.08);
+}
+
+.overlay-page .overlay-endgame-completion-card {
+  animation:
+    poe2-feedback-confirm 640ms var(--motion-ease-out, ease-out) both,
+    poe2-feedback-warning-glow 7.8s ease-in-out 640ms infinite;
+}
+
+.report-page.fx-off .report-copy-button.is-copied,
+.companion-page.fx-off .run-save-notice,
+.settings-page.fx-off .settings-status-pill,
+.settings-page.fx-off .update-inline-message,
+.update-page.fx-off .update-inline-message,
+.overlay-page.fx-off .hud-banner,
+.overlay-page.fx-off .hud-warning,
+.overlay-page.fx-off .overlay-endgame-completion-card {
+  animation: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .report-page .report-copy-button.is-copied,
+  .companion-page .run-save-notice,
+  .settings-page .settings-status-pill,
+  .settings-page .update-inline-message,
+  .update-page .update-inline-message,
+  .overlay-page .hud-banner,
+  .overlay-page .hud-warning,
+  .overlay-page .overlay-endgame-completion-card,
+  .overlay-page .overlay-lock-icon-button.is-locked {
+    animation: none !important;
+  }
+}

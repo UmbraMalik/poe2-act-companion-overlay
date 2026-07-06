@@ -84,6 +84,9 @@ export const DEFAULT_CONFIG: AppConfig = {
   overlayScale: 90,
   overlayTextSize: 0,
   overlayDensity: 'normal',
+  visualFxIntensity: 'normal',
+  overlayEffectsEnabled: true,
+  overlayDebugLayoutEnabled: false,
   overlayVisibleSections: {
     nearby: true,
     zoneInfo: true,

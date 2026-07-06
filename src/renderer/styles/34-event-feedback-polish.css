@@ -1,0 +1,273 @@
+/* Event feedback polish: route progress, bonus toggles, and timer split notices. */
+
+@keyframes poe2-event-route-progress-energy {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  100% {
+    background-position: 180% 50%;
+  }
+}
+
+@keyframes poe2-event-bonus-done {
+  0% {
+    filter: brightness(1);
+    transform: translateY(0) scale(1);
+  }
+
+  18% {
+    filter: brightness(1.16) saturate(1.18);
+    transform: translateY(-2px) scale(1.01);
+  }
+
+  58% {
+    filter: brightness(1.08) saturate(1.10);
+    transform: translateY(0) scale(1);
+  }
+
+  100% {
+    filter: brightness(1);
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes poe2-event-bonus-pending {
+  0% {
+    filter: brightness(1);
+    transform: translateY(0) scale(1);
+  }
+
+  18% {
+    filter: brightness(1.14) saturate(1.14);
+    transform: translateY(-2px) scale(1.01);
+  }
+
+  58% {
+    filter: brightness(1.06) saturate(1.08);
+    transform: translateY(0) scale(1);
+  }
+
+  100% {
+    filter: brightness(1);
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes poe2-event-bonus-marker-pop {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  35% {
+    transform: scale(1.28);
+  }
+}
+
+@keyframes poe2-event-count-bump {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+
+  38% {
+    transform: translateY(-1px) scale(1.035);
+  }
+}
+
+@keyframes poe2-event-split-feedback {
+  0% {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  18%,
+  82% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+}
+
+.companion-page .route-progress-rail-card {
+  position: relative;
+  display: grid;
+  gap: 10px;
+  align-self: stretch;
+  min-height: 84px;
+  margin: 0;
+  padding: 12px 14px;
+  border-color: rgba(224, 174, 89, 0.24);
+  background:
+    radial-gradient(circle at 12% 0%, rgba(224, 174, 89, 0.12), transparent 32%),
+    linear-gradient(135deg, rgba(34, 29, 20, 0.58), rgba(10, 15, 21, 0.68));
+  overflow: hidden;
+  z-index: 2;
+}
+
+.companion-page .route-polish-layout {
+  grid-template-rows: auto auto minmax(0, 1fr) !important;
+}
+
+.companion-page .route-polish-layout .companion-route-list-card {
+  min-height: 0 !important;
+}
+
+.companion-page .route-progress-rail-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 28px rgba(86, 150, 255, 0.08);
+  pointer-events: none;
+}
+
+.companion-page .route-progress-rail-header,
+.companion-page .route-progress-endpoints {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.companion-page .route-progress-rail-header .eyebrow {
+  margin: 0 0 3px;
+}
+
+.companion-page .route-progress-rail-header strong {
+  color: rgba(248, 238, 210, 0.96);
+}
+
+.companion-page .route-progress-rail-header > span,
+.companion-page .route-progress-endpoints {
+  color: rgba(188, 199, 211, 0.78);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.companion-page .route-progress-track {
+  position: relative;
+  z-index: 1;
+  height: 8px;
+  border: 1px solid rgba(224, 174, 89, 0.20);
+  border-radius: 999px;
+  background: rgba(7, 10, 14, 0.72);
+  box-shadow: inset 0 1px 8px rgba(0, 0, 0, 0.42);
+  overflow: hidden;
+}
+
+.companion-page .route-progress-track span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background:
+    linear-gradient(90deg, rgba(224, 174, 89, 0.72), rgba(86, 150, 255, 0.46), rgba(255, 220, 140, 0.86), rgba(224, 174, 89, 0.72));
+  background-size: 220% 100%;
+  box-shadow:
+    0 0 12px rgba(224, 174, 89, 0.36),
+    0 0 20px rgba(86, 150, 255, 0.14);
+  animation: poe2-event-route-progress-energy 5200ms linear infinite;
+}
+
+.companion-page .bonus-row.is-bonus-toggle-feedback {
+  position: relative;
+  overflow: hidden;
+}
+
+.companion-page .bonus-row.is-bonus-toggle-feedback::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.companion-page .bonus-row.is-bonus-toggle-feedback.is-feedback-done {
+  border-color: rgba(106, 211, 123, 0.72);
+  box-shadow:
+    0 0 0 1px rgba(106, 211, 123, 0.52),
+    0 0 26px rgba(106, 211, 123, 0.30),
+    inset 0 0 22px rgba(106, 211, 123, 0.12);
+  animation: poe2-event-bonus-done 1200ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.companion-page .bonus-row.is-bonus-toggle-feedback.is-feedback-done::after {
+  background:
+    linear-gradient(90deg, transparent, rgba(106, 211, 123, 0.20), transparent);
+}
+
+.companion-page .bonus-row.is-bonus-toggle-feedback.is-feedback-pending {
+  border-color: rgba(224, 174, 89, 0.70);
+  box-shadow:
+    0 0 0 1px rgba(224, 174, 89, 0.46),
+    0 0 24px rgba(224, 174, 89, 0.26),
+    inset 0 0 22px rgba(224, 174, 89, 0.10);
+  animation: poe2-event-bonus-pending 1200ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.companion-page .bonus-row.is-bonus-toggle-feedback.is-feedback-pending::after {
+  background:
+    linear-gradient(90deg, transparent, rgba(224, 174, 89, 0.18), transparent);
+}
+
+.companion-page .bonus-row.is-bonus-toggle-feedback .bonus-status-marker {
+  animation: poe2-event-bonus-marker-pop 560ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.companion-page .bonus-row.is-bonus-toggle-feedback.is-feedback-done .bonus-title-line strong {
+  color: rgba(218, 255, 210, 0.98);
+  text-shadow: 0 0 12px rgba(106, 211, 123, 0.34);
+}
+
+.companion-page .bonus-row.is-bonus-toggle-feedback.is-feedback-pending .bonus-title-line strong {
+  color: rgba(255, 239, 205, 0.98);
+  text-shadow: 0 0 12px rgba(224, 174, 89, 0.30);
+}
+
+.companion-page .info-cell.is-bonus-count-bump {
+  border-color: rgba(224, 174, 89, 0.38);
+  animation: poe2-event-count-bump 760ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.companion-page .timer-split-feedback {
+  align-self: start;
+  margin: 0;
+  padding: 8px 12px;
+  border: 1px solid rgba(224, 174, 89, 0.38);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(224, 174, 89, 0.16), rgba(9, 13, 18, 0.78)),
+    rgba(10, 12, 16, 0.72);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.04),
+    0 0 18px rgba(224, 174, 89, 0.18);
+  color: rgba(248, 238, 210, 0.96);
+  font-size: 12px;
+  font-weight: 800;
+  animation: poe2-event-split-feedback 2400ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.companion-page.fx-off .route-progress-track span,
+.companion-page.fx-off .bonus-row.is-bonus-toggle-feedback,
+.companion-page.fx-off .bonus-row.is-bonus-toggle-feedback .bonus-status-marker,
+.companion-page.fx-off .info-cell.is-bonus-count-bump,
+.companion-page.fx-off .timer-split-feedback {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .companion-page .route-progress-track span,
+  .companion-page .bonus-row.is-bonus-toggle-feedback,
+  .companion-page .bonus-row.is-bonus-toggle-feedback .bonus-status-marker,
+  .companion-page .info-cell.is-bonus-count-bump,
+  .companion-page .timer-split-feedback {
+    animation: none;
+  }
+}

@@ -25,8 +25,11 @@ test('preload exposes only specific safe IPC APIs and not the raw ipcRenderer', 
 
 test('main process keeps renderer windows isolated and guards shell.openExternal', () => {
   const main = readMainProcessSource();
+  const environment = readText('src/main/app-environment.ts');
 
-  assert.match(main, /function isSafeExternalUrl/);
+  assert.match(environment, /isAllowedExternalUrl/);
+  assert.match(environment, /return isAllowedExternalUrl\(url\)/);
+  assert.doesNotMatch(environment, /parsed\.protocol\s*===\s*'https:'\s*\|\|\s*parsed\.protocol\s*===\s*'http:'/);
   assert.match(main, /ipcMain\.handle\('app:open-external'/);
   assert.match(main, /if \(!isSafeExternalUrl\(url\)\)/);
   assert.match(main, /contextIsolation:\s*true/);

@@ -49,6 +49,13 @@ export interface RouteActGroup {
   zones: RouteZoneStatus[];
 }
 
+export interface RouteProgressState {
+  total: number;
+  currentCount: number;
+  percent: number;
+  currentIndex: number;
+}
+
 export interface ActTimeRow {
   act: number;
   elapsedMs: number;
@@ -335,7 +342,22 @@ export function isTownScene(snapshot: AppSnapshot): boolean {
 }
 
 function getRouteRewardItems(guide: GuideEntry, snapshot: AppSnapshot): ChecklistViewItem[] {
-  const checklist = buildChecklistViewItems(guide, snapshot.config.zoneProgress[guide.id]);
+  const zoneProgress = snapshot.config.zoneProgress[guide.id];
+  const checklist = buildChecklistViewItems(guide, zoneProgress).map((item) => {
+    const storedProgress = zoneProgress?.itemStates[item.id] ?? null;
+
+    if (storedProgress?.state === 'missed' && shouldItemBeMissed(item)) {
+      return {
+        ...item,
+        displayState: 'missed' as const,
+        detectedBy: storedProgress.detectedBy,
+        timestamp: storedProgress.timestamp
+      };
+    }
+
+    return item;
+  });
+
   return checklist.filter(
     (item) =>
       item.required ||
@@ -345,22 +367,32 @@ function getRouteRewardItems(guide: GuideEntry, snapshot: AppSnapshot): Checklis
   );
 }
 
+function isRouteRewardItemDone(item: ChecklistViewItem): boolean {
+  return item.displayState === 'done' || item.displayState === 'likely_done';
+}
+
 function getRouteZoneStatus(guide: GuideEntry, snapshot: AppSnapshot): RouteZoneStatus {
   const rewardItems = getRouteRewardItems(guide, snapshot);
+  const missedItems = rewardItems.filter((item) => item.displayState === 'missed');
+  const completed = rewardItems.length > 0 && rewardItems.every(isRouteRewardItemDone);
   const visited = snapshot.config.visitedZones.some((entry) => entry.zoneId === guide.id);
 
   const status: RouteZoneStatus['status'] =
     snapshot.currentGuideEntry?.id === guide.id
       ? 'current'
-      : visited
-        ? 'visited'
-        : 'pending';
+      : missedItems.length > 0
+        ? 'missed'
+        : completed
+          ? 'completed'
+          : visited
+            ? 'visited'
+            : 'pending';
 
   return {
     guide,
     status,
     rewardItems,
-    missedItems: []
+    missedItems
   };
 }
 
@@ -416,6 +448,41 @@ export function getRouteOverviewForAct(
   }
 
   return getRouteActs(snapshot, language).find((entry) => entry.act === act)?.zones ?? [];
+}
+
+export function getRouteProgressState(
+  routeZones: RouteZoneStatus[],
+  options: {
+    isSelectedRouteActCurrent: boolean;
+    isSelectedRouteActBeforeCurrent: boolean;
+  }
+): RouteProgressState {
+  const total = routeZones.length;
+  const currentIndex = options.isSelectedRouteActCurrent
+    ? routeZones.findIndex((entry) => entry.status === 'current')
+    : -1;
+  const completedCount = options.isSelectedRouteActCurrent
+    ? routeZones.filter((entry, index) => (
+      entry.status === 'completed' ||
+      entry.status === 'visited' ||
+      (currentIndex >= 0 && index < currentIndex)
+    )).length
+    : 0;
+  const currentCount = options.isSelectedRouteActBeforeCurrent
+    ? total
+    : currentIndex >= 0
+      ? currentIndex + 1
+      : completedCount;
+  const percent = total === 0
+    ? 0
+    : Math.min(100, Math.max(0, (currentCount / total) * 100));
+
+  return {
+    total,
+    currentCount,
+    percent,
+    currentIndex
+  };
 }
 
 export function getCurrentRouteAct(snapshot: AppSnapshot): ZoneAct | null {

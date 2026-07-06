@@ -1,0 +1,399 @@
+/* Atmospheric ARPG glow layer. Keep this scoped and layered after base motion. */
+.overlay-page,
+.companion-page,
+.settings-page,
+.report-page,
+.close-confirm-page,
+.update-page {
+  --fx-gold: rgba(241, 185, 106, 0.72);
+  --fx-gold-soft: rgba(241, 185, 106, 0.18);
+  --fx-blue: rgba(112, 190, 255, 0.68);
+  --fx-blue-soft: rgba(82, 170, 255, 0.16);
+  --fx-green: rgba(125, 236, 162, 0.64);
+  --fx-green-soft: rgba(84, 190, 112, 0.15);
+  --fx-violet: rgba(177, 147, 255, 0.66);
+  --fx-violet-soft: rgba(142, 118, 255, 0.16);
+  --fx-red: rgba(255, 104, 90, 0.72);
+  --fx-red-soft: rgba(255, 76, 62, 0.16);
+  --fx-panel-edge:
+    inset 0 0 0 1px rgba(255, 232, 176, 0.075),
+    inset 0 0 32px rgba(241, 185, 106, 0.045),
+    0 18px 42px rgba(0, 0, 0, 0.34);
+  --fx-panel-edge-blue:
+    inset 0 0 0 1px rgba(176, 222, 255, 0.075),
+    inset 0 0 32px rgba(82, 170, 255, 0.045),
+    0 18px 42px rgba(0, 0, 0, 0.34);
+}
+
+@keyframes poe2-fx-focus-flare {
+  from {
+    opacity: 0;
+    transform: scaleX(0.72);
+  }
+
+  to {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+.overlay-page .overlay-shell,
+.overlay-page .overlay-hud {
+  box-shadow:
+    var(--fx-panel-edge),
+    0 0 0 1px rgba(112, 190, 255, 0.035),
+    0 0 28px rgba(241, 185, 106, 0.06) !important;
+}
+
+.overlay-page .overlay-shell {
+  border-color: rgba(241, 185, 106, 0.50) !important;
+  background:
+    radial-gradient(circle at 12% 0, rgba(241, 185, 106, 0.18), transparent 34%),
+    radial-gradient(circle at 92% 4%, rgba(82, 170, 255, 0.10), transparent 30%),
+    linear-gradient(180deg, rgba(21, 23, 25, 0.96), rgba(8, 10, 13, 0.94)) !important;
+}
+
+.overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .hud-zone-title-card {
+  border-color: rgba(241, 185, 106, 0.20);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 232, 176, 0.055),
+    inset 0 0 20px rgba(241, 185, 106, 0.040);
+}
+
+.overlay-page .hud-zone-name,
+.overlay-page .hud-collapsed-zone-name {
+  text-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.70),
+    0 0 16px rgba(241, 185, 106, 0.16);
+}
+
+.overlay-page .overlay-quick-actions {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    inset 0 0 18px rgba(255, 255, 255, 0.018),
+    0 0 18px rgba(0, 0, 0, 0.18) !important;
+}
+
+.overlay-page .overlay-quick-actions > .overlay-icon-button:hover,
+.overlay-page .overlay-quick-actions > .overlay-icon-button:focus-visible,
+.overlay-page .overlay-timer-control:hover:not(:disabled),
+.overlay-page .overlay-timer-control:focus-visible:not(:disabled) {
+  filter: saturate(1.18) brightness(1.08) !important;
+}
+
+.overlay-page .overlay-quick-actions > .overlay-timer-control-start:hover:not(:disabled),
+.overlay-page .overlay-quick-actions > .overlay-timer-control-start:focus-visible:not(:disabled),
+.overlay-page .timer-only-controls-row .overlay-timer-control-start:hover:not(:disabled),
+.overlay-page .timer-only-controls-row .overlay-timer-control-start:focus-visible:not(:disabled) {
+  box-shadow:
+    inset 0 0 0 1px rgba(205, 255, 220, 0.18),
+    0 0 0 1px rgba(125, 236, 162, 0.22),
+    0 0 22px var(--fx-green-soft) !important;
+}
+
+.overlay-page .overlay-quick-actions > .overlay-timer-control-pause:hover:not(:disabled),
+.overlay-page .overlay-quick-actions > .overlay-timer-control-pause:focus-visible:not(:disabled),
+.overlay-page .timer-only-controls-row .overlay-timer-control-pause:hover:not(:disabled),
+.overlay-page .timer-only-controls-row .overlay-timer-control-pause:focus-visible:not(:disabled) {
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 239, 192, 0.17),
+    0 0 0 1px rgba(255, 219, 128, 0.22),
+    0 0 22px var(--fx-gold-soft) !important;
+}
+
+.overlay-page .overlay-quick-actions > .overlay-timer-control-reset:hover:not(:disabled),
+.overlay-page .overlay-quick-actions > .overlay-timer-control-reset:focus-visible:not(:disabled),
+.overlay-page .timer-only-controls-row .overlay-timer-control-reset:hover:not(:disabled),
+.overlay-page .timer-only-controls-row .overlay-timer-control-reset:focus-visible:not(:disabled),
+.overlay-page .overlay-close-button:hover,
+.overlay-page .overlay-close-button:focus-visible {
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 214, 205, 0.16),
+    0 0 0 1px rgba(255, 94, 82, 0.22),
+    0 0 22px var(--fx-red-soft) !important;
+}
+
+.overlay-page .overlay-companion-icon-button:hover,
+.overlay-page .overlay-companion-icon-button:focus-visible {
+  box-shadow:
+    inset 0 0 0 1px rgba(201, 235, 255, 0.16),
+    0 0 0 1px rgba(112, 190, 255, 0.20),
+    0 0 22px var(--fx-blue-soft) !important;
+}
+
+.overlay-page .overlay-collapse-icon-button:hover,
+.overlay-page .overlay-collapse-icon-button:focus-visible,
+.overlay-page .timer-only-collapse-button:hover,
+.overlay-page .timer-only-collapse-button:focus-visible,
+.overlay-page .timer-only-expand-button:hover,
+.overlay-page .timer-only-expand-button:focus-visible {
+  box-shadow:
+    inset 0 0 0 1px rgba(225, 215, 255, 0.15),
+    0 0 0 1px rgba(177, 147, 255, 0.20),
+    0 0 22px var(--fx-violet-soft) !important;
+}
+
+.overlay-page .overlay-lock-icon-button:hover,
+.overlay-page .overlay-lock-icon-button:focus-visible,
+.overlay-page .overlay-settings-icon-button:hover,
+.overlay-page .overlay-settings-icon-button:focus-visible {
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 232, 174, 0.16),
+    0 0 0 1px rgba(241, 185, 106, 0.21),
+    0 0 22px var(--fx-gold-soft) !important;
+}
+
+.overlay-page.is-overlay-collapsed .overlay-collapsed-shell {
+  border-color: rgba(177, 147, 255, 0.36) !important;
+  background:
+    radial-gradient(circle at 12% 50%, rgba(177, 147, 255, 0.16), transparent 38%),
+    radial-gradient(circle at 88% 50%, rgba(82, 170, 255, 0.12), transparent 34%),
+    linear-gradient(180deg, rgba(20, 23, 28, 0.97), rgba(8, 10, 14, 0.96)) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(225, 215, 255, 0.075),
+    0 0 24px rgba(142, 118, 255, 0.14),
+    0 10px 26px rgba(0, 0, 0, 0.38) !important;
+}
+
+.overlay-page.overlay-page-timer-only .overlay-timer-only-card {
+  border-color: rgba(241, 185, 106, 0.46) !important;
+  box-shadow:
+    var(--fx-panel-edge),
+    0 0 30px rgba(241, 185, 106, 0.10) !important;
+}
+
+.overlay-page .timer-only-main-panel {
+  border-color: rgba(241, 185, 106, 0.24);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 232, 176, 0.07),
+    inset 0 0 26px rgba(241, 185, 106, 0.055);
+}
+
+.overlay-page .timer-only-time {
+  color: #fff0c8;
+  text-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.72),
+    0 0 18px rgba(241, 185, 106, 0.28),
+    0 0 34px rgba(241, 185, 106, 0.11);
+}
+
+.overlay-page .timer-only-status.status-paused {
+  border-color: rgba(255, 219, 128, 0.34);
+  color: #ffe1a0;
+  box-shadow: inset 0 0 0 1px rgba(255, 239, 192, 0.08);
+}
+
+.overlay-page .timer-only-status.status-finished {
+  border-color: rgba(125, 236, 162, 0.34);
+  color: #bff8cc;
+  box-shadow:
+    inset 0 0 0 1px rgba(205, 255, 220, 0.08),
+    0 0 16px rgba(84, 190, 112, 0.10);
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-meta.level-low,
+.overlay-page-timer-only .timer-only-meta.level-low {
+  border-color: rgba(255, 104, 90, 0.36);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 214, 205, 0.08),
+    0 0 18px var(--fx-red-soft);
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-meta.level-farm,
+.overlay-page-timer-only .timer-only-meta.level-farm {
+  border-color: rgba(241, 185, 106, 0.34);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 232, 176, 0.08),
+    0 0 16px var(--fx-gold-soft);
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-meta.level-ok,
+.overlay-page-timer-only .timer-only-meta.level-ok {
+  border-color: rgba(125, 236, 162, 0.30);
+  box-shadow:
+    inset 0 0 0 1px rgba(205, 255, 220, 0.07),
+    0 0 14px var(--fx-green-soft);
+}
+
+.companion-page .companion-card {
+  border-color: rgba(241, 185, 106, 0.18);
+  background:
+    radial-gradient(circle at 8% 0, rgba(241, 185, 106, 0.13), transparent 34%),
+    radial-gradient(circle at 96% 2%, rgba(82, 170, 255, 0.095), transparent 30%),
+    linear-gradient(180deg, rgba(17, 22, 29, 0.98), rgba(7, 10, 15, 0.99));
+  box-shadow:
+    var(--fx-panel-edge),
+    0 0 34px rgba(82, 170, 255, 0.045);
+}
+
+.companion-page .companion-card > .companion-tab-row .button-primary {
+  border-color: rgba(241, 185, 106, 0.68) !important;
+  text-shadow: 0 0 12px rgba(241, 185, 106, 0.22);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 232, 176, 0.16),
+    inset 0 0 18px rgba(241, 185, 106, 0.075),
+    0 0 18px rgba(241, 185, 106, 0.14) !important;
+}
+
+.companion-page .companion-card > .companion-tab-row .button-primary::after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 1px;
+  margin-top: 4px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, rgba(255, 228, 167, 0.72), transparent);
+  animation: poe2-fx-focus-flare 180ms var(--motion-ease-out, ease-out) both;
+}
+
+.companion-page .zone-hero-card {
+  border-color: rgba(241, 185, 106, 0.28);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 232, 176, 0.07),
+    inset 0 0 34px rgba(241, 185, 106, 0.055),
+    0 0 24px rgba(241, 185, 106, 0.075);
+}
+
+.companion-page .zone-metric-card.is-accent,
+.companion-page .zone-next-card,
+.companion-page .companion-details-block {
+  box-shadow:
+    inset 0 0 0 1px rgba(201, 235, 255, 0.055),
+    0 0 16px rgba(82, 170, 255, 0.060);
+}
+
+.companion-page .zone-reward-card,
+.companion-page .zone-bonuses-card,
+.companion-page .bonus-act-card,
+.companion-page .bonus-summary-card,
+.companion-page .route-overview-card .compact-reward-list li {
+  box-shadow:
+    inset 0 0 0 1px rgba(205, 255, 220, 0.045),
+    0 0 14px rgba(84, 190, 112, 0.045);
+}
+
+.companion-page .zone-important-card,
+.companion-page .timer-cockpit-card,
+.companion-page .timer-split-card,
+.companion-page .summary-result-panel,
+.companion-page .summary-act-breakdown-panel {
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 232, 176, 0.055),
+    0 0 18px rgba(241, 185, 106, 0.055);
+}
+
+.companion-page .skip-section,
+.companion-page .route-overview-card.status-missed,
+.companion-page .danger-card {
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 214, 205, 0.06),
+    0 0 16px rgba(255, 76, 62, 0.065);
+}
+
+.companion-page .route-overview-card.status-current {
+  border-color: rgba(241, 185, 106, 0.48) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 232, 176, 0.12),
+    inset 0 0 24px rgba(241, 185, 106, 0.070),
+    0 0 22px rgba(241, 185, 106, 0.12) !important;
+}
+
+.companion-page .route-overview-card.status-current .route-zone-name,
+.companion-page .zone-hero-copy h3,
+.companion-page .summary-result-panel h3 {
+  text-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.64),
+    0 0 16px rgba(241, 185, 106, 0.16);
+}
+
+.companion-page .companion-tab-body .companion-block:hover,
+.companion-page .companion-tab-body .zone-task-card:hover,
+.companion-page .companion-tab-body .route-overview-card:hover,
+.companion-page .companion-tab-body .reminder-card:hover,
+.companion-page .companion-tab-body .bonus-act-card:hover {
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 232, 176, 0.075),
+    0 0 20px rgba(241, 185, 106, 0.070),
+    0 12px 26px rgba(0, 0, 0, 0.20);
+}
+
+.companion-modal-backdrop,
+.overlay-confirm-backdrop {
+  background:
+    radial-gradient(circle at 50% 42%, rgba(241, 185, 106, 0.14), transparent 38%),
+    rgba(3, 6, 10, 0.76) !important;
+}
+
+.companion-modal-card,
+.overlay-confirm-card,
+.close-confirm-page .close-confirm-shell,
+.update-page .update-shell {
+  border-color: rgba(241, 185, 106, 0.38);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 232, 176, 0.08),
+    inset 0 0 30px rgba(241, 185, 106, 0.045),
+    0 24px 72px rgba(0, 0, 0, 0.58),
+    0 0 34px rgba(241, 185, 106, 0.08);
+}
+
+.companion-modal-card .button-danger,
+.overlay-confirm-card .button-danger,
+.close-confirm-page .button-primary {
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 214, 205, 0.08),
+    0 0 16px rgba(255, 76, 62, 0.10);
+}
+
+.settings-page .settings-card,
+.settings-page .support-card,
+.report-page .report-card {
+  border-color: rgba(241, 185, 106, 0.16);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 232, 176, 0.045),
+    0 16px 34px rgba(0, 0, 0, 0.20),
+    0 0 22px rgba(82, 170, 255, 0.030);
+}
+
+.settings-page input:focus-visible,
+.settings-page select:focus-visible,
+.settings-page textarea:focus-visible,
+.report-page textarea:focus-visible {
+  box-shadow:
+    0 0 0 3px rgba(241, 185, 106, 0.12),
+    0 0 18px rgba(241, 185, 106, 0.10);
+}
+
+.settings-page .toggle-card:has(input:checked) {
+  border-color: rgba(125, 236, 162, 0.34);
+  box-shadow:
+    inset 0 0 0 1px rgba(205, 255, 220, 0.08),
+    0 0 16px rgba(84, 190, 112, 0.09);
+}
+
+.report-page .report-copy-button.is-copied {
+  box-shadow:
+    inset 0 0 0 1px rgba(205, 255, 220, 0.16),
+    0 0 22px rgba(84, 190, 112, 0.18) !important;
+}
+
+.update-page .update-progress-track {
+  border-color: rgba(112, 190, 255, 0.20);
+  box-shadow:
+    inset 0 0 0 1px rgba(201, 235, 255, 0.055),
+    0 0 14px rgba(82, 170, 255, 0.060);
+}
+
+.settings-page .update-progress-track > span,
+.update-page .update-progress-track span {
+  background:
+    linear-gradient(90deg, rgba(125, 236, 162, 0.88), rgba(241, 185, 106, 0.92), rgba(112, 190, 255, 0.82));
+  box-shadow:
+    0 0 14px rgba(125, 236, 162, 0.16),
+    0 0 18px rgba(241, 185, 106, 0.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .companion-page .companion-card > .companion-tab-row .button-primary::after {
+    animation: none !important;
+  }
+}

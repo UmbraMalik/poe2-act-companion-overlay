@@ -173,6 +173,24 @@ test('real-time priority remains opt-in and is controlled from settings', () => 
   assert.match(performance, /process\.platform !== 'win32'/);
 });
 
+test('overlay visual effects can be disabled independently from global FX intensity', () => {
+  const overlay = readText('src/renderer/pages/OverlayPage.tsx');
+  const settingsPage = readText('src/renderer/pages/SettingsPage.tsx');
+  const defaults = readText('src/shared/defaults.ts');
+  const configStore = readText('src/main/services/config-store.ts');
+  const translations = readText('src/i18n/translations.ts');
+
+  assert.match(defaults, /overlayEffectsEnabled:\s*true/);
+  assert.match(configStore, /safeBoolean\(rawConfig\.overlayEffectsEnabled/);
+  assert.match(configStore, /patch\.overlayEffectsEnabled/);
+  assert.match(settingsPage, /checked=\{config\.overlayEffectsEnabled\}/);
+  assert.match(settingsPage, /overlayEffectsEnabled:\s*event\.target\.checked/);
+  assert.match(overlay, /config\.overlayEffectsEnabled\s*\?\s*`fx-\$\{config\.visualFxIntensity\}`\s*:\s*'fx-off'/);
+  assert.match(overlay, /!\s*config\.overlayEffectsEnabled/);
+  assert.match(translations, /Эффекты оверлея/);
+  assert.match(translations, /Overlay effects/);
+});
+
 test('no forbidden performance hacks are reintroduced', () => {
   const source = [
     readMainProcessSource(),

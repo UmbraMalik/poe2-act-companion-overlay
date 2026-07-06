@@ -11,6 +11,9 @@ test('normalizeAppConfig keeps defaults, custom settings and strips legacy unkno
     overlayOpacity: 0.5,
     overlayScale: 120,
     overlayDensity: 'compact',
+    visualFxIntensity: 'rich',
+    overlayEffectsEnabled: false,
+    overlayDebugLayoutEnabled: true,
     overlayMovementLocked: true,
     realtimePriorityEnabled: true,
     hotkeys: {
@@ -23,6 +26,9 @@ test('normalizeAppConfig keeps defaults, custom settings and strips legacy unkno
   assert.equal(normalized.overlayOpacity, 0.5);
   assert.equal(normalized.overlayScale, 120);
   assert.equal(normalized.overlayDensity, 'compact');
+  assert.equal(normalized.visualFxIntensity, 'rich');
+  assert.equal(normalized.overlayEffectsEnabled, false);
+  assert.equal(normalized.overlayDebugLayoutEnabled, true);
   assert.equal(normalized.overlayMovementLocked, true);
   assert.equal(normalized.realtimePriorityEnabled, true);
   assert.equal(normalized.hotkeys.openCompanion, 'Ctrl+F9');
@@ -36,6 +42,9 @@ test('normalizeAppConfig hardens corrupted user config values', () => {
     currentLevel: -42,
     overlayScale: 999,
     overlayDensity: 'gigantic',
+    visualFxIntensity: 'casino',
+    overlayEffectsEnabled: 'no',
+    overlayDebugLayoutEnabled: 'yes',
     overlayOpacity: 5,
     realtimePriorityEnabled: 'yes',
     overlayBounds: {
@@ -102,6 +111,9 @@ test('normalizeAppConfig hardens corrupted user config values', () => {
   assert.equal(normalized.currentLevel, DEFAULT_CONFIG.currentLevel);
   assert.equal(normalized.overlayScale, 120);
   assert.equal(normalized.overlayDensity, DEFAULT_CONFIG.overlayDensity);
+  assert.equal(normalized.visualFxIntensity, DEFAULT_CONFIG.visualFxIntensity);
+  assert.equal(normalized.overlayEffectsEnabled, DEFAULT_CONFIG.overlayEffectsEnabled);
+  assert.equal(normalized.overlayDebugLayoutEnabled, DEFAULT_CONFIG.overlayDebugLayoutEnabled);
   assert.equal(normalized.overlayOpacity, 1);
   assert.equal(normalized.realtimePriorityEnabled, DEFAULT_CONFIG.realtimePriorityEnabled);
   assert.deepEqual(normalized.overlayBounds, {
@@ -168,6 +180,7 @@ test('ConfigStore persists log path and merges settings safely', () => {
     overlayOpacity: 0.77,
     overlayScale: 110,
     overlayMovementLocked: true,
+    overlayEffectsEnabled: false,
     realtimePriorityEnabled: true,
     hotkeys: {
       openCompanion: 'Ctrl+F9'
@@ -180,6 +193,7 @@ test('ConfigStore persists log path and merges settings safely', () => {
   assert.equal(reloaded.overlayOpacity, 0.77);
   assert.equal(reloaded.overlayScale, 110);
   assert.equal(reloaded.overlayMovementLocked, true);
+  assert.equal(reloaded.overlayEffectsEnabled, false);
   assert.equal(reloaded.realtimePriorityEnabled, true);
   assert.equal(reloaded.hotkeys.openCompanion, 'Ctrl+F9');
   assert.equal(reloaded.hotkeys.toggleOverlayMode, DEFAULT_HOTKEYS.toggleOverlayMode);
@@ -189,6 +203,7 @@ test('settings page keeps hotkey settings but no longer embeds reload-guide or s
   const settingsPage = readText('src/renderer/pages/SettingsPage.tsx');
 
   assert.match(settingsPage, /toggleOverlayMode/);
+  assert.match(settingsPage, /overlayEffectsEnabled/);
   assert.match(settingsPage, /realtimePriorityEnabled/);
   assert.match(settingsPage, /openCompanion/);
   assert.doesNotMatch(settingsPage, /Открепить|Закрепить/);

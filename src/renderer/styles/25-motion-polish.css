@@ -1,0 +1,365 @@
+/* System motion layer: small state changes without disturbing overlay sizing. */
+:root {
+  --motion-fast: 120ms;
+  --motion-medium: 180ms;
+  --motion-slow: 240ms;
+  --motion-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --motion-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes poe2-panel-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+    filter: saturate(0.96) brightness(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: saturate(1) brightness(1);
+  }
+}
+
+@keyframes poe2-tab-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes poe2-modal-backdrop-enter {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes poe2-modal-card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes poe2-compact-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.985);
+    filter: saturate(0.96) brightness(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: saturate(1) brightness(1);
+  }
+}
+
+@keyframes poe2-timer-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.985);
+    filter: saturate(0.96) brightness(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: saturate(1) brightness(1);
+  }
+}
+
+.settings-page .button-primary,
+.settings-page .button-secondary,
+.settings-page .button-danger,
+.settings-page .button-danger-soft,
+.settings-page .ghost-button,
+.update-page .button-primary,
+.update-page .button-secondary,
+.update-page .button-danger,
+.close-confirm-page .button-primary,
+.close-confirm-page .button-secondary,
+.report-page .button-primary,
+.report-page .button-secondary,
+.companion-page .button-primary,
+.companion-page .button-secondary,
+.companion-page .button-danger,
+.overlay-page .overlay-icon-button,
+.overlay-page .overlay-timer-control,
+.overlay-page .timer-only-collapse-button,
+.overlay-page .timer-only-expand-button,
+.overlay-page .compact-mode-button {
+  transition:
+    border-color var(--motion-fast) var(--motion-ease-standard),
+    background var(--motion-fast) var(--motion-ease-standard),
+    color var(--motion-fast) var(--motion-ease-standard),
+    box-shadow var(--motion-fast) var(--motion-ease-standard),
+    filter var(--motion-fast) var(--motion-ease-standard),
+    opacity var(--motion-fast) var(--motion-ease-standard),
+    transform var(--motion-fast) var(--motion-ease-standard);
+}
+
+.settings-page .button-primary:hover:not(:disabled),
+.settings-page .button-secondary:hover:not(:disabled),
+.settings-page .button-danger:hover:not(:disabled),
+.settings-page .button-danger-soft:hover:not(:disabled),
+.settings-page .ghost-button:hover:not(:disabled),
+.update-page .button-primary:hover:not(:disabled),
+.update-page .button-secondary:hover:not(:disabled),
+.update-page .button-danger:hover:not(:disabled),
+.close-confirm-page .button-primary:hover:not(:disabled),
+.close-confirm-page .button-secondary:hover:not(:disabled),
+.report-page .button-primary:hover:not(:disabled),
+.report-page .button-secondary:hover:not(:disabled),
+.companion-page .button-primary:hover:not(:disabled),
+.companion-page .button-secondary:hover:not(:disabled),
+.companion-page .button-danger:hover:not(:disabled) {
+  transform: translateY(-1px);
+  filter: saturate(1.08) brightness(1.05);
+  box-shadow:
+    0 10px 22px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+.settings-page .button-primary:active:not(:disabled),
+.settings-page .button-secondary:active:not(:disabled),
+.settings-page .button-danger:active:not(:disabled),
+.settings-page .button-danger-soft:active:not(:disabled),
+.settings-page .ghost-button:active:not(:disabled),
+.update-page .button-primary:active:not(:disabled),
+.update-page .button-secondary:active:not(:disabled),
+.update-page .button-danger:active:not(:disabled),
+.close-confirm-page .button-primary:active:not(:disabled),
+.close-confirm-page .button-secondary:active:not(:disabled),
+.report-page .button-primary:active:not(:disabled),
+.report-page .button-secondary:active:not(:disabled),
+.companion-page .button-primary:active:not(:disabled),
+.companion-page .button-secondary:active:not(:disabled),
+.companion-page .button-danger:active:not(:disabled) {
+  transform: translateY(0) scale(0.985);
+  filter: saturate(1.02) brightness(0.98);
+  transition-duration: 90ms;
+}
+
+.overlay-page .overlay-icon-button:active:not(:disabled),
+.overlay-page .overlay-timer-control:active:not(:disabled),
+.overlay-page .timer-only-collapse-button:active:not(:disabled),
+.overlay-page .timer-only-expand-button:active:not(:disabled),
+.overlay-page .compact-mode-button:active:not(:disabled) {
+  transform: translateY(0) scale(0.985) !important;
+  filter: saturate(1.02) brightness(0.98) !important;
+  transition-duration: 90ms !important;
+}
+
+.settings-page .settings-card,
+.settings-page .support-card,
+.report-page .report-card,
+.close-confirm-page .close-confirm-shell,
+.update-page .update-shell {
+  animation: poe2-panel-enter var(--motion-medium) var(--motion-ease-out) both;
+}
+
+.settings-page .settings-card:nth-of-type(2) { animation-delay: 24ms; }
+.settings-page .settings-card:nth-of-type(3) { animation-delay: 48ms; }
+.settings-page .settings-card:nth-of-type(4) { animation-delay: 72ms; }
+
+.companion-page .companion-card {
+  animation: poe2-panel-enter var(--motion-medium) var(--motion-ease-out) both;
+}
+
+.companion-page .companion-card > .companion-tab-row .button-primary {
+  transform: translateY(-1px);
+  filter: saturate(1.08) brightness(1.05);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 232, 176, 0.14),
+    0 8px 18px rgba(241, 185, 106, 0.11);
+}
+
+.companion-page .companion-tab-body {
+  animation: poe2-tab-enter var(--motion-medium) var(--motion-ease-out) both;
+  will-change: opacity, transform;
+}
+
+.companion-page .companion-tab-body .companion-block,
+.companion-page .companion-tab-body .zone-task-card,
+.companion-page .companion-tab-body .route-overview-card,
+.companion-page .companion-tab-body .reminder-card,
+.companion-page .companion-tab-body .bonus-act-card,
+.companion-page .companion-tab-body .summary-result-panel {
+  transition:
+    border-color var(--motion-medium) var(--motion-ease-standard),
+    background var(--motion-medium) var(--motion-ease-standard),
+    box-shadow var(--motion-medium) var(--motion-ease-standard),
+    filter var(--motion-medium) var(--motion-ease-standard),
+    transform var(--motion-medium) var(--motion-ease-standard);
+}
+
+.companion-page .companion-tab-body .companion-block:hover,
+.companion-page .companion-tab-body .zone-task-card:hover,
+.companion-page .companion-tab-body .route-overview-card:hover,
+.companion-page .companion-tab-body .reminder-card:hover,
+.companion-page .companion-tab-body .bonus-act-card:hover {
+  transform: translateY(-1px);
+  filter: saturate(1.03) brightness(1.025);
+}
+
+.companion-modal-backdrop,
+.overlay-confirm-backdrop {
+  animation: poe2-modal-backdrop-enter var(--motion-medium) var(--motion-ease-standard) both;
+}
+
+.companion-modal-card,
+.overlay-confirm-card {
+  animation: poe2-modal-card-enter var(--motion-medium) var(--motion-ease-out) both;
+  transform-origin: center;
+}
+
+.overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-main-compact {
+  animation: poe2-panel-enter var(--motion-medium) var(--motion-ease-out) both;
+}
+
+.overlay-page.is-overlay-collapsed .overlay-collapsed-shell {
+  animation: poe2-compact-enter var(--motion-medium) var(--motion-ease-out) both;
+  transform-origin: top center;
+}
+
+.overlay-page.overlay-page-timer-only .overlay-timer-only-card {
+  animation: poe2-timer-enter var(--motion-medium) var(--motion-ease-out) both;
+  transform-origin: center top;
+}
+
+.overlay-page .timer-only-main-panel,
+.overlay-page .timer-only-time,
+.overlay-page .hud-meta,
+.overlay-page .timer-only-meta,
+.overlay-page .hud-banner,
+.overlay-page .hud-block {
+  transition:
+    border-color var(--motion-medium) var(--motion-ease-standard),
+    background var(--motion-medium) var(--motion-ease-standard),
+    box-shadow var(--motion-medium) var(--motion-ease-standard),
+    color var(--motion-medium) var(--motion-ease-standard),
+    filter var(--motion-medium) var(--motion-ease-standard);
+}
+
+.overlay-page .timer-only-status.status-paused,
+.overlay-page .timer-only-status.status-finished {
+  filter: saturate(1.10) brightness(1.05);
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-meta.level-low,
+.overlay-page-timer-only .timer-only-meta.level-low {
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 129, 112, 0.18),
+    0 0 16px rgba(255, 86, 70, 0.14);
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-meta.level-farm,
+.overlay-page-timer-only .timer-only-meta.level-farm {
+  box-shadow:
+    inset 0 0 0 1px rgba(241, 185, 106, 0.16),
+    0 0 14px rgba(241, 185, 106, 0.12);
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-meta.level-ok,
+.overlay-page-timer-only .timer-only-meta.level-ok {
+  box-shadow:
+    inset 0 0 0 1px rgba(125, 236, 162, 0.13),
+    0 0 12px rgba(84, 190, 112, 0.10);
+}
+
+.settings-page .toggle-card,
+.settings-page .select-field,
+.settings-page .settings-field,
+.settings-page .slider-field,
+.settings-page input,
+.settings-page select,
+.settings-page textarea,
+.report-page textarea {
+  transition:
+    border-color var(--motion-fast) var(--motion-ease-standard),
+    background var(--motion-fast) var(--motion-ease-standard),
+    box-shadow var(--motion-fast) var(--motion-ease-standard),
+    filter var(--motion-fast) var(--motion-ease-standard),
+    transform var(--motion-fast) var(--motion-ease-standard);
+}
+
+.settings-page .toggle-card:hover,
+.settings-page .select-field:hover,
+.settings-page .settings-field:hover,
+.settings-page .slider-field:hover {
+  filter: brightness(1.025);
+}
+
+.settings-page .toggle-card:has(input:checked) {
+  border-color: rgba(125, 236, 162, 0.22);
+  background:
+    radial-gradient(circle at 0 0, rgba(125, 236, 162, 0.09), transparent 46%),
+    rgba(0, 0, 0, 0.16);
+  box-shadow: inset 0 0 0 1px rgba(125, 236, 162, 0.05);
+}
+
+.report-page .report-copy-button.is-copied {
+  border-color: rgba(125, 236, 162, 0.62);
+  background:
+    radial-gradient(circle at 12% 0, rgba(169, 255, 195, 0.26), transparent 54%),
+    linear-gradient(180deg, rgba(55, 151, 89, 0.38), rgba(24, 84, 52, 0.32));
+  color: #effff4;
+  box-shadow:
+    inset 0 0 0 1px rgba(205, 255, 220, 0.14),
+    0 0 18px rgba(84, 190, 112, 0.18);
+}
+
+.update-page .update-status-banner,
+.update-page .update-version-card,
+.update-page .update-meta-item,
+.update-page .update-progress-card,
+.update-page .update-notes-card,
+.update-page .update-inline-message {
+  animation: poe2-tab-enter var(--motion-medium) var(--motion-ease-out) both;
+}
+
+.update-page .update-progress-track span {
+  transition: width var(--motion-slow) var(--motion-ease-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay-page *,
+  .overlay-page *::before,
+  .overlay-page *::after,
+  .companion-page *,
+  .companion-page *::before,
+  .companion-page *::after,
+  .settings-page *,
+  .settings-page *::before,
+  .settings-page *::after,
+  .report-page *,
+  .report-page *::before,
+  .report-page *::after,
+  .close-confirm-page *,
+  .close-confirm-page *::before,
+  .close-confirm-page *::after,
+  .update-page *,
+  .update-page *::before,
+  .update-page *::after {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 1ms !important;
+  }
+}

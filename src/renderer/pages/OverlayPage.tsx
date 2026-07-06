@@ -826,6 +826,16 @@ const LiveTimerMeta = memo(function LiveTimerMeta({
 });
 
 const DEFAULT_OVERLAY_MINIMUM_SIZE = getOverlayMinimumSize('full', 'normal', 90);
+const OVERLAY_MODE_ENTER_MS = 240;
+
+type OverlayVisualMode = 'full' | 'compact' | 'collapsed' | 'timer-only';
+type OverlayModeTransitionPhase = 'enter';
+
+type OverlayModeTransitionState = {
+  from: OverlayVisualMode;
+  to: OverlayVisualMode;
+  phase: OverlayModeTransitionPhase;
+};
 
 function getRendererViewportWidth(): number {
   return Math.round(
@@ -857,12 +867,14 @@ export function OverlayPage() {
     startWindowY: number | null;
     frame: number | null;
   } | null>(null);
+  const overlayModeTransitionTimersRef = useRef<number[]>([]);
   const overlayMovementLockedRef = useRef(false);
   const overlayPageRef = useRef<HTMLElement | null>(null);
   const overlayShellRef = useRef<HTMLElement | null>(null);
   const autoResizeFrameRef = useRef<OverlayRenderTask | null>(null);
   const adaptiveOverlayHeightSuspendedUntilRef = useRef(0);
   const [isOverlayCollapsed, setIsOverlayCollapsed] = useState(false);
+  const [overlayModeTransition, setOverlayModeTransition] = useState<OverlayModeTransitionState | null>(null);
   const [dismissedEndgameNoticeAt, setDismissedEndgameNoticeAt] = useState<string | null>(null);
   const isTimerOnlySnapshot = snapshot?.runtime.overlayMode === 'timer_only';
   const autoResizeMinimumHeight = snapshot
@@ -906,6 +918,15 @@ export function OverlayPage() {
     );
     void window.poe2Overlay?.setOverlayAutoResizeSuspended(false);
   }, []);
+
+  const clearOverlayModeTransitionTimers = useCallback(() => {
+    overlayModeTransitionTimersRef.current.forEach((timer) => window.clearTimeout(timer));
+    overlayModeTransitionTimersRef.current = [];
+  }, []);
+
+  useEffect(() => () => {
+    clearOverlayModeTransitionTimers();
+  }, [clearOverlayModeTransitionTimers]);
 
   const scheduleAdaptiveOverlayHeight = useCallback((options?: {
     allowDuringManualResize?: boolean;
@@ -1203,23 +1224,6 @@ export function OverlayPage() {
       });
   }, [releaseAdaptiveOverlayHeightSuspension, suspendAdaptiveOverlayHeight]);
 
-  const toggleTimerOnlyMode = useCallback(() => {
-    // Mode switching is handled atomically in the main process: it persists the
-    // current mode bounds, restores the target mode bounds, and broadcasts one
-    // final snapshot. Avoid an extra pre-switch auto-height IPC here, because it
-    // can save stale timer-only/full heights and briefly render the old layout in
-    // the new window size.
-    void window.poe2Overlay?.toggleOverlayMode().then(() => {
-      const forceResize = () => {
-        scheduleAdaptiveOverlayHeight({ force: true, allowBelowMinimum: false });
-      };
-
-      window.requestAnimationFrame(forceResize);
-      window.setTimeout(forceResize, 90);
-      window.setTimeout(forceResize, 240);
-    });
-  }, [scheduleAdaptiveOverlayHeight]);
-
   useDocumentTitle(t('titles.overlay'));
 
   if (!snapshot) {
@@ -1274,6 +1278,19 @@ export function OverlayPage() {
       : t('overlay.currentZoneFallback');
   const isTimerOnlyMode = runtime.overlayMode === 'timer_only';
   const isCompactOverlay = config.overlayDensity === 'compact';
+  const overlayFxClass = config.overlayEffectsEnabled ? `fx-${config.visualFxIntensity}` : 'fx-off';
+  const overlayDebugClass = import.meta.env.DEV && config.overlayDebugLayoutEnabled ? ' debug-layout' : '';
+  const overlayLockClass = config.overlayMovementLocked ? ' is-overlay-locked' : '';
+  const overlayVisualMode: OverlayVisualMode = isTimerOnlyMode
+    ? 'timer-only'
+    : isOverlayCollapsed
+      ? 'collapsed'
+      : isCompactOverlay
+        ? 'compact'
+        : 'full';
+  const overlayModeTransitionClass = overlayModeTransition
+    ? ` is-overlay-mode-transitioning is-overlay-mode-${overlayModeTransition.phase} is-overlay-mode-${overlayModeTransition.phase}-from-${overlayModeTransition.from} is-overlay-mode-${overlayModeTransition.phase}-to-${overlayModeTransition.to}`
+    : '';
   const visibleChecklist = isCompactOverlay ? guideChecklist.slice(0, 3) : guideChecklist;
   const hiddenChecklistCount = Math.max(0, guideChecklist.length - visibleChecklist.length);
   const hasLogConnection = runtime.logWatcherStatus === 'ready' || Boolean(runtime.watchedLogPath);
@@ -1300,6 +1317,75 @@ export function OverlayPage() {
     config.overlayDensity,
     config.overlayScale
   );
+
+  const scheduleOverlayModeSettledResize = (allowBelowMinimum = false) => {
+    const forceResize = () => {
+      scheduleAdaptiveOverlayHeight({ force: true, allowBelowMinimum });
+    };
+
+    forceResize();
+    window.requestAnimationFrame(forceResize);
+    window.setTimeout(forceResize, 90);
+    window.setTimeout(forceResize, 240);
+  };
+
+  const runOverlayModeTransition = (
+    nextMode: OverlayVisualMode,
+    commit: () => Promise<unknown> | unknown,
+    options?: { allowBelowMinimum?: boolean }
+  ) => {
+    const allowBelowMinimum = Boolean(options?.allowBelowMinimum);
+    const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+    const shouldSkipMotion = prefersReducedMotion || !config.overlayEffectsEnabled || config.visualFxIntensity === 'off';
+
+    clearOverlayModeTransitionTimers();
+
+    if (shouldSkipMotion) {
+      void Promise.resolve(commit()).finally(() => {
+        setOverlayModeTransition(null);
+        scheduleOverlayModeSettledResize(allowBelowMinimum);
+      });
+      return;
+    }
+
+    setOverlayModeTransition({
+      from: overlayVisualMode,
+      to: nextMode,
+      phase: 'enter'
+    });
+    suspendAdaptiveOverlayHeight(480);
+
+    const commitTimer = window.setTimeout(() => {
+      void Promise.resolve(commit())
+        .then(() => {
+          scheduleOverlayModeSettledResize(allowBelowMinimum);
+
+          const finishTimer = window.setTimeout(() => {
+            setOverlayModeTransition(null);
+            releaseAdaptiveOverlayHeightSuspension(180);
+            scheduleOverlayModeSettledResize(allowBelowMinimum);
+          }, OVERLAY_MODE_ENTER_MS);
+
+          overlayModeTransitionTimersRef.current.push(finishTimer);
+        })
+        .catch(() => {
+          setOverlayModeTransition(null);
+          releaseAdaptiveOverlayHeightSuspension(180);
+          scheduleOverlayModeSettledResize(allowBelowMinimum);
+        });
+    }, 16);
+
+    overlayModeTransitionTimersRef.current.push(commitTimer);
+  };
+
+  const toggleTimerOnlyMode = () => {
+    // Mode switching stays atomic in the main process. The renderer only arms
+    // the enter class before the snapshot changes so the new HUD does not flash.
+    runOverlayModeTransition(
+      isTimerOnlyMode ? 'full' : 'timer-only',
+      () => window.poe2Overlay?.toggleOverlayMode()
+    );
+  };
 
   const beginResize = (event: ReactPointerEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -1386,27 +1472,21 @@ export function OverlayPage() {
 
     void window.poe2Overlay?.startRunTimer();
   };
-  const handleCompactOverlayToggle = async () => {
+  const handleCompactOverlayToggle = () => {
     const api = window.poe2Overlay;
     if (!api) {
       return;
     }
 
-    await api.updateSettings({
-      overlayDensity: isCompactOverlay ? 'normal' : 'compact'
-    });
-
-    const forceResize = () => {
-      scheduleAdaptiveOverlayHeight({ force: true, allowBelowMinimum: false });
-    };
-
-    forceResize();
-    window.requestAnimationFrame(forceResize);
-    window.setTimeout(forceResize, 80);
-    window.setTimeout(forceResize, 220);
+    runOverlayModeTransition(
+      isCompactOverlay ? 'full' : 'compact',
+      () => api.updateSettings({
+        overlayDensity: isCompactOverlay ? 'normal' : 'compact'
+      })
+    );
   };
 
-  const handleTimerOnlyExpand = async () => {
+  const handleTimerOnlyExpand = () => {
     const api = window.poe2Overlay;
     if (!api) {
       return;
@@ -1415,20 +1495,16 @@ export function OverlayPage() {
     // Use the same single-path transition as the hotkey/footer toggle. The main
     // process also restores normal density when leaving timer-only mode, so this
     // avoids the old three-step sequence: resize -> density update -> mode update.
-    await api.toggleOverlayMode();
-
-    const forceResize = () => {
-      scheduleAdaptiveOverlayHeight({ force: true, allowBelowMinimum: false });
-    };
-
-    window.requestAnimationFrame(forceResize);
-    window.setTimeout(forceResize, 90);
-    window.setTimeout(forceResize, 240);
+    runOverlayModeTransition('full', () => api.toggleOverlayMode());
   };
 
   const handleOverlayCollapsedToggle = (event: ReactMouseEvent<HTMLButtonElement>) => {
     stopOverlayControlPropagation(event);
-    setIsOverlayCollapsed((value) => !value);
+    runOverlayModeTransition(
+      isOverlayCollapsed ? (isCompactOverlay ? 'compact' : 'full') : 'collapsed',
+      () => setIsOverlayCollapsed((value) => !value),
+      { allowBelowMinimum: !isOverlayCollapsed }
+    );
   };
 
   const handleLanguageChange = (nextLanguage: AppLanguage) => {
@@ -1659,7 +1735,7 @@ export function OverlayPage() {
     return (
       <main
         ref={overlayPageRef}
-        className={`overlay-page overlay-page-timer-only density-${config.overlayDensity} scale-${config.overlayScale} text-size-${config.overlayTextSize}`}
+        className={`overlay-page overlay-page-timer-only density-${config.overlayDensity} scale-${config.overlayScale} text-size-${config.overlayTextSize} ${overlayFxClass}${overlayDebugClass}${overlayLockClass}${overlayModeTransitionClass}`}
         onPointerDownCapture={beginOverlayDrag}
       >
         <section ref={overlayShellRef} className="overlay-shell overlay-hud overlay-timer-only-card">
@@ -1734,7 +1810,7 @@ export function OverlayPage() {
     return (
       <main
         ref={overlayPageRef}
-        className={`overlay-page is-overlay-collapsed density-${config.overlayDensity} scale-${config.overlayScale} text-size-${config.overlayTextSize}`}
+        className={`overlay-page is-overlay-collapsed density-${config.overlayDensity} scale-${config.overlayScale} text-size-${config.overlayTextSize} ${overlayFxClass}${overlayDebugClass}${overlayLockClass}${overlayModeTransitionClass}`}
         onPointerDownCapture={beginOverlayDrag}
       >
         <section ref={overlayShellRef} className="overlay-shell overlay-hud overlay-main-compact overlay-collapsed-shell">
@@ -1755,7 +1831,7 @@ export function OverlayPage() {
   return (
     <main
       ref={overlayPageRef}
-      className={`overlay-page density-${config.overlayDensity} scale-${config.overlayScale} text-size-${config.overlayTextSize}`}
+      className={`overlay-page density-${config.overlayDensity} scale-${config.overlayScale} text-size-${config.overlayTextSize} ${overlayFxClass}${overlayDebugClass}${overlayLockClass}${overlayModeTransitionClass}`}
       onPointerDownCapture={beginOverlayDrag}
     >
       <section ref={overlayShellRef} className="overlay-shell overlay-hud overlay-main-compact">

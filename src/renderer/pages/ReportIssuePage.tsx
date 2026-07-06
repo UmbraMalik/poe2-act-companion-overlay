@@ -78,7 +78,7 @@ export function ReportIssuePage() {
   };
 
   return (
-    <main className="settings-page report-page">
+    <main className={`settings-page report-page fx-${snapshot?.config.visualFxIntensity ?? 'normal'}`}>
       <section className="settings-shell report-shell">
         <header className="settings-header window-drag-strip">
           <div className="settings-header-copy">
@@ -122,7 +122,11 @@ export function ReportIssuePage() {
           />
 
           <div className="report-actions no-drag">
-            <button className="button-primary" type="button" onClick={() => void handleCopy()}>
+            <button
+              className={`button-primary report-copy-button${copied ? ' is-copied' : ''}`}
+              type="button"
+              onClick={() => void handleCopy()}
+            >
               {copied ? t('report.copied') : t('report.copy')}
             </button>
             <button className="button-secondary" type="button" onClick={() => void openTelegram()}>

@@ -1,0 +1,682 @@
+/* Animated ambient FX: living glow only on key HUD focus points. */
+@property --poe2-ambient-edge-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes poe2-ambient-shell-glow {
+  0%,
+  100% {
+    filter: saturate(1.04) brightness(1.02);
+    box-shadow:
+      var(--fx-panel-edge),
+      0 0 0 1px rgba(112, 190, 255, 0.070),
+      0 0 24px rgba(112, 190, 255, 0.060),
+      0 0 34px rgba(241, 185, 106, 0.115);
+  }
+
+  50% {
+    filter: saturate(1.14) brightness(1.065);
+    box-shadow:
+      var(--fx-panel-edge),
+      0 0 0 1px rgba(112, 190, 255, 0.135),
+      0 0 34px rgba(112, 190, 255, 0.100),
+      0 0 54px rgba(241, 185, 106, 0.220);
+  }
+}
+
+@keyframes poe2-ambient-edge-orbit {
+  to {
+    --poe2-ambient-edge-angle: 360deg;
+  }
+}
+
+@keyframes poe2-ambient-edge-breathe {
+  0% {
+    opacity: 0.52;
+    filter:
+      drop-shadow(0 0 8px rgba(241, 185, 106, 0.22))
+      drop-shadow(0 0 14px rgba(112, 190, 255, 0.10));
+  }
+
+  50% {
+    opacity: 0.88;
+    filter:
+      drop-shadow(0 0 13px rgba(241, 185, 106, 0.38))
+      drop-shadow(0 0 22px rgba(112, 190, 255, 0.20));
+  }
+
+  100% {
+    opacity: 0.52;
+    filter:
+      drop-shadow(0 0 8px rgba(241, 185, 106, 0.22))
+      drop-shadow(0 0 14px rgba(112, 190, 255, 0.10));
+  }
+}
+
+@keyframes poe2-ambient-timer-aura {
+  0%,
+  100% {
+    filter: saturate(1.03) brightness(1.015);
+    text-shadow:
+      0 1px 0 rgba(0, 0, 0, 0.72),
+      0 0 18px rgba(255, 214, 136, 0.34),
+      0 0 34px rgba(241, 185, 106, 0.16),
+      0 0 52px rgba(112, 190, 255, 0.055);
+  }
+
+  50% {
+    filter: saturate(1.13) brightness(1.075);
+    text-shadow:
+      0 1px 0 rgba(0, 0, 0, 0.72),
+      0 0 24px rgba(255, 214, 136, 0.52),
+      0 0 46px rgba(241, 185, 106, 0.25),
+      0 0 68px rgba(112, 190, 255, 0.085);
+  }
+}
+
+@keyframes poe2-ambient-tab-shimmer {
+  0% {
+    opacity: 0;
+    transform: translateX(-115%) skewX(-18deg);
+  }
+
+  24%,
+  66% {
+    opacity: 0.58;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(115%) skewX(-18deg);
+  }
+}
+
+@keyframes poe2-ambient-current-zone {
+  0%,
+  100% {
+    filter: saturate(1.025) brightness(1.012);
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 232, 176, 0.14),
+      inset 0 0 26px rgba(241, 185, 106, 0.095),
+      0 0 24px rgba(241, 185, 106, 0.145);
+  }
+
+  50% {
+    filter: saturate(1.10) brightness(1.055);
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 232, 176, 0.22),
+      inset 0 0 34px rgba(241, 185, 106, 0.145),
+      0 0 36px rgba(241, 185, 106, 0.240);
+  }
+}
+
+@keyframes poe2-ambient-progress-energy {
+  from {
+    background-position: 0% 50%;
+  }
+
+  to {
+    background-position: 200% 50%;
+  }
+}
+
+@keyframes poe2-ambient-zone-title-glow {
+  0%,
+  100% {
+    filter: saturate(1.04) brightness(1.02);
+    text-shadow:
+      0 1px 0 rgba(0, 0, 0, 0.76),
+      0 0 14px rgba(255, 221, 154, 0.30),
+      0 0 30px rgba(241, 185, 106, 0.16);
+  }
+
+  50% {
+    filter: saturate(1.16) brightness(1.08);
+    text-shadow:
+      0 1px 0 rgba(0, 0, 0, 0.76),
+      0 0 22px rgba(255, 227, 166, 0.58),
+      0 0 44px rgba(241, 185, 106, 0.30),
+      0 0 62px rgba(112, 190, 255, 0.10);
+  }
+}
+
+@keyframes poe2-ambient-route-active-glow {
+  0%,
+  100% {
+    filter: saturate(1.03) brightness(1.01);
+  }
+
+  50% {
+    filter: saturate(1.13) brightness(1.055);
+  }
+}
+
+@keyframes poe2-ambient-route-halo {
+  0%,
+  100% {
+    opacity: 0.42;
+    box-shadow:
+      inset 0 0 28px rgba(241, 185, 106, 0.08),
+      0 0 18px rgba(241, 185, 106, 0.12);
+  }
+
+  50% {
+    opacity: 0.76;
+    box-shadow:
+      inset 0 0 42px rgba(241, 185, 106, 0.16),
+      0 0 30px rgba(241, 185, 106, 0.24);
+  }
+}
+
+@keyframes poe2-ambient-reminder-next-glow {
+  0%,
+  100% {
+    filter: saturate(1.02) brightness(1.01);
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 232, 176, 0.12),
+      inset 0 0 18px rgba(241, 185, 106, 0.08),
+      0 0 18px rgba(241, 185, 106, 0.12);
+  }
+
+  50% {
+    filter: saturate(1.12) brightness(1.055);
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 232, 176, 0.24),
+      inset 0 0 28px rgba(241, 185, 106, 0.16),
+      0 0 30px rgba(241, 185, 106, 0.24);
+  }
+}
+
+@keyframes poe2-ambient-bonus-done-glow {
+  0%,
+  100% {
+    filter: saturate(1.02) brightness(1.01);
+    box-shadow:
+      inset 0 0 0 1px rgba(122, 214, 144, 0.22),
+      inset 0 0 22px rgba(84, 190, 112, 0.065),
+      0 0 18px rgba(84, 190, 112, 0.12);
+  }
+
+  50% {
+    filter: saturate(1.12) brightness(1.04);
+    box-shadow:
+      inset 0 0 0 1px rgba(139, 236, 162, 0.36),
+      inset 0 0 30px rgba(84, 190, 112, 0.115),
+      0 0 28px rgba(84, 190, 112, 0.22);
+  }
+}
+
+@keyframes poe2-ambient-bonus-pending-glow {
+  0%,
+  100% {
+    filter: saturate(1.01) brightness(1.005);
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 116, 96, 0.16),
+      inset 0 0 18px rgba(226, 97, 97, 0.050),
+      0 0 16px rgba(226, 97, 97, 0.080);
+  }
+
+  50% {
+    filter: saturate(1.08) brightness(1.035);
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 132, 112, 0.28),
+      inset 0 0 26px rgba(226, 97, 97, 0.095),
+      0 0 24px rgba(226, 97, 97, 0.16);
+  }
+}
+
+@keyframes poe2-ambient-soft-red-text {
+  0%,
+  100% {
+    text-shadow:
+      0 1px 0 rgba(0, 0, 0, 0.70),
+      0 0 10px rgba(255, 130, 112, 0.16);
+  }
+
+  50% {
+    text-shadow:
+      0 1px 0 rgba(0, 0, 0, 0.70),
+      0 0 16px rgba(255, 130, 112, 0.30),
+      0 0 28px rgba(226, 97, 97, 0.12);
+  }
+}
+
+@keyframes poe2-ambient-soft-green-text {
+  0%,
+  100% {
+    text-shadow:
+      0 1px 0 rgba(0, 0, 0, 0.70),
+      0 0 10px rgba(122, 214, 144, 0.18);
+  }
+
+  50% {
+    text-shadow:
+      0 1px 0 rgba(0, 0, 0, 0.70),
+      0 0 16px rgba(122, 214, 144, 0.34),
+      0 0 28px rgba(84, 190, 112, 0.14);
+  }
+}
+
+@keyframes poe2-ambient-route-focus-flash {
+  0% {
+    filter: saturate(1.28) brightness(1.14);
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 235, 184, 0.48),
+      inset 0 0 42px rgba(241, 185, 106, 0.28),
+      0 0 0 1px rgba(255, 232, 176, 0.36),
+      0 0 44px rgba(241, 185, 106, 0.42);
+  }
+
+  72% {
+    filter: saturate(1.12) brightness(1.06);
+  }
+
+  100% {
+    filter: saturate(1) brightness(1);
+  }
+}
+
+@keyframes poe2-ambient-next-route-pulse {
+  0%,
+  100% {
+    box-shadow:
+      inset 0 0 0 1px rgba(112, 190, 255, 0.12),
+      inset 0 0 18px rgba(82, 170, 255, 0.055),
+      0 0 16px rgba(82, 170, 255, 0.08);
+  }
+
+  50% {
+    box-shadow:
+      inset 0 0 0 1px rgba(112, 190, 255, 0.24),
+      inset 0 0 28px rgba(82, 170, 255, 0.10),
+      0 0 26px rgba(82, 170, 255, 0.16);
+  }
+}
+
+@keyframes poe2-ambient-priority-breathe {
+  0%,
+  100% {
+    filter: saturate(1.02) brightness(1.01);
+  }
+
+  50% {
+    filter: saturate(1.10) brightness(1.045);
+  }
+}
+
+.overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-shell {
+  position: relative;
+  overflow: hidden;
+  animation:
+    poe2-panel-enter var(--motion-medium, 180ms) var(--motion-ease-out, ease-out) both,
+    poe2-ambient-shell-glow 7.5s ease-in-out 220ms infinite;
+}
+
+.overlay-page.overlay-page-timer-only .overlay-timer-only-card {
+  position: relative;
+  overflow: hidden;
+  animation:
+    poe2-timer-enter var(--motion-medium, 180ms) var(--motion-ease-out, ease-out) both,
+    poe2-ambient-shell-glow 7.5s ease-in-out 220ms infinite;
+}
+
+.overlay-page.is-overlay-collapsed .overlay-collapsed-shell {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  animation:
+    poe2-compact-enter var(--motion-medium, 180ms) var(--motion-ease-out, ease-out) both,
+    poe2-ambient-shell-glow 6.8s ease-in-out 220ms infinite;
+}
+
+.overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-shell,
+.overlay-page.overlay-page-timer-only .overlay-timer-only-card {
+  isolation: isolate;
+}
+
+.overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-shell::after,
+.overlay-page.overlay-page-timer-only .overlay-timer-only-card::after,
+.overlay-page.is-overlay-collapsed .overlay-collapsed-shell::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  padding: 2px;
+  border-radius: inherit;
+  pointer-events: none;
+  background: conic-gradient(
+    from var(--poe2-ambient-edge-angle),
+    transparent 0deg 38deg,
+    rgba(112, 190, 255, 0.72) 48deg,
+    rgba(255, 230, 166, 0.96) 58deg,
+    rgba(177, 147, 255, 0.56) 72deg,
+    transparent 92deg 360deg
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation:
+    poe2-ambient-edge-orbit 8.8s linear infinite,
+    poe2-ambient-edge-breathe 5.6s ease-in-out infinite;
+}
+
+.overlay-page .overlay-hud > :not(.resize-grip),
+.overlay-page .overlay-timer-only-card > :not(.resize-grip),
+.overlay-page .overlay-collapsed-shell > :not(.resize-grip) {
+  position: relative;
+  z-index: 1;
+}
+
+.overlay-page .resize-grip {
+  position: fixed !important;
+  top: auto !important;
+  left: auto !important;
+  right: 7px !important;
+  bottom: 7px !important;
+  z-index: 99999 !important;
+  transform: none !important;
+}
+
+.overlay-page .timer-only-main-panel {
+  animation: poe2-ambient-current-zone 6.2s ease-in-out infinite;
+}
+
+.overlay-page .timer-only-time {
+  animation: poe2-ambient-timer-aura 5.6s ease-in-out infinite;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-block:has(.overlay-upcoming-item.is-current-level),
+.overlay-page:not(.overlay-page-timer-only) .hud-block.zone-bonuses-section,
+.overlay-page:not(.overlay-page-timer-only) .hud-block:has(.overlay-no-guide-card),
+.overlay-page:not(.overlay-page-timer-only) .hud-meta.level-low {
+  animation: poe2-ambient-priority-breathe 6.2s ease-in-out infinite;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-block:has(.overlay-upcoming-item.is-current-level) {
+  border-color: rgba(241, 185, 106, 0.42) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 232, 176, 0.11),
+    0 0 24px rgba(241, 185, 106, 0.15) !important;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-block.zone-bonuses-section {
+  border-color: rgba(125, 236, 162, 0.28) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(205, 255, 220, 0.075),
+    0 0 22px rgba(84, 190, 112, 0.11) !important;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-block:has(.overlay-no-guide-card) {
+  border-color: rgba(112, 190, 255, 0.34) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(201, 235, 255, 0.085),
+    0 0 24px rgba(82, 170, 255, 0.12) !important;
+}
+
+.overlay-page .hud-zone-name,
+.overlay-page .hud-collapsed-zone-name,
+.companion-page .zone-hero-copy h3 {
+  animation: poe2-ambient-zone-title-glow 5.8s ease-in-out infinite;
+}
+
+.overlay-page .overlay-upcoming-item:first-child,
+.overlay-page .overlay-upcoming-item.is-current-level,
+.companion-page .reminders-next-card .reminder-item.is-nearest,
+.companion-page .reminders-next-card .reminder-item.is-current,
+.companion-page .vendor-checkpoint.is-current,
+.companion-page .power-spike-timeline-item.is-nearest .power-spike-timeline-card {
+  animation: poe2-ambient-reminder-next-glow 6.4s ease-in-out infinite;
+}
+
+.overlay-page .overlay-upcoming-item:first-child .overlay-upcoming-title,
+.overlay-page .overlay-upcoming-item.is-current-level .overlay-upcoming-title,
+.companion-page .reminders-next-card .reminder-item.is-nearest .reminder-title,
+.companion-page .reminders-next-card .reminder-item.is-current .reminder-title,
+.companion-page .vendor-checkpoint.is-current strong,
+.companion-page .power-spike-timeline-item.is-nearest .power-spike-timeline-card strong {
+  animation: poe2-ambient-zone-title-glow 6.2s ease-in-out infinite;
+}
+
+.companion-page .route-overview-card.status-current {
+  animation:
+    poe2-ambient-current-zone 6.8s ease-in-out infinite,
+    poe2-ambient-route-active-glow 5.9s ease-in-out infinite;
+}
+
+.companion-page .route-overview-card.status-current::after {
+  animation: poe2-ambient-route-halo 5.9s ease-in-out infinite;
+}
+
+.companion-page .route-overview-card.status-current .route-zone-name {
+  animation: poe2-ambient-zone-title-glow 5.7s ease-in-out infinite;
+}
+
+.companion-page .route-overview-list.route-overview-grid::-webkit-scrollbar-thumb {
+  background:
+    linear-gradient(180deg, rgba(255, 219, 148, 0.82), rgba(145, 95, 43, 0.72)) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 238, 190, 0.20),
+    0 0 12px rgba(241, 185, 106, 0.22);
+}
+
+.companion-page .route-overview-list.route-overview-grid::-webkit-scrollbar-track {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.012)),
+    rgba(0, 0, 0, 0.20) !important;
+}
+
+.companion-page .route-overview-card.status-completed,
+.companion-page .route-overview-card.status-visited,
+.companion-page .route-overview-card.status-done {
+  border-color: rgba(122, 214, 144, 0.18) !important;
+  box-shadow:
+    inset 3px 0 0 rgba(84, 190, 112, 0.30),
+    inset 0 0 18px rgba(84, 190, 112, 0.035),
+    0 0 12px rgba(84, 190, 112, 0.045) !important;
+}
+
+.companion-page .route-overview-card.is-route-next {
+  border-color: rgba(112, 190, 255, 0.28) !important;
+  animation: poe2-ambient-next-route-pulse 7.2s ease-in-out infinite;
+}
+
+.companion-page .route-overview-card.is-route-next .route-zone-name {
+  color: #e5f4ff !important;
+  text-shadow: 0 0 14px rgba(112, 190, 255, 0.22);
+}
+
+.companion-page .route-overview-card.is-route-next::before {
+  background: linear-gradient(180deg, rgba(112, 190, 255, 0.72), rgba(82, 170, 255, 0.24));
+  box-shadow: 0 0 16px rgba(82, 170, 255, 0.24);
+}
+
+.companion-page .route-overview-card.status-missed {
+  box-shadow:
+    inset 3px 0 0 rgba(255, 104, 90, 0.42),
+    inset 0 0 22px rgba(226, 97, 97, 0.050),
+    0 0 18px rgba(226, 97, 97, 0.08) !important;
+}
+
+.companion-page .route-overview-card.is-focus-flash {
+  animation: poe2-ambient-route-focus-flash 1.4s var(--motion-ease-out, ease-out) both !important;
+}
+
+.companion-page .route-overview-card.is-focus-flash .route-zone-name {
+  animation: poe2-ambient-zone-title-glow 1.4s ease-in-out both !important;
+}
+
+.overlay-page .timer-only-status.status-paused {
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 239, 192, 0.10),
+    0 0 18px rgba(241, 185, 106, 0.12);
+}
+
+.overlay-page .timer-only-status.status-finished {
+  box-shadow:
+    inset 0 0 0 1px rgba(205, 255, 220, 0.10),
+    0 0 18px rgba(84, 190, 112, 0.13);
+}
+
+.companion-page .companion-card > .companion-tab-row .button-primary {
+  position: relative;
+  overflow: hidden;
+}
+
+.companion-page .companion-card > .companion-tab-row .button-primary::before {
+  content: "";
+  position: absolute;
+  inset: 1px -34%;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 244, 208, 0.34),
+      rgba(112, 190, 255, 0.24),
+      transparent
+    );
+  transform: translateX(-115%) skewX(-18deg);
+  animation: poe2-ambient-tab-shimmer 6.4s ease-in-out infinite;
+}
+
+.companion-page .zone-hero-card {
+  animation: poe2-ambient-current-zone 6.8s ease-in-out infinite;
+}
+
+.companion-page .bonuses-tab-layout .bonus-row.is-done,
+.companion-page .zone-bonus-details-list .bonus-line.is-done {
+  animation: poe2-ambient-bonus-done-glow 7.4s ease-in-out infinite;
+}
+
+.companion-page .bonuses-tab-layout .bonus-row.is-pending,
+.companion-page .zone-bonus-details-list .bonus-line:not(.is-done) {
+  border-color: rgba(255, 116, 96, 0.18);
+  animation: poe2-ambient-bonus-pending-glow 7.8s ease-in-out infinite;
+}
+
+.companion-page .bonuses-tab-layout .bonus-row.is-done .bonus-status-marker,
+.companion-page .bonuses-tab-layout .bonus-row.is-done .bonus-title-line strong,
+.companion-page .zone-bonus-details-list .bonus-line.is-done .bonus-state-marker {
+  animation: poe2-ambient-soft-green-text 7.4s ease-in-out infinite;
+}
+
+.companion-page .bonuses-tab-layout .bonus-row.is-pending .bonus-status-marker,
+.companion-page .bonuses-tab-layout .bonus-row.is-pending .bonus-title-line strong,
+.companion-page .zone-bonus-details-list .bonus-line:not(.is-done) .bonus-state-marker {
+  color: rgba(255, 185, 171, 0.94);
+  animation: poe2-ambient-soft-red-text 7.8s ease-in-out infinite;
+}
+
+.companion-page .timer-cockpit-card {
+  animation: poe2-ambient-current-zone 7.2s ease-in-out infinite;
+}
+
+.companion-page .timer-cockpit-details strong {
+  animation: poe2-ambient-timer-aura 5.8s ease-in-out infinite;
+}
+
+.companion-modal-backdrop,
+.overlay-confirm-backdrop {
+  background:
+    radial-gradient(circle at 50% 42%, rgba(241, 185, 106, 0.20), transparent 34%),
+    radial-gradient(circle at 50% 52%, rgba(82, 170, 255, 0.08), transparent 42%),
+    rgba(3, 6, 10, 0.80) !important;
+}
+
+.companion-modal-card,
+.overlay-confirm-card,
+.close-confirm-page .close-confirm-shell,
+.update-page .update-shell {
+  position: relative;
+  overflow: hidden;
+  border-color: rgba(241, 185, 106, 0.48) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 232, 176, 0.12),
+    inset 0 0 34px rgba(241, 185, 106, 0.060),
+    0 26px 76px rgba(0, 0, 0, 0.62),
+    0 0 38px rgba(241, 185, 106, 0.13) !important;
+}
+
+.companion-modal-card:has(.button-danger),
+.overlay-confirm-card:has(.button-danger),
+.close-confirm-page .close-confirm-shell {
+  border-color: rgba(255, 170, 120, 0.42) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 232, 176, 0.10),
+    inset 0 0 34px rgba(241, 185, 106, 0.050),
+    inset 0 -18px 42px rgba(226, 97, 97, 0.035),
+    0 26px 76px rgba(0, 0, 0, 0.62),
+    0 0 36px rgba(241, 185, 106, 0.11) !important;
+}
+
+.companion-modal-card .button-danger,
+.overlay-confirm-card .button-danger,
+.close-confirm-page .button-primary {
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 214, 205, 0.12),
+    0 0 18px rgba(255, 76, 62, 0.16) !important;
+}
+
+.settings-page .update-progress-track > span,
+.update-page .update-progress-track span {
+  background-size: 200% 100%;
+  animation: poe2-ambient-progress-energy 4.8s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-shell,
+  .overlay-page.overlay-page-timer-only .overlay-timer-only-card,
+  .overlay-page.is-overlay-collapsed .overlay-collapsed-shell,
+  .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-shell::after,
+  .overlay-page.overlay-page-timer-only .overlay-timer-only-card::after,
+  .overlay-page.is-overlay-collapsed .overlay-collapsed-shell::after,
+  .overlay-page .timer-only-main-panel,
+  .overlay-page:not(.overlay-page-timer-only) .hud-block:has(.overlay-upcoming-item.is-current-level),
+  .overlay-page:not(.overlay-page-timer-only) .hud-block.zone-bonuses-section,
+  .overlay-page:not(.overlay-page-timer-only) .hud-block:has(.overlay-no-guide-card),
+  .overlay-page:not(.overlay-page-timer-only) .hud-meta.level-low,
+  .overlay-page .timer-only-time,
+  .overlay-page .hud-zone-name,
+  .overlay-page .hud-collapsed-zone-name,
+  .overlay-page .overlay-upcoming-item:first-child,
+  .overlay-page .overlay-upcoming-item.is-current-level,
+  .overlay-page .overlay-upcoming-item:first-child .overlay-upcoming-title,
+  .overlay-page .overlay-upcoming-item.is-current-level .overlay-upcoming-title,
+  .companion-page .companion-card > .companion-tab-row .button-primary::before,
+  .companion-page .zone-hero-card,
+  .companion-page .zone-hero-copy h3,
+  .companion-page .route-overview-card.status-current,
+  .companion-page .route-overview-card.status-current::after,
+  .companion-page .route-overview-card.status-current .route-zone-name,
+  .companion-page .route-overview-card.is-route-next,
+  .companion-page .route-overview-card.is-focus-flash,
+  .companion-page .route-overview-card.is-focus-flash .route-zone-name,
+  .companion-page .reminders-next-card .reminder-item.is-nearest,
+  .companion-page .reminders-next-card .reminder-item.is-current,
+  .companion-page .reminders-next-card .reminder-item.is-nearest .reminder-title,
+  .companion-page .reminders-next-card .reminder-item.is-current .reminder-title,
+  .companion-page .vendor-checkpoint.is-current,
+  .companion-page .vendor-checkpoint.is-current strong,
+  .companion-page .power-spike-timeline-item.is-nearest .power-spike-timeline-card,
+  .companion-page .power-spike-timeline-item.is-nearest .power-spike-timeline-card strong,
+  .companion-page .bonuses-tab-layout .bonus-row.is-done,
+  .companion-page .bonuses-tab-layout .bonus-row.is-pending,
+  .companion-page .bonuses-tab-layout .bonus-row.is-done .bonus-status-marker,
+  .companion-page .bonuses-tab-layout .bonus-row.is-done .bonus-title-line strong,
+  .companion-page .bonuses-tab-layout .bonus-row.is-pending .bonus-status-marker,
+  .companion-page .bonuses-tab-layout .bonus-row.is-pending .bonus-title-line strong,
+  .companion-page .zone-bonus-details-list .bonus-line.is-done,
+  .companion-page .zone-bonus-details-list .bonus-line:not(.is-done),
+  .companion-page .zone-bonus-details-list .bonus-line.is-done .bonus-state-marker,
+  .companion-page .zone-bonus-details-list .bonus-line:not(.is-done) .bonus-state-marker,
+  .companion-page .timer-cockpit-card,
+  .companion-page .timer-cockpit-details strong,
+  .settings-page .update-progress-track > span,
+  .update-page .update-progress-track span {
+    animation: none !important;
+  }
+}

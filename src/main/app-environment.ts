@@ -1,5 +1,6 @@
 import { app } from 'electron';
 
+import { isAllowedExternalUrl } from '../shared/external-url-policy';
 import { inferActHintFromInternalAreaId as inferActHintFromInternalAreaIdFromScene } from './scene-classifier';
 
 export const forceProductionRenderer = process.env.ELECTRON_RENDERER_MODE === 'production' ||
@@ -22,14 +23,5 @@ export function clampOpacity(value: any) {
 }
 
 export function isSafeExternalUrl(url: any) {
-    if (typeof url !== 'string') {
-        return false;
-    }
-    try {
-        const parsed = new URL(url);
-        return parsed.protocol === 'https:' || parsed.protocol === 'http:';
-    }
-    catch {
-        return false;
-    }
+    return isAllowedExternalUrl(url);
 }

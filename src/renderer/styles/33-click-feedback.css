@@ -1,0 +1,241 @@
+/* Click feedback layer: short pointer-confirmation bursts for app controls. */
+
+@keyframes poe2-click-feedback-burst {
+  0% {
+    opacity: 0.78;
+    transform: translate(-50%, -50%) scale(0.12);
+  }
+
+  46% {
+    opacity: 0.54;
+    transform: translate(-50%, -50%) scale(0.86);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.75);
+  }
+}
+
+@keyframes poe2-click-feedback-ring {
+  0% {
+    box-shadow:
+      inset 0 0 0 1px rgba(var(--click-feedback-rgb, 241, 185, 106), 0.44),
+      0 0 0 0 rgba(var(--click-feedback-rgb, 241, 185, 106), 0.34),
+      0 0 16px rgba(var(--click-feedback-rgb, 241, 185, 106), 0.18);
+    filter: brightness(1.16) saturate(1.18);
+  }
+
+  44% {
+    box-shadow:
+      inset 0 0 0 1px rgba(var(--click-feedback-rgb, 241, 185, 106), 0.58),
+      0 0 0 4px rgba(var(--click-feedback-rgb, 241, 185, 106), 0.16),
+      0 0 22px rgba(var(--click-feedback-rgb, 241, 185, 106), 0.28);
+    filter: brightness(1.12) saturate(1.14);
+  }
+
+  100% {
+    box-shadow:
+      inset 0 0 0 1px rgba(var(--click-feedback-rgb, 241, 185, 106), 0.18),
+      0 0 0 7px rgba(var(--click-feedback-rgb, 241, 185, 106), 0),
+      0 0 0 rgba(var(--click-feedback-rgb, 241, 185, 106), 0);
+    filter: brightness(1) saturate(1);
+  }
+}
+
+@keyframes poe2-click-feedback-glyph-pop {
+  0% {
+    transform: scale(0.88);
+    filter: brightness(1.28) saturate(1.2);
+  }
+
+  55% {
+    transform: scale(1.08);
+    filter: brightness(1.14) saturate(1.1);
+  }
+
+  100% {
+    transform: scale(1);
+    filter: brightness(1) saturate(1);
+  }
+}
+
+.overlay-page button,
+.companion-page button,
+.settings-page button,
+.settings-page .toggle-card,
+.report-page button,
+.update-page button,
+.close-confirm-page button,
+.info-page button,
+.community-page button,
+.support-page button {
+  --click-feedback-rgb: 241, 185, 106;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.overlay-page button:not(.overlay-language-toggle-hitarea) > :not(.click-feedback-burst),
+.companion-page button > :not(.click-feedback-burst),
+.settings-page button > :not(.click-feedback-burst),
+.settings-page .toggle-card > :not(.click-feedback-burst),
+.report-page button > :not(.click-feedback-burst),
+.update-page button > :not(.click-feedback-burst),
+.close-confirm-page button > :not(.click-feedback-burst),
+.info-page button > :not(.click-feedback-burst),
+.community-page button > :not(.click-feedback-burst),
+.support-page button > :not(.click-feedback-burst) {
+  position: relative;
+  z-index: 3;
+}
+
+.overlay-page .click-feedback-burst,
+.companion-page .click-feedback-burst,
+.settings-page .click-feedback-burst,
+.report-page .click-feedback-burst,
+.update-page .click-feedback-burst,
+.close-confirm-page .click-feedback-burst,
+.info-page .click-feedback-burst,
+.community-page .click-feedback-burst,
+.support-page .click-feedback-burst {
+  position: absolute;
+  left: var(--click-x, 50%);
+  top: var(--click-y, 50%);
+  z-index: 2;
+  width: max(46px, min(150%, 138px));
+  aspect-ratio: 1;
+  border-radius: 999px;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      circle,
+      rgba(255, 255, 255, 0.58) 0%,
+      rgba(var(--click-feedback-rgb, 241, 185, 106), 0.54) 18%,
+      rgba(var(--click-feedback-rgb, 241, 185, 106), 0.24) 46%,
+      rgba(var(--click-feedback-rgb, 241, 185, 106), 0.08) 62%,
+      transparent 76%
+    );
+  mix-blend-mode: screen;
+  animation: poe2-click-feedback-burst 420ms var(--motion-ease-out, cubic-bezier(0.16, 1, 0.3, 1)) both;
+}
+
+.overlay-page .overlay-language-toggle-hitarea > .overlay-language-toggle-indicator {
+  position: absolute;
+  z-index: 1;
+}
+
+.overlay-page .overlay-language-toggle-hitarea > .overlay-language-option {
+  position: relative;
+  z-index: 3;
+}
+
+.overlay-page .is-click-feedback-active,
+.companion-page .is-click-feedback-active,
+.settings-page .is-click-feedback-active,
+.report-page .is-click-feedback-active,
+.update-page .is-click-feedback-active,
+.close-confirm-page .is-click-feedback-active,
+.info-page .is-click-feedback-active,
+.community-page .is-click-feedback-active,
+.support-page .is-click-feedback-active {
+  animation: poe2-click-feedback-ring 360ms var(--motion-ease-out, cubic-bezier(0.16, 1, 0.3, 1)) both;
+}
+
+.overlay-page .is-click-feedback-active > .overlay-icon-glyph,
+.overlay-page .is-click-feedback-active > .timer-button-glyph,
+.companion-page .is-click-feedback-active > span,
+.settings-page .is-click-feedback-active > span,
+.report-page .is-click-feedback-active > span,
+.update-page .is-click-feedback-active > span,
+.close-confirm-page .is-click-feedback-active > span {
+  animation: poe2-click-feedback-glyph-pop 260ms var(--motion-ease-out, cubic-bezier(0.16, 1, 0.3, 1)) both;
+}
+
+.overlay-page .overlay-timer-control-start,
+.overlay-page .overlay-timer-control-primary {
+  --click-feedback-rgb: 82, 219, 143;
+}
+
+.overlay-page .overlay-timer-control-pause,
+.overlay-page .overlay-settings-icon-button,
+.overlay-page .overlay-lock-icon-button,
+.overlay-page .overlay-language-toggle-hitarea,
+.settings-page .button-primary,
+.settings-page .toggle-card,
+.companion-page .button-primary,
+.report-page .button-primary,
+.update-page .button-primary,
+.close-confirm-page .button-primary {
+  --click-feedback-rgb: 241, 185, 106;
+}
+
+.overlay-page .overlay-timer-control-reset,
+.overlay-page .overlay-close-button,
+.settings-page .button-danger,
+.settings-page .button-danger-soft,
+.companion-page .button-danger,
+.update-page .button-danger {
+  --click-feedback-rgb: 255, 111, 91;
+}
+
+.overlay-page .overlay-companion-icon-button,
+.companion-page .button-secondary,
+.report-page .button-secondary,
+.update-page .button-secondary,
+.close-confirm-page .button-secondary,
+.info-page .button-secondary,
+.community-page .button-secondary,
+.support-page .button-secondary {
+  --click-feedback-rgb: 107, 173, 255;
+}
+
+.overlay-page .overlay-collapse-icon-button,
+.overlay-page .timer-only-collapse-button,
+.overlay-page .timer-only-expand-button,
+.overlay-page .compact-mode-button {
+  --click-feedback-rgb: 159, 116, 255;
+}
+
+.overlay-page .overlay-icon-button:disabled,
+.overlay-page .overlay-timer-control:disabled,
+.companion-page button:disabled,
+.settings-page button:disabled,
+.report-page button:disabled,
+.update-page button:disabled,
+.close-confirm-page button:disabled {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay-page .click-feedback-burst,
+  .companion-page .click-feedback-burst,
+  .settings-page .click-feedback-burst,
+  .report-page .click-feedback-burst,
+  .update-page .click-feedback-burst,
+  .close-confirm-page .click-feedback-burst,
+  .info-page .click-feedback-burst,
+  .community-page .click-feedback-burst,
+  .support-page .click-feedback-burst,
+  .overlay-page .is-click-feedback-active,
+  .companion-page .is-click-feedback-active,
+  .settings-page .is-click-feedback-active,
+  .report-page .is-click-feedback-active,
+  .update-page .is-click-feedback-active,
+  .close-confirm-page .is-click-feedback-active,
+  .info-page .is-click-feedback-active,
+  .community-page .is-click-feedback-active,
+  .support-page .is-click-feedback-active {
+    animation-duration: 1ms !important;
+  }
+
+  .overlay-page .is-click-feedback-active > .overlay-icon-glyph,
+  .overlay-page .is-click-feedback-active > .timer-button-glyph,
+  .companion-page .is-click-feedback-active > span,
+  .settings-page .is-click-feedback-active > span,
+  .report-page .is-click-feedback-active > span,
+  .update-page .is-click-feedback-active > span,
+  .close-confirm-page .is-click-feedback-active > span {
+    animation-duration: 1ms !important;
+  }
+}

@@ -47,6 +47,11 @@ const partials = rootEntries
   .filter((entry) => entry.isFile() && /^\d{2}-.+\.css$/.test(entry.name))
   .map((entry) => entry.name)
   .sort();
+const trackedNonNumberedPartials = ['route-visual-pass.css'];
+const cssFiles = rootEntries
+  .filter((entry) => entry.isFile() && entry.name.endsWith('.css'))
+  .map((entry) => entry.name)
+  .sort();
 
 const expected = [
   '01-overlay-core.css',
@@ -73,17 +78,37 @@ const expected = [
   '22-reminders-final-alignment.css',
   '23-results-recap.css',
   '24-companion-panel-ux.css',
+  '25-motion-polish.css',
+  '26-atmospheric-fx.css',
+  '27-ambient-animated-fx.css',
+  '28-fx-controls-debug.css',
+  '29-guidance-state-polish.css',
+  '30-feedback-polish.css',
+  '31-overlay-control-state-polish.css',
+  '32-overlay-mode-transitions.css',
+  '33-click-feedback.css',
+  '34-event-feedback-polish.css',
 ];
+const expectedCssFiles = [...expected, ...trackedNonNumberedPartials].sort();
+const expectedImports = [
+  ...expected.slice(0, 24),
+  'route-visual-pass.css',
+  ...expected.slice(24)
+];
+
+if (cssFiles.join('\n') !== expectedCssFiles.join('\n')) {
+  fail(`Unexpected root CSS files.\nExpected:\n${expectedCssFiles.map((file) => `  - ${file}`).join('\n')}\nActual:\n${cssFiles.map((file) => `  - ${file}`).join('\n')}`);
+}
 
 if (partials.join('\n') !== expected.join('\n')) {
   fail(`Unexpected numbered CSS partials.\nExpected:\n${expected.map((file) => `  - ${file}`).join('\n')}\nActual:\n${partials.map((file) => `  - ${file}`).join('\n')}`);
 }
 
 const indexText = fs.readFileSync(indexFile, 'utf8');
-const importMatches = [...indexText.matchAll(/@import\s+['"]\.\/styles\/(\d{2}-.+?\.css)['"]/g)].map((match) => match[1]);
+const importMatches = [...indexText.matchAll(/@import\s+['"]\.\/styles\/(.+?\.css)['"]/g)].map((match) => match[1]);
 
-if (importMatches.join('\n') !== expected.join('\n')) {
-  fail(`styles.css must import numbered partials in canonical order.\nExpected:\n${expected.map((file) => `  - ${file}`).join('\n')}\nActual:\n${importMatches.map((file) => `  - ${file}`).join('\n')}`);
+if (importMatches.join('\n') !== expectedImports.join('\n')) {
+  fail(`styles.css must import tracked partials in canonical order.\nExpected:\n${expectedImports.map((file) => `  - ${file}`).join('\n')}\nActual:\n${importMatches.map((file) => `  - ${file}`).join('\n')}`);
 }
 
 if (process.exitCode) {

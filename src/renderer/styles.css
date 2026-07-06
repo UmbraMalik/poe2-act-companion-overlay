@@ -30,3 +30,13 @@
 @import './styles/23-results-recap.css'; /* Results recap polish: hero result, metrics, splits and longest zones */
 @import './styles/24-companion-panel-ux.css'; /* Companion panel UX pass: timer, act times, reminders and summary */
 @import './styles/route-visual-pass.css'; /* Route tab final visual and scroll override */
+@import './styles/25-motion-polish.css'; /* System motion layer: state changes, panels, tabs and dialogs */
+@import './styles/26-atmospheric-fx.css'; /* Atmospheric ARPG glow layer for overlay, companion and app windows */
+@import './styles/27-ambient-animated-fx.css'; /* Slow living glows, edge-light sweeps and timer aura */
+@import './styles/28-fx-controls-debug.css'; /* User FX intensity and dev layout inspector overrides */
+@import './styles/29-guidance-state-polish.css'; /* HUD control alignment and safe active-route affordance polish */
+@import './styles/30-feedback-polish.css'; /* Confirmation, warning and status feedback polish */
+@import './styles/31-overlay-control-state-polish.css'; /* Locked/unlocked overlay controls and resize grip state polish */
+@import './styles/32-overlay-mode-transitions.css'; /* Staged full, compact, collapsed and timer-only overlay mode transitions */
+@import './styles/33-click-feedback.css'; /* Short click confirmation bursts for overlay, companion and app controls */
+@import './styles/34-event-feedback-polish.css'; /* One-shot route, bonus, timer split and overlay event feedback */

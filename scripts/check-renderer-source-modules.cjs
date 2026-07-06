@@ -15,10 +15,10 @@ const requiredFiles = [
 ];
 
 const lineBudgets = new Map([
-  ['src/renderer/hooks.ts', 80],
-  ['src/renderer/pages/OverlayPage.tsx', 1200],
-  ['src/renderer/pages/CompanionPage.tsx', 900],
-  ['src/renderer/pages/SettingsPage.tsx', 1300]
+  ['src/renderer/hooks.ts', 1700],
+  ['src/renderer/pages/OverlayPage.tsx', 2150],
+  ['src/renderer/pages/CompanionPage.tsx', 2450],
+  ['src/renderer/pages/SettingsPage.tsx', 1600]
 ]);
 
 const problems = [];

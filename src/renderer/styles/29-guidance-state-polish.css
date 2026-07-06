@@ -1,0 +1,86 @@
+/* Guidance state polish: HUD control alignment plus explicit route/reminder affordances. */
+@keyframes poe2-guidance-route-pill {
+  0%,
+  100% {
+    filter: brightness(1);
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 232, 176, 0.12),
+      0 0 10px rgba(241, 185, 106, 0.10);
+  }
+
+  50% {
+    filter: brightness(1.08);
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 232, 176, 0.24),
+      0 0 18px rgba(241, 185, 106, 0.22);
+  }
+}
+
+.overlay-page .overlay-icon-button,
+.overlay-page .overlay-timer-icon-control {
+  align-items: center;
+  display: inline-grid;
+  justify-items: center;
+  place-items: center;
+}
+
+.overlay-page .overlay-icon-glyph,
+.overlay-page .timer-button-glyph {
+  align-items: center;
+  display: grid;
+  height: 100%;
+  justify-items: center;
+  line-height: 1;
+  place-items: center;
+  transform: translateY(-0.5px);
+  width: 100%;
+}
+
+.overlay-page .overlay-icon-glyph-close {
+  transform: translateY(-1px);
+}
+
+.overlay-page .resize-grip {
+  pointer-events: auto;
+}
+
+.overlay-page:not(.debug-layout) .resize-grip {
+  filter: drop-shadow(0 0 5px rgba(241, 185, 106, 0.20));
+}
+
+.companion-page .route-overview-card.status-current .route-state-pill,
+.companion-page .route-overview-card.is-route-next .route-state-pill {
+  animation: poe2-guidance-route-pill 6.8s ease-in-out infinite;
+}
+
+.companion-page .route-overview-card.status-current .route-step-index {
+  background:
+    radial-gradient(circle, rgba(255, 227, 166, 0.92), rgba(197, 133, 54, 0.72));
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 245, 218, 0.28),
+    0 0 18px rgba(241, 185, 106, 0.26);
+  color: rgba(37, 23, 8, 0.94);
+}
+
+.companion-page .reminders-next-card .reminder-item.is-nearest::before,
+.companion-page .power-spike-timeline-item.is-nearest .power-spike-timeline-node::before {
+  filter: drop-shadow(0 0 10px rgba(241, 185, 106, 0.28));
+}
+
+.companion-page .bonus-row.is-pending .bonus-toggle-button {
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 232, 176, 0.10),
+    0 0 14px rgba(241, 185, 106, 0.10);
+}
+
+.companion-page.fx-off .route-overview-card .route-state-pill {
+  animation: none !important;
+  text-shadow: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .companion-page .route-overview-card.status-current .route-state-pill,
+  .companion-page .route-overview-card.is-route-next .route-state-pill {
+    animation: none !important;
+  }
+}

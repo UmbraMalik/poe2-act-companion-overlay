@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useAppSnapshot, useLiveRunTimer } from '../hooks';
 import { useDocumentTitle, useI18n } from '../useI18n';
 import {
@@ -11,6 +11,7 @@ import {
   getRequiredRewardLabelsForZone,
   getRouteActs,
   getRouteOverviewForAct,
+  getRouteProgressState,
   getSceneDisplayName,
   getUpcomingVendorReminders,
   getXpStatus
@@ -29,6 +30,16 @@ type RunConfirmDialog =
   | { type: 'restore'; runId: string }
   | { type: 'delete'; runId: string }
   | null;
+
+type BonusFeedbackState = {
+  id: string;
+  tone: 'done' | 'pending';
+};
+
+type TimerSplitFeedbackState = {
+  id: number;
+  text: string;
+};
 
 const ROUTE_OVERVIEW_VISIBLE_ITEMS = 2;
 const TOTAL_CAMPAIGN_ACTS = 5;
@@ -1114,6 +1125,14 @@ export function CompanionPage() {
   const [busy, setBusy] = useState<string | null>(null);
   const [runSaveNotice, setRunSaveNotice] = useState<string | null>(null);
   const [runConfirmDialog, setRunConfirmDialog] = useState<RunConfirmDialog>(null);
+  const [focusedRouteZoneId, setFocusedRouteZoneId] = useState<string | null>(null);
+  const [bonusFeedback, setBonusFeedback] = useState<BonusFeedbackState | null>(null);
+  const [timerSplitFeedback, setTimerSplitFeedback] = useState<TimerSplitFeedbackState | null>(null);
+  const focusedRouteZoneTimeoutRef = useRef<number | null>(null);
+  const bonusFeedbackTimeoutRef = useRef<number | null>(null);
+  const runSaveNoticeTimeoutRef = useRef<number | null>(null);
+  const timerSplitFeedbackTimeoutRef = useRef<number | null>(null);
+  const previousActSplitRef = useRef<{ act: ZoneAct | null; elapsedMs: number | null } | null>(null);
 
   useDocumentTitle(t('titles.companion'));
 
@@ -1129,6 +1148,48 @@ export function CompanionPage() {
     }
   }, [snapshot, selectedAct, language]);
 
+  const splitSnapshotAct = snapshot ? getCurrentRouteAct(snapshot) : null;
+  const splitNumericAct = typeof splitSnapshotAct === 'number' ? splitSnapshotAct : null;
+  const splitRunTimer = liveRunTimer.runTimer ?? snapshot?.config.runTimer ?? null;
+  const splitActElapsed = splitRunTimer
+    ? getCurrentActElapsedMsForAct(splitRunTimer, splitNumericAct, liveRunTimer.nowMs)
+    : null;
+
+  useEffect(() => {
+    if (!splitRunTimer) {
+      return;
+    }
+
+    const previous = previousActSplitRef.current;
+    if (!previous) {
+      previousActSplitRef.current = { act: splitSnapshotAct, elapsedMs: splitActElapsed };
+      return;
+    }
+
+    if (previous.act !== null && splitSnapshotAct !== null && previous.act !== splitSnapshotAct) {
+      const splitText = translate(language, 'companion.actSplitFeedback', {
+        act: formatActTitle(previous.act, language),
+        time: previous.elapsedMs === null ? translate(language, 'common.notAvailable') : formatDuration(previous.elapsedMs)
+      });
+
+      setTimerSplitFeedback({
+        id: Date.now(),
+        text: splitText
+      });
+
+      if (timerSplitFeedbackTimeoutRef.current !== null) {
+        window.clearTimeout(timerSplitFeedbackTimeoutRef.current);
+      }
+
+      timerSplitFeedbackTimeoutRef.current = window.setTimeout(() => {
+        setTimerSplitFeedback(null);
+        timerSplitFeedbackTimeoutRef.current = null;
+      }, 2400);
+    }
+
+    previousActSplitRef.current = { act: splitSnapshotAct, elapsedMs: splitActElapsed };
+  }, [splitRunTimer, splitSnapshotAct, splitActElapsed, language]);
+
   useEffect(() => {
     const unsubscribe = window.poe2Overlay.onRunResetConfirmationRequested(() => {
       setActiveTab('timer');
@@ -1137,6 +1198,36 @@ export function CompanionPage() {
 
     return unsubscribe;
   }, []);
+
+  useEffect(() => () => {
+    if (focusedRouteZoneTimeoutRef.current !== null) {
+      window.clearTimeout(focusedRouteZoneTimeoutRef.current);
+    }
+
+    if (bonusFeedbackTimeoutRef.current !== null) {
+      window.clearTimeout(bonusFeedbackTimeoutRef.current);
+    }
+
+    if (runSaveNoticeTimeoutRef.current !== null) {
+      window.clearTimeout(runSaveNoticeTimeoutRef.current);
+    }
+
+    if (timerSplitFeedbackTimeoutRef.current !== null) {
+      window.clearTimeout(timerSplitFeedbackTimeoutRef.current);
+    }
+  }, []);
+
+  const showRunSaveNotice = (text: string) => {
+    if (runSaveNoticeTimeoutRef.current !== null) {
+      window.clearTimeout(runSaveNoticeTimeoutRef.current);
+    }
+
+    setRunSaveNotice(text);
+    runSaveNoticeTimeoutRef.current = window.setTimeout(() => {
+      setRunSaveNotice(null);
+      runSaveNoticeTimeoutRef.current = null;
+    }, 2800);
+  };
 
   if (!snapshot) {
     return <div className="settings-shell">{t('companion.loading')}</div>;
@@ -1151,7 +1242,8 @@ export function CompanionPage() {
   const guideChecklist = guideView?.checklist ?? [];
   const sceneName = getSceneDisplayName(snapshot, language);
   const routeActs = getRouteActs(snapshot, language);
-  const routeZones = getRouteOverviewForAct(snapshot, selectedAct ?? nowAct, language);
+  const selectedRouteAct = selectedAct ?? nowAct;
+  const routeZones = getRouteOverviewForAct(snapshot, selectedRouteAct, language);
   const xpStatus = getXpStatus(snapshot, language);
   const countdownMs = liveRunTimer.countdownMs;
   const currentRunElapsed = liveRunTimer.runElapsedMs;
@@ -1204,6 +1296,40 @@ export function CompanionPage() {
       currentZone.sceneKind === 'gameplay' ||
       currentZone.sceneKind === 'town'
     );
+  const selectedRouteActIndex = routeActs.findIndex((entry) => entry.act === selectedRouteAct);
+  const currentRouteActIndex = routeActs.findIndex((entry) => entry.act === nowAct);
+  const isSelectedRouteActCurrent =
+    selectedRouteActIndex >= 0 &&
+    currentRouteActIndex >= 0 &&
+    selectedRouteActIndex === currentRouteActIndex;
+  const isSelectedRouteActBeforeCurrent =
+    selectedRouteActIndex >= 0 &&
+    currentRouteActIndex >= 0 &&
+    selectedRouteActIndex < currentRouteActIndex;
+  const selectedRouteProgress = getRouteProgressState(routeZones, {
+    isSelectedRouteActCurrent,
+    isSelectedRouteActBeforeCurrent
+  });
+  const currentRouteIndex = selectedRouteProgress.currentIndex;
+  const routeProgressTotal = selectedRouteProgress.total;
+  const routeProgressCurrentCount = selectedRouteProgress.currentCount;
+  const routeProgressPercent = selectedRouteProgress.percent;
+  const currentRouteZone = currentRouteIndex >= 0 ? routeZones[currentRouteIndex] : null;
+  const nextRouteZone = isSelectedRouteActBeforeCurrent
+    ? null
+    : currentRouteIndex >= 0
+      ? routeZones.find((entry, index) => entry.status === 'pending' && index > currentRouteIndex) ?? null
+      : routeZones[0] ?? null;
+  const routeProgressLeftLabel = currentRouteZone
+    ? t('companion.routeProgressCurrent', { zone: formatRouteCardTitle(currentRouteZone.guide, language) })
+    : routeProgressTotal > 0 && routeProgressCurrentCount >= routeProgressTotal
+      ? t('companion.routeProgressDone')
+      : routeProgressCurrentCount > 0
+        ? t('companion.routeProgressPartial', {
+          current: routeProgressCurrentCount,
+          total: routeProgressTotal
+        })
+        : t('companion.routeProgressNotStarted');
 
   const runTask = async (name: string, action: () => Promise<unknown>) => {
     try {
@@ -1228,13 +1354,14 @@ export function CompanionPage() {
     await runTask('save-run', async () => {
       await window.poe2Overlay.saveCurrentRunToHistory(label);
     });
-    setRunSaveNotice(t('companion.runSavedNotice'));
+    showRunSaveNotice(t('companion.runSavedNotice'));
   };
 
   const resetRunWithoutSaving = async () => {
     await runTask('reset-run', async () => {
       await window.poe2Overlay.resetRunTimer();
     });
+    showRunSaveNotice(t('companion.runResetNotice'));
   };
 
   const saveAndResetRun = async () => {
@@ -1243,7 +1370,7 @@ export function CompanionPage() {
       await window.poe2Overlay.saveCurrentRunToHistory(defaultLabel);
       await window.poe2Overlay.resetRunTimer();
     });
-    setRunSaveNotice(t('companion.runSavedAndResetNotice'));
+    showRunSaveNotice(t('companion.runSavedAndResetNotice'));
   };
 
   const resetRunWithOptionalSave = async () => {
@@ -1269,12 +1396,14 @@ export function CompanionPage() {
     await runTask('restore-run', async () => {
       await window.poe2Overlay.restoreSavedRun(runId);
     });
+    showRunSaveNotice(t('companion.runRestoredNotice'));
   };
 
   const confirmDeleteSavedRun = async (runId: string) => {
     await runTask('delete-run', async () => {
       await window.poe2Overlay.deleteSavedRun(runId);
     });
+    showRunSaveNotice(t('companion.runDeletedNotice'));
   };
 
   const openExternalLink = async (name: string, url: string) => {
@@ -1288,16 +1417,26 @@ export function CompanionPage() {
       setSelectedAct(nowAct);
     }
 
+    if (focusedRouteZoneTimeoutRef.current !== null) {
+      window.clearTimeout(focusedRouteZoneTimeoutRef.current);
+    }
+
     window.requestAnimationFrame(() => {
       const currentZoneId = snapshot.currentGuideEntry?.id;
       if (!currentZoneId) {
+        setFocusedRouteZoneId(null);
         return;
       }
 
+      setFocusedRouteZoneId(currentZoneId);
       document.getElementById(`route-zone-${currentZoneId}`)?.scrollIntoView({
         block: 'nearest',
         behavior: 'smooth'
       });
+      focusedRouteZoneTimeoutRef.current = window.setTimeout(() => {
+        setFocusedRouteZoneId(null);
+        focusedRouteZoneTimeoutRef.current = null;
+      }, 1400);
     });
   };
 
@@ -1417,8 +1556,32 @@ export function CompanionPage() {
         </div>
       </section>
 
+      <section className="companion-block route-progress-rail-card" aria-label={t('companion.routeProgressTitle')}>
+        <div className="route-progress-rail-header">
+          <div>
+            <p className="eyebrow">{t('companion.routeProgressTitle')}</p>
+            <strong>
+              {formatActTitle(selectedRouteAct, language)}
+            </strong>
+          </div>
+          <span>
+            {t('companion.routeProgressComplete', {
+              current: Math.min(routeProgressTotal, routeProgressCurrentCount),
+              total: routeProgressTotal
+            })}
+          </span>
+        </div>
+        <div className="route-progress-track" aria-hidden="true">
+          <span style={{ width: `${routeProgressPercent}%` }} />
+        </div>
+        <div className="route-progress-endpoints">
+          <span>{routeProgressLeftLabel}</span>
+          <span>{t('companion.routeProgressNext', { zone: nextRouteZone ? formatRouteCardTitle(nextRouteZone.guide, language) : t('common.finish') })}</span>
+        </div>
+      </section>
+
       <section className="companion-block companion-route-list-card">
-        <h3>{formatActTitle(selectedAct ?? nowAct, language)}</h3>
+        <h3>{formatActTitle(selectedRouteAct, language)}</h3>
         <div className="route-overview-list route-overview-grid">
           {routeZones.map((entry, index) => {
             const rewardLabels = getRequiredRewardLabelsForZone(entry.guide, snapshot, language);
@@ -1429,12 +1592,14 @@ export function CompanionPage() {
             const statusLabel = getRouteStatusLabel(entry.status, language);
             const routeCardTitle = formatRouteCardTitle(entry.guide, language);
             const routeGuideView = getGuideView(entry.guide, language);
+            const isFocusedRouteZone = focusedRouteZoneId === entry.guide.id;
+            const isRouteNext = entry.status === 'pending' && routeZones[index - 1]?.status === 'current';
 
             return (
               <article
                 id={`route-zone-${entry.guide.id}`}
                 key={entry.guide.id}
-                className={`route-overview-card status-${entry.status}`}
+                className={`route-overview-card status-${entry.status}${isRouteNext ? ' is-route-next' : ''}${isFocusedRouteZone ? ' is-focus-flash' : ''}`}
               >
                 <div className="route-overview-header">
                   <span className="route-step-index">{String(index + 1).padStart(2, '0')}</span>
@@ -1511,6 +1676,11 @@ export function CompanionPage() {
             <small>{countdownMs === null ? t('common.notAvailable') : t('settings.countdown')}</small>
           </div>
         </div>
+        {timerSplitFeedback ? (
+          <p key={timerSplitFeedback.id} className="timer-split-feedback" role="status" aria-live="polite">
+            {timerSplitFeedback.text}
+          </p>
+        ) : null}
       </section>
 
       <section className="companion-block timer-segment-card">
@@ -1746,7 +1916,7 @@ export function CompanionPage() {
               percent: campaignBonusTotals.increasedMana
             })}</dd>
           </div>
-          <div className="info-cell">
+          <div className={`info-cell${bonusFeedback ? ' is-bonus-count-bump' : ''}`}>
             <dt>{t('common.summary')}</dt>
             <dd>{campaignBonusTotals.done} / {campaignBonusTotals.total}</dd>
           </div>
@@ -1781,9 +1951,13 @@ export function CompanionPage() {
                   const progress = campaignBonusProgress[bonus.id];
                   const done = Boolean(progress);
                   const bonusView = getCampaignBonusView(bonus, language) ?? bonus;
+                  const isBonusFeedback = bonusFeedback?.id === bonus.id;
 
                   return (
-                    <article key={bonus.id} className={`bonus-row ${done ? 'is-done' : 'is-pending'}`}>
+                    <article
+                      key={bonus.id}
+                      className={`bonus-row ${done ? 'is-done' : 'is-pending'}${isBonusFeedback ? ` is-bonus-toggle-feedback is-feedback-${bonusFeedback.tone}` : ''}`}
+                    >
                       <div className="bonus-status-marker" aria-hidden="true">
                         {done ? '✓' : '○'}
                       </div>
@@ -1820,6 +1994,18 @@ export function CompanionPage() {
                         disabled={busy !== null}
                         onClick={() =>
                           runTask(`campaign-bonus-${bonus.id}`, async () => {
+                            if (bonusFeedbackTimeoutRef.current !== null) {
+                              window.clearTimeout(bonusFeedbackTimeoutRef.current);
+                            }
+
+                            setBonusFeedback({
+                              id: bonus.id,
+                              tone: done ? 'pending' : 'done'
+                            });
+                            bonusFeedbackTimeoutRef.current = window.setTimeout(() => {
+                              setBonusFeedback(null);
+                              bonusFeedbackTimeoutRef.current = null;
+                            }, 1200);
                             await window.poe2Overlay.setCampaignBonusDone(bonus.id, !done);
                           })
                         }
@@ -1984,7 +2170,7 @@ export function CompanionPage() {
   } satisfies Record<CompanionTab, JSX.Element>;
 
   return (
-    <main className="settings-page companion-page">
+    <main className={`settings-page companion-page fx-${config.visualFxIntensity}`}>
       <header className="settings-header window-drag-strip">
         <div className="settings-header-copy">
           <p className="eyebrow">{t('common.appName')}</p>
@@ -2079,7 +2265,7 @@ export function CompanionPage() {
               </button>
             ))}
           </div>
-          <div className="companion-tab-body">{tabContent[activeTab]}</div>
+          <div className="companion-tab-body" key={activeTab}>{tabContent[activeTab]}</div>
         </section>
       </section>
       {renderRunConfirmDialog()}

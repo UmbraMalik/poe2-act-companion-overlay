@@ -142,9 +142,6 @@ export function runApplyOverlayWindowBounds(this: any, source: any, requestedBou
         if (shouldHintWindowEvent) {
             this.setOverlayBoundsSourceHint(source, plan.applyMode === 'none' ? 'setBounds' : plan.applyMode);
         }
-        if (options.minimumSize) {
-            targetWindow.setMinimumSize(options.minimumSize.width, options.minimumSize.height);
-        }
         this.logOverlayBoundsEvent(plan.suspiciousSizeChange ? 'warn' : 'info', {
             phase: 'request',
             source,
@@ -154,14 +151,29 @@ export function runApplyOverlayWindowBounds(this: any, source: any, requestedBou
             to: plan.nextBounds
         });
         if (plan.applyMode === 'none') {
+            if (options.minimumSize) {
+                targetWindow.setMinimumSize(options.minimumSize.width, options.minimumSize.height);
+            }
             this.lastOverlayKnownBounds = plan.currentBounds;
             return plan.currentBounds;
         }
+        const isShrinking =
+            plan.nextBounds.width < plan.currentBounds.width ||
+            plan.nextBounds.height < plan.currentBounds.height;
+        if (options.minimumSize && isShrinking) {
+            targetWindow.setMinimumSize(options.minimumSize.width, options.minimumSize.height);
+        }
         if (plan.applyMode === 'setPosition') {
-            targetWindow.setPosition(plan.nextBounds.x, plan.nextBounds.y);
+            targetWindow.setPosition(plan.nextBounds.x, plan.nextBounds.y, false);
+            if (options.minimumSize && !isShrinking) {
+                targetWindow.setMinimumSize(options.minimumSize.width, options.minimumSize.height);
+            }
             return plan.nextBounds;
         }
-        targetWindow.setBounds(plan.nextBounds);
+        targetWindow.setBounds(plan.nextBounds, false);
+        if (options.minimumSize && !isShrinking) {
+            targetWindow.setMinimumSize(options.minimumSize.width, options.minimumSize.height);
+        }
         return plan.nextBounds;
     }
 

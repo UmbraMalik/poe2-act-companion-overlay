@@ -283,3 +283,49 @@
     0 0 0 1px rgba(184, 132, 255, 0.18),
     0 0 16px var(--overlay-hover-violet-glow) !important;
 }
+
+/* Optical icon alignment: keep button boxes stable, nudge only the glyphs. */
+.overlay-page .overlay-quick-actions > .overlay-icon-button > .overlay-icon-glyph,
+.overlay-page:not(.overlay-page-timer-only) .hud-header .overlay-quick-actions > .overlay-icon-button > .overlay-icon-glyph,
+.overlay-page.density-compact .overlay-quick-actions > .overlay-icon-button > .overlay-icon-glyph,
+.overlay-page.overlay-page-timer-only .timer-only-top-control-row .overlay-quick-actions > .overlay-icon-button > .overlay-icon-glyph,
+.overlay-page.is-overlay-collapsed .overlay-quick-actions > .overlay-icon-button > .overlay-icon-glyph {
+  display: grid !important;
+  place-items: center !important;
+  width: 100% !important;
+  height: 100% !important;
+  line-height: 1 !important;
+}
+
+.overlay-page .overlay-quick-actions .overlay-icon-glyph-lock,
+.overlay-page .overlay-quick-actions .overlay-icon-glyph-menu,
+.overlay-page .overlay-quick-actions .overlay-icon-glyph-settings,
+.overlay-page .overlay-quick-actions .overlay-icon-glyph-collapse {
+  transform: translateY(-1px) !important;
+}
+
+.overlay-page .overlay-quick-actions .overlay-icon-glyph-close {
+  transform: translateY(-1.25px) !important;
+}
+
+.overlay-page .overlay-language-option {
+  display: grid !important;
+  place-items: center !important;
+  line-height: 1 !important;
+  transform: translateY(-0.5px) !important;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-header .overlay-quick-actions > .overlay-timer-control-start .timer-button-glyph::before,
+.overlay-page.is-overlay-collapsed .overlay-quick-actions > .overlay-timer-control-start .timer-button-glyph::before,
+.overlay-page.overlay-page-timer-only .timer-only-controls-row .overlay-timer-control-start .timer-button-glyph::before {
+  transform: translate(calc(-50% + 1px), calc(-50% - 0.75px)) !important;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-header .overlay-quick-actions > .overlay-timer-control-pause .timer-button-glyph::before,
+.overlay-page:not(.overlay-page-timer-only) .hud-header .overlay-quick-actions > .overlay-timer-control-pause .timer-button-glyph::after,
+.overlay-page.is-overlay-collapsed .overlay-quick-actions > .overlay-timer-control-pause .timer-button-glyph::before,
+.overlay-page.is-overlay-collapsed .overlay-quick-actions > .overlay-timer-control-pause .timer-button-glyph::after,
+.overlay-page.overlay-page-timer-only .timer-only-controls-row .overlay-timer-control-pause .timer-button-glyph::before,
+.overlay-page.overlay-page-timer-only .timer-only-controls-row .overlay-timer-control-pause .timer-button-glyph::after {
+  transform: translateY(calc(-50% - 0.75px)) !important;
+}

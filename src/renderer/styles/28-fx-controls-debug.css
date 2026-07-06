@@ -1,0 +1,235 @@
+/* User-facing FX intensity plus dev-only overlay layout inspector. */
+.overlay-page.fx-off,
+.companion-page.fx-off,
+.settings-page.fx-off,
+.report-page.fx-off,
+.close-confirm-page.fx-off,
+.update-page.fx-off {
+  --fx-gold: rgba(241, 185, 106, 0);
+  --fx-gold-soft: rgba(241, 185, 106, 0);
+  --fx-blue: rgba(112, 190, 255, 0);
+  --fx-blue-soft: rgba(82, 170, 255, 0);
+  --fx-green: rgba(125, 236, 162, 0);
+  --fx-green-soft: rgba(84, 190, 112, 0);
+  --fx-violet: rgba(177, 147, 255, 0);
+  --fx-violet-soft: rgba(142, 118, 255, 0);
+  --fx-red: rgba(255, 104, 90, 0);
+  --fx-red-soft: rgba(255, 76, 62, 0);
+  --fx-panel-edge:
+    inset 0 0 0 1px rgba(255, 232, 176, 0.035),
+    0 14px 30px rgba(0, 0, 0, 0.30);
+  --fx-panel-edge-blue:
+    inset 0 0 0 1px rgba(176, 222, 255, 0.035),
+    0 14px 30px rgba(0, 0, 0, 0.30);
+}
+
+.overlay-page.fx-subtle,
+.companion-page.fx-subtle,
+.settings-page.fx-subtle,
+.report-page.fx-subtle,
+.close-confirm-page.fx-subtle,
+.update-page.fx-subtle {
+  --fx-gold: rgba(241, 185, 106, 0.46);
+  --fx-gold-soft: rgba(241, 185, 106, 0.09);
+  --fx-blue: rgba(112, 190, 255, 0.42);
+  --fx-blue-soft: rgba(82, 170, 255, 0.08);
+  --fx-green: rgba(125, 236, 162, 0.40);
+  --fx-green-soft: rgba(84, 190, 112, 0.075);
+  --fx-violet: rgba(177, 147, 255, 0.40);
+  --fx-violet-soft: rgba(142, 118, 255, 0.075);
+  --fx-red: rgba(255, 104, 90, 0.44);
+  --fx-red-soft: rgba(255, 76, 62, 0.08);
+  --fx-panel-edge:
+    inset 0 0 0 1px rgba(255, 232, 176, 0.055),
+    inset 0 0 22px rgba(241, 185, 106, 0.026),
+    0 16px 34px rgba(0, 0, 0, 0.32);
+  --fx-panel-edge-blue:
+    inset 0 0 0 1px rgba(176, 222, 255, 0.055),
+    inset 0 0 22px rgba(82, 170, 255, 0.026),
+    0 16px 34px rgba(0, 0, 0, 0.32);
+}
+
+.overlay-page.fx-rich,
+.companion-page.fx-rich,
+.settings-page.fx-rich,
+.report-page.fx-rich,
+.close-confirm-page.fx-rich,
+.update-page.fx-rich {
+  --fx-gold: rgba(255, 202, 116, 0.86);
+  --fx-gold-soft: rgba(255, 194, 96, 0.26);
+  --fx-blue: rgba(125, 205, 255, 0.80);
+  --fx-blue-soft: rgba(82, 170, 255, 0.22);
+  --fx-green: rgba(135, 255, 178, 0.78);
+  --fx-green-soft: rgba(84, 220, 126, 0.22);
+  --fx-violet: rgba(190, 162, 255, 0.78);
+  --fx-violet-soft: rgba(154, 124, 255, 0.22);
+  --fx-red: rgba(255, 118, 104, 0.84);
+  --fx-red-soft: rgba(255, 76, 62, 0.22);
+  --fx-panel-edge:
+    inset 0 0 0 1px rgba(255, 232, 176, 0.11),
+    inset 0 0 38px rgba(241, 185, 106, 0.070),
+    0 20px 46px rgba(0, 0, 0, 0.36);
+  --fx-panel-edge-blue:
+    inset 0 0 0 1px rgba(176, 222, 255, 0.11),
+    inset 0 0 38px rgba(82, 170, 255, 0.070),
+    0 20px 46px rgba(0, 0, 0, 0.36);
+}
+
+.overlay-page.fx-off .overlay-shell,
+.overlay-page.fx-off .overlay-hud,
+.overlay-page.fx-off .overlay-timer-only-card,
+.overlay-page.fx-off .overlay-collapsed-shell,
+.companion-page.fx-off .companion-card,
+.companion-page.fx-off .companion-block,
+.settings-page.fx-off .settings-card,
+.report-page.fx-off .report-card,
+.update-page.fx-off .update-shell,
+.close-confirm-page.fx-off .close-confirm-shell {
+  box-shadow: var(--fx-panel-edge) !important;
+  filter: none !important;
+}
+
+.overlay-page.fx-off .overlay-shell::before,
+.overlay-page.fx-off .overlay-shell::after,
+.overlay-page.fx-off .overlay-timer-only-card::before,
+.overlay-page.fx-off .overlay-timer-only-card::after,
+.overlay-page.fx-off .overlay-collapsed-shell::before,
+.overlay-page.fx-off .overlay-collapsed-shell::after,
+.companion-page.fx-off .companion-card::before,
+.companion-page.fx-off .companion-card::after,
+.companion-page.fx-off .companion-card > .companion-tab-row .button-primary::before,
+.companion-page.fx-off .companion-card > .companion-tab-row .button-primary::after,
+.companion-page.fx-off .route-overview-card::before,
+.companion-page.fx-off .route-overview-card::after {
+  animation: none !important;
+  opacity: 0 !important;
+}
+
+.overlay-page.fx-off .timer-only-time,
+.overlay-page.fx-off .hud-zone-name,
+.overlay-page.fx-off .hud-collapsed-zone-name,
+.companion-page.fx-off .zone-hero-copy h3,
+.companion-page.fx-off .route-overview-card .route-zone-name,
+.companion-page.fx-off .timer-cockpit-details strong {
+  animation: none !important;
+  filter: none !important;
+  text-shadow: none !important;
+}
+
+.overlay-page.fx-subtle .overlay-shell,
+.overlay-page.fx-subtle .overlay-timer-only-card,
+.overlay-page.fx-subtle .overlay-collapsed-shell,
+.companion-page.fx-subtle .zone-hero-card,
+.companion-page.fx-subtle .route-overview-card.status-current,
+.companion-page.fx-subtle .timer-cockpit-card {
+  filter: saturate(1.02) brightness(1.01) !important;
+}
+
+.overlay-page.fx-subtle .overlay-shell::after,
+.overlay-page.fx-subtle .overlay-timer-only-card::after,
+.overlay-page.fx-subtle .overlay-collapsed-shell::after,
+.companion-page.fx-subtle .companion-card > .companion-tab-row .button-primary::before,
+.companion-page.fx-subtle .route-overview-card.status-current::after {
+  opacity: 0.34 !important;
+  animation-duration: 10s !important;
+}
+
+.overlay-page.fx-subtle .timer-only-time,
+.overlay-page.fx-subtle .hud-zone-name,
+.overlay-page.fx-subtle .hud-collapsed-zone-name,
+.companion-page.fx-subtle .zone-hero-copy h3,
+.companion-page.fx-subtle .route-overview-card.status-current .route-zone-name {
+  animation-duration: 7.8s !important;
+  text-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.68),
+    0 0 12px rgba(241, 185, 106, 0.14) !important;
+}
+
+.overlay-page.fx-rich .overlay-shell,
+.overlay-page.fx-rich .overlay-timer-only-card,
+.overlay-page.fx-rich .overlay-collapsed-shell {
+  box-shadow:
+    var(--fx-panel-edge),
+    0 0 0 1px rgba(112, 190, 255, 0.10),
+    0 0 34px rgba(112, 190, 255, 0.090),
+    0 0 58px rgba(241, 185, 106, 0.18) !important;
+}
+
+.overlay-page.fx-rich .overlay-shell::after,
+.overlay-page.fx-rich .overlay-timer-only-card::after,
+.overlay-page.fx-rich .overlay-collapsed-shell::after,
+.companion-page.fx-rich .companion-card > .companion-tab-row .button-primary::before,
+.companion-page.fx-rich .route-overview-card.status-current::after {
+  opacity: 0.82 !important;
+  animation-duration: 6.2s !important;
+}
+
+.overlay-page.fx-rich .timer-only-time,
+.overlay-page.fx-rich .hud-zone-name,
+.overlay-page.fx-rich .hud-collapsed-zone-name,
+.companion-page.fx-rich .zone-hero-copy h3,
+.companion-page.fx-rich .route-overview-card.status-current .route-zone-name {
+  animation-duration: 5.2s !important;
+}
+
+.overlay-page.debug-layout::before {
+  content: "layout debug";
+  position: fixed;
+  z-index: 100000;
+  top: 6px;
+  right: 8px;
+  padding: 4px 7px;
+  border: 1px solid rgba(112, 190, 255, 0.65);
+  border-radius: 6px;
+  color: rgba(215, 238, 255, 0.95);
+  background: rgba(4, 10, 16, 0.88);
+  font: 800 10px/1 system-ui, sans-serif;
+  letter-spacing: 0.04em;
+  pointer-events: none;
+  text-transform: uppercase;
+}
+
+.overlay-page.debug-layout .overlay-shell {
+  outline: 1px dashed rgba(112, 190, 255, 0.76) !important;
+  outline-offset: -2px;
+}
+
+.overlay-page.debug-layout .hud-header,
+.overlay-page.debug-layout .timer-only-header,
+.overlay-page.debug-layout .hud-collapsed-bar,
+.overlay-page.debug-layout .timer-only-main-panel,
+.overlay-page.debug-layout .hud-block {
+  outline: 1px dashed rgba(241, 185, 106, 0.58) !important;
+  outline-offset: -3px;
+}
+
+.overlay-page.debug-layout .overlay-quick-actions,
+.overlay-page.debug-layout .overlay-timer-controls,
+.overlay-page.debug-layout .timer-only-controls-row {
+  outline: 1px dashed rgba(177, 147, 255, 0.62) !important;
+  outline-offset: 2px;
+}
+
+.overlay-page.debug-layout .resize-grip {
+  background:
+    linear-gradient(135deg, transparent 0 42%, rgba(112, 190, 255, 0.36) 43% 56%, transparent 57%),
+    rgba(112, 190, 255, 0.12) !important;
+  box-shadow:
+    0 0 0 1px rgba(112, 190, 255, 0.80),
+    0 0 16px rgba(112, 190, 255, 0.32) !important;
+  opacity: 1 !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay-page.fx-subtle *,
+  .overlay-page.fx-rich *,
+  .companion-page.fx-subtle *,
+  .companion-page.fx-rich *,
+  .settings-page.fx-subtle *,
+  .settings-page.fx-rich *,
+  .report-page.fx-subtle *,
+  .report-page.fx-rich * {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

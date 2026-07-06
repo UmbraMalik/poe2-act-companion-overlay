@@ -50,6 +50,7 @@ export interface ChecklistViewItem extends ChecklistItemDefinition {
 export type OverlayDensity = 'compact' | 'normal' | 'detailed';
 export type OverlayScale = 70 | 80 | 90 | 100 | 110 | 120;
 export type OverlayTextSize = 0 | 1 | 2 | 3;
+export type VisualFxIntensity = 'off' | 'subtle' | 'normal' | 'rich';
 export type OverlayMode = 'full' | 'timer_only';
 export type AppLanguage = 'ru' | 'en';
 
@@ -396,6 +397,9 @@ export interface AppConfig {
   overlayScale: OverlayScale;
   overlayTextSize: OverlayTextSize;
   overlayDensity: OverlayDensity;
+  visualFxIntensity: VisualFxIntensity;
+  overlayEffectsEnabled: boolean;
+  overlayDebugLayoutEnabled: boolean;
   overlayVisibleSections: OverlayVisibleSections;
   mainOverlaySettings: MainOverlaySettings;
   devPanelEnabled: boolean;
@@ -558,6 +562,9 @@ export interface SettingsPatch {
   overlayScale?: OverlayScale;
   overlayTextSize?: OverlayTextSize;
   overlayDensity?: OverlayDensity;
+  visualFxIntensity?: VisualFxIntensity;
+  overlayEffectsEnabled?: boolean;
+  overlayDebugLayoutEnabled?: boolean;
   overlayVisibleSections?: Partial<OverlayVisibleSections>;
   mainOverlaySettings?: Partial<MainOverlaySettings>;
   devPanelEnabled?: boolean;

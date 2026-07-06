@@ -699,13 +699,17 @@ export function runSetOverlayMode(this: any, mode: any) {
         });
         if (this.overlayWindow && !this.overlayWindow.isDestroyed()) {
             const minimumSize = this.getOverlayMinimumSize(mode);
-            const nextBounds = this.getOverlayBoundsForMode(mode);
+            const targetModeBounds = this.getOverlayBoundsForMode(mode);
+            const nextBounds = previousOverlayBounds
+                ? this.normalizeOverlayBoundsForMode({
+                    ...targetModeBounds,
+                    x: previousOverlayBounds.x,
+                    y: previousOverlayBounds.y
+                }, mode)
+                : targetModeBounds;
             this.applyOverlayWindowBounds('modeSwitch', nextBounds, { minimumSize });
             this.overlayWindow.setFocusable(true);
             this.overlayWindow.setAlwaysOnTop(true, 'screen-saver');
-            if (this.overlayWindow.isVisible()) {
-                this.overlayWindow.showInactive();
-            }
         }
         this.broadcastState();
     }

@@ -24,6 +24,7 @@ import type {
   TownTimerState,
   TownVisitEntry,
   TrainingTargetActTimes,
+  VisualFxIntensity,
   VisitedZoneEntry,
   ZoneTimeEntry
 } from '../../shared/types';
@@ -32,6 +33,7 @@ import { normalizeHotkeyAccelerator } from '../hotkey-utils';
 const OVERLAY_SCALES: OverlayScale[] = [70, 80, 90, 100, 110, 120];
 const OVERLAY_TEXT_SIZES: OverlayTextSize[] = [0, 1, 2, 3];
 const OVERLAY_DENSITIES: OverlayDensity[] = ['compact', 'normal', 'detailed'];
+const VISUAL_FX_INTENSITIES: VisualFxIntensity[] = ['off', 'subtle', 'normal', 'rich'];
 const RUN_TIMER_STATUSES: RunTimerStatus[] = ['not_started', 'armed', 'running', 'paused', 'finished'];
 const HOTKEY_KEYS: Array<keyof HotkeySettings> = [
   'markChecklistDone',
@@ -133,6 +135,10 @@ function normalizeOverlayTextSize(value: unknown): OverlayTextSize {
 
 function normalizeOverlayDensity(value: unknown): OverlayDensity {
   return normalizeEnum(value, OVERLAY_DENSITIES, DEFAULT_CONFIG.overlayDensity);
+}
+
+function normalizeVisualFxIntensity(value: unknown): VisualFxIntensity {
+  return normalizeEnum(value, VISUAL_FX_INTENSITIES, DEFAULT_CONFIG.visualFxIntensity);
 }
 
 function normalizeOverlayOpacity(value: unknown): number {
@@ -508,6 +514,12 @@ export function normalizeAppConfig(config: Partial<AppConfig> = {}): AppConfig {
     overlayScale: normalizeOverlayScale(rawConfig.overlayScale),
     overlayTextSize: normalizeOverlayTextSize(rawConfig.overlayTextSize),
     overlayDensity: normalizeOverlayDensity(rawConfig.overlayDensity),
+    visualFxIntensity: normalizeVisualFxIntensity(rawConfig.visualFxIntensity),
+    overlayEffectsEnabled: safeBoolean(rawConfig.overlayEffectsEnabled, DEFAULT_CONFIG.overlayEffectsEnabled),
+    overlayDebugLayoutEnabled: safeBoolean(
+      rawConfig.overlayDebugLayoutEnabled,
+      DEFAULT_CONFIG.overlayDebugLayoutEnabled
+    ),
     overlayVisibleSections: normalizeOverlayVisibleSections(rawConfig.overlayVisibleSections),
     mainOverlaySettings: normalizeMainOverlaySettings(rawConfig.mainOverlaySettings),
     devPanelEnabled: safeBoolean(rawConfig.devPanelEnabled, DEFAULT_CONFIG.devPanelEnabled),
@@ -590,6 +602,15 @@ export class ConfigStore {
         : {}),
       ...(patch.overlayDensity !== undefined
         ? { overlayDensity: patch.overlayDensity }
+        : {}),
+      ...(patch.visualFxIntensity !== undefined
+        ? { visualFxIntensity: patch.visualFxIntensity }
+        : {}),
+      ...(patch.overlayEffectsEnabled !== undefined
+        ? { overlayEffectsEnabled: patch.overlayEffectsEnabled }
+        : {}),
+      ...(patch.overlayDebugLayoutEnabled !== undefined
+        ? { overlayDebugLayoutEnabled: patch.overlayDebugLayoutEnabled }
         : {}),
       ...(patch.overlayVisibleSections !== undefined
         ? {
