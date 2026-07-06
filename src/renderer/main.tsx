@@ -40,8 +40,7 @@ const CLICK_FEEDBACK_SCOPE_SELECTOR = [
 ].join(', ');
 
 const CLICK_FEEDBACK_TARGET_SELECTOR = [
-  'button',
-  '.toggle-card'
+  'button'
 ].join(', ');
 
 const CLICK_FEEDBACK_BURST_CLASS = 'click-feedback-burst';
