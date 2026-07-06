@@ -158,6 +158,38 @@
   content: none !important;
 }
 
+.theme-dark-fantasy.overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-shell::before {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  display: block;
+  padding: 2px;
+  border-radius: inherit;
+  pointer-events: none;
+  background: conic-gradient(
+    from var(--poe2-ambient-edge-angle),
+    transparent 0deg 34deg,
+    rgba(167, 123, 255, 0.68) 46deg,
+    rgba(217, 167, 95, 0.72) 58deg,
+    rgba(122, 83, 222, 0.54) 74deg,
+    rgba(82, 170, 255, 0.22) 88deg,
+    transparent 108deg 360deg
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0.62;
+  filter:
+    drop-shadow(0 0 10px rgba(167, 123, 255, 0.30))
+    drop-shadow(0 0 18px rgba(217, 167, 95, 0.14));
+  animation:
+    poe2-ambient-edge-orbit 9.6s linear infinite,
+    poe2-ambient-edge-breathe 6.2s ease-in-out infinite;
+}
+
 .theme-dark-fantasy.overlay-page .resize-grip:not(.is-disabled) {
   opacity: 0.20 !important;
   background:
@@ -1228,6 +1260,8 @@
 }
 
 .settings-page .toggle-card input[type="checkbox"] {
+  position: relative;
+  z-index: 1;
   appearance: none;
   -webkit-appearance: none;
   display: grid;
@@ -1300,6 +1334,8 @@
 }
 
 .settings-page .toggle-card:has(input[type="checkbox"]:checked) span {
+  position: relative;
+  z-index: 1;
   color: #f2fff5 !important;
   text-shadow: 0 0 12px rgba(125, 236, 162, 0.18);
 }
@@ -1422,16 +1458,24 @@
   border-right: 2px solid rgba(255, 231, 184, 0.95);
   border-bottom: 2px solid rgba(255, 231, 184, 0.95);
   transform: translateY(-2px) rotate(45deg);
+  transition: transform var(--motion-fast) var(--motion-ease-standard);
 }
 
-.settings-select.is-open .settings-select-chevron {
-  transform: rotate(180deg);
+.settings-select.is-open .settings-select-chevron::before {
+  transform: translateY(2px) rotate(225deg);
 }
 
-.settings-select-menu {
+.settings-select-layer {
   position: fixed;
   z-index: 10000;
   box-sizing: border-box;
+  pointer-events: auto;
+}
+
+.settings-select-menu {
+  box-sizing: border-box;
+  width: 100%;
+  max-height: inherit;
   overflow-y: auto;
   overscroll-behavior: contain;
   display: grid;
@@ -1455,11 +1499,9 @@
   align-items: center;
   justify-content: flex-start;
   padding: 8px 10px !important;
-  border: 1px solid rgba(241, 185, 106, 0.12) !important;
-  border-radius: 8px !important;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.026), rgba(255, 255, 255, 0.008)),
-    rgba(0, 0, 0, 0.10) !important;
+  border: 0 !important;
+  border-radius: 7px !important;
+  background: transparent !important;
   color: rgba(247, 234, 211, 0.86) !important;
   text-align: left;
   box-shadow: none !important;
@@ -1531,10 +1573,7 @@
 }
 
 .theme-dark-fantasy.settings-page .settings-select-option {
-  border-color: rgba(190, 162, 255, 0.13) !important;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.026), rgba(255, 255, 255, 0.008)),
-    rgba(8, 6, 15, 0.20) !important;
+  background: transparent !important;
   color: rgba(244, 236, 255, 0.84) !important;
 }
 

@@ -25,6 +25,12 @@ export function SettingsSelect<T extends string | number>({
   const menuRef = useRef<HTMLDivElement | null>(null);
   const selectedIndex = Math.max(0, options.findIndex((option) => option.value === value));
   const selectedOption = options[selectedIndex] ?? options[0] ?? null;
+  const settingsRoot = buttonRef.current?.closest('.settings-page');
+  const portalThemeClassName = settingsRoot
+    ? Array.from(settingsRoot.classList)
+      .filter((className) => className === 'theme-dark-fantasy' || className.startsWith('fx-'))
+      .join(' ')
+    : '';
 
   useEffect(() => {
     if (!isOpen) {
@@ -48,15 +54,15 @@ export function SettingsSelect<T extends string | number>({
       const spaceAbove = rect.top - margin;
       const openAbove = spaceBelow < 190 && spaceAbove > spaceBelow;
       const maxHeight = Math.min(280, Math.max(150, (openAbove ? spaceAbove : spaceBelow) - gap));
-      const top = openAbove
-        ? Math.max(margin, rect.top - gap - maxHeight)
-        : Math.min(rect.bottom + gap, viewportHeight - margin - 80);
+      const verticalPosition = openAbove
+        ? { bottom: viewportHeight - rect.top + gap }
+        : { top: Math.min(rect.bottom + gap, viewportHeight - margin - 80) };
 
       setMenuStyle({
         left,
         maxHeight,
-        top,
-        width
+        width,
+        ...verticalPosition
       });
     };
 
@@ -159,24 +165,24 @@ export function SettingsSelect<T extends string | number>({
         createPortal(
           <div
             ref={menuRef}
-            className="settings-select-menu"
-            role="listbox"
-            aria-label={ariaLabel}
+            className={`settings-select-layer settings-page ${portalThemeClassName}`}
             style={menuStyle}
           >
-            {options.map((option) => (
-              <button
-                type="button"
-                className={`settings-select-option${option.value === value ? ' is-selected' : ''}`}
-                role="option"
-                aria-selected={option.value === value}
-                key={String(option.value)}
-                onMouseDown={(event) => event.preventDefault()}
-                onClick={() => chooseValue(option.value)}
-              >
-                <span>{option.label}</span>
-              </button>
-            ))}
+            <div className="settings-select-menu" role="listbox" aria-label={ariaLabel}>
+              {options.map((option) => (
+                <button
+                  type="button"
+                  className={`settings-select-option${option.value === value ? ' is-selected' : ''}`}
+                  role="option"
+                  aria-selected={option.value === value}
+                  key={String(option.value)}
+                  onMouseDown={(event) => event.preventDefault()}
+                  onClick={() => chooseValue(option.value)}
+                >
+                  <span>{option.label}</span>
+                </button>
+              ))}
+            </div>
           </div>,
           document.body
         )}
