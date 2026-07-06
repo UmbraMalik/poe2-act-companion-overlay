@@ -286,6 +286,8 @@
   --overlay-section-bg-bottom: rgba(22, 14, 33, 0.66);
   --overlay-section-base: rgba(11, 7, 18, 0.74);
   --overlay-section-shadow: rgba(217, 167, 95, 0.09);
+  --overlay-section-edge: rgba(217, 167, 95, 0.34);
+  --overlay-section-edge-soft: rgba(217, 167, 95, 0.15);
 }
 
 .theme-dark-fantasy.overlay-page:not(.overlay-page-timer-only) .checklist-section {
@@ -295,6 +297,8 @@
   --overlay-section-glow: radial-gradient(circle at 12% 0%, rgba(167, 123, 255, 0.085), transparent 44%);
   --overlay-section-bg-top: rgba(35, 23, 54, 0.34);
   --overlay-section-bg-bottom: rgba(12, 8, 20, 0.68);
+  --overlay-section-edge: rgba(190, 162, 255, 0.24);
+  --overlay-section-edge-soft: rgba(167, 123, 255, 0.11);
 }
 
 .theme-dark-fantasy.overlay-page:not(.overlay-page-timer-only) .zone-bonuses-section {
@@ -305,6 +309,8 @@
   --overlay-section-bg-top: rgba(18, 57, 48, 0.32);
   --overlay-section-bg-bottom: rgba(10, 12, 22, 0.68);
   --overlay-section-shadow: rgba(72, 201, 139, 0.075);
+  --overlay-section-edge: rgba(99, 226, 170, 0.30);
+  --overlay-section-edge-soft: rgba(72, 201, 139, 0.13);
 }
 
 .theme-dark-fantasy.overlay-page:not(.overlay-page-timer-only) .league-reward-section {
@@ -315,6 +321,8 @@
   --overlay-section-bg-top: rgba(62, 40, 20, 0.30);
   --overlay-section-bg-bottom: rgba(18, 11, 23, 0.68);
   --overlay-section-shadow: rgba(217, 167, 95, 0.070);
+  --overlay-section-edge: rgba(217, 167, 95, 0.31);
+  --overlay-section-edge-soft: rgba(217, 167, 95, 0.13);
 }
 
 .theme-dark-fantasy.overlay-page:not(.overlay-page-timer-only) .hud-next-block {
@@ -325,6 +333,8 @@
   --overlay-section-bg-top: rgba(18, 38, 68, 0.28);
   --overlay-section-bg-bottom: rgba(10, 10, 22, 0.68);
   --overlay-section-shadow: rgba(96, 174, 255, 0.050);
+  --overlay-section-edge: rgba(96, 174, 255, 0.27);
+  --overlay-section-edge-soft: rgba(96, 174, 255, 0.11);
 }
 
 .theme-dark-fantasy.overlay-page:not(.overlay-page-timer-only) .skip-section {
@@ -335,6 +345,8 @@
   --overlay-section-bg-top: rgba(62, 24, 32, 0.26);
   --overlay-section-bg-bottom: rgba(17, 9, 19, 0.70);
   --overlay-section-shadow: rgba(255, 116, 112, 0.040);
+  --overlay-section-edge: rgba(255, 116, 112, 0.24);
+  --overlay-section-edge-soft: rgba(255, 116, 112, 0.10);
 }
 
 .theme-dark-fantasy.overlay-page:not(.overlay-page-timer-only) .speedrun-section {
@@ -345,6 +357,8 @@
   --overlay-section-bg-top: rgba(51, 38, 25, 0.25);
   --overlay-section-bg-bottom: rgba(14, 10, 20, 0.70);
   --overlay-section-shadow: rgba(192, 145, 85, 0.045);
+  --overlay-section-edge: rgba(192, 145, 85, 0.25);
+  --overlay-section-edge-soft: rgba(192, 145, 85, 0.10);
 }
 
 .theme-dark-fantasy.overlay-page:not(.overlay-page-timer-only) .info-section {
@@ -355,6 +369,8 @@
   --overlay-section-bg-top: rgba(48, 24, 72, 0.30);
   --overlay-section-bg-bottom: rgba(14, 8, 22, 0.70);
   --overlay-section-shadow: rgba(190, 120, 255, 0.060);
+  --overlay-section-edge: rgba(190, 120, 255, 0.28);
+  --overlay-section-edge-soft: rgba(190, 120, 255, 0.12);
 }
 
 @media (max-width: 640px) {

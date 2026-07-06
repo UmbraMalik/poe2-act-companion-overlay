@@ -2064,13 +2064,7 @@ export function OverlayPage() {
           <section className="hud-block league-reward-section">
             <h2>{t('overlay.league')}</h2>
             <div className="league-reward-line">
-              <span className="league-reward-marker">◆</span>
-              <span>
-                {t('overlay.guaranteedReward', {
-                  reward: language === 'en' ? leagueRewardItem.reward_en : leagueRewardItem.reward_ru
-                })}
-                {leagueRewardItem.uncertain ? ` · ${t('overlay.verify')}` : ''}
-              </span>
+              <span>{language === 'en' ? leagueRewardItem.reward_en : leagueRewardItem.reward_ru}</span>
             </div>
             {leagueRewardItem.oneTimeGuaranteed && (
               <p className="league-reward-note">{t('overlay.oneTimeLeagueReward')}</p>
