@@ -1850,9 +1850,8 @@ export function OverlayPage() {
       <main
         ref={overlayPageRef}
         className={`overlay-page overlay-page-timer-only density-${config.overlayDensity} scale-${config.overlayScale} text-size-${config.overlayTextSize} ${overlayFxClass} ${overlayThemeClass}${overlayDebugClass}${overlayLockClass}${overlayModeTransitionClass}`}
-        onPointerDownCapture={beginOverlayDrag}
       >
-        <section ref={overlayShellRef} className="overlay-shell overlay-hud overlay-timer-only-card">
+        <section ref={overlayShellRef} className="overlay-shell overlay-hud overlay-timer-only-card" onPointerDownCapture={beginOverlayDrag}>
           <header className="timer-only-header">
             <div className="timer-only-heading">
               <p className="timer-only-kicker">{overlayTitle}</p>
@@ -1926,9 +1925,8 @@ export function OverlayPage() {
       <main
         ref={overlayPageRef}
         className={`overlay-page is-overlay-collapsed density-${config.overlayDensity} scale-${config.overlayScale} text-size-${config.overlayTextSize} ${overlayFxClass} ${overlayThemeClass}${overlayDebugClass}${overlayLockClass}${overlayModeTransitionClass}`}
-        onPointerDownCapture={beginOverlayDrag}
       >
-        <section ref={overlayShellRef} className="overlay-shell overlay-hud overlay-main-compact overlay-collapsed-shell">
+        <section ref={overlayShellRef} className="overlay-shell overlay-hud overlay-main-compact overlay-collapsed-shell" onPointerDownCapture={beginOverlayDrag}>
           <header className="hud-collapsed-bar">
             <div className="hud-collapsed-main">
               <span className="hud-zone-act-pill">{overlayActLabel}</span>
@@ -1948,9 +1946,8 @@ export function OverlayPage() {
     <main
       ref={overlayPageRef}
       className={`overlay-page density-${config.overlayDensity} scale-${config.overlayScale} text-size-${config.overlayTextSize} ${overlayFxClass} ${overlayThemeClass}${overlayDebugClass}${overlayLockClass}${overlayModeTransitionClass}`}
-      onPointerDownCapture={beginOverlayDrag}
     >
-      <section ref={overlayShellRef} className="overlay-shell overlay-hud overlay-main-compact">
+      <section ref={overlayShellRef} className="overlay-shell overlay-hud overlay-main-compact" onPointerDownCapture={beginOverlayDrag}>
         <header className="hud-header">
           <div className="hud-title-row">
             <div className="hud-zone-title-card">
