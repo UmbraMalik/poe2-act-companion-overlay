@@ -332,7 +332,8 @@ test('settings defaults keep safe overlay bounds and hotkeys visible in user set
   const settingsPage = readText('src/renderer/pages/SettingsPage.tsx');
   assert.match(settingsPage, /min=\{35\}/);
   assert.match(settingsPage, /max=\{100\}/);
+  assert.match(settingsPage, /SettingsSelect/);
   for (const scale of [70, 80, 90, 100, 110, 120]) {
-    assert.match(settingsPage, new RegExp(`<option value=\\{${scale}\\}>${scale}%<\\/option>`));
+    assert.match(settingsPage, new RegExp(`\\{ value: ${scale}, label: '${scale}%' \\}`));
   }
 });
