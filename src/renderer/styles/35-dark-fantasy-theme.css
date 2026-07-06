@@ -49,9 +49,35 @@
 .theme-dark-fantasy.overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-shell::after,
 .theme-dark-fantasy.overlay-page.overlay-page-timer-only .overlay-timer-only-card::after,
 .theme-dark-fantasy.overlay-page.is-overlay-collapsed .overlay-collapsed-shell::after {
-  content: none !important;
-  display: none !important;
-  animation: none !important;
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  display: block;
+  padding: 2px;
+  border-radius: inherit;
+  pointer-events: none;
+  background: conic-gradient(
+    from var(--poe2-ambient-edge-angle),
+    transparent 0deg 34deg,
+    rgba(167, 123, 255, 0.68) 46deg,
+    rgba(217, 167, 95, 0.72) 58deg,
+    rgba(122, 83, 222, 0.54) 74deg,
+    rgba(82, 170, 255, 0.22) 88deg,
+    transparent 108deg 360deg
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0.70;
+  filter:
+    drop-shadow(0 0 10px rgba(167, 123, 255, 0.34))
+    drop-shadow(0 0 18px rgba(217, 167, 95, 0.16));
+  animation:
+    poe2-ambient-edge-orbit 9.6s linear infinite,
+    poe2-ambient-edge-breathe 6.2s ease-in-out infinite;
 }
 
 .theme-dark-fantasy.overlay-page .resize-grip:not(.is-disabled) {
