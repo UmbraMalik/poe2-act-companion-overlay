@@ -693,6 +693,8 @@
 }
 
 .theme-dark-fantasy.companion-page .reminders-next-card .reminder-level,
+.theme-dark-fantasy.companion-page .reminders-next-card .summary-section-heading span,
+.theme-dark-fantasy.companion-page .act-times-card-list .summary-section-heading span,
 .theme-dark-fantasy.companion-page .timer-segment-card .summary-section-heading span,
 .theme-dark-fantasy.companion-page .summary-history-row .summary-history-stats span {
   border-color: transparent !important;
@@ -703,6 +705,22 @@
 .theme-dark-fantasy.companion-page .reminders-next-card .reminder-level {
   padding: 0 !important;
   color: rgba(218, 202, 244, 0.80) !important;
+}
+
+.theme-dark-fantasy.companion-page .reminders-next-card .summary-section-heading span,
+.theme-dark-fantasy.companion-page .act-times-card-list .summary-section-heading span {
+  padding: 0 !important;
+  color: rgba(218, 202, 244, 0.82) !important;
+}
+
+.theme-dark-fantasy.companion-page .timer-main-readout h3,
+.theme-dark-fantasy.companion-page .summary-result-main strong {
+  font-family: var(--font-caps) !important;
+  font-weight: var(--fw-heavy) !important;
+  letter-spacing: -0.035em !important;
+  line-height: 0.95 !important;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
 }
 
 .theme-dark-fantasy.companion-page .act-split-table {
@@ -740,6 +758,52 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.034),
     0 10px 22px rgba(0, 0, 0, 0.12),
     0 0 18px rgba(217, 167, 95, 0.08) !important;
+}
+
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-list.route-overview-grid > .route-overview-card.status-current,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-list.route-overview-grid > .route-overview-card.is-route-next {
+  min-height: 108px !important;
+  border-color: rgba(217, 167, 95, 0.32) !important;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(217, 167, 95, 0.085), transparent 40%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.034), rgba(255, 255, 255, 0.014)),
+    rgba(18, 15, 31, 0.58) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.034),
+    0 10px 22px rgba(0, 0, 0, 0.12) !important;
+}
+
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.status-current::before,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.is-route-next::before {
+  width: 0 !important;
+  opacity: 0 !important;
+  box-shadow: none !important;
+}
+
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.status-current .route-step-index,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.is-route-next .route-step-index {
+  border-color: rgba(190, 162, 255, 0.22) !important;
+  background: rgba(17, 11, 29, 0.72) !important;
+  color: rgba(229, 216, 255, 0.84) !important;
+  box-shadow: none !important;
+}
+
+.theme-dark-fantasy.overlay-page.overlay-page-timer-only .timer-only-main-panel .timer-only-time-control-row {
+  align-items: center !important;
+}
+
+.theme-dark-fantasy.overlay-page.overlay-page-timer-only .timer-only-main-panel .timer-only-controls-row {
+  align-self: center !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transform: translateY(-1px);
+}
+
+.theme-dark-fantasy.overlay-page.overlay-page-timer-only .timer-only-main-panel .timer-only-controls-row .overlay-timer-controls,
+.theme-dark-fantasy.overlay-page.overlay-page-timer-only .timer-only-main-panel .timer-only-controls-row .overlay-timer-icon-control {
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
 }
 
 .theme-dark-fantasy.companion-page .companion-block::-webkit-scrollbar-thumb,
