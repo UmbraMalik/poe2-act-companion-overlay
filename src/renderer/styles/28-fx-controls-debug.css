@@ -145,6 +145,108 @@
     0 0 12px rgba(241, 185, 106, 0.14) !important;
 }
 
+.overlay-page.fx-normal:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-shell,
+.overlay-page.fx-subtle:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-shell {
+  animation: poe2-panel-enter var(--motion-medium, 180ms) var(--motion-ease-out, ease-out) both !important;
+}
+
+.overlay-page.fx-normal.is-overlay-collapsed .overlay-collapsed-shell,
+.overlay-page.fx-subtle.is-overlay-collapsed .overlay-collapsed-shell {
+  animation: poe2-compact-enter var(--motion-medium, 180ms) var(--motion-ease-out, ease-out) both !important;
+}
+
+.overlay-page.fx-normal:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-shell::after,
+.overlay-page.fx-subtle:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-shell::after,
+.overlay-page.fx-normal.is-overlay-collapsed .overlay-collapsed-shell::after,
+.overlay-page.fx-subtle.is-overlay-collapsed .overlay-collapsed-shell::after {
+  animation: none !important;
+  opacity: 0.28 !important;
+}
+
+.overlay-page.fx-normal:not(.overlay-page-timer-only) .hud-block:has(.overlay-upcoming-item.is-current-level),
+.overlay-page.fx-normal:not(.overlay-page-timer-only) .hud-block.zone-bonuses-section,
+.overlay-page.fx-normal:not(.overlay-page-timer-only) .hud-block:has(.overlay-no-guide-card),
+.overlay-page.fx-normal:not(.overlay-page-timer-only) .hud-meta.level-low,
+.overlay-page.fx-normal .hud-zone-name,
+.overlay-page.fx-normal .hud-collapsed-zone-name,
+.overlay-page.fx-normal .overlay-upcoming-item:first-child,
+.overlay-page.fx-normal .overlay-upcoming-item.is-current-level,
+.overlay-page.fx-normal .overlay-upcoming-item:first-child .overlay-upcoming-title,
+.overlay-page.fx-normal .overlay-upcoming-item.is-current-level .overlay-upcoming-title,
+.overlay-page.fx-subtle:not(.overlay-page-timer-only) .hud-block:has(.overlay-upcoming-item.is-current-level),
+.overlay-page.fx-subtle:not(.overlay-page-timer-only) .hud-block.zone-bonuses-section,
+.overlay-page.fx-subtle:not(.overlay-page-timer-only) .hud-block:has(.overlay-no-guide-card),
+.overlay-page.fx-subtle:not(.overlay-page-timer-only) .hud-meta.level-low,
+.overlay-page.fx-subtle .overlay-upcoming-item:first-child,
+.overlay-page.fx-subtle .overlay-upcoming-item.is-current-level,
+.overlay-page.fx-subtle .overlay-upcoming-item:first-child .overlay-upcoming-title,
+.overlay-page.fx-subtle .overlay-upcoming-item.is-current-level .overlay-upcoming-title,
+.companion-page.fx-normal .companion-card > .companion-tab-row .button-primary::before,
+.companion-page.fx-subtle .companion-card > .companion-tab-row .button-primary::before,
+.companion-page.fx-normal .zone-hero-card,
+.companion-page.fx-subtle .zone-hero-card,
+.companion-page.fx-normal .zone-hero-copy h3,
+.companion-page.fx-normal .route-overview-card.status-current:not(.is-focus-flash),
+.companion-page.fx-subtle .route-overview-card.status-current:not(.is-focus-flash),
+.companion-page.fx-normal .route-overview-card.status-current:not(.is-focus-flash)::after,
+.companion-page.fx-subtle .route-overview-card.status-current:not(.is-focus-flash)::after,
+.companion-page.fx-normal .route-overview-card.status-current:not(.is-focus-flash) .route-zone-name,
+.companion-page.fx-subtle .route-overview-card.status-current:not(.is-focus-flash) .route-zone-name,
+.companion-page.fx-normal .route-overview-card.is-route-next:not(.is-focus-flash),
+.companion-page.fx-subtle .route-overview-card.is-route-next:not(.is-focus-flash),
+.companion-page.fx-normal .reminders-next-card .reminder-item.is-nearest,
+.companion-page.fx-normal .reminders-next-card .reminder-item.is-current,
+.companion-page.fx-normal .reminders-next-card .reminder-item.is-nearest .reminder-title,
+.companion-page.fx-normal .reminders-next-card .reminder-item.is-current .reminder-title,
+.companion-page.fx-subtle .reminders-next-card .reminder-item.is-nearest,
+.companion-page.fx-subtle .reminders-next-card .reminder-item.is-current,
+.companion-page.fx-subtle .reminders-next-card .reminder-item.is-nearest .reminder-title,
+.companion-page.fx-subtle .reminders-next-card .reminder-item.is-current .reminder-title,
+.companion-page.fx-normal .vendor-checkpoint.is-current,
+.companion-page.fx-normal .vendor-checkpoint.is-current strong,
+.companion-page.fx-subtle .vendor-checkpoint.is-current,
+.companion-page.fx-subtle .vendor-checkpoint.is-current strong,
+.companion-page.fx-normal .power-spike-timeline-item.is-nearest .power-spike-timeline-card,
+.companion-page.fx-normal .power-spike-timeline-item.is-nearest .power-spike-timeline-card strong,
+.companion-page.fx-subtle .power-spike-timeline-item.is-nearest .power-spike-timeline-card,
+.companion-page.fx-subtle .power-spike-timeline-item.is-nearest .power-spike-timeline-card strong,
+.companion-page.fx-normal .bonuses-tab-layout .bonus-row.is-done,
+.companion-page.fx-normal .bonuses-tab-layout .bonus-row.is-pending,
+.companion-page.fx-normal .bonuses-tab-layout .bonus-row.is-done .bonus-status-marker,
+.companion-page.fx-normal .bonuses-tab-layout .bonus-row.is-done .bonus-title-line strong,
+.companion-page.fx-normal .bonuses-tab-layout .bonus-row.is-pending .bonus-status-marker,
+.companion-page.fx-normal .bonuses-tab-layout .bonus-row.is-pending .bonus-title-line strong,
+.companion-page.fx-subtle .bonuses-tab-layout .bonus-row.is-done,
+.companion-page.fx-subtle .bonuses-tab-layout .bonus-row.is-pending,
+.companion-page.fx-subtle .bonuses-tab-layout .bonus-row.is-done .bonus-status-marker,
+.companion-page.fx-subtle .bonuses-tab-layout .bonus-row.is-done .bonus-title-line strong,
+.companion-page.fx-subtle .bonuses-tab-layout .bonus-row.is-pending .bonus-status-marker,
+.companion-page.fx-subtle .bonuses-tab-layout .bonus-row.is-pending .bonus-title-line strong,
+.companion-page.fx-normal .zone-bonus-details-list .bonus-line.is-done,
+.companion-page.fx-normal .zone-bonus-details-list .bonus-line:not(.is-done),
+.companion-page.fx-normal .zone-bonus-details-list .bonus-line.is-done .bonus-state-marker,
+.companion-page.fx-normal .zone-bonus-details-list .bonus-line:not(.is-done) .bonus-state-marker,
+.companion-page.fx-subtle .zone-bonus-details-list .bonus-line.is-done,
+.companion-page.fx-subtle .zone-bonus-details-list .bonus-line:not(.is-done),
+.companion-page.fx-subtle .zone-bonus-details-list .bonus-line.is-done .bonus-state-marker,
+.companion-page.fx-subtle .zone-bonus-details-list .bonus-line:not(.is-done) .bonus-state-marker {
+  animation: none !important;
+}
+
+.overlay-page.fx-off:not(.overlay-page-timer-only) .hud-block,
+.overlay-page.fx-off:not(.overlay-page-timer-only) .hud-meta,
+.overlay-page.fx-off .overlay-upcoming-item,
+.overlay-page.fx-off .overlay-upcoming-title,
+.companion-page.fx-off .reminder-item,
+.companion-page.fx-off .vendor-checkpoint,
+.companion-page.fx-off .power-spike-timeline-card,
+.companion-page.fx-off .bonus-row,
+.companion-page.fx-off .bonus-line,
+.settings-page.fx-off .update-progress-track > span,
+.update-page.fx-off .update-progress-track span {
+  animation: none !important;
+}
+
 .overlay-page.fx-rich .overlay-shell,
 .overlay-page.fx-rich .overlay-timer-only-card,
 .overlay-page.fx-rich .overlay-collapsed-shell {

@@ -203,6 +203,43 @@ test('no forbidden performance hacks are reintroduced', () => {
   assert.doesNotMatch(source, /\[Perf\].*(priority|power save)/i);
 });
 
+test('secondary app windows share smooth show/focus handling', () => {
+  const controller = readText('src/main/app-window-controller.ts');
+
+  assert.match(controller, /function showWindowWhenReady/);
+  assert.match(controller, /webContents\.isLoading\(\)/);
+  assert.match(controller, /did-finish-load/);
+  assert.match(controller, /did-fail-load/);
+  assert.doesNotMatch(
+    controller,
+    /this\.(settings|companion|info|community|support|report)Window\.show\(\);\s*this\.\1Window\.focus\(\);/
+  );
+});
+
+test('default motion avoids continuous compositor-heavy ambient animations', () => {
+  const fxControls = readText('src/renderer/styles/28-fx-controls-debug.css');
+  const modeTransitions = readText('src/renderer/styles/32-overlay-mode-transitions.css');
+
+  assert.match(fxControls, /\.overlay-page\.fx-normal:not\(\.overlay-page-timer-only\):not\(\.is-overlay-collapsed\) \.overlay-shell/);
+  assert.match(fxControls, /poe2-panel-enter var\(--motion-medium, 180ms\)/);
+  assert.match(fxControls, /\.companion-page\.fx-normal \.route-overview-card\.status-current:not\(\.is-focus-flash\)/);
+  assert.match(fxControls, /\.companion-page\.fx-subtle \.bonuses-tab-layout \.bonus-row\.is-pending/);
+  assert.doesNotMatch(modeTransitions, /will-change:\s*opacity,\s*transform,\s*filter/);
+
+  for (const keyframeName of [
+    'poe2-overlay-mode-enter-full',
+    'poe2-overlay-mode-enter-compact',
+    'poe2-overlay-mode-enter-collapsed'
+  ]) {
+    const keyframeStart = modeTransitions.indexOf(`@keyframes ${keyframeName}`);
+    const nextKeyframe = modeTransitions.indexOf('@keyframes', keyframeStart + 1);
+    const shellRule = modeTransitions.indexOf('.overlay-page.is-overlay-mode-transitioning .overlay-shell', keyframeStart);
+    const keyframeEnd = nextKeyframe === -1 ? shellRule : Math.min(nextKeyframe, shellRule);
+    const keyframeSource = modeTransitions.slice(keyframeStart, keyframeEnd);
+    assert.doesNotMatch(keyframeSource, /filter:/);
+  }
+});
+
 test('overlay supports full left-click drag with an icon-only lock toggle', () => {
   const overlay = readText('src/renderer/pages/OverlayPage.tsx');
   const drag = readText('src/shared/overlay-drag.ts');
