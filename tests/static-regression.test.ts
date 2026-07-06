@@ -222,7 +222,15 @@ test('hidden windows and unchanged bounds do not trigger unnecessary smoothness 
   const stateController = readText('src/main/app-state-controller.ts');
   const boundsController = readText('src/main/app-overlay-bounds-controller.ts');
   const windowController = readText('src/main/app-window-controller.ts');
+  const ipcHandlers = readText('src/main/app-ipc-handlers.ts');
+  const configStore = readText('src/main/services/config-store.ts');
+  const main = readText('src/main/main.ts');
 
+  assert.match(stateController, /function runGetOverlaySnapshot/);
+  assert.match(stateController, /guideEntries:\s*currentGuideEntry \? \[currentGuideEntry\] : \[\]/);
+  assert.match(stateController, /const overlayTargets = targetWindows\.filter/);
+  assert.match(stateController, /const appTargets = targetWindows\.filter/);
+  assert.match(main, /getOverlaySnapshot\(\)/);
   assert.match(stateController, /win\.isVisible\(\)/);
   assert.match(stateController, /!win\.webContents\.isLoading\(\)/);
   assert.match(stateController, /if \(targetWindows\.length === 0\)/);
@@ -231,6 +239,25 @@ test('hidden windows and unchanged bounds do not trigger unnecessary smoothness 
   assert.match(boundsController, /return this\.persistOverlayBoundsForState/);
   assert.match(boundsController, /if \(changed\) \{\s*this\.broadcastState\(\);/);
   assert.match(boundsController, /areOverlayBoundsEqual\(this\.config\.companionBounds, bounds\)/);
+  assert.match(ipcHandlers, /areOverlayBoundsEqual\(currentBounds, nextBounds\)/);
+  assert.match(ipcHandlers, /const changed = this\.persistOverlayBoundsForCurrentState/);
+  assert.match(configStore, /JSON\.stringify\(nextConfig\) === JSON\.stringify\(this\.config\)/);
+});
+
+test('overlay renderer memoizes heavy derived view state and throttles layout IPC', () => {
+  const overlay = readText('src/renderer/pages/OverlayPage.tsx');
+  const types = readText('src/shared/types.ts');
+
+  assert.match(overlay, /useMemo/);
+  assert.match(overlay, /const overlayDerived = useMemo/);
+  assert.match(overlay, /getImportantOverlayLines\(snapshot, language\)/);
+  assert.match(overlay, /getCurrentZoneCampaignBonuses\(snapshot\)/);
+  assert.match(overlay, /getOverlayUpcomingReminders\(snapshot, language\)/);
+  assert.match(overlay, /lastAdaptiveOverlayHeightRequestRef/);
+  assert.match(overlay, /lastAdaptiveOverlaySuspensionSyncAtRef/);
+  assert.match(overlay, /now - lastAdaptiveOverlaySuspensionSyncAtRef\.current > 500/);
+  assert.match(overlay, /event:\s*'overlay-render-frequency'/);
+  assert.match(types, /'overlay-render-frequency'/);
 });
 
 test('default motion avoids continuous compositor-heavy ambient animations', () => {

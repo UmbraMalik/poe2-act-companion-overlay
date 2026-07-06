@@ -657,10 +657,14 @@ export class ConfigStore {
   }
 
   update(patch: Partial<AppConfig>): AppConfig {
-    this.config = normalizeAppConfig({
+    const nextConfig = normalizeAppConfig({
       ...this.config,
       ...patch
     });
+    if (JSON.stringify(nextConfig) === JSON.stringify(this.config)) {
+      return this.get();
+    }
+    this.config = nextConfig;
     this.save();
     return this.get();
   }

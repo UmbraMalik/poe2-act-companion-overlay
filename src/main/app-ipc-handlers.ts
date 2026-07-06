@@ -379,9 +379,14 @@ export function runRegisterIpc(this: any) {
                 width: Math.round(Number(width) || currentBounds.width),
                 height: Math.round(Number(height) || currentBounds.height)
             }, this.overlayMode, this.config.overlayDensity);
+            if (areOverlayBoundsEqual(currentBounds, nextBounds)) {
+                return this.getSnapshot();
+            }
             this.applyOverlayWindowBounds('manualResize', nextBounds);
-            this.persistOverlayBoundsForCurrentState(targetWindow.getBounds());
-            this.broadcastState();
+            const changed = this.persistOverlayBoundsForCurrentState(targetWindow.getBounds());
+            if (changed) {
+                this.broadcastState();
+            }
             return this.getSnapshot();
         });
         ipcMain.handle('app:set-overlay-auto-resize-suspended', async (_event: any, suspended: any) => {
@@ -470,9 +475,14 @@ export function runRegisterIpc(this: any) {
                     height: collapsedHeight
                 };
             }
+            if (areOverlayBoundsEqual(currentBounds, nextBounds)) {
+                return this.getSnapshot();
+            }
             this.applyOverlayWindowBounds('autoHeight', nextBounds);
-            this.persistOverlayBoundsForCurrentState(targetWindow.getBounds());
-            this.broadcastState();
+            const changed = this.persistOverlayBoundsForCurrentState(targetWindow.getBounds());
+            if (changed) {
+                this.broadcastState();
+            }
             return this.getSnapshot();
         });
         ipcMain.handle('app:set-overlay-position', async (_event: any, x: any, y: any) => {

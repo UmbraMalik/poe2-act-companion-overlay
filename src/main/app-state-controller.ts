@@ -201,6 +201,29 @@ export function runGetSnapshot(this: any) {
         };
     }
 
+export function runGetOverlaySnapshot(this: any) {
+        const currentGuideEntry = this.currentZone.guide;
+        const currentZoneProgress = currentGuideEntry
+            ? this.getZoneProgress(currentGuideEntry.id)
+            : null;
+        return {
+            config: this.config,
+            currentZone: this.currentZone,
+            currentGuideEntry,
+            currentZoneProgress,
+            currentChecklist: buildChecklistViewItems(currentGuideEntry, currentZoneProgress ?? undefined),
+            guideEntries: currentGuideEntry ? [currentGuideEntry] : [],
+            vendorCheckpoints: this.guideService.getVendorCheckpoints(),
+            powerSpikes: this.guideService.getPowerSpikes(),
+            campaignBonuses: this.campaignBonuses,
+            activeLevelReminder: this.getActiveLevelReminder(),
+            runtime: {
+                ...this.runtime,
+                timerNowMs: Date.now()
+            }
+        };
+    }
+
 export function runClearBroadcastTimer(this: any) {
         if (this.broadcastTimer) {
             clearTimeout(this.broadcastTimer);
@@ -227,10 +250,21 @@ export function runFlushBroadcastState(this: any) {
             this.pendingSnapshot = null;
             return;
         }
-        const snapshot = this.pendingSnapshot ?? this.getSnapshot();
+        const overlayTargets = targetWindows.filter((win) => win === this.overlayWindow);
+        const appTargets = targetWindows.filter((win) => win !== this.overlayWindow);
+        const pendingSnapshot = this.pendingSnapshot;
         this.pendingSnapshot = null;
-        for (const win of targetWindows) {
-            win.webContents.send('app:state-changed', snapshot);
+        if (overlayTargets.length > 0) {
+            const overlaySnapshot = this.getOverlaySnapshot();
+            for (const win of overlayTargets) {
+                win.webContents.send('app:state-changed', overlaySnapshot);
+            }
+        }
+        if (appTargets.length > 0) {
+            const snapshot = pendingSnapshot ?? this.getSnapshot();
+            for (const win of appTargets) {
+                win.webContents.send('app:state-changed', snapshot);
+            }
         }
     }
 

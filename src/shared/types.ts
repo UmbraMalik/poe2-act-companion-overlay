@@ -603,6 +603,7 @@ export type TimerDiagnosticsEvent =
   | 'timer-renderer-unmount'
   | 'overlay-render-scheduler-ready'
   | 'overlay-render-commit-delay'
+  | 'overlay-render-frequency'
   | 'overlay-direct-composition-compat-enabled';
 
 export interface TimerDiagnosticsPayload {
