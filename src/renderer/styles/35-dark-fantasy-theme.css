@@ -1001,6 +1001,18 @@
   }
 }
 
+@keyframes poe2-select-menu-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 :where(
   html,
   body,
@@ -1336,6 +1348,8 @@
 .settings-select {
   position: relative;
   min-width: 0;
+  display: grid;
+  gap: 7px;
 }
 
 .settings-select-button {
@@ -1418,11 +1432,8 @@
 }
 
 .settings-select-menu {
-  position: absolute;
-  z-index: 60;
-  top: calc(100% + 6px);
-  left: 0;
-  right: 0;
+  position: relative;
+  z-index: 1;
   max-height: min(280px, 52vh);
   overflow-y: auto;
   overscroll-behavior: contain;
@@ -1435,13 +1446,16 @@
     radial-gradient(circle at 8% 0%, rgba(241, 185, 106, 0.14), transparent 48%),
     linear-gradient(180deg, rgba(19, 24, 31, 0.98), rgba(7, 10, 14, 0.98));
   box-shadow:
-    0 18px 40px rgba(0, 0, 0, 0.46),
+    0 12px 26px rgba(0, 0, 0, 0.30),
     0 0 24px rgba(241, 185, 106, 0.12),
     inset 0 1px 0 rgba(255, 255, 255, 0.040);
+  animation: poe2-select-menu-enter 120ms var(--motion-ease-out, ease-out) both;
 }
 
 .settings-select-option {
   min-height: 34px;
+  display: flex;
+  align-items: center;
   justify-content: flex-start;
   padding: 8px 10px !important;
   border: 1px solid transparent !important;
@@ -1470,13 +1484,7 @@
 }
 
 .settings-select-option.is-selected::after {
-  content: "";
-  width: 9px;
-  height: 5px;
-  margin-left: auto;
-  border-left: 2px solid rgba(169, 255, 195, 0.96);
-  border-bottom: 2px solid rgba(169, 255, 195, 0.96);
-  transform: rotate(-45deg);
+  content: none !important;
 }
 
 .theme-dark-fantasy.settings-page .settings-select-button {
@@ -1518,7 +1526,7 @@
     radial-gradient(circle at 100% 0%, rgba(217, 167, 95, 0.10), transparent 38%),
     linear-gradient(180deg, rgba(22, 15, 36, 0.98), rgba(8, 6, 15, 0.98));
   box-shadow:
-    0 18px 42px rgba(0, 0, 0, 0.52),
+    0 12px 28px rgba(0, 0, 0, 0.36),
     0 0 24px rgba(167, 123, 255, 0.16),
     inset 0 1px 0 rgba(255, 255, 255, 0.040);
 }
