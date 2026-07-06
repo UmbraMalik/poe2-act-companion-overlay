@@ -1,4 +1,5 @@
-import { useState, type KeyboardEvent, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 
 export interface SettingsSelectOption<T extends string | number> {
   value: T;
@@ -19,8 +20,70 @@ export function SettingsSelect<T extends string | number>({
   onChange
 }: SettingsSelectProps<T>) {
   const [isOpen, setIsOpen] = useState(false);
+  const [menuStyle, setMenuStyle] = useState<CSSProperties>({});
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const menuRef = useRef<HTMLDivElement | null>(null);
   const selectedIndex = Math.max(0, options.findIndex((option) => option.value === value));
   const selectedOption = options[selectedIndex] ?? options[0] ?? null;
+
+  useEffect(() => {
+    if (!isOpen) {
+      return undefined;
+    }
+
+    const updateMenuPosition = () => {
+      const button = buttonRef.current;
+      if (!button) {
+        return;
+      }
+
+      const margin = 12;
+      const gap = 8;
+      const rect = button.getBoundingClientRect();
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      const width = Math.min(rect.width, viewportWidth - margin * 2);
+      const left = Math.min(Math.max(margin, rect.left), viewportWidth - width - margin);
+      const spaceBelow = viewportHeight - rect.bottom - margin;
+      const spaceAbove = rect.top - margin;
+      const openAbove = spaceBelow < 190 && spaceAbove > spaceBelow;
+      const maxHeight = Math.min(280, Math.max(150, (openAbove ? spaceAbove : spaceBelow) - gap));
+      const top = openAbove
+        ? Math.max(margin, rect.top - gap - maxHeight)
+        : Math.min(rect.bottom + gap, viewportHeight - margin - 80);
+
+      setMenuStyle({
+        left,
+        maxHeight,
+        top,
+        width
+      });
+    };
+
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target;
+      if (!(target instanceof Node)) {
+        return;
+      }
+
+      if (buttonRef.current?.contains(target) || menuRef.current?.contains(target)) {
+        return;
+      }
+
+      setIsOpen(false);
+    };
+
+    updateMenuPosition();
+    window.addEventListener('resize', updateMenuPosition);
+    document.addEventListener('scroll', updateMenuPosition, true);
+    document.addEventListener('pointerdown', handlePointerDown);
+
+    return () => {
+      window.removeEventListener('resize', updateMenuPosition);
+      document.removeEventListener('scroll', updateMenuPosition, true);
+      document.removeEventListener('pointerdown', handlePointerDown);
+    };
+  }, [isOpen]);
 
   const chooseValue = (nextValue: T) => {
     onChange(nextValue);
@@ -79,6 +142,7 @@ export function SettingsSelect<T extends string | number>({
       }}
     >
       <button
+        ref={buttonRef}
         type="button"
         className="settings-select-button"
         aria-label={ariaLabel}
@@ -91,23 +155,31 @@ export function SettingsSelect<T extends string | number>({
         <span className="settings-select-chevron" aria-hidden="true" />
       </button>
 
-      {isOpen && (
-        <div className="settings-select-menu" role="listbox" aria-label={ariaLabel}>
-          {options.map((option) => (
-            <button
-              type="button"
-              className={`settings-select-option${option.value === value ? ' is-selected' : ''}`}
-              role="option"
-              aria-selected={option.value === value}
-              key={String(option.value)}
-              onMouseDown={(event) => event.preventDefault()}
-              onClick={() => chooseValue(option.value)}
-            >
-              <span>{option.label}</span>
-            </button>
-          ))}
-        </div>
-      )}
+      {isOpen &&
+        createPortal(
+          <div
+            ref={menuRef}
+            className="settings-select-menu"
+            role="listbox"
+            aria-label={ariaLabel}
+            style={menuStyle}
+          >
+            {options.map((option) => (
+              <button
+                type="button"
+                className={`settings-select-option${option.value === value ? ' is-selected' : ''}`}
+                role="option"
+                aria-selected={option.value === value}
+                key={String(option.value)}
+                onMouseDown={(event) => event.preventDefault()}
+                onClick={() => chooseValue(option.value)}
+              >
+                <span>{option.label}</span>
+              </button>
+            ))}
+          </div>,
+          document.body
+        )}
     </div>
   );
 }

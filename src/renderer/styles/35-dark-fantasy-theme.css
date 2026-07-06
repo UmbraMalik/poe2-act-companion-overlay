@@ -1348,8 +1348,6 @@
 .settings-select {
   position: relative;
   min-width: 0;
-  display: grid;
-  gap: 7px;
 }
 
 .settings-select-button {
@@ -1406,6 +1404,8 @@
   width: 28px;
   height: 28px;
   border-radius: 999px;
+  display: grid;
+  place-items: center;
   background:
     radial-gradient(circle at 50% 40%, rgba(255, 231, 184, 0.24), transparent 56%),
     rgba(241, 185, 106, 0.10);
@@ -1417,14 +1417,11 @@
 
 .settings-select-chevron::before {
   content: "";
-  position: absolute;
-  left: 9px;
-  top: 10px;
   width: 8px;
   height: 8px;
   border-right: 2px solid rgba(255, 231, 184, 0.95);
   border-bottom: 2px solid rgba(255, 231, 184, 0.95);
-  transform: rotate(45deg);
+  transform: translateY(-2px) rotate(45deg);
 }
 
 .settings-select.is-open .settings-select-chevron {
@@ -1432,13 +1429,13 @@
 }
 
 .settings-select-menu {
-  position: relative;
-  z-index: 1;
-  max-height: min(280px, 52vh);
+  position: fixed;
+  z-index: 10000;
+  box-sizing: border-box;
   overflow-y: auto;
   overscroll-behavior: contain;
   display: grid;
-  gap: 4px;
+  gap: 6px;
   padding: 6px;
   border: 1px solid rgba(241, 185, 106, 0.28);
   border-radius: 12px;
@@ -1458,9 +1455,11 @@
   align-items: center;
   justify-content: flex-start;
   padding: 8px 10px !important;
-  border: 1px solid transparent !important;
+  border: 1px solid rgba(241, 185, 106, 0.12) !important;
   border-radius: 8px !important;
-  background: transparent !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.026), rgba(255, 255, 255, 0.008)),
+    rgba(0, 0, 0, 0.10) !important;
   color: rgba(247, 234, 211, 0.86) !important;
   text-align: left;
   box-shadow: none !important;
@@ -1475,12 +1474,12 @@
 }
 
 .settings-select-option.is-selected {
-  border-color: rgba(125, 236, 162, 0.34) !important;
+  border-color: rgba(241, 185, 106, 0.42) !important;
   background:
-    radial-gradient(circle at 0% 0%, rgba(125, 236, 162, 0.20), transparent 48%),
-    linear-gradient(180deg, rgba(125, 236, 162, 0.11), rgba(255, 255, 255, 0.018)) !important;
-  color: #f2fff5 !important;
-  box-shadow: inset 0 0 0 1px rgba(205, 255, 220, 0.050) !important;
+    radial-gradient(circle at 0% 0%, rgba(241, 185, 106, 0.20), transparent 48%),
+    linear-gradient(180deg, rgba(241, 185, 106, 0.13), rgba(255, 255, 255, 0.018)) !important;
+  color: #fff3d7 !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 232, 176, 0.050) !important;
 }
 
 .settings-select-option.is-selected::after {
@@ -1532,6 +1531,10 @@
 }
 
 .theme-dark-fantasy.settings-page .settings-select-option {
+  border-color: rgba(190, 162, 255, 0.13) !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.026), rgba(255, 255, 255, 0.008)),
+    rgba(8, 6, 15, 0.20) !important;
   color: rgba(244, 236, 255, 0.84) !important;
 }
 
@@ -1544,10 +1547,11 @@
 }
 
 .theme-dark-fantasy.settings-page .settings-select-option.is-selected {
-  border-color: rgba(99, 226, 170, 0.34) !important;
+  border-color: rgba(217, 167, 95, 0.42) !important;
   background:
-    radial-gradient(circle at 0% 0%, rgba(99, 226, 170, 0.17), transparent 46%),
-    linear-gradient(180deg, rgba(99, 226, 170, 0.095), rgba(167, 123, 255, 0.028)) !important;
+    radial-gradient(circle at 0% 0%, rgba(217, 167, 95, 0.18), transparent 46%),
+    linear-gradient(180deg, rgba(217, 167, 95, 0.11), rgba(167, 123, 255, 0.030)) !important;
+  color: #fff1cb !important;
 }
 
 .settings-page:not(.theme-dark-fantasy) .visual-fx-intensity-field {
