@@ -446,6 +446,258 @@
   opacity: 0 !important;
 }
 
+/* Dark fantasy detailed panel: adapt every companion tab without changing layout. */
+.theme-dark-fantasy.companion-page {
+  --df-companion-panel: rgba(13, 8, 24, 0.94);
+  --df-companion-card: rgba(24, 15, 40, 0.74);
+  --df-companion-card-strong: rgba(32, 20, 52, 0.82);
+  --df-companion-border: rgba(176, 133, 255, 0.24);
+  --df-companion-border-soft: rgba(212, 184, 255, 0.13);
+  --df-companion-gold: rgba(217, 167, 95, 0.92);
+  --df-companion-gold-soft: rgba(217, 167, 95, 0.16);
+  --df-companion-blue: rgba(115, 184, 255, 0.78);
+  --df-companion-blue-soft: rgba(96, 174, 255, 0.13);
+  --df-companion-green: rgba(115, 235, 172, 0.78);
+  --df-companion-green-soft: rgba(72, 201, 139, 0.13);
+  --df-companion-red: rgba(255, 128, 116, 0.76);
+  --df-companion-red-soft: rgba(255, 116, 112, 0.12);
+  --df-companion-violet: rgba(190, 145, 255, 0.82);
+  --df-companion-violet-soft: rgba(167, 123, 255, 0.16);
+}
+
+.theme-dark-fantasy.companion-page .companion-card {
+  border-color: rgba(174, 128, 255, 0.34) !important;
+  background:
+    radial-gradient(circle at 14% 0%, rgba(167, 123, 255, 0.20), transparent 32%),
+    radial-gradient(circle at 88% 8%, rgba(217, 167, 95, 0.10), transparent 30%),
+    linear-gradient(180deg, rgba(20, 12, 35, 0.96), rgba(8, 5, 14, 0.96)) !important;
+  box-shadow:
+    0 22px 48px rgba(0, 0, 0, 0.54),
+    0 0 0 1px rgba(167, 123, 255, 0.10),
+    0 0 42px rgba(98, 58, 184, 0.20),
+    inset 0 1px 0 rgba(255, 255, 255, 0.045) !important;
+}
+
+.theme-dark-fantasy.companion-page .companion-tab-body {
+  background:
+    radial-gradient(circle at 10% 0%, rgba(167, 123, 255, 0.075), transparent 36%),
+    linear-gradient(180deg, rgba(10, 7, 18, 0.44), transparent 42%) !important;
+}
+
+.theme-dark-fantasy.companion-page .companion-card > .companion-tab-row .button-secondary {
+  border-color: rgba(190, 162, 255, 0.18) !important;
+  background:
+    linear-gradient(180deg, rgba(27, 18, 44, 0.86), rgba(14, 9, 24, 0.84)) !important;
+  color: rgba(236, 226, 255, 0.86) !important;
+}
+
+.theme-dark-fantasy.companion-page .companion-card > .companion-tab-row .button-primary {
+  border-color: rgba(217, 167, 95, 0.58) !important;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(217, 167, 95, 0.30), transparent 42%),
+    linear-gradient(180deg, rgba(92, 64, 145, 0.74), rgba(31, 20, 53, 0.84)) !important;
+  color: #fff3d7 !important;
+  box-shadow:
+    0 0 0 1px rgba(217, 167, 95, 0.12),
+    0 0 20px rgba(167, 123, 255, 0.20) !important;
+}
+
+.theme-dark-fantasy.companion-page .companion-block,
+.theme-dark-fantasy.companion-page .route-overview-card,
+.theme-dark-fantasy.companion-page .info-cell,
+.theme-dark-fantasy.companion-page .zone-metric-card,
+.theme-dark-fantasy.companion-page .timer-cockpit-details > div,
+.theme-dark-fantasy.companion-page .timer-segment-item,
+.theme-dark-fantasy.companion-page .act-split-row,
+.theme-dark-fantasy.companion-page .summary-act-breakdown-row,
+.theme-dark-fantasy.companion-page .summary-compare-act-pill,
+.theme-dark-fantasy.companion-page .summary-stat,
+.theme-dark-fantasy.companion-page .summary-history-row,
+.theme-dark-fantasy.companion-page .reminder-item,
+.theme-dark-fantasy.companion-page .vendor-checkpoint,
+.theme-dark-fantasy.companion-page .power-spike-timeline-card,
+.theme-dark-fantasy.companion-page .bonus-row {
+  border-color: var(--df-companion-border-soft) !important;
+  background:
+    radial-gradient(circle at 12% 0%, rgba(167, 123, 255, 0.070), transparent 44%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.026), rgba(255, 255, 255, 0.010)),
+    var(--df-companion-card) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.035),
+    0 14px 28px rgba(0, 0, 0, 0.20) !important;
+}
+
+.theme-dark-fantasy.companion-page .zone-hero-card,
+.theme-dark-fantasy.companion-page .timer-cockpit-card,
+.theme-dark-fantasy.companion-page .act-times-hero-card,
+.theme-dark-fantasy.companion-page .summary-result-panel,
+.theme-dark-fantasy.companion-page .bonuses-summary-card {
+  border-color: rgba(217, 167, 95, 0.44) !important;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(217, 167, 95, 0.20), transparent 38%),
+    radial-gradient(circle at 88% 12%, rgba(167, 123, 255, 0.16), transparent 34%),
+    linear-gradient(135deg, rgba(52, 36, 68, 0.72), rgba(10, 8, 16, 0.88)) !important;
+  box-shadow:
+    0 0 0 1px rgba(217, 167, 95, 0.08),
+    0 0 30px rgba(167, 123, 255, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.050) !important;
+}
+
+.theme-dark-fantasy.companion-page .zone-hero-copy h3,
+.theme-dark-fantasy.companion-page .timer-main-readout strong,
+.theme-dark-fantasy.companion-page .summary-result-main strong {
+  color: rgba(239, 179, 91, 0.96) !important;
+  text-shadow:
+    0 2px 0 rgba(0, 0, 0, 0.50),
+    0 0 18px rgba(217, 167, 95, 0.26),
+    0 0 28px rgba(167, 123, 255, 0.20) !important;
+}
+
+.theme-dark-fantasy.companion-page .companion-block h3,
+.theme-dark-fantasy.companion-page .summary-section-heading h3,
+.theme-dark-fantasy.companion-page .bonuses-act-card h3,
+.theme-dark-fantasy.companion-page .companion-inline-title {
+  color: var(--df-companion-gold) !important;
+}
+
+.theme-dark-fantasy.companion-page .zone-metric-card,
+.theme-dark-fantasy.companion-page .act-split-row.is-current,
+.theme-dark-fantasy.companion-page .summary-act-breakdown-row.is-current,
+.theme-dark-fantasy.companion-page .timer-cockpit-details > div {
+  border-color: rgba(96, 174, 255, 0.28) !important;
+  background:
+    radial-gradient(circle at 10% 0%, var(--df-companion-blue-soft), transparent 44%),
+    rgba(12, 15, 28, 0.76) !important;
+}
+
+.theme-dark-fantasy.companion-page .route-overview-card.status-current,
+.theme-dark-fantasy.companion-page .route-overview-card.is-route-next,
+.theme-dark-fantasy.companion-page .reminder-item.is-current,
+.theme-dark-fantasy.companion-page .reminder-item.is-nearest,
+.theme-dark-fantasy.companion-page .vendor-checkpoint.is-current,
+.theme-dark-fantasy.companion-page .vendor-checkpoint.is-nearest,
+.theme-dark-fantasy.companion-page .power-spike-timeline-item.is-nearest .power-spike-timeline-card {
+  border-color: rgba(217, 167, 95, 0.50) !important;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(217, 167, 95, 0.17), transparent 44%),
+    linear-gradient(180deg, rgba(50, 34, 59, 0.78), rgba(13, 9, 22, 0.82)) !important;
+  box-shadow:
+    0 0 0 1px rgba(217, 167, 95, 0.10),
+    0 0 22px rgba(217, 167, 95, 0.12),
+    inset 3px 0 0 rgba(217, 167, 95, 0.76) !important;
+}
+
+.theme-dark-fantasy.companion-page .route-overview-card.status-completed,
+.theme-dark-fantasy.companion-page .route-overview-card.status-visited,
+.theme-dark-fantasy.companion-page .route-overview-card.status-done,
+.theme-dark-fantasy.companion-page .bonus-row.is-done,
+.theme-dark-fantasy.companion-page .zone-bonus-details-list .bonus-line.is-done,
+.theme-dark-fantasy.companion-page .bonus-line.is-done {
+  border-color: rgba(99, 226, 170, 0.28) !important;
+  background:
+    radial-gradient(circle at 0% 0%, var(--df-companion-green-soft), transparent 42%),
+    rgba(11, 28, 25, 0.54) !important;
+}
+
+.theme-dark-fantasy.companion-page .route-overview-card.status-missed {
+  border-color: rgba(255, 128, 116, 0.24) !important;
+  background:
+    radial-gradient(circle at 0% 0%, var(--df-companion-red-soft), transparent 42%),
+    rgba(30, 14, 22, 0.50) !important;
+}
+
+.theme-dark-fantasy.companion-page .bonus-row.is-pending {
+  border-color: rgba(217, 167, 95, 0.26) !important;
+  background:
+    radial-gradient(circle at 0% 0%, var(--df-companion-gold-soft), transparent 42%),
+    rgba(26, 18, 32, 0.56) !important;
+}
+
+.theme-dark-fantasy.companion-page .route-step-index,
+.theme-dark-fantasy.companion-page .act-time-status-pill,
+.theme-dark-fantasy.companion-page .route-rec-badge,
+.theme-dark-fantasy.companion-page .route-state-pill,
+.theme-dark-fantasy.companion-page .bonus-category-pill,
+.theme-dark-fantasy.companion-page .bonus-verify-pill,
+.theme-dark-fantasy.companion-page .reminder-level,
+.theme-dark-fantasy.companion-page .reminder-badge,
+.theme-dark-fantasy.companion-page .summary-history-stats span,
+.theme-dark-fantasy.companion-page .summary-section-heading span {
+  border-color: rgba(190, 162, 255, 0.22) !important;
+  background: rgba(17, 11, 29, 0.72) !important;
+  color: rgba(229, 216, 255, 0.84) !important;
+}
+
+.theme-dark-fantasy.companion-page .bonus-status-marker,
+.theme-dark-fantasy.companion-page .bonus-state-marker,
+.theme-dark-fantasy.companion-page .delta-good {
+  color: var(--df-companion-green) !important;
+}
+
+.theme-dark-fantasy.companion-page .delta-bad,
+.theme-dark-fantasy.companion-page .warning-inline {
+  color: var(--df-companion-red) !important;
+}
+
+.theme-dark-fantasy.companion-page .route-zone-name,
+.theme-dark-fantasy.companion-page .summary-history-main strong,
+.theme-dark-fantasy.companion-page .bonus-title-line strong,
+.theme-dark-fantasy.companion-page .reminder-title,
+.theme-dark-fantasy.companion-page .act-split-time,
+.theme-dark-fantasy.companion-page .summary-stat strong,
+.theme-dark-fantasy.companion-page .summary-compare-lead strong {
+  color: rgba(245, 239, 255, 0.94) !important;
+  text-shadow: 0 0 14px rgba(167, 123, 255, 0.16);
+}
+
+.theme-dark-fantasy.companion-page .helper-text,
+.theme-dark-fantasy.companion-page .route-empty-note,
+.theme-dark-fantasy.companion-page .route-more-note,
+.theme-dark-fantasy.companion-page .bonus-meta,
+.theme-dark-fantasy.companion-page .bonus-detected-line,
+.theme-dark-fantasy.companion-page .summary-stat small,
+.theme-dark-fantasy.companion-page .summary-history-main span,
+.theme-dark-fantasy.companion-page .summary-history-stats span,
+.theme-dark-fantasy.companion-page .act-split-total,
+.theme-dark-fantasy.companion-page .timer-cockpit-details small {
+  color: rgba(184, 170, 207, 0.78) !important;
+}
+
+.theme-dark-fantasy.companion-page .compact-table,
+.theme-dark-fantasy.companion-page .act-split-table,
+.theme-dark-fantasy.companion-page .summary-act-breakdown-table,
+.theme-dark-fantasy.companion-page .summary-compare-panel,
+.theme-dark-fantasy.companion-page .summary-history-panel,
+.theme-dark-fantasy.companion-page .summary-longest-card,
+.theme-dark-fantasy.companion-page .run-save-card,
+.theme-dark-fantasy.companion-page .timer-action-bar {
+  border-color: var(--df-companion-border-soft) !important;
+  background:
+    radial-gradient(circle at 12% 0%, rgba(167, 123, 255, 0.060), transparent 42%),
+    rgba(12, 8, 20, 0.70) !important;
+}
+
+.theme-dark-fantasy.companion-page .summary-history-actions .button-secondary,
+.theme-dark-fantasy.companion-page .timer-action-button.button-secondary,
+.theme-dark-fantasy.companion-page .bonus-toggle-button.button-secondary {
+  border-color: rgba(190, 162, 255, 0.22) !important;
+  background: rgba(16, 10, 27, 0.78) !important;
+  color: rgba(238, 230, 255, 0.88) !important;
+}
+
+.theme-dark-fantasy.companion-page .button-danger,
+.theme-dark-fantasy.companion-page .timer-action-button.button-danger {
+  border-color: rgba(255, 128, 116, 0.32) !important;
+  background: rgba(72, 24, 32, 0.52) !important;
+  color: rgba(255, 213, 205, 0.92) !important;
+}
+
+.theme-dark-fantasy.companion-page .companion-block::-webkit-scrollbar-thumb,
+.theme-dark-fantasy.companion-page .route-overview-grid::-webkit-scrollbar-thumb,
+.theme-dark-fantasy.companion-page .summary-scroll-body::-webkit-scrollbar-thumb {
+  background: rgba(167, 123, 255, 0.42) !important;
+}
+
 @media (max-width: 640px) {
   .app-theme-choice,
   .overlay-theme-preference-actions {
