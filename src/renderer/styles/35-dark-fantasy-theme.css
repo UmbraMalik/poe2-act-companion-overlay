@@ -1119,6 +1119,274 @@
     0 0 8px rgba(217, 167, 95, 0.10) !important;
 }
 
+.settings-page select {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  min-height: 42px;
+  padding: 10px 46px 10px 14px !important;
+  border-color: rgba(241, 185, 106, 0.24) !important;
+  background-color: rgba(7, 10, 14, 0.72) !important;
+  background-image:
+    linear-gradient(45deg, transparent 50%, rgba(255, 231, 184, 0.98) 50%),
+    linear-gradient(135deg, rgba(255, 231, 184, 0.98) 50%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(241, 185, 106, 0.18), rgba(241, 185, 106, 0.060) 62%, transparent 64%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.034), rgba(255, 255, 255, 0.010)) !important;
+  background-position:
+    calc(100% - 23px) calc(50% - 2px),
+    calc(100% - 17px) calc(50% - 2px),
+    calc(100% - 20px) 50%,
+    0 0 !important;
+  background-size: 6px 6px, 6px 6px, 28px 28px, 100% 100% !important;
+  background-repeat: no-repeat !important;
+  color: #f7ead3 !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.035),
+    inset 0 0 0 1px rgba(255, 232, 176, 0.026) !important;
+  cursor: pointer;
+}
+
+.settings-page select:hover {
+  border-color: rgba(241, 185, 106, 0.42) !important;
+  background-color: rgba(12, 16, 22, 0.84) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.045),
+    inset 0 0 0 1px rgba(255, 232, 176, 0.045),
+    0 0 16px rgba(241, 185, 106, 0.10) !important;
+}
+
+.settings-page select:focus,
+.settings-page select:focus-visible {
+  outline: none;
+  border-color: rgba(241, 185, 106, 0.66) !important;
+  box-shadow:
+    0 0 0 3px rgba(241, 185, 106, 0.13),
+    0 0 20px rgba(241, 185, 106, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.045) !important;
+}
+
+.settings-page select option {
+  background: #111820;
+  color: #f5ead8;
+}
+
+.theme-dark-fantasy.settings-page select {
+  border-color: rgba(190, 162, 255, 0.24) !important;
+  background-color: rgba(10, 7, 18, 0.88) !important;
+  background-image:
+    linear-gradient(45deg, transparent 50%, rgba(236, 222, 255, 0.98) 50%),
+    linear-gradient(135deg, rgba(236, 222, 255, 0.98) 50%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(167, 123, 255, 0.22), rgba(217, 167, 95, 0.075) 62%, transparent 64%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.030), rgba(255, 255, 255, 0.010)) !important;
+  color: #f4ecff !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.040),
+    inset 0 0 0 1px rgba(190, 162, 255, 0.038) !important;
+}
+
+.theme-dark-fantasy.settings-page select:hover {
+  border-color: rgba(190, 162, 255, 0.44) !important;
+  background-color: rgba(17, 11, 29, 0.94) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.050),
+    inset 0 0 0 1px rgba(190, 162, 255, 0.060),
+    0 0 18px rgba(167, 123, 255, 0.13) !important;
+}
+
+.theme-dark-fantasy.settings-page select:focus,
+.theme-dark-fantasy.settings-page select:focus-visible {
+  border-color: rgba(217, 167, 95, 0.58) !important;
+  box-shadow:
+    0 0 0 3px rgba(167, 123, 255, 0.14),
+    0 0 22px rgba(217, 167, 95, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.046) !important;
+}
+
+.theme-dark-fantasy.settings-page select option {
+  background: #100b1b;
+  color: #f4ecff;
+}
+
+.settings-page .toggle-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.settings-page .toggle-card input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  display: grid;
+  place-items: center;
+  width: 18px;
+  min-width: 18px;
+  height: 18px;
+  min-height: 18px;
+  border-radius: 5px;
+  border: 1px solid rgba(205, 220, 237, 0.28);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.040), rgba(255, 255, 255, 0.010)),
+    rgba(0, 0, 0, 0.24);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.045),
+    0 0 0 rgba(125, 236, 162, 0);
+  cursor: pointer;
+}
+
+.settings-page .toggle-card input[type="checkbox"]::before {
+  content: "";
+  width: 9px;
+  height: 5px;
+  border-left: 2px solid #082416;
+  border-bottom: 2px solid #082416;
+  opacity: 0;
+  transform: translateY(-1px) rotate(-45deg) scale(0.82);
+  transition:
+    opacity var(--motion-fast) var(--motion-ease-standard),
+    transform var(--motion-fast) var(--motion-ease-standard);
+}
+
+.settings-page .toggle-card input[type="checkbox"]:checked {
+  border-color: rgba(125, 236, 162, 0.76);
+  background:
+    radial-gradient(circle at 50% 20%, rgba(230, 255, 236, 0.72), transparent 52%),
+    linear-gradient(180deg, #8df1ad, #3fcf76);
+  box-shadow:
+    0 0 0 3px rgba(84, 190, 112, 0.12),
+    0 0 18px rgba(84, 190, 112, 0.24);
+}
+
+.settings-page .toggle-card input[type="checkbox"]:checked::before {
+  opacity: 1;
+  transform: translateY(-1px) rotate(-45deg) scale(1);
+}
+
+.settings-page .toggle-card:has(input[type="checkbox"]:checked) {
+  border-color: rgba(125, 236, 162, 0.46) !important;
+  background:
+    radial-gradient(circle at 3% 0%, rgba(125, 236, 162, 0.16), transparent 46%),
+    linear-gradient(180deg, rgba(125, 236, 162, 0.050), rgba(255, 255, 255, 0.012)),
+    rgba(0, 0, 0, 0.16) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(205, 255, 220, 0.08),
+    0 0 20px rgba(84, 190, 112, 0.12) !important;
+}
+
+.settings-page .toggle-card:has(input[type="checkbox"]:checked)::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background:
+    linear-gradient(100deg, transparent 0%, rgba(169, 255, 195, 0.13) 45%, transparent 72%);
+  opacity: 0.58;
+  transform: translateX(-60%);
+  animation: poe2-dark-fx-field-sweep 6.8s ease-in-out infinite;
+}
+
+.settings-page .toggle-card:has(input[type="checkbox"]:checked) span {
+  color: #f2fff5 !important;
+  text-shadow: 0 0 12px rgba(125, 236, 162, 0.18);
+}
+
+.theme-dark-fantasy.settings-page .toggle-card:has(input[type="checkbox"]:checked) {
+  border-color: rgba(99, 226, 170, 0.42) !important;
+  background:
+    radial-gradient(circle at 3% 0%, rgba(99, 226, 170, 0.14), transparent 44%),
+    radial-gradient(circle at 94% 16%, rgba(167, 123, 255, 0.10), transparent 42%),
+    linear-gradient(180deg, rgba(32, 21, 48, 0.58), rgba(10, 7, 18, 0.76)) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(205, 255, 220, 0.070),
+    0 0 18px rgba(99, 226, 170, 0.10),
+    0 0 22px rgba(167, 123, 255, 0.070) !important;
+}
+
+.settings-page.fx-off .toggle-card:has(input[type="checkbox"]:checked)::after {
+  opacity: 0;
+  animation: none;
+}
+
+.settings-page:not(.theme-dark-fantasy) .visual-fx-intensity-field {
+  position: relative;
+  overflow: hidden;
+  padding: 10px 12px;
+  border: 1px solid rgba(241, 185, 106, 0.30);
+  border-radius: 12px;
+  background:
+    radial-gradient(circle at 5% 0%, rgba(241, 185, 106, 0.16), transparent 42%),
+    radial-gradient(circle at 92% 10%, rgba(82, 170, 255, 0.090), transparent 44%),
+    linear-gradient(180deg, rgba(31, 27, 20, 0.58), rgba(8, 11, 15, 0.68));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.046),
+    0 0 18px rgba(241, 185, 106, 0.08);
+}
+
+.settings-page:not(.theme-dark-fantasy) .visual-fx-intensity-field::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      115deg,
+      transparent 0%,
+      rgba(255, 230, 174, 0.00) 32%,
+      rgba(255, 230, 174, 0.17) 48%,
+      rgba(125, 205, 255, 0.080) 56%,
+      transparent 72%
+    );
+  opacity: 0.48;
+  will-change: transform, filter;
+  animation: poe2-dark-fx-field-sweep 7.6s ease-in-out infinite;
+}
+
+.settings-page:not(.theme-dark-fantasy) .visual-fx-intensity-field > span {
+  position: relative;
+  z-index: 1;
+  color: #ffd792 !important;
+  letter-spacing: 0.05em;
+}
+
+.settings-page:not(.theme-dark-fantasy) .visual-fx-intensity-field select {
+  position: relative;
+  z-index: 1;
+  border-color: rgba(241, 185, 106, 0.38) !important;
+  background-color: rgba(9, 12, 16, 0.82) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 232, 176, 0.055),
+    0 0 14px rgba(241, 185, 106, 0.10) !important;
+}
+
+.settings-page:not(.theme-dark-fantasy) .visual-fx-intensity-field:focus-within {
+  border-color: rgba(241, 185, 106, 0.58);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.055),
+    0 0 0 1px rgba(241, 185, 106, 0.12),
+    0 0 24px rgba(241, 185, 106, 0.13);
+}
+
+.settings-page:not(.theme-dark-fantasy).fx-subtle .visual-fx-intensity-field::after {
+  opacity: 0.28;
+  animation-duration: 10.2s;
+}
+
+.settings-page:not(.theme-dark-fantasy).fx-rich .visual-fx-intensity-field {
+  border-color: rgba(241, 185, 106, 0.46);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.055),
+    0 0 22px rgba(241, 185, 106, 0.14),
+    0 0 26px rgba(82, 170, 255, 0.070);
+}
+
+.settings-page:not(.theme-dark-fantasy).fx-rich .visual-fx-intensity-field::after {
+  opacity: 0.72;
+  animation-duration: 5.6s;
+}
+
+.settings-page:not(.theme-dark-fantasy).fx-off .visual-fx-intensity-field::after {
+  opacity: 0;
+  animation: none;
+}
+
 .theme-dark-fantasy.settings-page .visual-fx-intensity-field {
   position: relative;
   overflow: hidden;
