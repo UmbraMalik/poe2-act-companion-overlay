@@ -862,6 +862,123 @@
   color: rgba(197, 209, 220, 0.64) !important;
 }
 
+@keyframes poe2-route-current-card-pulse {
+  0%,
+  100% {
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 232, 176, 0.16),
+      inset 4px 0 0 rgba(241, 185, 106, 0.76),
+      0 0 18px rgba(241, 185, 106, 0.16),
+      0 12px 28px rgba(0, 0, 0, 0.18);
+  }
+
+  50% {
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 232, 176, 0.30),
+      inset 4px 0 0 rgba(255, 213, 128, 0.92),
+      0 0 30px rgba(241, 185, 106, 0.28),
+      0 16px 34px rgba(0, 0, 0, 0.22);
+  }
+}
+
+@keyframes poe2-route-current-title-pulse {
+  0%,
+  100% {
+    text-shadow:
+      0 1px 0 rgba(0, 0, 0, 0.68),
+      0 0 12px rgba(241, 185, 106, 0.24);
+  }
+
+  50% {
+    text-shadow:
+      0 1px 0 rgba(0, 0, 0, 0.72),
+      0 0 22px rgba(255, 218, 145, 0.48),
+      0 0 36px rgba(241, 185, 106, 0.20);
+  }
+}
+
+.companion-page:not(.theme-dark-fantasy) .route-polish-layout .route-overview-card.status-current,
+.companion-page:not(.theme-dark-fantasy).fx-normal .route-polish-layout .route-overview-card.status-current:not(.is-focus-flash),
+.companion-page:not(.theme-dark-fantasy).fx-subtle .route-polish-layout .route-overview-card.status-current:not(.is-focus-flash),
+.companion-page:not(.theme-dark-fantasy).fx-rich .route-polish-layout .route-overview-card.status-current {
+  min-height: 122px !important;
+  opacity: 1 !important;
+  transform: translateY(-1px) !important;
+  filter: saturate(1.08) brightness(1.04) !important;
+  animation: poe2-route-current-card-pulse 4.8s ease-in-out infinite !important;
+  border-color: rgba(241, 185, 106, 0.66) !important;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(241, 185, 106, 0.22), transparent 46%),
+    linear-gradient(180deg, rgba(241, 185, 106, 0.12), rgba(255, 255, 255, 0.018)),
+    rgba(12, 14, 19, 0.58) !important;
+}
+
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.status-current,
+.theme-dark-fantasy.companion-page.fx-normal .route-polish-layout .route-overview-card.status-current:not(.is-focus-flash),
+.theme-dark-fantasy.companion-page.fx-subtle .route-polish-layout .route-overview-card.status-current:not(.is-focus-flash),
+.theme-dark-fantasy.companion-page.fx-rich .route-polish-layout .route-overview-card.status-current {
+  min-height: 122px !important;
+  opacity: 1 !important;
+  transform: translateY(-1px) !important;
+  filter: saturate(1.10) brightness(1.05) !important;
+  animation: poe2-route-current-card-pulse 4.8s ease-in-out infinite !important;
+  border-color: rgba(217, 167, 95, 0.58) !important;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(217, 167, 95, 0.18), transparent 44%),
+    radial-gradient(circle at 92% 10%, rgba(167, 123, 255, 0.12), transparent 42%),
+    linear-gradient(180deg, rgba(50, 34, 59, 0.78), rgba(13, 9, 22, 0.84)) !important;
+}
+
+.companion-page:not(.theme-dark-fantasy) .route-polish-layout .route-overview-card.status-current::before,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.status-current::before {
+  width: 5px !important;
+  opacity: 1 !important;
+  background: linear-gradient(180deg, rgba(255, 226, 161, 0.96), rgba(201, 132, 47, 0.74)) !important;
+  box-shadow: 0 0 20px rgba(241, 185, 106, 0.36) !important;
+}
+
+.companion-page:not(.theme-dark-fantasy) .route-polish-layout .route-overview-card.status-current::after,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.status-current::after {
+  opacity: 0.54 !important;
+  animation: poe2-ambient-route-halo 5.9s ease-in-out infinite !important;
+  background:
+    radial-gradient(circle at 10% 0%, rgba(241, 185, 106, 0.16), transparent 44%),
+    linear-gradient(90deg, rgba(241, 185, 106, 0.10), transparent 38%) !important;
+  box-shadow:
+    inset 0 0 28px rgba(241, 185, 106, 0.08),
+    0 0 18px rgba(241, 185, 106, 0.12) !important;
+}
+
+.companion-page:not(.theme-dark-fantasy) .route-polish-layout .route-overview-card.status-current .route-zone-name,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.status-current .route-zone-name {
+  color: #fff3d0 !important;
+  animation: poe2-route-current-title-pulse 4.8s ease-in-out infinite !important;
+}
+
+.companion-page:not(.theme-dark-fantasy) .route-polish-layout .route-overview-card.status-current .route-step-index,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.status-current .route-step-index {
+  border-color: rgba(255, 230, 174, 0.62) !important;
+  background:
+    radial-gradient(circle at 50% 18%, rgba(255, 235, 185, 0.30), transparent 60%),
+    rgba(241, 185, 106, 0.22) !important;
+  color: #ffe6aa !important;
+  box-shadow: 0 0 16px rgba(241, 185, 106, 0.20) !important;
+}
+
+.companion-page:not(.theme-dark-fantasy) .route-polish-layout .route-overview-card.status-current .route-rec-badge,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.status-current .route-rec-badge,
+.companion-page:not(.theme-dark-fantasy) .route-polish-layout .route-overview-card.status-current .route-overview-header > span.route-rec-badge,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.status-current .route-overview-header > span.route-rec-badge {
+  border-color: rgba(241, 185, 106, 0.32) !important;
+  background: rgba(241, 185, 106, 0.10) !important;
+  color: rgba(255, 235, 194, 0.90) !important;
+}
+
+.companion-page:not(.theme-dark-fantasy) .route-polish-layout .route-overview-card.status-current .compact-reward-list li,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.status-current .compact-reward-list li {
+  color: rgba(249, 244, 232, 0.91) !important;
+}
+
 .theme-dark-fantasy.overlay-page.overlay-page-timer-only .timer-only-main-panel .timer-only-time-control-row {
   align-items: center !important;
 }
