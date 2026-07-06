@@ -46,6 +46,28 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.045) !important;
 }
 
+.theme-dark-fantasy.overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-shell::after,
+.theme-dark-fantasy.overlay-page.overlay-page-timer-only .overlay-timer-only-card::after,
+.theme-dark-fantasy.overlay-page.is-overlay-collapsed .overlay-collapsed-shell::after {
+  content: none !important;
+  display: none !important;
+  animation: none !important;
+}
+
+.theme-dark-fantasy.overlay-page .resize-grip:not(.is-disabled) {
+  opacity: 0.20 !important;
+  background:
+    linear-gradient(135deg, transparent 0 58%, rgba(167, 123, 255, 0.28) 59% 64%, transparent 65%),
+    linear-gradient(135deg, transparent 0 78%, rgba(217, 167, 95, 0.20) 79% 84%, transparent 85%) !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+.theme-dark-fantasy.overlay-page .resize-grip:not(.is-disabled):hover {
+  opacity: 0.56 !important;
+  filter: drop-shadow(0 0 7px rgba(167, 123, 255, 0.22)) !important;
+}
+
 .theme-dark-fantasy .settings-subsection,
 .theme-dark-fantasy .details-panel,
 .theme-dark-fantasy .info-cell,

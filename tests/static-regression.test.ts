@@ -220,6 +220,8 @@ test('app theme is persisted and available in overlay and settings', () => {
   assert.match(styleCheck, /35-dark-fantasy-theme\.css/);
   assert.match(themeStyles, /\.theme-dark-fantasy/);
   assert.match(themeStyles, /\.theme-dark-fantasy\.overlay-page\s*\{\s*background:\s*transparent !important;/);
+  assert.match(themeStyles, /overlay-shell::after[\s\S]*content:\s*none !important/);
+  assert.match(themeStyles, /\.theme-dark-fantasy\.overlay-page \.resize-grip:not\(\.is-disabled\)/);
   assert.match(translations, /Тёмное фэнтези/);
   assert.match(translations, /Выбери тему/);
   assert.match(translations, /Dark fantasy/);
