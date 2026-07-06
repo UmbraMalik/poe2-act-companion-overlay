@@ -154,6 +154,10 @@
     poe2-ambient-edge-breathe 6.2s ease-in-out infinite;
 }
 
+.theme-dark-fantasy.overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-shell::after {
+  content: none !important;
+}
+
 .theme-dark-fantasy.overlay-page .resize-grip:not(.is-disabled) {
   opacity: 0.20 !important;
   background:
