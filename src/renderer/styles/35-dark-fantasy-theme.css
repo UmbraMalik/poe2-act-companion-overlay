@@ -1,0 +1,184 @@
+/* Optional black-violet theme. Scoped by config-driven classes so classic UI stays unchanged. */
+.theme-dark-fantasy {
+  --theme-bg: #050409;
+  --theme-panel: rgba(13, 9, 22, 0.92);
+  --theme-panel-strong: rgba(19, 13, 32, 0.96);
+  --theme-card: rgba(28, 19, 45, 0.72);
+  --theme-card-soft: rgba(22, 15, 36, 0.58);
+  --theme-border: rgba(159, 112, 255, 0.28);
+  --theme-border-soft: rgba(210, 184, 255, 0.14);
+  --theme-text: #f1eaff;
+  --theme-muted: #b5a8ca;
+  --theme-violet: #a77bff;
+  --theme-violet-soft: rgba(167, 123, 255, 0.18);
+  --theme-gold: #d9a75f;
+  --theme-gold-soft: rgba(217, 167, 95, 0.16);
+  color: var(--theme-text);
+}
+
+.theme-dark-fantasy.settings-page,
+.theme-dark-fantasy.companion-page,
+.theme-dark-fantasy.report-page {
+  background:
+    radial-gradient(circle at 15% 0%, rgba(115, 72, 210, 0.30), transparent 30%),
+    radial-gradient(circle at 92% 8%, rgba(217, 167, 95, 0.13), transparent 28%),
+    linear-gradient(180deg, #08050f 0%, #050409 100%);
+  color: var(--theme-text);
+}
+
+.theme-dark-fantasy.overlay-page {
+  background:
+    radial-gradient(circle at 18% 8%, rgba(119, 74, 214, 0.22), transparent 32%),
+    radial-gradient(circle at 92% 18%, rgba(217, 167, 95, 0.10), transparent 30%),
+    transparent;
+}
+
+.theme-dark-fantasy .overlay-shell,
+.theme-dark-fantasy .overlay-timer-only-card,
+.theme-dark-fantasy .overlay-collapsed-shell,
+.theme-dark-fantasy .settings-card,
+.theme-dark-fantasy .companion-card,
+.theme-dark-fantasy .report-card {
+  border-color: var(--theme-border) !important;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(149, 99, 255, 0.14), transparent 34%),
+    linear-gradient(180deg, rgba(24, 15, 39, 0.96), rgba(9, 7, 16, 0.94)) !important;
+  box-shadow:
+    0 18px 42px rgba(0, 0, 0, 0.48),
+    0 0 34px rgba(98, 58, 184, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.045) !important;
+}
+
+.theme-dark-fantasy .settings-subsection,
+.theme-dark-fantasy .details-panel,
+.theme-dark-fantasy .info-cell,
+.theme-dark-fantasy .value-box,
+.theme-dark-fantasy .toggle-card,
+.theme-dark-fantasy .hud-block,
+.theme-dark-fantasy .hud-zone-title-card,
+.theme-dark-fantasy .timer-only-main-panel,
+.theme-dark-fantasy .timer-only-info-grid,
+.theme-dark-fantasy .overlay-onboarding-card,
+.theme-dark-fantasy .companion-summary-hero,
+.theme-dark-fantasy .route-card,
+.theme-dark-fantasy .bonus-row,
+.theme-dark-fantasy .reminder-card {
+  border-color: var(--theme-border-soft) !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.028), rgba(255, 255, 255, 0.012)),
+    var(--theme-card-soft) !important;
+}
+
+.theme-dark-fantasy .settings-section-title,
+.theme-dark-fantasy .settings-subtitle,
+.theme-dark-fantasy .eyebrow,
+.theme-dark-fantasy .hud-block h2,
+.theme-dark-fantasy .timer-only-kicker,
+.theme-dark-fantasy .hud-zone-act-pill {
+  color: var(--theme-gold) !important;
+}
+
+.theme-dark-fantasy .helper-text,
+.theme-dark-fantasy .settings-intro,
+.theme-dark-fantasy .hud-meta,
+.theme-dark-fantasy .timer-only-meta,
+.theme-dark-fantasy .timer-only-next,
+.theme-dark-fantasy .overlay-upcoming-note {
+  color: var(--theme-muted) !important;
+}
+
+.theme-dark-fantasy .hud-zone-name,
+.theme-dark-fantasy .hud-collapsed-zone-name,
+.theme-dark-fantasy .timer-only-time,
+.theme-dark-fantasy .timer-only-main-label,
+.theme-dark-fantasy .info-cell dd,
+.theme-dark-fantasy .value-box,
+.theme-dark-fantasy .overlay-upcoming-title {
+  color: var(--theme-text) !important;
+  text-shadow: 0 0 16px rgba(167, 123, 255, 0.20);
+}
+
+.theme-dark-fantasy button,
+.theme-dark-fantasy select,
+.theme-dark-fantasy input,
+.theme-dark-fantasy textarea {
+  border-color: var(--theme-border-soft) !important;
+  background: rgba(9, 6, 18, 0.76) !important;
+  color: var(--theme-text) !important;
+}
+
+.theme-dark-fantasy select option {
+  background: #100b1b;
+  color: var(--theme-text);
+}
+
+.theme-dark-fantasy button:hover:not(:disabled),
+.theme-dark-fantasy select:hover,
+.theme-dark-fantasy input:hover,
+.theme-dark-fantasy textarea:hover,
+.theme-dark-fantasy button:focus-visible,
+.theme-dark-fantasy select:focus-visible,
+.theme-dark-fantasy input:focus-visible,
+.theme-dark-fantasy textarea:focus-visible {
+  border-color: rgba(185, 145, 255, 0.48) !important;
+  box-shadow:
+    0 0 0 3px rgba(167, 123, 255, 0.13),
+    0 0 18px rgba(107, 66, 210, 0.16) !important;
+}
+
+.theme-dark-fantasy .button-primary,
+.theme-dark-fantasy .app-theme-choice .button-primary {
+  border-color: rgba(191, 151, 255, 0.58) !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(217, 167, 95, 0.22), transparent 55%),
+    linear-gradient(180deg, rgba(98, 58, 184, 0.62), rgba(43, 28, 82, 0.58)) !important;
+  color: #fff7e7 !important;
+}
+
+.theme-dark-fantasy .button-secondary,
+.theme-dark-fantasy .ghost-button {
+  background: rgba(18, 12, 31, 0.70) !important;
+  color: #e7dcff !important;
+}
+
+.app-theme-choice {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.app-theme-choice button {
+  min-width: 0;
+}
+
+.theme-dark-fantasy .overlay-quick-actions,
+.theme-dark-fantasy .overlay-language-toggle-hitarea,
+.theme-dark-fantasy .overlay-icon-button {
+  border-color: var(--theme-border-soft) !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.036), rgba(255, 255, 255, 0.012)),
+    rgba(13, 8, 23, 0.78) !important;
+}
+
+.theme-dark-fantasy .overlay-theme-icon-button:hover,
+.theme-dark-fantasy .overlay-theme-icon-button:focus-visible {
+  border-color: rgba(191, 151, 255, 0.78) !important;
+  background:
+    radial-gradient(circle at 50% 22%, rgba(191, 151, 255, 0.34), transparent 58%),
+    linear-gradient(180deg, rgba(83, 50, 151, 0.58), rgba(31, 20, 58, 0.46)) !important;
+  color: #f2ebff !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(235, 222, 255, 0.13),
+    0 0 0 1px rgba(184, 132, 255, 0.18),
+    0 0 16px rgba(142, 118, 255, 0.30) !important;
+}
+
+.theme-dark-fantasy .overlay-icon-glyph-theme {
+  transform: translateY(-1px);
+}
+
+@media (max-width: 640px) {
+  .app-theme-choice {
+    grid-template-columns: 1fr;
+  }
+}

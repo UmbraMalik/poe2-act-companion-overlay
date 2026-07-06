@@ -88,6 +88,7 @@ const expected = [
   '32-overlay-mode-transitions.css',
   '33-click-feedback.css',
   '34-event-feedback-polish.css',
+  '35-dark-fantasy-theme.css',
 ];
 const expectedCssFiles = [...expected, ...trackedNonNumberedPartials].sort();
 const expectedImports = [

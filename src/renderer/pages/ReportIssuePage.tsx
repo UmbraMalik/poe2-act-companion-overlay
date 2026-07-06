@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useAppSnapshot } from '../hooks';
 import { useDocumentTitle, useI18n } from '../useI18n';
+import { getAppThemeClassName } from '../theme';
 import {
   buildReportDiagnostics,
   buildReportTemplateBody,
@@ -78,7 +79,7 @@ export function ReportIssuePage() {
   };
 
   return (
-    <main className={`settings-page report-page fx-${snapshot?.config.visualFxIntensity ?? 'normal'}`}>
+    <main className={`settings-page report-page fx-${snapshot?.config.visualFxIntensity ?? 'normal'} ${getAppThemeClassName(snapshot?.config.theme)}`}>
       <section className="settings-shell report-shell">
         <header className="settings-header window-drag-strip">
           <div className="settings-header-copy">

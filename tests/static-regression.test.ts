@@ -191,6 +191,34 @@ test('overlay visual effects can be disabled independently from global FX intens
   assert.match(translations, /Overlay effects/);
 });
 
+test('app theme is persisted and available in overlay and settings', () => {
+  const overlay = readText('src/renderer/pages/OverlayPage.tsx');
+  const settingsPage = readText('src/renderer/pages/SettingsPage.tsx');
+  const companionPage = readText('src/renderer/pages/CompanionPage.tsx');
+  const defaults = readText('src/shared/defaults.ts');
+  const types = readText('src/shared/types.ts');
+  const configStore = readText('src/main/services/config-store.ts');
+  const stylesIndex = readText('src/renderer/styles.css');
+  const styleCheck = readText('scripts/check-style-partials.cjs');
+  const themeStyles = readText('src/renderer/styles/35-dark-fantasy-theme.css');
+  const translations = readText('src/i18n/translations.ts');
+
+  assert.match(types, /export type AppTheme = 'classic' \| 'dark_fantasy'/);
+  assert.match(defaults, /theme:\s*'classic'/);
+  assert.match(configStore, /normalizeAppTheme\(rawConfig\.theme\)/);
+  assert.match(configStore, /patch\.theme/);
+  assert.match(overlay, /overlay-theme-icon-button/);
+  assert.match(overlay, /getNextAppTheme\(config\.theme\)/);
+  assert.match(settingsPage, /app-theme-choice/);
+  assert.match(settingsPage, /updateSettings\(\{ theme \}\)/);
+  assert.match(companionPage, /getAppThemeClassName\(config\.theme\)/);
+  assert.match(stylesIndex, /35-dark-fantasy-theme\.css/);
+  assert.match(styleCheck, /35-dark-fantasy-theme\.css/);
+  assert.match(themeStyles, /\.theme-dark-fantasy/);
+  assert.match(translations, /Тёмное фэнтези/);
+  assert.match(translations, /Dark fantasy/);
+});
+
 test('no forbidden performance hacks are reintroduced', () => {
   const source = [
     readMainProcessSource(),

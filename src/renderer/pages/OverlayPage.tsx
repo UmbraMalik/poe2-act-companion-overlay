@@ -42,6 +42,7 @@ import {
   type OverlayRenderTask
 } from '../render-scheduler';
 import { reportOverlayRenderDiagnostics } from '../render-diagnostics';
+import { getAppThemeClassName, getAppThemeIcon, getNextAppTheme } from '../theme';
 import leagueMechanicRewardsData from '../../data/league-mechanic-rewards.json';
 import { getCampaignBonusView, getGuideView, getLevelReminderView, getPowerSpikeView } from '../../i18n/data';
 import { translateSystemText } from '../../i18n/runtime';
@@ -1369,6 +1370,7 @@ export function OverlayPage() {
   const isTimerOnlyMode = runtime.overlayMode === 'timer_only';
   const isCompactOverlay = config.overlayDensity === 'compact';
   const overlayFxClass = config.overlayEffectsEnabled ? `fx-${config.visualFxIntensity}` : 'fx-off';
+  const overlayThemeClass = getAppThemeClassName(config.theme);
   const overlayDebugClass = import.meta.env.DEV && config.overlayDebugLayoutEnabled ? ' debug-layout' : '';
   const overlayLockClass = config.overlayMovementLocked ? ' is-overlay-locked' : '';
   const overlayVisualMode: OverlayVisualMode = isTimerOnlyMode
@@ -1610,6 +1612,11 @@ export function OverlayPage() {
   const handleLanguageToggle = () => {
     handleLanguageChange(language === 'en' ? 'ru' : 'en');
   };
+  const handleThemeToggle = () => {
+    void window.poe2Overlay?.updateSettings({
+      theme: getNextAppTheme(config.theme)
+    });
+  };
 
   const handleToggleSettings = () => {
     void window.poe2Overlay?.toggleSettings();
@@ -1730,6 +1737,26 @@ export function OverlayPage() {
       </button>
     </div>
   );
+  const overlayThemeButtonLabel = t(
+    config.theme === 'dark_fantasy'
+      ? 'overlay.switchToClassicTheme'
+      : 'overlay.switchToDarkFantasyTheme'
+  );
+  const overlayThemeButton = (
+    <button
+      className="overlay-icon-button overlay-theme-icon-button no-drag"
+      type="button"
+      title={overlayThemeButtonLabel}
+      aria-label={overlayThemeButtonLabel}
+      onPointerDown={stopOverlayControlPropagation}
+      onMouseDown={stopOverlayControlPropagation}
+      onClick={handleThemeToggle}
+    >
+      <span className="overlay-icon-glyph overlay-icon-glyph-theme" aria-hidden="true">
+        {getAppThemeIcon(config.theme)}
+      </span>
+    </button>
+  );
   const timerPrimaryButton = (
     <button
       className={`overlay-timer-control overlay-timer-icon-control overlay-timer-control-${timerPrimaryTone} no-drag`}
@@ -1745,6 +1772,7 @@ export function OverlayPage() {
     <div className="overlay-quick-actions no-drag" aria-label={t('overlay.quickActions')}>
       {!isTimerOnlyMode && timerPrimaryButton}
       {overlayLanguageToggle}
+      {overlayThemeButton}
       {!isTimerOnlyMode && overlayCollapseButton}
       {overlayLockButton}
       {overlayOpenCompanionButton}
@@ -1825,7 +1853,7 @@ export function OverlayPage() {
     return (
       <main
         ref={overlayPageRef}
-        className={`overlay-page overlay-page-timer-only density-${config.overlayDensity} scale-${config.overlayScale} text-size-${config.overlayTextSize} ${overlayFxClass}${overlayDebugClass}${overlayLockClass}${overlayModeTransitionClass}`}
+        className={`overlay-page overlay-page-timer-only density-${config.overlayDensity} scale-${config.overlayScale} text-size-${config.overlayTextSize} ${overlayFxClass} ${overlayThemeClass}${overlayDebugClass}${overlayLockClass}${overlayModeTransitionClass}`}
         onPointerDownCapture={beginOverlayDrag}
       >
         <section ref={overlayShellRef} className="overlay-shell overlay-hud overlay-timer-only-card">
@@ -1900,7 +1928,7 @@ export function OverlayPage() {
     return (
       <main
         ref={overlayPageRef}
-        className={`overlay-page is-overlay-collapsed density-${config.overlayDensity} scale-${config.overlayScale} text-size-${config.overlayTextSize} ${overlayFxClass}${overlayDebugClass}${overlayLockClass}${overlayModeTransitionClass}`}
+        className={`overlay-page is-overlay-collapsed density-${config.overlayDensity} scale-${config.overlayScale} text-size-${config.overlayTextSize} ${overlayFxClass} ${overlayThemeClass}${overlayDebugClass}${overlayLockClass}${overlayModeTransitionClass}`}
         onPointerDownCapture={beginOverlayDrag}
       >
         <section ref={overlayShellRef} className="overlay-shell overlay-hud overlay-main-compact overlay-collapsed-shell">
@@ -1921,7 +1949,7 @@ export function OverlayPage() {
   return (
     <main
       ref={overlayPageRef}
-      className={`overlay-page density-${config.overlayDensity} scale-${config.overlayScale} text-size-${config.overlayTextSize} ${overlayFxClass}${overlayDebugClass}${overlayLockClass}${overlayModeTransitionClass}`}
+      className={`overlay-page density-${config.overlayDensity} scale-${config.overlayScale} text-size-${config.overlayTextSize} ${overlayFxClass} ${overlayThemeClass}${overlayDebugClass}${overlayLockClass}${overlayModeTransitionClass}`}
       onPointerDownCapture={beginOverlayDrag}
     >
       <section ref={overlayShellRef} className="overlay-shell overlay-hud overlay-main-compact">

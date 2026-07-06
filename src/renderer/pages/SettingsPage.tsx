@@ -16,7 +16,9 @@ import {
 import { getGuideView, getLevelReminderView } from '../../i18n/data';
 import { formatZoneMatcherReason, translateSystemText } from '../../i18n/runtime';
 import { translate } from '../../i18n/translations';
+import { getAppThemeClassName } from '../theme';
 import type {
+  AppTheme,
   AppLanguage,
   HotkeySettings,
   OverlayDensity,
@@ -179,6 +181,10 @@ function formatVisualFxIntensity(value: VisualFxIntensity, language: AppLanguage
     default:
       return translate(language, 'visualFxIntensity.normal');
   }
+}
+
+function formatAppTheme(value: AppTheme, language: AppLanguage): string {
+  return translate(language, value === 'dark_fantasy' ? 'appTheme.darkFantasy' : 'appTheme.classic');
 }
 
 function formatLogSelectionMode(mode: 'auto' | 'manual' | null, language: AppLanguage): string {
@@ -634,7 +640,7 @@ export function SettingsPage() {
   })();
 
   return (
-    <main className={`settings-page fx-${config.visualFxIntensity}`}>
+    <main className={`settings-page fx-${config.visualFxIntensity} ${getAppThemeClassName(config.theme)}`}>
       <header className="settings-header window-drag-strip">
         <div className="settings-header-copy">
           <p className="eyebrow">{t('common.appName')}</p>
@@ -1160,6 +1166,25 @@ export function SettingsPage() {
                 <option value="rich">{formatVisualFxIntensity('rich', appLanguage)}</option>
               </select>
             </label>
+            <div className="settings-field settings-field-full app-theme-field">
+              <span>{t('settings.theme')}</span>
+              <div className="app-theme-choice" role="group" aria-label={t('settings.theme')}>
+                {(['classic', 'dark_fantasy'] as AppTheme[]).map((theme) => (
+                  <button
+                    key={theme}
+                    className={config.theme === theme ? 'button-primary' : 'button-secondary'}
+                    type="button"
+                    aria-pressed={config.theme === theme}
+                    onClick={() => {
+                      void window.poe2Overlay.updateSettings({ theme });
+                    }}
+                  >
+                    {formatAppTheme(theme, appLanguage)}
+                  </button>
+                ))}
+              </div>
+              <p className="helper-text">{t('settings.themeDescription')}</p>
+            </div>
           </div>
 
           <div className="settings-subsection">

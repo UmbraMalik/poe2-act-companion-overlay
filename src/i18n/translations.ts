@@ -121,6 +121,8 @@ const baseTranslations = {
       languageToggle: 'Переключатель языка RU/EN',
       switchToRussian: 'Переключить язык на русский',
       switchToEnglish: 'Switch language to English',
+      switchToClassicTheme: 'Переключить на классическую тему',
+      switchToDarkFantasyTheme: 'Переключить на тёмное фэнтези',
       openCompanion: 'Открыть/закрыть подробную панель ({hotkey})',
       openSettings: 'Открыть/закрыть настройки',
       closeWindow: 'Закрыть приложение',
@@ -238,6 +240,8 @@ const baseTranslations = {
       overlayTextSize: 'Размер текста',
       overlayDensity: 'Плотность',
       visualFxIntensity: 'Интенсивность эффектов',
+      theme: 'Тема интерфейса',
+      themeDescription: 'Переключает палитру оверлея и окон приложения. Выбор сохраняется автоматически.',
       overlayEffectsEnabledTitle: 'Эффекты оверлея',
       overlayEffectsEnabledDescription: 'Включает свечения, мягкие анимации и визуальные отклики именно в оверлее. Если отвлекает или просаживает FPS — выключи.',
       realtimePriorityTitle: 'Экстремальный режим отрисовки',
@@ -662,6 +666,10 @@ const baseTranslations = {
       normal: 'Обычно',
       rich: 'Насыщенно'
     },
+    appTheme: {
+      classic: 'Классическая',
+      darkFantasy: 'Тёмное фэнтези'
+    },
     logSelectionMode: {
       auto: 'Автопоиск',
       manual: 'Выбран вручную',
@@ -810,6 +818,8 @@ const baseTranslations = {
       languageToggle: 'RU/EN language toggle',
       switchToRussian: 'Switch language to Russian',
       switchToEnglish: 'Switch language to English',
+      switchToClassicTheme: 'Switch to the classic theme',
+      switchToDarkFantasyTheme: 'Switch to dark fantasy',
       openCompanion: 'Open/close the detailed panel ({hotkey})',
       openSettings: 'Open/close settings',
       closeWindow: 'Close app',
@@ -927,6 +937,8 @@ const baseTranslations = {
       overlayTextSize: 'Text size',
       overlayDensity: 'Density',
       visualFxIntensity: 'FX intensity',
+      theme: 'Interface theme',
+      themeDescription: 'Switches the overlay and app window palette. The choice is saved automatically.',
       overlayEffectsEnabledTitle: 'Overlay effects',
       overlayEffectsEnabledDescription: 'Enables glows, soft animations, and visual feedback in the overlay only. Turn it off if it distracts you or affects FPS.',
       realtimePriorityTitle: 'Extreme rendering mode',
@@ -1350,6 +1362,10 @@ const baseTranslations = {
       subtle: 'Subtle',
       normal: 'Normal',
       rich: 'Rich'
+    },
+    appTheme: {
+      classic: 'Classic',
+      darkFantasy: 'Dark fantasy'
     },
     logSelectionMode: {
       auto: 'Auto search',

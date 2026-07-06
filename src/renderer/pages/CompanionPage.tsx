@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useAppSnapshot, useLiveRunTimer } from '../hooks';
 import { useDocumentTitle, useI18n } from '../useI18n';
+import { getAppThemeClassName } from '../theme';
 import {
   getActTimeRowsFromSplits,
   getCurrentActElapsedMsForAct,
@@ -2170,7 +2171,7 @@ export function CompanionPage() {
   } satisfies Record<CompanionTab, JSX.Element>;
 
   return (
-    <main className={`settings-page companion-page fx-${config.visualFxIntensity}`}>
+    <main className={`settings-page companion-page fx-${config.visualFxIntensity} ${getAppThemeClassName(config.theme)}`}>
       <header className="settings-header window-drag-strip">
         <div className="settings-header-copy">
           <p className="eyebrow">{t('common.appName')}</p>

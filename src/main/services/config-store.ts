@@ -9,6 +9,7 @@ import {
 } from '../../shared/defaults';
 import type {
   AppConfig,
+  AppTheme,
   CampaignBonusProgress,
   ChecklistDetectedBy,
   ChecklistItemProgress,
@@ -38,6 +39,7 @@ const OVERLAY_SCALES: OverlayScale[] = [70, 80, 90, 100, 110, 120];
 const OVERLAY_TEXT_SIZES: OverlayTextSize[] = [0, 1, 2, 3];
 const OVERLAY_DENSITIES: OverlayDensity[] = ['compact', 'normal', 'detailed'];
 const VISUAL_FX_INTENSITIES: VisualFxIntensity[] = ['off', 'subtle', 'normal', 'rich'];
+const APP_THEMES: AppTheme[] = ['classic', 'dark_fantasy'];
 const RUN_TIMER_STATUSES: RunTimerStatus[] = ['not_started', 'armed', 'running', 'paused', 'finished'];
 const CHECKLIST_ITEM_STATES: ChecklistItemState[] = ['pending', 'current', 'likely_done', 'done', 'missed'];
 const CHECKLIST_DETECTED_BY: ChecklistDetectedBy[] = ['log', 'manual', 'zone_leave', 'linked_reward', 'inferred_zone_leave'];
@@ -145,6 +147,10 @@ function normalizeOverlayDensity(value: unknown): OverlayDensity {
 
 function normalizeVisualFxIntensity(value: unknown): VisualFxIntensity {
   return normalizeEnum(value, VISUAL_FX_INTENSITIES, DEFAULT_CONFIG.visualFxIntensity);
+}
+
+function normalizeAppTheme(value: unknown): AppTheme {
+  return normalizeEnum(value, APP_THEMES, DEFAULT_CONFIG.theme);
 }
 
 function normalizeOverlayOpacity(value: unknown): number {
@@ -603,6 +609,7 @@ export function normalizeAppConfig(config: Partial<AppConfig> = {}): AppConfig {
     overlayDensity: normalizeOverlayDensity(rawConfig.overlayDensity),
     visualFxIntensity: normalizeVisualFxIntensity(rawConfig.visualFxIntensity),
     overlayEffectsEnabled: safeBoolean(rawConfig.overlayEffectsEnabled, DEFAULT_CONFIG.overlayEffectsEnabled),
+    theme: normalizeAppTheme(rawConfig.theme),
     overlayDebugLayoutEnabled: safeBoolean(
       rawConfig.overlayDebugLayoutEnabled,
       DEFAULT_CONFIG.overlayDebugLayoutEnabled
@@ -697,6 +704,9 @@ export class ConfigStore {
         : {}),
       ...(patch.overlayEffectsEnabled !== undefined
         ? { overlayEffectsEnabled: patch.overlayEffectsEnabled }
+        : {}),
+      ...(patch.theme !== undefined
+        ? { theme: patch.theme }
         : {}),
       ...(patch.overlayDebugLayoutEnabled !== undefined
         ? { overlayDebugLayoutEnabled: patch.overlayDebugLayoutEnabled }
