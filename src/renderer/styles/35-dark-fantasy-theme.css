@@ -16,6 +16,80 @@
   color: var(--theme-text);
 }
 
+.theme-dark-fantasy.fx-off {
+  --fx-gold: rgba(217, 167, 95, 0);
+  --fx-gold-soft: rgba(217, 167, 95, 0);
+  --fx-blue: rgba(125, 205, 255, 0);
+  --fx-blue-soft: rgba(82, 170, 255, 0);
+  --fx-green: rgba(99, 226, 170, 0);
+  --fx-green-soft: rgba(60, 185, 136, 0);
+  --fx-violet: rgba(167, 123, 255, 0);
+  --fx-violet-soft: rgba(167, 123, 255, 0);
+  --fx-red: rgba(255, 118, 104, 0);
+  --fx-red-soft: rgba(255, 76, 62, 0);
+  --fx-panel-edge:
+    inset 0 0 0 1px rgba(210, 184, 255, 0.040),
+    0 16px 34px rgba(0, 0, 0, 0.38);
+  --fx-panel-edge-blue:
+    inset 0 0 0 1px rgba(176, 222, 255, 0.035),
+    0 16px 34px rgba(0, 0, 0, 0.38);
+}
+
+.theme-dark-fantasy.fx-subtle {
+  --fx-gold: rgba(217, 167, 95, 0.34);
+  --fx-gold-soft: rgba(217, 167, 95, 0.070);
+  --fx-blue: rgba(125, 205, 255, 0.30);
+  --fx-blue-soft: rgba(82, 170, 255, 0.060);
+  --fx-green: rgba(99, 226, 170, 0.32);
+  --fx-green-soft: rgba(60, 185, 136, 0.060);
+  --fx-violet: rgba(167, 123, 255, 0.34);
+  --fx-violet-soft: rgba(167, 123, 255, 0.075);
+  --fx-red: rgba(255, 118, 104, 0.34);
+  --fx-red-soft: rgba(255, 76, 62, 0.065);
+  --fx-panel-edge:
+    inset 0 0 0 1px rgba(210, 184, 255, 0.060),
+    inset 0 0 20px rgba(167, 123, 255, 0.030),
+    0 18px 38px rgba(0, 0, 0, 0.42);
+  --fx-panel-edge-blue:
+    inset 0 0 0 1px rgba(176, 222, 255, 0.050),
+    inset 0 0 20px rgba(82, 170, 255, 0.022),
+    0 18px 38px rgba(0, 0, 0, 0.42);
+}
+
+.theme-dark-fantasy.fx-normal {
+  --fx-gold: rgba(217, 167, 95, 0.58);
+  --fx-gold-soft: rgba(217, 167, 95, 0.14);
+  --fx-blue: rgba(125, 205, 255, 0.48);
+  --fx-blue-soft: rgba(82, 170, 255, 0.10);
+  --fx-green: rgba(99, 226, 170, 0.50);
+  --fx-green-soft: rgba(60, 185, 136, 0.10);
+  --fx-violet: rgba(167, 123, 255, 0.56);
+  --fx-violet-soft: rgba(167, 123, 255, 0.14);
+  --fx-red: rgba(255, 118, 104, 0.54);
+  --fx-red-soft: rgba(255, 76, 62, 0.12);
+}
+
+.theme-dark-fantasy.fx-rich {
+  --fx-gold: rgba(242, 190, 101, 0.88);
+  --fx-gold-soft: rgba(217, 167, 95, 0.26);
+  --fx-blue: rgba(143, 214, 255, 0.74);
+  --fx-blue-soft: rgba(82, 170, 255, 0.18);
+  --fx-green: rgba(118, 250, 188, 0.76);
+  --fx-green-soft: rgba(60, 210, 150, 0.18);
+  --fx-violet: rgba(190, 162, 255, 0.86);
+  --fx-violet-soft: rgba(167, 123, 255, 0.27);
+  --fx-red: rgba(255, 128, 112, 0.82);
+  --fx-red-soft: rgba(255, 76, 62, 0.20);
+  --fx-panel-edge:
+    inset 0 0 0 1px rgba(210, 184, 255, 0.11),
+    inset 0 0 40px rgba(167, 123, 255, 0.085),
+    0 22px 48px rgba(0, 0, 0, 0.48);
+  --fx-panel-edge-blue:
+    inset 0 0 0 1px rgba(176, 222, 255, 0.095),
+    inset 0 0 36px rgba(82, 170, 255, 0.060),
+    0 22px 48px rgba(0, 0, 0, 0.48);
+}
+
 .theme-dark-fantasy.settings-page,
 .theme-dark-fantasy.companion-page,
 .theme-dark-fantasy.report-page {
@@ -897,6 +971,239 @@
   }
 }
 
+@keyframes poe2-zone-title-shimmer {
+  0%,
+  100% {
+    background-position: 0% 50%;
+    filter: saturate(1.04) brightness(1.02);
+  }
+
+  50% {
+    background-position: 100% 50%;
+    filter: saturate(1.18) brightness(1.08);
+  }
+}
+
+@keyframes poe2-dark-fx-field-sweep {
+  0%,
+  100% {
+    transform: translateX(-62%);
+    filter: saturate(1) brightness(1);
+  }
+
+  50% {
+    transform: translateX(62%);
+    filter: saturate(1.15) brightness(1.08);
+  }
+}
+
+:where(
+  html,
+  body,
+  .settings-shell,
+  .update-content,
+  .overlay-hud,
+  .overlay-shell,
+  .overlay-timer-only-card,
+  .overlay-collapsed-shell,
+  .companion-tab-body,
+  .companion-tab-layout,
+  .companion-scroll-layout,
+  .companion-zone-polished-layout,
+  .companion-zone-dashboard,
+  .route-overview-list,
+  .route-overview-grid,
+  .summary-scroll-body,
+  .companion-block,
+  .companion-tables-grid,
+  .compact-table-wrap,
+  .report-card
+) {
+  scroll-behavior: smooth;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where(
+    html,
+    body,
+    .settings-shell,
+    .update-content,
+    .overlay-hud,
+    .overlay-shell,
+    .overlay-timer-only-card,
+    .overlay-collapsed-shell,
+    .companion-tab-body,
+    .companion-tab-layout,
+    .companion-scroll-layout,
+    .companion-zone-polished-layout,
+    .companion-zone-dashboard,
+    .route-overview-list,
+    .route-overview-grid,
+    .summary-scroll-body,
+    .companion-block,
+    .companion-tables-grid,
+    .compact-table-wrap,
+    .report-card
+  ) {
+    scroll-behavior: auto !important;
+  }
+}
+
+.companion-page .companion-zone-polished-layout .zone-hero-copy h3 {
+  width: fit-content;
+  max-width: 100%;
+  color: transparent !important;
+  background:
+    linear-gradient(
+      90deg,
+      #fff5d6 0%,
+      #f1b96a 34%,
+      #d9c5ff 58%,
+      #fff5d6 100%
+    );
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation:
+    poe2-zone-title-shimmer 6.2s ease-in-out infinite,
+    poe2-route-current-title-pulse 4.8s ease-in-out infinite;
+  text-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.70),
+    0 0 18px rgba(241, 185, 106, 0.26);
+}
+
+.theme-dark-fantasy.companion-page .companion-zone-polished-layout .zone-hero-copy h3 {
+  background:
+    linear-gradient(
+      90deg,
+      #fff1cb 0%,
+      rgba(239, 179, 91, 0.98) 34%,
+      rgba(190, 145, 255, 0.98) 60%,
+      #fff1cb 100%
+    );
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  text-shadow:
+    0 2px 0 rgba(0, 0, 0, 0.56),
+    0 0 22px rgba(217, 167, 95, 0.30),
+    0 0 34px rgba(167, 123, 255, 0.20);
+}
+
+.theme-dark-fantasy.companion-page.fx-subtle .companion-zone-polished-layout .zone-hero-copy h3 {
+  animation-duration: 8.4s, 7.4s !important;
+  text-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.58),
+    0 0 14px rgba(217, 167, 95, 0.18) !important;
+}
+
+.theme-dark-fantasy.companion-page.fx-rich .companion-zone-polished-layout .zone-hero-copy h3 {
+  animation-duration: 4.8s, 3.9s !important;
+  text-shadow:
+    0 2px 0 rgba(0, 0, 0, 0.56),
+    0 0 28px rgba(242, 190, 101, 0.42),
+    0 0 44px rgba(190, 162, 255, 0.30) !important;
+}
+
+.theme-dark-fantasy.companion-page.fx-off .companion-zone-polished-layout .zone-hero-copy h3 {
+  color: #fff1cb !important;
+  background: none !important;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  animation: none !important;
+  filter: none !important;
+  text-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.58),
+    0 0 8px rgba(217, 167, 95, 0.10) !important;
+}
+
+.theme-dark-fantasy.settings-page .visual-fx-intensity-field {
+  position: relative;
+  overflow: hidden;
+  padding: 10px 12px;
+  border: 1px solid rgba(217, 167, 95, 0.24);
+  border-radius: 12px;
+  background:
+    radial-gradient(circle at 6% 0%, rgba(217, 167, 95, 0.13), transparent 42%),
+    radial-gradient(circle at 94% 12%, rgba(167, 123, 255, 0.13), transparent 44%),
+    linear-gradient(180deg, rgba(32, 21, 48, 0.80), rgba(11, 8, 19, 0.74));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.045),
+    0 0 24px rgba(167, 123, 255, 0.09);
+}
+
+.theme-dark-fantasy.settings-page .visual-fx-intensity-field::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      115deg,
+      transparent 0%,
+      rgba(255, 230, 174, 0.00) 32%,
+      rgba(255, 230, 174, 0.18) 48%,
+      rgba(190, 162, 255, 0.12) 56%,
+      transparent 72%
+  );
+  opacity: 0.56;
+  transform: translateX(-58%);
+  will-change: transform, filter;
+  animation: poe2-dark-fx-field-sweep 7.4s ease-in-out infinite;
+}
+
+.theme-dark-fantasy.settings-page .visual-fx-intensity-field > span {
+  position: relative;
+  z-index: 1;
+  color: #e9c992 !important;
+  letter-spacing: 0.05em;
+}
+
+.theme-dark-fantasy.settings-page .visual-fx-intensity-field select {
+  position: relative;
+  z-index: 1;
+  border-color: rgba(217, 167, 95, 0.34) !important;
+  background:
+    linear-gradient(180deg, rgba(39, 27, 58, 0.96), rgba(12, 9, 20, 0.96)) !important;
+  color: #fff1cb !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(167, 123, 255, 0.08),
+    0 0 16px rgba(217, 167, 95, 0.12) !important;
+}
+
+.theme-dark-fantasy.settings-page .visual-fx-intensity-field:focus-within {
+  border-color: rgba(242, 190, 101, 0.56);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.055),
+    0 0 0 1px rgba(167, 123, 255, 0.16),
+    0 0 26px rgba(217, 167, 95, 0.16);
+}
+
+.theme-dark-fantasy.settings-page.fx-subtle .visual-fx-intensity-field::after {
+  opacity: 0.30;
+  animation-duration: 10s;
+}
+
+.theme-dark-fantasy.settings-page.fx-rich .visual-fx-intensity-field {
+  border-color: rgba(242, 190, 101, 0.42);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.055),
+    0 0 26px rgba(217, 167, 95, 0.14),
+    0 0 34px rgba(167, 123, 255, 0.12);
+}
+
+.theme-dark-fantasy.settings-page.fx-rich .visual-fx-intensity-field::after {
+  opacity: 0.74;
+  animation-duration: 5.4s;
+}
+
+.theme-dark-fantasy.settings-page.fx-off .visual-fx-intensity-field::after {
+  opacity: 0;
+  animation: none;
+}
+
 .companion-page:not(.theme-dark-fantasy) .route-polish-layout .route-overview-card.status-current,
 .companion-page:not(.theme-dark-fantasy).fx-normal .route-polish-layout .route-overview-card.status-current:not(.is-focus-flash),
 .companion-page:not(.theme-dark-fantasy).fx-subtle .route-polish-layout .route-overview-card.status-current:not(.is-focus-flash),
@@ -977,6 +1284,66 @@
 .companion-page:not(.theme-dark-fantasy) .route-polish-layout .route-overview-card.status-current .compact-reward-list li,
 .theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.status-current .compact-reward-list li {
   color: rgba(249, 244, 232, 0.91) !important;
+}
+
+.theme-dark-fantasy.companion-page.fx-subtle .route-polish-layout .route-overview-card.status-current:not(.is-focus-flash) {
+  filter: saturate(1.04) brightness(1.025) !important;
+  animation-duration: 6.8s !important;
+  border-color: rgba(217, 167, 95, 0.46) !important;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(217, 167, 95, 0.13), transparent 44%),
+    radial-gradient(circle at 92% 10%, rgba(167, 123, 255, 0.085), transparent 42%),
+    linear-gradient(180deg, rgba(42, 29, 53, 0.74), rgba(13, 9, 22, 0.82)) !important;
+}
+
+.theme-dark-fantasy.companion-page.fx-subtle .route-polish-layout .route-overview-card.status-current:not(.is-focus-flash)::after {
+  opacity: 0.36 !important;
+  animation-duration: 8.2s !important;
+}
+
+.theme-dark-fantasy.companion-page.fx-subtle .route-polish-layout .route-overview-card.status-current:not(.is-focus-flash) .route-zone-name {
+  animation-duration: 6.8s !important;
+  text-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.60),
+    0 0 13px rgba(217, 167, 95, 0.18) !important;
+}
+
+.theme-dark-fantasy.companion-page.fx-rich .route-polish-layout .route-overview-card.status-current {
+  filter: saturate(1.20) brightness(1.07) !important;
+  animation-duration: 3.9s !important;
+  border-color: rgba(242, 190, 101, 0.70) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.055),
+    0 0 28px rgba(217, 167, 95, 0.16),
+    0 0 34px rgba(167, 123, 255, 0.14) !important;
+}
+
+.theme-dark-fantasy.companion-page.fx-rich .route-polish-layout .route-overview-card.status-current::after {
+  opacity: 0.68 !important;
+  animation-duration: 4.4s !important;
+}
+
+.theme-dark-fantasy.companion-page.fx-rich .route-polish-layout .route-overview-card.status-current .route-zone-name {
+  animation-duration: 3.9s !important;
+}
+
+.companion-page.fx-off .route-polish-layout .route-overview-card.status-current,
+.theme-dark-fantasy.companion-page.fx-off .route-polish-layout .route-overview-card.status-current {
+  transform: none !important;
+  filter: none !important;
+  animation: none !important;
+}
+
+.companion-page.fx-off .route-polish-layout .route-overview-card.status-current::after,
+.theme-dark-fantasy.companion-page.fx-off .route-polish-layout .route-overview-card.status-current::after {
+  opacity: 0 !important;
+  animation: none !important;
+}
+
+.companion-page.fx-off .route-polish-layout .route-overview-card.status-current .route-zone-name,
+.theme-dark-fantasy.companion-page.fx-off .route-polish-layout .route-overview-card.status-current .route-zone-name {
+  animation: none !important;
+  text-shadow: none !important;
 }
 
 .theme-dark-fantasy.overlay-page.overlay-page-timer-only .timer-only-main-panel .timer-only-time-control-row {

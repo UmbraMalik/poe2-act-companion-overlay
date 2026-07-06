@@ -1150,7 +1150,7 @@ export function SettingsPage() {
               </select>
             </label>
 
-            <label className="settings-field">
+            <label className="settings-field visual-fx-intensity-field">
               <span>{t('settings.visualFxIntensity')}</span>
               <select
                 value={config.visualFxIntensity}
