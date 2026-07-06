@@ -52,8 +52,10 @@ export function SettingsSelect<T extends string | number>({
       const left = Math.min(Math.max(margin, rect.left), viewportWidth - width - margin);
       const spaceBelow = viewportHeight - rect.bottom - margin;
       const spaceAbove = rect.top - margin;
-      const openAbove = spaceBelow < 190 && spaceAbove > spaceBelow;
-      const maxHeight = Math.min(280, Math.max(150, (openAbove ? spaceAbove : spaceBelow) - gap));
+      const preferredHeight = Math.min(280, Math.max(46, options.length * 46 + 12));
+      const openAbove = spaceBelow < preferredHeight && spaceAbove > spaceBelow;
+      const availableHeight = Math.max(46, (openAbove ? spaceAbove : spaceBelow) - gap);
+      const maxHeight = Math.min(preferredHeight, availableHeight);
       const verticalPosition = openAbove
         ? { bottom: viewportHeight - rect.top + gap }
         : { top: Math.min(rect.bottom + gap, viewportHeight - margin - 80) };
@@ -89,7 +91,7 @@ export function SettingsSelect<T extends string | number>({
       document.removeEventListener('scroll', updateMenuPosition, true);
       document.removeEventListener('pointerdown', handlePointerDown);
     };
-  }, [isOpen]);
+  }, [isOpen, options.length]);
 
   const chooseValue = (nextValue: T) => {
     onChange(nextValue);

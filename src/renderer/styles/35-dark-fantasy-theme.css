@@ -1264,8 +1264,8 @@
   z-index: 1;
   appearance: none;
   -webkit-appearance: none;
-  display: grid;
-  place-items: center;
+  display: block;
+  align-self: center;
   width: 18px;
   min-width: 18px;
   height: 18px;
@@ -1283,12 +1283,16 @@
 
 .settings-page .toggle-card input[type="checkbox"]::before {
   content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
   width: 9px;
   height: 5px;
   border-left: 2px solid #082416;
   border-bottom: 2px solid #082416;
   opacity: 0;
-  transform: translateY(-1px) rotate(-45deg) scale(0.82);
+  transform: translate(-50%, -58%) rotate(-45deg) scale(0.82);
+  transform-origin: 50% 50%;
   transition:
     opacity var(--motion-fast) var(--motion-ease-standard),
     transform var(--motion-fast) var(--motion-ease-standard);
@@ -1306,7 +1310,7 @@
 
 .settings-page .toggle-card input[type="checkbox"]:checked::before {
   opacity: 1;
-  transform: translateY(-1px) rotate(-45deg) scale(1);
+  transform: translate(-50%, -58%) rotate(-45deg) scale(1);
 }
 
 .settings-page .toggle-card:has(input[type="checkbox"]:checked) {
