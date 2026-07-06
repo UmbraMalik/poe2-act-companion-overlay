@@ -99,7 +99,10 @@ import {
   isSafeExternalUrl
 } from './app-environment';
 
-function showWindowWhenReady(window: BrowserWindow | null | undefined, options: { focus?: boolean } = {}): void {
+function showWindowWhenReady(
+        window: BrowserWindow | null | undefined,
+        options: { focus?: boolean; afterShow?: () => void } = {}
+): void {
         const targetWindow = window;
         if (!targetWindow || targetWindow.isDestroyed()) {
             return;
@@ -117,6 +120,7 @@ function showWindowWhenReady(window: BrowserWindow | null | undefined, options: 
             if (options.focus !== false) {
                 targetWindow.focus();
             }
+            options.afterShow?.();
         };
         const finishLoad = () => {
             targetWindow.webContents.off('did-finish-load', finishLoad);
@@ -341,7 +345,7 @@ export function runToggleSettingsWindow(this: any) {
                 this.settingsWindow.hide();
                 return;
             }
-            showWindowWhenReady(this.settingsWindow);
+            showWindowWhenReady(this.settingsWindow, { afterShow: () => this.broadcastState() });
             return;
         }
         this.openSettingsWindow();
@@ -349,7 +353,7 @@ export function runToggleSettingsWindow(this: any) {
 
 export function runOpenSettingsWindow(this: any) {
         if (this.settingsWindow) {
-            showWindowWhenReady(this.settingsWindow);
+            showWindowWhenReady(this.settingsWindow, { afterShow: () => this.broadcastState() });
             return;
         }
         this.settingsWindow = new BrowserWindow({
@@ -382,7 +386,7 @@ export function runOpenSettingsWindow(this: any) {
         });
         void this.loadWindowPage(this.settingsWindow, 'settings');
         this.settingsWindow.once('ready-to-show', () => {
-            showWindowWhenReady(this.settingsWindow, { focus: false });
+            showWindowWhenReady(this.settingsWindow, { focus: false, afterShow: () => this.broadcastState() });
         });
     }
 
@@ -392,7 +396,7 @@ export function runToggleCompanionWindow(this: any) {
                 this.companionWindow.hide();
                 return;
             }
-            showWindowWhenReady(this.companionWindow);
+            showWindowWhenReady(this.companionWindow, { afterShow: () => this.broadcastState() });
             return;
         }
         this.openCompanionWindow();
@@ -400,7 +404,7 @@ export function runToggleCompanionWindow(this: any) {
 
 export function runOpenCompanionWindow(this: any) {
         if (this.companionWindow) {
-            showWindowWhenReady(this.companionWindow);
+            showWindowWhenReady(this.companionWindow, { afterShow: () => this.broadcastState() });
             return;
         }
         const bounds = this.getCompanionBounds();
@@ -439,13 +443,13 @@ export function runOpenCompanionWindow(this: any) {
         });
         void this.loadWindowPage(this.companionWindow, 'companion');
         this.companionWindow.once('ready-to-show', () => {
-            showWindowWhenReady(this.companionWindow, { focus: false });
+            showWindowWhenReady(this.companionWindow, { focus: false, afterShow: () => this.broadcastState() });
         });
     }
 
 export function runOpenInfoWindow(this: any) {
         if (this.infoWindow) {
-            showWindowWhenReady(this.infoWindow);
+            showWindowWhenReady(this.infoWindow, { afterShow: () => this.broadcastState() });
             return;
         }
         this.infoWindow = new BrowserWindow({
@@ -478,13 +482,13 @@ export function runOpenInfoWindow(this: any) {
         });
         void this.loadWindowPage(this.infoWindow, 'info');
         this.infoWindow.once('ready-to-show', () => {
-            showWindowWhenReady(this.infoWindow, { focus: false });
+            showWindowWhenReady(this.infoWindow, { focus: false, afterShow: () => this.broadcastState() });
         });
     }
 
 export function runOpenCommunityWindow(this: any) {
         if (this.communityWindow) {
-            showWindowWhenReady(this.communityWindow);
+            showWindowWhenReady(this.communityWindow, { afterShow: () => this.broadcastState() });
             return;
         }
         this.communityWindow = new BrowserWindow({
@@ -517,13 +521,13 @@ export function runOpenCommunityWindow(this: any) {
         });
         void this.loadWindowPage(this.communityWindow, 'community');
         this.communityWindow.once('ready-to-show', () => {
-            showWindowWhenReady(this.communityWindow);
+            showWindowWhenReady(this.communityWindow, { afterShow: () => this.broadcastState() });
         });
     }
 
 export function runOpenSupportWindow(this: any) {
         if (this.supportWindow) {
-            showWindowWhenReady(this.supportWindow);
+            showWindowWhenReady(this.supportWindow, { afterShow: () => this.broadcastState() });
             return;
         }
         this.supportWindow = new BrowserWindow({
@@ -556,13 +560,13 @@ export function runOpenSupportWindow(this: any) {
         });
         void this.loadWindowPage(this.supportWindow, 'support');
         this.supportWindow.once('ready-to-show', () => {
-            showWindowWhenReady(this.supportWindow);
+            showWindowWhenReady(this.supportWindow, { afterShow: () => this.broadcastState() });
         });
     }
 
 export function runOpenReportIssueWindow(this: any) {
         if (this.reportWindow) {
-            showWindowWhenReady(this.reportWindow);
+            showWindowWhenReady(this.reportWindow, { afterShow: () => this.broadcastState() });
             return;
         }
         this.reportWindow = new BrowserWindow({
@@ -595,7 +599,7 @@ export function runOpenReportIssueWindow(this: any) {
         });
         void this.loadWindowPage(this.reportWindow, 'report');
         this.reportWindow.once('ready-to-show', () => {
-            showWindowWhenReady(this.reportWindow);
+            showWindowWhenReady(this.reportWindow, { afterShow: () => this.broadcastState() });
         });
     }
 
@@ -678,6 +682,7 @@ export function runShowOverlayInactive(this: any) {
         this.overlayWindow.setFocusable(true);
         this.overlayWindow.setAlwaysOnTop(true, 'screen-saver');
         this.overlayWindow.showInactive();
+        this.broadcastState();
     }
 
 export function runShowOverlay(this: any) {

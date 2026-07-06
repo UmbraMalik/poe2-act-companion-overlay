@@ -210,12 +210,27 @@ export function runClearBroadcastTimer(this: any) {
 
 export function runFlushBroadcastState(this: any) {
         this.broadcastTimer = null;
+        const targetWindows = [
+            this.overlayWindow,
+            this.settingsWindow,
+            this.companionWindow,
+            this.infoWindow,
+            this.communityWindow,
+            this.supportWindow
+        ].filter((win) => (
+            win &&
+            !win.isDestroyed() &&
+            win.isVisible() &&
+            !win.webContents.isLoading()
+        ));
+        if (targetWindows.length === 0) {
+            this.pendingSnapshot = null;
+            return;
+        }
         const snapshot = this.pendingSnapshot ?? this.getSnapshot();
         this.pendingSnapshot = null;
-        for (const win of [this.overlayWindow, this.settingsWindow, this.companionWindow, this.infoWindow, this.communityWindow, this.supportWindow]) {
-            if (win && !win.isDestroyed()) {
-                win.webContents.send('app:state-changed', snapshot);
-            }
+        for (const win of targetWindows) {
+            win.webContents.send('app:state-changed', snapshot);
         }
     }
 

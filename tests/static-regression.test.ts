@@ -210,10 +210,27 @@ test('secondary app windows share smooth show/focus handling', () => {
   assert.match(controller, /webContents\.isLoading\(\)/);
   assert.match(controller, /did-finish-load/);
   assert.match(controller, /did-fail-load/);
+  assert.match(controller, /afterShow\?:\s*\(\)\s*=>\s*void/);
+  assert.match(controller, /afterShow:\s*\(\)\s*=>\s*this\.broadcastState\(\)/);
   assert.doesNotMatch(
     controller,
     /this\.(settings|companion|info|community|support|report)Window\.show\(\);\s*this\.\1Window\.focus\(\);/
   );
+});
+
+test('hidden windows and unchanged bounds do not trigger unnecessary smoothness work', () => {
+  const stateController = readText('src/main/app-state-controller.ts');
+  const boundsController = readText('src/main/app-overlay-bounds-controller.ts');
+  const windowController = readText('src/main/app-window-controller.ts');
+
+  assert.match(stateController, /win\.isVisible\(\)/);
+  assert.match(stateController, /!win\.webContents\.isLoading\(\)/);
+  assert.match(stateController, /if \(targetWindows\.length === 0\)/);
+  assert.match(windowController, /showInactive\(\);\s*this\.broadcastState\(\);/);
+  assert.match(boundsController, /areOverlayBoundsEqual\(currentBounds, normalizedBounds\)/);
+  assert.match(boundsController, /return this\.persistOverlayBoundsForState/);
+  assert.match(boundsController, /if \(changed\) \{\s*this\.broadcastState\(\);/);
+  assert.match(boundsController, /areOverlayBoundsEqual\(this\.config\.companionBounds, bounds\)/);
 });
 
 test('default motion avoids continuous compositor-heavy ambient animations', () => {
