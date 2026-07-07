@@ -47,8 +47,11 @@ function normalizeOverlayModeSettingsPatch(patch: SettingsPatch): SettingsPatch 
 }
 
 function finiteRoundedNumber(value: unknown, fallback: number): number {
-    const numericValue = typeof value === 'number' ? value : Number(value);
-    return Number.isFinite(numericValue) ? Math.round(numericValue) : fallback;
+  const numberValue = Number(value);
+
+  return Number.isFinite(numberValue)
+    ? Math.round(numberValue)
+    : fallback;
 }
 
 function normalizeDevLogLine(value: unknown): string | null {
