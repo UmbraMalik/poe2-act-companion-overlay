@@ -1,6 +1,7 @@
 import { access, stat } from 'node:fs/promises';
 import { constants } from 'node:fs';
 import { join } from 'node:path';
+import { app } from 'electron';
 import {
   extractGeneratedAreaId,
   extractNamedZoneFromLine
