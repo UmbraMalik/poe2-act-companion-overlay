@@ -3,7 +3,7 @@ import { app } from 'electron';
 import { isAllowedExternalUrl } from '../shared/external-url-policy';
 import { inferActHintFromInternalAreaId as inferActHintFromInternalAreaIdFromScene } from './scene-classifier';
 
-export const forceProductionRenderer = process.env.ELECTRON_RENDERER_MODE === 'production' ||
+const forceProductionRenderer = process.env.ELECTRON_RENDERER_MODE === 'production' ||
     process.env.NODE_ENV === 'production';
 export const isDev = !app.isPackaged && !forceProductionRenderer;
 export const devServerUrl = process.env.VITE_DEV_SERVER_URL ?? 'http://localhost:5173';

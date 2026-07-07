@@ -29,15 +29,6 @@ function roundBounds(
   };
 }
 
-export function cloneOverlayBounds(bounds: OverlayBounds): OverlayBounds {
-  return {
-    x: bounds.x,
-    y: bounds.y,
-    width: bounds.width,
-    height: bounds.height
-  };
-}
-
 export function areOverlayBoundsEqual(
   left: OverlayBounds,
   right: OverlayBounds

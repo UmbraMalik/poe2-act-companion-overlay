@@ -1,22 +1,15 @@
 import {
-  buildChecklistDefinition,
   buildChecklistViewItems,
   shouldItemBeMissed
 } from '../shared/checklist';
 import {
-  getCountdownDisplayMs,
-  getRunTimerDisplayElapsed,
-  getTownTimerDisplayElapsed,
-  getTownTimerTotalElapsed,
-  getZoneTimerDisplayElapsed
+  getRunTimerDisplayElapsed
 } from '../shared/timers';
-import { getGuideView, getLevelReminderView, getPowerSpikeView } from '../i18n/data';
+import { getGuideView, getPowerSpikeView } from '../i18n/data';
 import { translate } from '../i18n/translations';
 import type {
   AppLanguage,
   AppSnapshot,
-  BestRunSummary,
-  ChecklistItemDefinition,
   ChecklistViewItem,
   GuideEntry,
   GuideProfile,
@@ -73,22 +66,6 @@ function supportsProfile(
 
 export function getRunElapsedMs(runTimer: RunTimerState, now: number): number {
   return getRunTimerDisplayElapsed(runTimer, now);
-}
-
-export function getZoneElapsedMs(_runTimer: RunTimerState, _now: number): number {
-  return 0;
-}
-
-export function getTownElapsedMs(_snapshot: AppSnapshot, _now: number): number {
-  return 0;
-}
-
-export function getTownTotalElapsedMs(_snapshot: AppSnapshot, _now: number): number {
-  return 0;
-}
-
-export function getCountdownMs(snapshot: AppSnapshot, now: number): number | null {
-  return getCountdownDisplayMs(snapshot.config.runTimerSettings, now);
 }
 
 export function getCurrentActElapsedMsForAct(
@@ -182,19 +159,6 @@ export function getActTimeRowsFromSplits(
   return rows;
 }
 
-export function getActTimeRows(
-  runTimer: RunTimerState,
-  guide: GuideEntry | null,
-  now: number
-): ActTimeRow[] {
-  const currentAct = guide && typeof guide.act === 'number' ? guide.act : null;
-  return getActTimeRowsFromSplits(runTimer.actSplits, getRunElapsedMs(runTimer, now), {
-    currentAct,
-    includeCurrentAct: runTimer.status === 'running' || runTimer.status === 'paused',
-    currentStatus: runTimer.status
-  });
-}
-
 export function getXpStatus(
   snapshot: AppSnapshot,
   language: AppLanguage = 'ru'
@@ -281,39 +245,6 @@ export function getDismissedReminderHistory(
   return reminders.filter((entry) => dismissedSet.has(entry.id));
 }
 
-export function getTownReminderItems(
-  guide: GuideEntry | null,
-  activeLevelReminder: LevelReminder | null,
-  language: AppLanguage = 'ru'
-): string[] {
-  if (!guide) {
-    return getLevelReminderView(activeLevelReminder, language)?.displayItems.slice(0, 4) ?? [];
-  }
-
-  const guideView = getGuideView(guide, language);
-  const reminderView = getLevelReminderView(activeLevelReminder, language);
-  const items = [
-    ...(guideView?.after ?? []),
-    ...(guideView?.craftingTips ?? []),
-    ...(reminderView?.displayItems ?? [])
-  ].filter(Boolean);
-
-  return [...new Set(items)].slice(0, 6);
-}
-
-export function getTownReminderShortLine(
-  guide: GuideEntry | null,
-  activeLevelReminder: LevelReminder | null,
-  language: AppLanguage = 'ru'
-): string | null {
-  const items = getTownReminderItems(guide, activeLevelReminder, language);
-  if (items.length === 0) {
-    return null;
-  }
-
-  return `${translate(language, 'companion.detailsGroup.town')}: ${items.slice(0, 3).join(' / ')}`;
-}
-
 export function getSceneDisplayName(
   snapshot: AppSnapshot,
   language: AppLanguage = 'ru'
@@ -335,10 +266,6 @@ export function getSceneDisplayName(
     currentGuideView?.zoneName ??
     translate(language, 'scene.unknownZone')
   );
-}
-
-export function isTownScene(snapshot: AppSnapshot): boolean {
-  return snapshot.currentZone.sceneKind === 'town';
 }
 
 function getRouteRewardItems(guide: GuideEntry, snapshot: AppSnapshot): ChecklistViewItem[] {
@@ -489,14 +416,6 @@ export function getCurrentRouteAct(snapshot: AppSnapshot): ZoneAct | null {
   return snapshot.currentGuideEntry?.act ?? snapshot.currentZone.actHint ?? null;
 }
 
-export function getRunBestLabel(bestRun: BestRunSummary | null): string {
-  if (!bestRun) {
-    return '—';
-  }
-
-  return `${bestRun.totalElapsedMs}`;
-}
-
 export function getRequiredRewardLabelsForZone(
   guide: GuideEntry,
   snapshot: AppSnapshot,
@@ -516,22 +435,4 @@ export function getRequiredRewardLabelsForZone(
 
 export function getLongestZones(zoneTimeHistory: ZoneTimeEntry[]): ZoneTimeEntry[] {
   return [...zoneTimeHistory].sort((left, right) => right.elapsedMs - left.elapsedMs).slice(0, 5);
-}
-
-export function getRecentZoneTimes(zoneTimeHistory: ZoneTimeEntry[], limit = 10): ZoneTimeEntry[] {
-  return [...zoneTimeHistory].slice(-limit).reverse();
-}
-
-export function getRecentTownVisits(_snapshot: AppSnapshot, _limit = 10) {
-  return [];
-}
-
-export function getCurrentZoneRequiredRewards(
-  guide: GuideEntry | null
-): ChecklistItemDefinition[] {
-  if (!guide) {
-    return [];
-  }
-
-  return buildChecklistDefinition(guide).filter((item) => shouldItemBeMissed(item));
 }

@@ -1,7 +1,7 @@
 import { nativeImage, type NativeImage } from 'electron';
 import { resolveRuntimePath } from './services/runtime-paths';
 
-export function createTrayIcon(): NativeImage {
+function createTrayIcon(): NativeImage {
   const svg = `
     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32">
       <rect width="32" height="32" rx="8" fill="#11161e"/>
