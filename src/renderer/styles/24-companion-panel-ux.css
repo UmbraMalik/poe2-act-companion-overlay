@@ -41,6 +41,51 @@
   font-size: 13px;
 }
 
+.companion-page .zone-health-row {
+  width: fit-content;
+  max-width: 100%;
+  min-height: 24px;
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 3px 8px;
+  border: 1px solid rgba(205, 220, 237, 0.14);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.025);
+  color: rgba(205, 220, 237, 0.78);
+  font-size: 11px;
+  line-height: 1.25;
+}
+
+.companion-page .zone-health-row strong {
+  color: #fff3d6;
+  font-weight: 900;
+}
+
+.companion-page .zone-health-row span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.companion-page .zone-health-row.is-ok {
+  border-color: rgba(116, 206, 139, 0.28);
+  background: rgba(54, 132, 82, 0.12);
+  color: rgba(221, 248, 228, 0.86);
+}
+
+.companion-page .zone-health-row.is-neutral {
+  border-color: rgba(127, 184, 237, 0.22);
+  background: rgba(66, 110, 160, 0.11);
+  color: rgba(221, 238, 255, 0.84);
+}
+
+.companion-page .zone-health-row.is-warning {
+  border-color: rgba(255, 185, 106, 0.34);
+  background: rgba(170, 92, 42, 0.14);
+  color: rgba(255, 227, 179, 0.88);
+}
+
 .companion-page .zone-hero-metrics {
   grid-template-columns: minmax(180px, 1.15fr) repeat(3, minmax(128px, 0.95fr));
   gap: 8px;

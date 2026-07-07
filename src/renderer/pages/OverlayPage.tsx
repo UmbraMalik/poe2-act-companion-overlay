@@ -47,6 +47,7 @@ import leagueMechanicRewardsData from '../../data/league-mechanic-rewards.json';
 import { getCampaignBonusView, getGuideView, getLevelReminderView, getPowerSpikeView } from '../../i18n/data';
 import { translateSystemText } from '../../i18n/runtime';
 import { translate } from '../../i18n/translations';
+import { getZoneRecognitionView } from '../log-health';
 import type {
   AppLanguage,
   AppTheme,
@@ -1392,11 +1393,7 @@ export function OverlayPage() {
       currentZone.sceneKind === 'town'
     );
   const shouldShowNoGuideForZone = hasLogConnection && hasNamedUnknownZone;
-  const unknownZoneName =
-    currentZone.rawZoneName ??
-    runtime.lastSceneSource ??
-    runtime.lastRawZoneName ??
-    t('scene.unknownZone');
+  const zoneRecognition = getZoneRecognitionView(snapshot, language, runtime.timerNowMs);
   const openCompanionHotkey = formatHotkeyLabel(config.hotkeys.openCompanion, 'F9');
   const timerOnlyShowsCountdown =
     displayRunTimer.status === 'armed' &&
@@ -1761,11 +1758,18 @@ export function OverlayPage() {
   );
   const overlayNoGuideBlock = (
     <div className="overlay-onboarding-card overlay-no-guide-card">
-      <p className="overlay-onboarding-title">{t('overlay.noGuideTitle')}</p>
-      <p className="overlay-onboarding-text">
-        {t('overlay.noGuideText', { zone: unknownZoneName })}
-      </p>
-      <p className="overlay-onboarding-move-hint">{t('overlay.noGuideHint')}</p>
+      <p className="overlay-onboarding-title">{zoneRecognition.noGuideTitle}</p>
+      <p className="overlay-onboarding-text">{zoneRecognition.noGuideText}</p>
+      <p className="overlay-onboarding-move-hint">{zoneRecognition.noGuideHint}</p>
+    </div>
+  );
+  const overlayLogHealthPill = (
+    <div
+      className={`overlay-log-health-pill is-${zoneRecognition.tone}`}
+      title={`${zoneRecognition.label}: ${zoneRecognition.detail}`}
+    >
+      <strong>{zoneRecognition.label}</strong>
+      <span>{zoneRecognition.detail}</span>
     </div>
   );
 
@@ -1953,6 +1957,7 @@ export function OverlayPage() {
                 <span className="hud-zone-act-pill">{overlayActLabel}</span>
               </div>
               <h1 className="hud-zone-name">{overlayZoneName}</h1>
+              {overlayLogHealthPill}
             </div>
             <div className="hud-title-actions no-drag">
               {overlayQuickActions}
@@ -1979,7 +1984,7 @@ export function OverlayPage() {
 
         {endgameT15CompletionBlock}
 
-        {runtime.logWatcherStatus !== 'ready' && (
+        {runtime.logWatcherStatus === 'error' && (
           <section className="hud-banner">
             <strong>{translateSystemText(runtime.logWatcherMessage, language)}</strong>
           </section>

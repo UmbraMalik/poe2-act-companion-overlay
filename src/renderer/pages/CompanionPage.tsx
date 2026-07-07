@@ -22,6 +22,7 @@ import { getCampaignBonusView, getGuideView, translateDataText } from '../../i18
 import { translate } from '../../i18n/translations';
 import { isEndgameT15Act } from '../../shared/timers';
 import { getGuideUpdateClassName } from '../guide-update-highlights';
+import { getZoneRecognitionView } from '../log-health';
 import type { AppLanguage, CampaignBonusDefinition, CampaignBonusProgress, GuideEntry, RunSummary, SavedRunHistoryEntry, ZoneAct } from '../../shared/types';
 
 type CompanionTab = 'zone' | 'route' | 'timer' | 'actTimes' | 'reminders' | 'bonuses' | 'summary';
@@ -1486,6 +1487,7 @@ export function CompanionPage() {
       currentZone.sceneKind === 'gameplay' ||
       currentZone.sceneKind === 'town'
     );
+  const zoneRecognition = getZoneRecognitionView(snapshot, language, snapshot.runtime.timerNowMs);
   const currentRouteIndex = selectedRouteProgress.currentIndex;
   const routeProgressTotal = selectedRouteProgress.total;
   const routeProgressCurrentCount = selectedRouteProgress.currentCount;
@@ -1625,10 +1627,12 @@ export function CompanionPage() {
           <p className="helper-text">
             {guideView?.nextZoneName
               ? t('companion.routeNextPrefix', { text: guideView.nextZoneName })
-              : currentZone.sceneKind === 'town'
-                ? t('companion.sceneTownHub')
-                : t('companion.sceneGameplay')}
+              : zoneRecognition.companionSummary}
           </p>
+          <div className={`zone-health-row is-${zoneRecognition.tone}`}>
+            <strong>{zoneRecognition.label}</strong>
+            <span>{zoneRecognition.detail}</span>
+          </div>
         </div>
         <dl className="zone-hero-metrics">
           <div className="zone-metric-card is-accent">
@@ -1645,7 +1649,7 @@ export function CompanionPage() {
           </div>
           <div className="zone-metric-card">
             <dt>{t('companion.sceneLabel')}</dt>
-            <dd>{currentZone.sceneKind === 'town' ? t('companion.sceneTownHub') : t('companion.sceneGameplay')}</dd>
+            <dd>{zoneRecognition.sceneLabel}</dd>
           </div>
         </dl>
       </section>
@@ -1667,7 +1671,7 @@ export function CompanionPage() {
               </ul>
             ) : (
               <p className="helper-text">
-                {hasNoGuideForKnownZone ? t('companion.noGuideKnown') : t('overlay.emptyZoneNotes')}
+                {hasNoGuideForKnownZone ? zoneRecognition.noGuideText : t('overlay.emptyZoneNotes')}
               </p>
             )}
           </section>
@@ -1838,7 +1842,7 @@ export function CompanionPage() {
           <div>
             <span>{t('common.currentZone')}</span>
             <strong>{activeZoneLabel || '—'}</strong>
-            <small>{currentZone.sceneKind === 'town' ? t('companion.sceneTownHub') : t('companion.sceneGameplay')}</small>
+            <small>{zoneRecognition.sceneLabel}</small>
           </div>
           <div>
             <span>{t('companion.pauses')}</span>
