@@ -7,12 +7,14 @@ test('preload exposes only specific safe IPC APIs and not the raw ipcRenderer', 
 
   for (const channel of [
     'app:get-overlay-snapshot',
+    'app:get-ui-preferences-snapshot',
     'app:update-settings',
     'app:open-report-issue',
     'app:open-external',
     'app:get-overlay-bounds',
     'app:set-overlay-position',
     'app:timer-diagnostics',
+    'app:ui-preferences-changed',
     'timer:visual-tick'
   ]) {
     assert.match(preload, new RegExp(channel.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
@@ -50,6 +52,64 @@ test('overlay initial snapshot uses trimmed overlay IPC while app pages keep ful
   assert.match(companionPage, /const snapshot = useAppSnapshot\(\);/);
   assert.match(useI18n, /const shouldReadSnapshot = arguments\.length === 0/);
   assert.match(useI18n, /useAppSnapshot\(\{\s*enabled:\s*shouldReadSnapshot\s*\}\)/);
+});
+
+test('static info community support pages use lightweight UI preferences snapshots', () => {
+  const main = readMainProcessSource();
+  const stateController = readText('src/main/app-state-controller.ts');
+  const preload = readText('src/main/preload.ts');
+  const types = readText('src/shared/types.ts');
+  const hooks = readText('src/renderer/hooks.ts');
+  const infoPage = readText('src/renderer/pages/InfoPage.tsx');
+  const communityPage = readText('src/renderer/pages/CommunityPage.tsx');
+  const supportPage = readText('src/renderer/pages/SupportPage.tsx');
+  const reportPage = readText('src/renderer/pages/ReportIssuePage.tsx');
+  const uiSnapshotBuilder = stateController.slice(
+    stateController.indexOf('export function runGetUiPreferencesSnapshot'),
+    stateController.indexOf('export function runClearBroadcastTimer')
+  );
+  const flushState = stateController.slice(
+    stateController.indexOf('export function runFlushBroadcastState'),
+    stateController.indexOf('export function runBroadcastState')
+  );
+  const uiSnapshotHook = hooks.slice(
+    hooks.indexOf('export function useUiPreferencesSnapshot'),
+    hooks.indexOf('export function useLiveNow')
+  );
+
+  assert.match(main, /ipcMain\.handle\('app:get-ui-preferences-snapshot', async \(\) => this\.getUiPreferencesSnapshot\(\)\)/);
+  assert.match(preload, /getUiPreferencesSnapshot: \(\) => ipcRenderer\.invoke\('app:get-ui-preferences-snapshot'\)/);
+  assert.match(preload, /onUiPreferencesChanged: \(callback: \(snapshot: UiPreferencesSnapshot\) => void\) =>/);
+  assert.match(types, /export interface UiPreferencesSnapshot/);
+  assert.match(types, /config: Pick<AppConfig, 'appLanguage' \| 'theme' \| 'visualFxIntensity'>;/);
+  assert.match(types, /getUiPreferencesSnapshot: \(\) => Promise<UiPreferencesSnapshot>/);
+  assert.match(types, /onUiPreferencesChanged: \(callback: \(snapshot: UiPreferencesSnapshot\) => void\) => \(\) => void/);
+
+  assert.match(uiSnapshotHook, /window\.poe2Overlay\.getUiPreferencesSnapshot\(\)/);
+  assert.match(uiSnapshotHook, /window\.poe2Overlay\.onUiPreferencesChanged/);
+  assert.match(uiSnapshotHook, /getPreviewSnapshot\(\)/);
+  assert.doesNotMatch(uiSnapshotHook, /window\.poe2Overlay\.getSnapshot\(\)/);
+  assert.doesNotMatch(uiSnapshotHook, /window\.poe2Overlay\.onStateChanged/);
+
+  for (const page of [infoPage, communityPage, supportPage]) {
+    assert.match(page, /useUiPreferencesSnapshot\(\)/);
+    assert.doesNotMatch(page, /useAppSnapshot/);
+  }
+  assert.match(reportPage, /useAppSnapshot\(\)/);
+
+  assert.match(uiSnapshotBuilder, /appLanguage: this\.config\.appLanguage/);
+  assert.match(uiSnapshotBuilder, /theme: this\.config\.theme/);
+  assert.match(uiSnapshotBuilder, /visualFxIntensity: this\.config\.visualFxIntensity/);
+  assert.doesNotMatch(uiSnapshotBuilder, /guideEntries/);
+  assert.doesNotMatch(uiSnapshotBuilder, /campaignBonuses/);
+  assert.doesNotMatch(uiSnapshotBuilder, /runtime/);
+
+  assert.match(flushState, /const uiPreferencesTargets = targetWindows\.filter/);
+  assert.match(flushState, /win === this\.infoWindow/);
+  assert.match(flushState, /win === this\.communityWindow/);
+  assert.match(flushState, /win === this\.supportWindow/);
+  assert.match(flushState, /const uiPreferencesSnapshot = this\.getUiPreferencesSnapshot\(\)/);
+  assert.match(flushState, /webContents\.send\('app:ui-preferences-changed', uiPreferencesSnapshot\)/);
 });
 
 test('main process keeps renderer windows isolated and guards shell.openExternal', () => {

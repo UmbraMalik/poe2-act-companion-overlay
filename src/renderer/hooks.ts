@@ -8,6 +8,7 @@ import type {
   RunTimerSettings,
   RunTimerState,
   TimerDiagnosticsPayload,
+  UiPreferencesSnapshot,
   ZoneAct
 } from '../shared/types';
 import { getPreviewSnapshot } from './preview-snapshot';
@@ -147,6 +148,52 @@ export function useAppSnapshot(options: UseAppSnapshotOptions = {}) {
       unsubscribe();
     };
   }, [enabled, initialSnapshot]);
+
+  return snapshot;
+}
+
+export function useUiPreferencesSnapshot() {
+  const [snapshot, setSnapshot] = useState<UiPreferencesSnapshot | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    const previewMode =
+      new URLSearchParams(window.location.search).get('preview') === '1';
+    const hasElectronApi =
+      typeof window !== 'undefined' &&
+      typeof window.poe2Overlay !== 'undefined';
+
+    if (previewMode || !hasElectronApi) {
+      const previewSnapshot = getPreviewSnapshot();
+      setSnapshot({
+        config: {
+          appLanguage: previewSnapshot.config.appLanguage,
+          theme: previewSnapshot.config.theme,
+          visualFxIntensity: previewSnapshot.config.visualFxIntensity
+        }
+      });
+      return () => {
+        isMounted = false;
+      };
+    }
+
+    void window.poe2Overlay.getUiPreferencesSnapshot().then((nextSnapshot) => {
+      if (isMounted) {
+        setSnapshot(nextSnapshot);
+      }
+    });
+
+    const unsubscribe = window.poe2Overlay.onUiPreferencesChanged((nextSnapshot) => {
+      if (isMounted) {
+        setSnapshot(nextSnapshot);
+      }
+    });
+
+    return () => {
+      isMounted = false;
+      unsubscribe();
+    };
+  }, []);
 
   return snapshot;
 }

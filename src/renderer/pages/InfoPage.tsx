@@ -1,9 +1,9 @@
 import { useDocumentTitle, useI18n } from '../useI18n';
-import { useAppSnapshot } from '../hooks';
+import { useUiPreferencesSnapshot } from '../hooks';
 import { getAppThemeClassName } from '../theme';
 
 export function InfoPage() {
-  const snapshot = useAppSnapshot();
+  const snapshot = useUiPreferencesSnapshot();
   const { t } = useI18n(snapshot?.config.appLanguage);
 
   useDocumentTitle(t('titles.info'));

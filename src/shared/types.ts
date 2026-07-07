@@ -493,6 +493,10 @@ export interface AppSnapshot {
   runtime: RuntimeState;
 }
 
+export interface UiPreferencesSnapshot {
+  config: Pick<AppConfig, 'appLanguage' | 'theme' | 'visualFxIntensity'>;
+}
+
 export interface GitHubReleaseAsset {
   name: string;
   browser_download_url: string;
@@ -639,6 +643,7 @@ export interface TimerDiagnosticsPayload {
 export interface ElectronApi {
   getSnapshot: () => Promise<AppSnapshot>;
   getOverlaySnapshot: () => Promise<AppSnapshot>;
+  getUiPreferencesSnapshot: () => Promise<UiPreferencesSnapshot>;
   getAppVersion: () => Promise<string>;
   getCachedUpdateCheckResult: () => Promise<UpdateCheckResult | null>;
   getStartupUpdateInfo: () => Promise<UpdateInfo | null>;
@@ -699,4 +704,5 @@ export interface ElectronApi {
   onRunResetConfirmationRequested: (callback: () => void) => () => void;
   onTimerVisualTick: (callback: (payload: TimerVisualTickPayload) => void) => () => void;
   onStateChanged: (callback: (snapshot: AppSnapshot) => void) => () => void;
+  onUiPreferencesChanged: (callback: (snapshot: UiPreferencesSnapshot) => void) => () => void;
 }

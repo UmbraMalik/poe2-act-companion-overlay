@@ -127,6 +127,16 @@ export function runGetOverlaySnapshot(this: any) {
         };
     }
 
+export function runGetUiPreferencesSnapshot(this: any) {
+        return {
+            config: {
+                appLanguage: this.config.appLanguage,
+                theme: this.config.theme,
+                visualFxIntensity: this.config.visualFxIntensity
+            }
+        };
+    }
+
 export function runClearBroadcastTimer(this: any) {
         if (this.broadcastTimer) {
             clearTimeout(this.broadcastTimer);
@@ -155,13 +165,29 @@ export function runFlushBroadcastState(this: any) {
             return;
         }
         const overlayTargets = targetWindows.filter((win) => win === this.overlayWindow);
-        const appTargets = targetWindows.filter((win) => win !== this.overlayWindow);
+        const uiPreferencesTargets = targetWindows.filter((win) => (
+            win === this.infoWindow ||
+            win === this.communityWindow ||
+            win === this.supportWindow
+        ));
+        const appTargets = targetWindows.filter((win) => (
+            win !== this.overlayWindow &&
+            win !== this.infoWindow &&
+            win !== this.communityWindow &&
+            win !== this.supportWindow
+        ));
         const pendingSnapshot = this.pendingSnapshot;
         this.pendingSnapshot = null;
         if (overlayTargets.length > 0) {
             const overlaySnapshot = this.getOverlaySnapshot();
             for (const win of overlayTargets) {
                 win.webContents.send('app:state-changed', overlaySnapshot);
+            }
+        }
+        if (uiPreferencesTargets.length > 0) {
+            const uiPreferencesSnapshot = this.getUiPreferencesSnapshot();
+            for (const win of uiPreferencesTargets) {
+                win.webContents.send('app:ui-preferences-changed', uiPreferencesSnapshot);
             }
         }
         if (appTargets.length > 0) {
