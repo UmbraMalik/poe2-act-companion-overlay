@@ -814,12 +814,15 @@ export class ConfigStore {
     const configDir = dirname(this.configPath);
     const tempPath = `${this.configPath}.tmp`;
     mkdirSync(configDir, { recursive: true });
-    rmSync(tempPath, { force: true });
     try {
       writeFileSync(tempPath, JSON.stringify(this.config, null, 2), 'utf8');
       renameSync(tempPath, this.configPath);
     } catch (error) {
-      rmSync(tempPath, { force: true });
+      try {
+        rmSync(tempPath, { force: true });
+      } catch {
+        // Best effort only: cleanup must not hide the original write/rename failure.
+      }
       throw error;
     }
   }

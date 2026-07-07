@@ -366,7 +366,7 @@ export class LogWatcher {
       currentOffset: this.filePosition,
       lastReadAt: readAt
     });
-    this.emitStatus('ready', 'Р§С‚РµРЅРёРµ Р»РѕРіР° Р°РєС‚РёРІРЅРѕ');
+    this.emitStatus('ready', 'Чтение лога активно');
     return true;
   }
 

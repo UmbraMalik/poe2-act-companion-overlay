@@ -22,6 +22,17 @@ test('dragMove source keeps width and height locked to current bounds', () => {
   assert.equal(plan.suspiciousSizeChange, true);
 });
 
+test('dragMove source keeps zero coordinates as valid movement targets', () => {
+  const plan = planOverlayBoundsChange({
+    source: 'dragMove',
+    currentBounds: { x: 140, y: 95, width: 520, height: 410 },
+    requestedBounds: { x: 0, y: 0, width: 520, height: 410 }
+  });
+
+  assert.equal(plan.applyMode, 'setPosition');
+  assert.deepEqual(plan.nextBounds, { x: 0, y: 0, width: 520, height: 410 });
+});
+
 test('auto-height helper ignores resize requests while dragging or suspended', () => {
   assert.equal(
     shouldIgnoreOverlayAutoHeight({

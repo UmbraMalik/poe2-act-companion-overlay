@@ -55,6 +55,7 @@ test('main process keeps renderer windows isolated and guards shell.openExternal
 
 test('overlay drag IPC routes absolute movement through the dragMove helper path without inline setBounds', () => {
   const main = readMainProcessSource();
+  const overlayBounds = readText('src/main/overlay-window-bounds.ts');
   const handlerStart = main.indexOf("ipcMain.handle('app:set-overlay-position'");
   const handlerEnd = main.indexOf("ipcMain.handle('app:set-overlay-mode'", handlerStart);
 
@@ -71,6 +72,9 @@ test('overlay drag IPC routes absolute movement through the dragMove helper path
   assert.doesNotMatch(moveHandler, /Number\(x\)\s*\|\|/);
   assert.doesNotMatch(moveHandler, /Number\(y\)\s*\|\|/);
   assert.doesNotMatch(moveHandler, /setBounds\(/);
+  assert.match(overlayBounds, /Number\.isFinite\(numberValue\)/);
+  assert.doesNotMatch(overlayBounds, /Number\(bounds\.x\)\s*\|\|/);
+  assert.doesNotMatch(overlayBounds, /Number\(bounds\.y\)\s*\|\|/);
 });
 
 test('update settings IPC normalizes unknown renderer payloads before reading fields', () => {

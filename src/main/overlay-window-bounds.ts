@@ -21,11 +21,16 @@ function roundBounds(
   bounds: OverlayBounds,
   fallback: OverlayBounds
 ): OverlayBounds {
+  const roundFinite = (value: unknown, fallbackValue: number): number => {
+    const numberValue = Number(value);
+    return Number.isFinite(numberValue) ? Math.round(numberValue) : fallbackValue;
+  };
+
   return {
-    x: Math.round(Number(bounds.x) || fallback.x),
-    y: Math.round(Number(bounds.y) || fallback.y),
-    width: Math.round(Number(bounds.width) || fallback.width),
-    height: Math.round(Number(bounds.height) || fallback.height)
+    x: roundFinite(bounds.x, fallback.x),
+    y: roundFinite(bounds.y, fallback.y),
+    width: roundFinite(bounds.width, fallback.width),
+    height: roundFinite(bounds.height, fallback.height)
   };
 }
 
