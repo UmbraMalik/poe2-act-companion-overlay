@@ -13,7 +13,7 @@ import {
   formatTimestamp,
   formatZoneOption
 } from '../utils';
-import { getGuideView, getLevelReminderView } from '../../i18n/data';
+import { getLevelReminderView } from '../../i18n/data';
 import { formatZoneMatcherReason, translateSystemText } from '../../i18n/runtime';
 import { translate } from '../../i18n/translations';
 import { getAppThemeClassName } from '../theme';
@@ -334,7 +334,6 @@ export function SettingsPage() {
   const appLanguage = language;
   const displayRunTimer = liveRunTimer.runTimer ?? config.runTimer;
   const currentGuide = currentGuideEntry;
-  const currentGuideView = getGuideView(currentGuide, appLanguage);
   const activeLevelReminderView = getLevelReminderView(activeLevelReminder, appLanguage);
   const displayElapsedMs = liveRunTimer.runElapsedMs;
   const currentActElapsedMs = getCurrentActElapsedMs(
@@ -1361,14 +1360,6 @@ export function SettingsPage() {
         <section id="settings-detail-panel" className="settings-card">
           <h2 className="settings-section-title">{t('settings.detailPanelTitle')}</h2>
           <p className="helper-text">{t('settings.detailPanelDescription')}</p>
-          <InfoGrid
-            items={[
-              { label: t('settings.currentScene'), value: sceneName },
-              { label: t('settings.currentRoute'), value: formatGuideLabel(currentGuide, appLanguage) },
-              { label: t('settings.guideProfile'), value: t('settings.universalProfile') },
-              { label: t('settings.trainingMode'), value: config.trainingModeEnabled ? t('companion.enabled') : t('companion.disabled') }
-            ]}
-          />
 
           <div className="checkbox-grid">
             <label className="toggle-card">
@@ -1383,66 +1374,6 @@ export function SettingsPage() {
               />
               <span>{t('settings.companionAlwaysOnTop')}</span>
             </label>
-
-            <label className="toggle-card">
-              <input
-                type="checkbox"
-                checked={config.trainingModeEnabled}
-                onChange={(event) => {
-                  void window.poe2Overlay.updateSettings({
-                    trainingModeEnabled: event.target.checked
-                  });
-                }}
-              />
-              <span>{t('settings.enableTrainingMode')}</span>
-            </label>
-          </div>
-
-          <div className="settings-grid settings-grid-wide">
-            <label className="settings-field">
-              <span>{t('settings.guideProfile')}</span>
-              <SettingsSelect
-                ariaLabel={t('settings.guideProfile')}
-                value={config.guideProfile}
-                options={[
-                  { value: 'universal', label: t('settings.universalProfile') }
-                ]}
-                onChange={(guideProfile) => {
-                  void window.poe2Overlay.updateSettings({
-                    guideProfile: guideProfile as 'universal'
-                  });
-                }}
-              />
-            </label>
-
-            <div className="settings-field">
-              <span>{t('settings.targetActTimes')}</span>
-              <div className="settings-inline-grid">
-                {([
-                  ['act1', 1],
-                  ['act2', 2],
-                  ['act3', 3],
-                  ['act4', 4]
-                ] as const).map(([key, act]) => (
-                  <label className="settings-field" key={key}>
-                    <span>{t('settings.targetActMinutes', { label: t('route.act', { act }) })}</span>
-                    <input
-                      type="number"
-                      min={0}
-                      value={config.trainingTargetActTimes[key] ?? ''}
-                      onChange={(event) => {
-                        const rawValue = event.target.value;
-                        void window.poe2Overlay.updateSettings({
-                          trainingTargetActTimes: {
-                            [key]: rawValue === '' ? null : Number(rawValue)
-                          }
-                        });
-                      }}
-                    />
-                  </label>
-                ))}
-              </div>
-            </div>
           </div>
 
           <div className="button-row">

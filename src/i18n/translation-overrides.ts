@@ -24,8 +24,7 @@ export const translationOverrides: Record<AppLanguage, TranslationTree> = {
       exampleZone: 'Пример зоны',
       exampleReward: 'Пример награды',
       updateAvailableTitle: 'Доступна новая версия: {version}',
-      openingRelease: 'Открываем релиз...',
-      targetActMinutes: '{label}, мин'
+      openingRelease: 'Открываем релиз...'
     },
     companion: {
       take: 'Забрать',
@@ -88,8 +87,7 @@ export const translationOverrides: Record<AppLanguage, TranslationTree> = {
       exampleZone: 'Example zone',
       exampleReward: 'Example reward',
       updateAvailableTitle: 'New version available: {version}',
-      openingRelease: 'Opening release...',
-      targetActMinutes: '{label}, min'
+      openingRelease: 'Opening release...'
     },
     companion: {
       take: 'Take',
