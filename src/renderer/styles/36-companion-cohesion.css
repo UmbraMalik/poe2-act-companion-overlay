@@ -173,6 +173,25 @@
     0 0 28px rgba(167, 123, 255, 0.18) !important;
 }
 
+.theme-classic.companion-page .timer-main-readout h3,
+.theme-classic.companion-page .summary-result-main strong,
+.theme-classic.companion-page .timer-cockpit-details small,
+.theme-classic.companion-page .timer-segment-list strong,
+.theme-classic.companion-page .longest-zone-list strong,
+.theme-classic.companion-page .summary-history-stats b,
+.theme-classic.companion-page .summary-compare-act-pill strong,
+.theme-classic.companion-page .summary-act-breakdown-row span,
+.theme-classic.companion-page .summary-act-breakdown-row small,
+.theme-classic.companion-page .act-split-time,
+.theme-classic.companion-page .act-split-total {
+  font-family: var(--font-caps) !important;
+  font-weight: var(--fw-heavy) !important;
+  letter-spacing: -0.035em !important;
+  line-height: 0.95 !important;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
 .companion-page .route-overview-list.route-overview-grid {
   scrollbar-color: var(--companion-gold) rgba(255, 255, 255, 0.045);
 }
