@@ -34,6 +34,7 @@ interface DiagnosticsRecord {
   previousDisplayedElapsedMs: number | null;
   nextDisplayedElapsedMs: number | null;
   component: string | null;
+  note: string | null;
   timestamp: string;
 }
 
@@ -66,6 +67,87 @@ test('timer diagnostics stay disabled by default and do not create a log file', 
 
     assert.equal(result, false);
     assert.equal(existsSync(logFilePath), false);
+  } finally {
+    if (previousValue === undefined) {
+      delete process.env.POE2_TIMER_DIAGNOSTICS;
+    } else {
+      process.env.POE2_TIMER_DIAGNOSTICS = previousValue;
+    }
+  }
+});
+
+test('timer diagnostics reject invalid renderer payloads before writing', async () => {
+  const previousValue = process.env.POE2_TIMER_DIAGNOSTICS;
+  process.env.POE2_TIMER_DIAGNOSTICS = '1';
+
+  try {
+    resetElectronMockState();
+    const app = createTestAppInstance() as any;
+    app.registerIpc();
+
+    const logFilePath = app.timerDiagnosticsLog.getLogFilePath();
+    const unknownEventResult = await invokeIpcHandler<boolean>('app:timer-diagnostics', {
+      event: 'timer-made-up-event',
+      source: 'renderer.test-invalid'
+    });
+    const nonObjectResult = await invokeIpcHandler<boolean>(
+      'app:timer-diagnostics',
+      'timer-display-jump'
+    );
+    const nonFiniteNumberResult = await invokeIpcHandler<boolean>('app:timer-diagnostics', {
+      event: 'timer-display-jump',
+      source: 'renderer.test-invalid-number',
+      displayDeltaMs: Number.POSITIVE_INFINITY
+    });
+
+    await app.timerDiagnosticsLog.whenIdle();
+
+    assert.equal(unknownEventResult, false);
+    assert.equal(nonObjectResult, false);
+    assert.equal(nonFiniteNumberResult, false);
+    assert.equal(existsSync(logFilePath), false);
+  } finally {
+    if (previousValue === undefined) {
+      delete process.env.POE2_TIMER_DIAGNOSTICS;
+    } else {
+      process.env.POE2_TIMER_DIAGNOSTICS = previousValue;
+    }
+  }
+});
+
+test('timer diagnostics clamp oversized renderer strings and still accept valid payloads', async () => {
+  const previousValue = process.env.POE2_TIMER_DIAGNOSTICS;
+  process.env.POE2_TIMER_DIAGNOSTICS = '1';
+
+  try {
+    resetElectronMockState();
+    const app = createTestAppInstance() as any;
+    app.registerIpc();
+
+    const longSource = `renderer.${'source'.repeat(1000)}`;
+    const longNote = 'note'.repeat(1000);
+    const result = await invokeIpcHandler<boolean>('app:timer-diagnostics', {
+      event: 'timer-display-jump',
+      source: longSource,
+      note: longNote,
+      displayDeltaMs: 1700
+    });
+
+    await app.timerDiagnosticsLog.whenIdle();
+
+    const logFilePath = app.timerDiagnosticsLog.getLogFilePath();
+    assert.equal(result, true);
+    assert.equal(existsSync(logFilePath), true);
+
+    const rawLog = await readFile(logFilePath, 'utf8');
+    assert.ok(rawLog.length < 3000);
+
+    const records = await readDiagnosticsRecords(logFilePath);
+    assert.equal(records.length, 1);
+    assert.equal(records[0]?.event, 'timer-display-jump');
+    assert.equal(records[0]?.displayDeltaMs, 1700);
+    assert.ok((records[0]?.source.length ?? 0) <= 160);
+    assert.ok((records[0]?.note?.length ?? 0) <= 1000);
   } finally {
     if (previousValue === undefined) {
       delete process.env.POE2_TIMER_DIAGNOSTICS;

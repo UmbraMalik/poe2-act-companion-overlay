@@ -13,7 +13,7 @@ import {
   shouldIgnoreOverlayAutoHeight
 } from './overlay-window-bounds';
 import { isTimerDiagnosticsEnabled } from './timer-diagnostics-log';
-import type { OverlayMode, SettingsPatch } from '../shared/types';
+import type { OverlayMode, SettingsPatch, TimerDiagnosticsPayload } from '../shared/types';
 import {
   DEV_SAMPLE_ZONE_LINE,
   clampOpacity,
@@ -22,6 +22,155 @@ import {
 } from './app-environment';
 
 const MAX_DEV_LOG_LINE_LENGTH = 4000;
+const MAX_TIMER_DIAGNOSTICS_SOURCE_LENGTH = 160;
+const MAX_TIMER_DIAGNOSTICS_STRING_LENGTH = 1000;
+const TIMER_DIAGNOSTICS_EVENTS = new Set<TimerDiagnosticsPayload['event']>([
+    'timer-diagnostics-enabled',
+    'timer-visual-diagnostics-ready',
+    'timer-arm',
+    'timer-start',
+    'timer-pause',
+    'timer-resume',
+    'timer-reset',
+    'timer-finish',
+    'timer-act-change',
+    'timer-zone-change',
+    'timer-tick-delay',
+    'timer-display-jump',
+    'timer-visual-update-delay',
+    'timer-visual-display-jump',
+    'timer-visual-elapsed-backwards',
+    'timer-unexpected-state',
+    'timer-renderer-mount',
+    'timer-renderer-unmount',
+    'overlay-render-scheduler-ready',
+    'overlay-render-commit-delay',
+    'overlay-render-frequency',
+    'overlay-direct-composition-compat-enabled'
+]);
+const TIMER_DIAGNOSTICS_STRING_FIELDS = [
+    'overlayMode',
+    'zoneName',
+    'previousDisplayedText',
+    'nextDisplayedText',
+    'timerStatus',
+    'previousStatus',
+    'nextStatus',
+    'note',
+    'component',
+    'renderSource',
+    'renderReason',
+    'visibilityState'
+] as const;
+const TIMER_DIAGNOSTICS_NUMBER_FIELDS = [
+    'totalElapsedMs',
+    'actElapsedMs',
+    'expectedTickMs',
+    'actualTickMs',
+    'tickDelayMs',
+    'lastRenderedElapsedMs',
+    'currentElapsedMs',
+    'displayDeltaMs',
+    'wallClockDeltaMs',
+    'previousDisplayedElapsedMs',
+    'nextDisplayedElapsedMs',
+    'renderDelayMs',
+    'snapshotAgeMs',
+    'snapshotReceivedCount',
+    'snapshotCommitCount',
+    'renderCommitCount',
+    'rendererVisualTickCount',
+    'lastSnapshotReceivedAtMs',
+    'lastSnapshotCommittedAtMs',
+    'lastRenderCommittedAtMs'
+] as const;
+const TIMER_DIAGNOSTICS_BOOLEAN_FIELDS = [
+    'isRunning',
+    'isPaused',
+    'documentHidden'
+] as const;
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+    return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function normalizeTimerDiagnosticsString(value: unknown, maxLength: number): string | null {
+    return typeof value === 'string'
+        ? value.slice(0, maxLength)
+        : null;
+}
+
+function normalizeTimerDiagnosticsPayload(value: unknown): TimerDiagnosticsPayload | null {
+    if (!isRecord(value)) {
+        return null;
+    }
+
+    const event = value.event;
+    const source = normalizeTimerDiagnosticsString(value.source, MAX_TIMER_DIAGNOSTICS_SOURCE_LENGTH);
+    if (typeof event !== 'string' || !TIMER_DIAGNOSTICS_EVENTS.has(event as TimerDiagnosticsPayload['event']) || source === null) {
+        return null;
+    }
+
+    const payload: Record<string, unknown> & Pick<TimerDiagnosticsPayload, 'event' | 'source'> = {
+        event: event as TimerDiagnosticsPayload['event'],
+        source
+    };
+
+    for (const field of TIMER_DIAGNOSTICS_STRING_FIELDS) {
+        const fieldValue = value[field];
+        if (fieldValue === undefined) {
+            continue;
+        }
+        if (fieldValue === null) {
+            payload[field] = null;
+            continue;
+        }
+        const normalizedValue = normalizeTimerDiagnosticsString(fieldValue, MAX_TIMER_DIAGNOSTICS_STRING_LENGTH);
+        if (normalizedValue === null) {
+            return null;
+        }
+        payload[field] = normalizedValue;
+    }
+
+    for (const field of TIMER_DIAGNOSTICS_NUMBER_FIELDS) {
+        const fieldValue = value[field];
+        if (fieldValue === undefined) {
+            continue;
+        }
+        if (fieldValue === null) {
+            payload[field] = null;
+            continue;
+        }
+        if (typeof fieldValue !== 'number' || !Number.isFinite(fieldValue)) {
+            return null;
+        }
+        payload[field] = fieldValue;
+    }
+
+    for (const field of TIMER_DIAGNOSTICS_BOOLEAN_FIELDS) {
+        const fieldValue = value[field];
+        if (fieldValue === undefined) {
+            continue;
+        }
+        if (fieldValue === null || typeof fieldValue === 'boolean') {
+            payload[field] = fieldValue;
+            continue;
+        }
+        return null;
+    }
+
+    const act = value.act;
+    if (act !== undefined) {
+        if (act === null || act === 'interlude' || (typeof act === 'number' && Number.isFinite(act))) {
+            payload.act = act;
+        }
+        else {
+            return null;
+        }
+    }
+
+    return payload as TimerDiagnosticsPayload;
+}
 
 function normalizeSettingsPatchInput(value: unknown): SettingsPatch {
     return typeof value === 'object' && value !== null && !Array.isArray(value)
@@ -327,10 +476,11 @@ export function runRegisterIpc(this: any) {
             if (!isTimerDiagnosticsEnabled()) {
                 return false;
             }
-            if (!payload || typeof payload.event !== 'string' || typeof payload.source !== 'string') {
+            const normalizedPayload = normalizeTimerDiagnosticsPayload(payload);
+            if (!normalizedPayload) {
                 return false;
             }
-            return await this.timerDiagnosticsLog.write(this.buildTimerDiagnosticsRecord(payload));
+            return await this.timerDiagnosticsLog.write(this.buildTimerDiagnosticsRecord(normalizedPayload));
         });
         ipcMain.handle('app:resize-overlay', async (_event: any, width: any, height: any) => {
             const targetWindow = this.overlayWindow;
