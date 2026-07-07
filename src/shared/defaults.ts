@@ -121,14 +121,6 @@ export const DEFAULT_CONFIG: AppConfig = {
   },
   companionBounds: null,
   companionAlwaysOnTop: false,
-  guideProfile: 'universal',
-  trainingModeEnabled: false,
-  trainingTargetActTimes: {
-    act1: null,
-    act2: null,
-    act3: null,
-    act4: null
-  },
   zoneProgress: {},
   visitedZones: [],
   zoneTimeHistory: [],

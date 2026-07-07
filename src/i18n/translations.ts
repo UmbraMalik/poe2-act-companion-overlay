@@ -483,8 +483,6 @@ const baseTranslations = {
       experience: 'Опыт',
       sceneLabel: 'Сцена',
       currentScene: 'Текущая сцена',
-      guideProfile: 'Профиль гайда',
-      trainingMode: 'Режим тренировки',
       enabled: 'Включён',
       disabled: 'Выключен'
     },
@@ -1176,8 +1174,6 @@ const baseTranslations = {
       experience: 'Experience',
       sceneLabel: 'Scene',
       currentScene: 'Current scene',
-      guideProfile: 'Guide profile',
-      trainingMode: 'Training mode',
       enabled: 'Enabled',
       disabled: 'Disabled'
     },

@@ -12,7 +12,6 @@ import type {
   AppSnapshot,
   ChecklistViewItem,
   GuideEntry,
-  GuideProfile,
   LevelReminder,
   PowerSpike,
   RunTimerActSplit,
@@ -55,13 +54,6 @@ export interface ActTimeRow {
   totalElapsedMs: number;
   timestamp: number | null;
   status: 'finished' | 'current';
-}
-
-function supportsProfile(
-  profiles: GuideProfile[] | undefined,
-  activeProfile: GuideProfile
-): boolean {
-  return !profiles || profiles.length === 0 || profiles.includes(activeProfile);
 }
 
 export function getRunElapsedMs(runTimer: RunTimerState, now: number): number {
@@ -209,7 +201,6 @@ export function getXpStatus(
 export function getNearestPowerSpike(
   powerSpikes: PowerSpike[],
   currentLevel: number | null,
-  profile: GuideProfile,
   maxDelta = 2
 ): PowerSpike | null {
   if (currentLevel === null) {
@@ -218,7 +209,6 @@ export function getNearestPowerSpike(
 
   return (
     [...powerSpikes]
-      .filter((entry) => supportsProfile(entry.profiles, profile))
       .filter((entry) => entry.level >= currentLevel && entry.level - currentLevel <= maxDelta)
       .sort((left, right) => left.level - right.level)[0] ?? null
   );

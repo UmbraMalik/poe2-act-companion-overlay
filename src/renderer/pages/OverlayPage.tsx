@@ -52,7 +52,6 @@ import type {
   AppTheme,
   CampaignBonusDefinition,
   GuideEntry,
-  GuideProfile,
   LevelReminder,
   PowerSpike,
   RunTimerSettings,
@@ -133,10 +132,6 @@ const LEAGUE_MECHANIC_REWARDS = (
   leagueMechanicRewardsData as { rewards?: LeagueMechanicRewardEntry[] }
 ).rewards ?? [];
 
-function supportsActiveProfile(entry: PowerSpike, activeProfile: GuideProfile): boolean {
-  return !entry.profiles || entry.profiles.length === 0 || entry.profiles.includes(activeProfile);
-}
-
 function getOverlayUpcomingReminders(
   snapshot: NonNullable<ReturnType<typeof useAppSnapshot>>,
   language: AppLanguage,
@@ -159,7 +154,6 @@ function getOverlayUpcomingReminders(
   );
 
   const powerSpikes: OverlayUpcomingReminder[] = snapshot.powerSpikes
-    .filter((entry) => supportsActiveProfile(entry, snapshot.config.guideProfile))
     .map((entry) => ({
       id: `power-${entry.id}`,
       level: entry.level,
@@ -207,8 +201,7 @@ function getImportantOverlayLines(
   const guideView = getGuideView(guide, language);
   const nearestPowerSpike = getNearestPowerSpike(
     snapshot.powerSpikes,
-    snapshot.config.currentLevel,
-    snapshot.config.guideProfile
+    snapshot.config.currentLevel
   );
   const powerSpikeView = getPowerSpikeView(nearestPowerSpike, language);
   const xpStatus = getXpStatus(snapshot, language);

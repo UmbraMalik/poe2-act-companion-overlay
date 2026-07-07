@@ -1193,11 +1193,10 @@ export function CompanionPage() {
       ? getNearestPowerSpike(
         snapshot.powerSpikes,
         snapshot.config.currentLevel,
-        snapshot.config.guideProfile,
         99
       )
       : null,
-    [snapshot?.powerSpikes, snapshot?.config.currentLevel, snapshot?.config.guideProfile]
+    [snapshot?.powerSpikes, snapshot?.config.currentLevel]
   );
   const visibleActiveLevelReminder = useMemo(
     () => {
@@ -1293,12 +1292,8 @@ export function CompanionPage() {
     [snapshot?.vendorCheckpoints]
   );
   const filteredPowerSpikes = useMemo(
-    () => snapshot
-      ? snapshot.powerSpikes.filter(
-        (entry) => !entry.profiles || entry.profiles.includes(snapshot.config.guideProfile)
-      )
-      : [],
-    [snapshot?.powerSpikes, snapshot?.config.guideProfile]
+    () => snapshot?.powerSpikes ?? [],
+    [snapshot?.powerSpikes]
   );
   const nearestReminderItems = useMemo(
     () => getUniqueReminderList([

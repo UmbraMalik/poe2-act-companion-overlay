@@ -150,14 +150,11 @@ export interface LevelReminder {
   items: string[];
 }
 
-export type GuideProfile = 'universal';
-
 export interface PowerSpike {
   id: string;
   level: number;
   title: string;
   items: string[];
-  profiles?: GuideProfile[];
 }
 
 export interface GuideGlobalReminders {
@@ -333,13 +330,6 @@ export interface HotkeySettings {
   toggleOverlayMode: string;
 }
 
-export interface TrainingTargetActTimes {
-  act1: number | null;
-  act2: number | null;
-  act3: number | null;
-  act4: number | null;
-}
-
 export interface ZoneTimeEntry {
   zoneId: string;
   zone_ru: string;
@@ -410,9 +400,6 @@ export interface AppConfig {
   hotkeys: HotkeySettings;
   companionBounds: OverlayBounds | null;
   companionAlwaysOnTop: boolean;
-  guideProfile: GuideProfile;
-  trainingModeEnabled: boolean;
-  trainingTargetActTimes: TrainingTargetActTimes;
   zoneProgress: Record<string, GuideZoneProgress>;
   visitedZones: VisitedZoneEntry[];
   zoneTimeHistory: ZoneTimeEntry[];
@@ -576,9 +563,6 @@ export interface SettingsPatch {
   manualHotkeysEnabled?: boolean;
   hotkeys?: Partial<HotkeySettings>;
   companionAlwaysOnTop?: boolean;
-  guideProfile?: GuideProfile;
-  trainingModeEnabled?: boolean;
-  trainingTargetActTimes?: Partial<TrainingTargetActTimes>;
   runTimerSettings?: Partial<RunTimerSettings>;
 }
 

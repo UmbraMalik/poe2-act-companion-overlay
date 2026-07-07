@@ -308,8 +308,7 @@ export class GuideService {
             id: entry.id,
             level: Number(entry.level) || 0,
             title: entry.title ?? `Скачок силы на ${entry.level} уровне`,
-            items: Array.isArray(entry.items) ? entry.items.filter(Boolean) : [],
-            profiles: Array.isArray(entry.profiles) ? entry.profiles.filter(Boolean) : undefined
+            items: Array.isArray(entry.items) ? entry.items.filter(Boolean) : []
           }))
       : [];
 

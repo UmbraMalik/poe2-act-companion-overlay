@@ -28,7 +28,6 @@ import type {
   SettingsPatch,
   TownTimerState,
   TownVisitEntry,
-  TrainingTargetActTimes,
   VisualFxIntensity,
   VisitedZoneEntry,
   ZoneTimeEntry
@@ -241,17 +240,6 @@ function normalizeHotkeys(value: unknown): HotkeySettings {
       return [key, trimmed && normalizeHotkeyAccelerator(trimmed) ? trimmed : DEFAULT_HOTKEYS[key]];
     })
   ) as unknown as HotkeySettings;
-}
-
-function normalizeTrainingTargetActTimes(value: unknown): TrainingTargetActTimes {
-  const source = isRecord(value) ? value : {};
-  return Object.fromEntries(
-    Object.keys(DEFAULT_CONFIG.trainingTargetActTimes).map((key) => {
-      const raw = source[key];
-      const numberValue = finiteNumber(raw);
-      return [key, numberValue === null || numberValue < 0 ? null : Math.round(clamp(numberValue, 0, 24 * 60 * 60 * 1000))];
-    })
-  ) as unknown as TrainingTargetActTimes;
 }
 
 function normalizeStringArray(value: unknown): string[] {
@@ -622,9 +610,6 @@ export function normalizeAppConfig(config: Partial<AppConfig> = {}): AppConfig {
     hotkeys: normalizeHotkeys(rawConfig.hotkeys),
     companionBounds: normalizeBounds(rawConfig.companionBounds, COMPANION_BOUNDS_LIMITS),
     companionAlwaysOnTop: safeBoolean(rawConfig.companionAlwaysOnTop, DEFAULT_CONFIG.companionAlwaysOnTop),
-    guideProfile: DEFAULT_CONFIG.guideProfile,
-    trainingModeEnabled: safeBoolean(rawConfig.trainingModeEnabled, DEFAULT_CONFIG.trainingModeEnabled),
-    trainingTargetActTimes: normalizeTrainingTargetActTimes(rawConfig.trainingTargetActTimes),
     zoneProgress: mergedZoneProgress,
     visitedZones: normalizeVisitedZones(rawConfig.visitedZones),
     zoneTimeHistory: normalizeZoneTimeHistory(rawConfig.zoneTimeHistory),
@@ -747,20 +732,6 @@ export class ConfigStore {
         : {}),
       ...(patch.companionAlwaysOnTop !== undefined
         ? { companionAlwaysOnTop: patch.companionAlwaysOnTop }
-        : {}),
-      ...(patch.guideProfile !== undefined
-        ? { guideProfile: patch.guideProfile }
-        : {}),
-      ...(patch.trainingModeEnabled !== undefined
-        ? { trainingModeEnabled: patch.trainingModeEnabled }
-        : {}),
-      ...(patch.trainingTargetActTimes !== undefined
-        ? {
-            trainingTargetActTimes: {
-              ...this.config.trainingTargetActTimes,
-              ...patch.trainingTargetActTimes
-            }
-          }
         : {}),
       ...(patch.runTimerSettings !== undefined
         ? {

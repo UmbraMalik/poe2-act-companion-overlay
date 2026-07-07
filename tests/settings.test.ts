@@ -82,6 +82,8 @@ test('normalizeAppConfig hardens corrupted user config values', () => {
       openCompanion: 'Ctrl+F9',
       toggleOverlayMode: 'Shift+F8'
     },
+    guideProfile: 'legacy',
+    trainingModeEnabled: true,
     trainingTargetActTimes: {
       act1: -1,
       act2: 999999999999
@@ -147,8 +149,9 @@ test('normalizeAppConfig hardens corrupted user config values', () => {
   assert.equal(normalized.hotkeys.toggleTimerPause, 'Alt+Q');
   assert.equal(normalized.hotkeys.openCompanion, 'Ctrl+F9');
   assert.equal(normalized.hotkeys.toggleOverlayMode, 'Shift+F8');
-  assert.equal(normalized.trainingTargetActTimes.act1, null);
-  assert.equal(normalized.trainingTargetActTimes.act2, 86400000);
+  assert.equal('guideProfile' in (normalized as unknown as Record<string, unknown>), false);
+  assert.equal('trainingModeEnabled' in (normalized as unknown as Record<string, unknown>), false);
+  assert.equal('trainingTargetActTimes' in (normalized as unknown as Record<string, unknown>), false);
   assert.equal(normalized.runTimer.status, DEFAULT_CONFIG.runTimer.status);
   assert.equal(normalized.runTimer.elapsedMs, 0);
   assert.equal(normalized.runTimer.startedAt, null);
