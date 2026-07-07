@@ -9,6 +9,11 @@ import {
 } from '../../shared/defaults';
 import type {
   AppConfig,
+  AppTheme,
+  CampaignBonusProgress,
+  ChecklistDetectedBy,
+  ChecklistItemProgress,
+  ChecklistItemState,
   HotkeySettings,
   MainOverlaySettings,
   OverlayBounds,
@@ -34,7 +39,10 @@ const OVERLAY_SCALES: OverlayScale[] = [70, 80, 90, 100, 110, 120];
 const OVERLAY_TEXT_SIZES: OverlayTextSize[] = [0, 1, 2, 3];
 const OVERLAY_DENSITIES: OverlayDensity[] = ['compact', 'normal', 'detailed'];
 const VISUAL_FX_INTENSITIES: VisualFxIntensity[] = ['off', 'subtle', 'normal', 'rich'];
+const APP_THEMES: AppTheme[] = ['classic', 'dark_fantasy'];
 const RUN_TIMER_STATUSES: RunTimerStatus[] = ['not_started', 'armed', 'running', 'paused', 'finished'];
+const CHECKLIST_ITEM_STATES: ChecklistItemState[] = ['pending', 'current', 'likely_done', 'done', 'missed'];
+const CHECKLIST_DETECTED_BY: ChecklistDetectedBy[] = ['log', 'manual', 'zone_leave', 'linked_reward', 'inferred_zone_leave'];
 const HOTKEY_KEYS: Array<keyof HotkeySettings> = [
   'markChecklistDone',
   'undoChecklistMark',
@@ -141,6 +149,10 @@ function normalizeVisualFxIntensity(value: unknown): VisualFxIntensity {
   return normalizeEnum(value, VISUAL_FX_INTENSITIES, DEFAULT_CONFIG.visualFxIntensity);
 }
 
+function normalizeAppTheme(value: unknown): AppTheme {
+  return normalizeEnum(value, APP_THEMES, DEFAULT_CONFIG.theme);
+}
+
 function normalizeOverlayOpacity(value: unknown): number {
   const numberValue = finiteNumber(value);
   if (numberValue === null) {
@@ -244,6 +256,87 @@ function normalizeTrainingTargetActTimes(value: unknown): TrainingTargetActTimes
 
 function normalizeStringArray(value: unknown): string[] {
   return Array.isArray(value) ? value.filter((entry): entry is string => typeof entry === 'string') : [];
+}
+
+function normalizeChecklistItemState(value: unknown): ChecklistItemState | null {
+  return typeof value === 'string' && CHECKLIST_ITEM_STATES.includes(value as ChecklistItemState)
+    ? value as ChecklistItemState
+    : null;
+}
+
+function normalizeChecklistDetectedBy(value: unknown): ChecklistDetectedBy | null {
+  return typeof value === 'string' && CHECKLIST_DETECTED_BY.includes(value as ChecklistDetectedBy)
+    ? value as ChecklistDetectedBy
+    : null;
+}
+
+function normalizeChecklistItemProgress(value: unknown): ChecklistItemProgress | null {
+  if (!isRecord(value)) {
+    return null;
+  }
+
+  const state = normalizeChecklistItemState(value.state);
+  const detectedBy = normalizeChecklistDetectedBy(value.detectedBy);
+  const timestamp = safeString(value.timestamp, null);
+
+  if (!state || !detectedBy || !timestamp) {
+    return null;
+  }
+
+  return {
+    state,
+    timestamp,
+    detectedBy,
+    originalText: safeString(value.originalText, '') ?? ''
+  };
+}
+
+function normalizeChecklistItemStates(value: unknown): Record<string, ChecklistItemProgress> {
+  if (!isRecord(value)) {
+    return {};
+  }
+
+  return Object.fromEntries(
+    Object.entries(value).flatMap(([itemId, progress]) => {
+      const normalized = normalizeChecklistItemProgress(progress);
+      return normalized ? [[itemId, normalized]] : [];
+    })
+  );
+}
+
+function normalizeCampaignBonusProgressEntry(value: unknown): CampaignBonusProgress | null {
+  if (!isRecord(value) || value.state !== 'done') {
+    return null;
+  }
+
+  const detectedBy = value.detectedBy === 'log' || value.detectedBy === 'manual'
+    ? value.detectedBy
+    : null;
+  const timestamp = safeString(value.timestamp, null);
+
+  if (!detectedBy || !timestamp) {
+    return null;
+  }
+
+  return {
+    state: 'done',
+    timestamp,
+    detectedBy,
+    ...(typeof value.logLine === 'string' ? { logLine: value.logLine } : {})
+  };
+}
+
+function normalizeCampaignBonusProgress(value: unknown): Record<string, CampaignBonusProgress> {
+  if (!isRecord(value)) {
+    return { ...DEFAULT_CONFIG.campaignBonusProgress };
+  }
+
+  return Object.fromEntries(
+    Object.entries(value).flatMap(([bonusId, progress]) => {
+      const normalized = normalizeCampaignBonusProgressEntry(progress);
+      return normalized ? [[bonusId, normalized]] : [];
+    })
+  );
 }
 
 function normalizeLevelRemindersState(value: unknown): AppConfig['levelRemindersState'] {
@@ -449,7 +542,7 @@ export function normalizeAppConfig(config: Partial<AppConfig> = {}): AppConfig {
       return [[
         zoneId,
         {
-          itemStates: isRecord(zoneProgress.itemStates) ? zoneProgress.itemStates : {},
+          itemStates: normalizeChecklistItemStates(zoneProgress.itemStates),
           likelyDoneKeywords: normalizeStringArray(zoneProgress.likelyDoneKeywords),
           lastVisitedAt: safeString(zoneProgress.lastVisitedAt, null)
         }
@@ -516,6 +609,8 @@ export function normalizeAppConfig(config: Partial<AppConfig> = {}): AppConfig {
     overlayDensity: normalizeOverlayDensity(rawConfig.overlayDensity),
     visualFxIntensity: normalizeVisualFxIntensity(rawConfig.visualFxIntensity),
     overlayEffectsEnabled: safeBoolean(rawConfig.overlayEffectsEnabled, DEFAULT_CONFIG.overlayEffectsEnabled),
+    theme: normalizeAppTheme(rawConfig.theme),
+    themePreferencePrompted: safeBoolean(rawConfig.themePreferencePrompted, DEFAULT_CONFIG.themePreferencePrompted),
     overlayDebugLayoutEnabled: safeBoolean(
       rawConfig.overlayDebugLayoutEnabled,
       DEFAULT_CONFIG.overlayDebugLayoutEnabled
@@ -540,9 +635,7 @@ export function normalizeAppConfig(config: Partial<AppConfig> = {}): AppConfig {
     runTimer: normalizeRunTimer(rawConfig.runTimer),
     townTimer: normalizeTownTimer(rawConfig.townTimer),
     runTimerSettings: normalizeRunTimerSettings(rawConfig.runTimerSettings),
-    campaignBonusProgress: isRecord(rawConfig.campaignBonusProgress)
-      ? rawConfig.campaignBonusProgress as AppConfig['campaignBonusProgress']
-      : DEFAULT_CONFIG.campaignBonusProgress
+    campaignBonusProgress: normalizeCampaignBonusProgress(rawConfig.campaignBonusProgress)
   };
 }
 
@@ -572,10 +665,14 @@ export class ConfigStore {
   }
 
   update(patch: Partial<AppConfig>): AppConfig {
-    this.config = normalizeAppConfig({
+    const nextConfig = normalizeAppConfig({
       ...this.config,
       ...patch
     });
+    if (JSON.stringify(nextConfig) === JSON.stringify(this.config)) {
+      return this.get();
+    }
+    this.config = nextConfig;
     this.save();
     return this.get();
   }
@@ -608,6 +705,12 @@ export class ConfigStore {
         : {}),
       ...(patch.overlayEffectsEnabled !== undefined
         ? { overlayEffectsEnabled: patch.overlayEffectsEnabled }
+        : {}),
+      ...(patch.theme !== undefined
+        ? { theme: patch.theme }
+        : {}),
+      ...(patch.themePreferencePrompted !== undefined
+        ? { themePreferencePrompted: patch.themePreferencePrompted }
         : {}),
       ...(patch.overlayDebugLayoutEnabled !== undefined
         ? { overlayDebugLayoutEnabled: patch.overlayDebugLayoutEnabled }

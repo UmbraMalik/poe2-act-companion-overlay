@@ -99,6 +99,11 @@ import {
   isSafeExternalUrl
 } from './app-environment';
 
+function normalizeSettingsPatchInput(value: unknown): SettingsPatch {
+    return typeof value === 'object' && value !== null && !Array.isArray(value)
+        ? value as SettingsPatch
+        : {};
+}
 
 export function runRegisterIpc(this: any) {
         ipcMain.handle('app:get-snapshot', async () => this.getSnapshot());
@@ -154,6 +159,7 @@ export function runRegisterIpc(this: any) {
             return selectedPath;
         });
         ipcMain.handle('app:update-settings', async (_event: any, patch: any) => {
+            patch = normalizeSettingsPatchInput(patch);
             const previousOverlayMode = this.overlayMode;
             const previousOverlayDensity = this.config.overlayDensity;
             const previousOverlayScale = this.config.overlayScale;
@@ -373,9 +379,14 @@ export function runRegisterIpc(this: any) {
                 width: Math.round(Number(width) || currentBounds.width),
                 height: Math.round(Number(height) || currentBounds.height)
             }, this.overlayMode, this.config.overlayDensity);
+            if (areOverlayBoundsEqual(currentBounds, nextBounds)) {
+                return this.getSnapshot();
+            }
             this.applyOverlayWindowBounds('manualResize', nextBounds);
-            this.persistOverlayBoundsForCurrentState(targetWindow.getBounds());
-            this.broadcastState();
+            const changed = this.persistOverlayBoundsForCurrentState(targetWindow.getBounds());
+            if (changed) {
+                this.broadcastState();
+            }
             return this.getSnapshot();
         });
         ipcMain.handle('app:set-overlay-auto-resize-suspended', async (_event: any, suspended: any) => {
@@ -464,9 +475,14 @@ export function runRegisterIpc(this: any) {
                     height: collapsedHeight
                 };
             }
+            if (areOverlayBoundsEqual(currentBounds, nextBounds)) {
+                return this.getSnapshot();
+            }
             this.applyOverlayWindowBounds('autoHeight', nextBounds);
-            this.persistOverlayBoundsForCurrentState(targetWindow.getBounds());
-            this.broadcastState();
+            const changed = this.persistOverlayBoundsForCurrentState(targetWindow.getBounds());
+            if (changed) {
+                this.broadcastState();
+            }
             return this.getSnapshot();
         });
         ipcMain.handle('app:set-overlay-position', async (_event: any, x: any, y: any) => {

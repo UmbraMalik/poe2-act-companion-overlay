@@ -13,6 +13,8 @@ test('normalizeAppConfig keeps defaults, custom settings and strips legacy unkno
     overlayDensity: 'compact',
     visualFxIntensity: 'rich',
     overlayEffectsEnabled: false,
+    theme: 'dark_fantasy',
+    themePreferencePrompted: true,
     overlayDebugLayoutEnabled: true,
     overlayMovementLocked: true,
     realtimePriorityEnabled: true,
@@ -28,6 +30,8 @@ test('normalizeAppConfig keeps defaults, custom settings and strips legacy unkno
   assert.equal(normalized.overlayDensity, 'compact');
   assert.equal(normalized.visualFxIntensity, 'rich');
   assert.equal(normalized.overlayEffectsEnabled, false);
+  assert.equal(normalized.theme, 'dark_fantasy');
+  assert.equal(normalized.themePreferencePrompted, true);
   assert.equal(normalized.overlayDebugLayoutEnabled, true);
   assert.equal(normalized.overlayMovementLocked, true);
   assert.equal(normalized.realtimePriorityEnabled, true);
@@ -44,6 +48,8 @@ test('normalizeAppConfig hardens corrupted user config values', () => {
     overlayDensity: 'gigantic',
     visualFxIntensity: 'casino',
     overlayEffectsEnabled: 'no',
+    theme: 'neon',
+    themePreferencePrompted: 'yes',
     overlayDebugLayoutEnabled: 'yes',
     overlayOpacity: 5,
     realtimePriorityEnabled: 'yes',
@@ -113,6 +119,8 @@ test('normalizeAppConfig hardens corrupted user config values', () => {
   assert.equal(normalized.overlayDensity, DEFAULT_CONFIG.overlayDensity);
   assert.equal(normalized.visualFxIntensity, DEFAULT_CONFIG.visualFxIntensity);
   assert.equal(normalized.overlayEffectsEnabled, DEFAULT_CONFIG.overlayEffectsEnabled);
+  assert.equal(normalized.theme, DEFAULT_CONFIG.theme);
+  assert.equal(normalized.themePreferencePrompted, DEFAULT_CONFIG.themePreferencePrompted);
   assert.equal(normalized.overlayDebugLayoutEnabled, DEFAULT_CONFIG.overlayDebugLayoutEnabled);
   assert.equal(normalized.overlayOpacity, 1);
   assert.equal(normalized.realtimePriorityEnabled, DEFAULT_CONFIG.realtimePriorityEnabled);
@@ -161,6 +169,95 @@ test('normalizeAppConfig hardens corrupted user config values', () => {
   assert.equal(normalized.runTimerSettings.showZoneTimer, false);
 });
 
+test('normalizeAppConfig drops corrupted checklist and campaign bonus progress entries', () => {
+  const normalized = normalizeAppConfig({
+    zoneProgress: {
+      a1_clearfell: {
+        itemStates: {
+          valid_done: {
+            state: 'done',
+            timestamp: '2026-01-01T00:00:00.000Z',
+            detectedBy: 'manual',
+            originalText: 'Done reward'
+          },
+          valid_missed: {
+            state: 'missed',
+            timestamp: '2026-01-01T00:01:00.000Z',
+            detectedBy: 'inferred_zone_leave',
+            originalText: 'Missed reward'
+          },
+          missing_original_text: {
+            state: 'likely_done',
+            timestamp: '2026-01-01T00:02:00.000Z',
+            detectedBy: 'zone_leave'
+          },
+          bad_state: {
+            state: 'banana',
+            timestamp: '2026-01-01T00:03:00.000Z',
+            detectedBy: 'manual',
+            originalText: 'Bad state'
+          },
+          bad_detected_by: {
+            state: 'done',
+            timestamp: '2026-01-01T00:04:00.000Z',
+            detectedBy: 'screen_reader',
+            originalText: 'Bad detector'
+          },
+          bad_timestamp: {
+            state: 'done',
+            timestamp: 123,
+            detectedBy: 'manual',
+            originalText: 'Bad timestamp'
+          }
+        },
+        likelyDoneKeywords: ['reward', 123, 'boss'],
+        lastVisitedAt: 123
+      },
+      broken_zone: null
+    },
+    campaignBonusProgress: {
+      valid_manual: {
+        state: 'done',
+        timestamp: '2026-01-01T00:00:00.000Z',
+        detectedBy: 'manual'
+      },
+      valid_log: {
+        state: 'done',
+        timestamp: '2026-01-01T00:01:00.000Z',
+        detectedBy: 'log',
+        logLine: 'You have gained a permanent bonus'
+      },
+      bad_state: {
+        state: 'missed',
+        timestamp: '2026-01-01T00:02:00.000Z',
+        detectedBy: 'manual'
+      },
+      bad_detected_by: {
+        state: 'done',
+        timestamp: '2026-01-01T00:03:00.000Z',
+        detectedBy: 'zone_leave'
+      },
+      bad_timestamp: {
+        state: 'done',
+        timestamp: 123,
+        detectedBy: 'manual'
+      }
+    }
+  } as never);
+
+  assert.deepEqual(Object.keys(normalized.zoneProgress), ['a1_clearfell']);
+  assert.deepEqual(Object.keys(normalized.zoneProgress.a1_clearfell.itemStates), [
+    'valid_done',
+    'valid_missed',
+    'missing_original_text'
+  ]);
+  assert.equal(normalized.zoneProgress.a1_clearfell.itemStates.missing_original_text.originalText, '');
+  assert.deepEqual(normalized.zoneProgress.a1_clearfell.likelyDoneKeywords, ['reward', 'boss']);
+  assert.equal(normalized.zoneProgress.a1_clearfell.lastVisitedAt, null);
+  assert.deepEqual(Object.keys(normalized.campaignBonusProgress), ['valid_manual', 'valid_log']);
+  assert.equal(normalized.campaignBonusProgress.valid_log.logLine, 'You have gained a permanent bonus');
+});
+
 test('ConfigStore persists log path and merges settings safely', () => {
   const configPath = join(
     process.cwd(),
@@ -181,6 +278,8 @@ test('ConfigStore persists log path and merges settings safely', () => {
     overlayScale: 110,
     overlayMovementLocked: true,
     overlayEffectsEnabled: false,
+    theme: 'dark_fantasy',
+    themePreferencePrompted: true,
     realtimePriorityEnabled: true,
     hotkeys: {
       openCompanion: 'Ctrl+F9'
@@ -194,6 +293,8 @@ test('ConfigStore persists log path and merges settings safely', () => {
   assert.equal(reloaded.overlayScale, 110);
   assert.equal(reloaded.overlayMovementLocked, true);
   assert.equal(reloaded.overlayEffectsEnabled, false);
+  assert.equal(reloaded.theme, 'dark_fantasy');
+  assert.equal(reloaded.themePreferencePrompted, true);
   assert.equal(reloaded.realtimePriorityEnabled, true);
   assert.equal(reloaded.hotkeys.openCompanion, 'Ctrl+F9');
   assert.equal(reloaded.hotkeys.toggleOverlayMode, DEFAULT_HOTKEYS.toggleOverlayMode);
@@ -231,7 +332,8 @@ test('settings defaults keep safe overlay bounds and hotkeys visible in user set
   const settingsPage = readText('src/renderer/pages/SettingsPage.tsx');
   assert.match(settingsPage, /min=\{35\}/);
   assert.match(settingsPage, /max=\{100\}/);
+  assert.match(settingsPage, /SettingsSelect/);
   for (const scale of [70, 80, 90, 100, 110, 120]) {
-    assert.match(settingsPage, new RegExp(`<option value=\\{${scale}\\}>${scale}%<\\/option>`));
+    assert.match(settingsPage, new RegExp(`\\{ value: ${scale}, label: '${scale}%' \\}`));
   }
 });

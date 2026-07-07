@@ -191,6 +191,42 @@ test('overlay visual effects can be disabled independently from global FX intens
   assert.match(translations, /Overlay effects/);
 });
 
+test('app theme is persisted and available in overlay and settings', () => {
+  const overlay = readText('src/renderer/pages/OverlayPage.tsx');
+  const settingsPage = readText('src/renderer/pages/SettingsPage.tsx');
+  const companionPage = readText('src/renderer/pages/CompanionPage.tsx');
+  const defaults = readText('src/shared/defaults.ts');
+  const types = readText('src/shared/types.ts');
+  const configStore = readText('src/main/services/config-store.ts');
+  const stylesIndex = readText('src/renderer/styles.css');
+  const styleCheck = readText('scripts/check-style-partials.cjs');
+  const themeStyles = readText('src/renderer/styles/35-dark-fantasy-theme.css');
+  const translations = readText('src/i18n/translations.ts');
+
+  assert.match(types, /export type AppTheme = 'classic' \| 'dark_fantasy'/);
+  assert.match(defaults, /theme:\s*'classic'/);
+  assert.match(defaults, /themePreferencePrompted:\s*false/);
+  assert.match(configStore, /normalizeAppTheme\(rawConfig\.theme\)/);
+  assert.match(configStore, /safeBoolean\(rawConfig\.themePreferencePrompted/);
+  assert.match(configStore, /patch\.theme/);
+  assert.match(configStore, /patch\.themePreferencePrompted/);
+  assert.match(overlay, /overlay-theme-preference-card/);
+  assert.match(overlay, /themePreferencePrompted:\s*true/);
+  assert.doesNotMatch(overlay, /overlay-theme-icon-button/);
+  assert.match(settingsPage, /app-theme-choice/);
+  assert.match(settingsPage, /updateSettings\(\{ theme, themePreferencePrompted:\s*true \}\)/);
+  assert.match(companionPage, /getAppThemeClassName\(config\.theme\)/);
+  assert.match(stylesIndex, /35-dark-fantasy-theme\.css/);
+  assert.match(styleCheck, /35-dark-fantasy-theme\.css/);
+  assert.match(themeStyles, /\.theme-dark-fantasy/);
+  assert.match(themeStyles, /\.theme-dark-fantasy\.overlay-page\s*\{\s*background:\s*transparent !important;/);
+  assert.match(themeStyles, /overlay-shell::after[\s\S]*content:\s*none !important/);
+  assert.match(themeStyles, /\.theme-dark-fantasy\.overlay-page \.resize-grip:not\(\.is-disabled\)/);
+  assert.match(translations, /Тёмное фэнтези/);
+  assert.match(translations, /Выбери тему/);
+  assert.match(translations, /Dark fantasy/);
+});
+
 test('no forbidden performance hacks are reintroduced', () => {
   const source = [
     readMainProcessSource(),
@@ -201,6 +237,87 @@ test('no forbidden performance hacks are reintroduced', () => {
   assert.doesNotMatch(source, /powerSaveBlocker/);
   assert.doesNotMatch(source, /setPriority\s*\(/);
   assert.doesNotMatch(source, /\[Perf\].*(priority|power save)/i);
+});
+
+test('secondary app windows share smooth show/focus handling', () => {
+  const controller = readText('src/main/app-window-controller.ts');
+
+  assert.match(controller, /function showWindowWhenReady/);
+  assert.match(controller, /webContents\.isLoading\(\)/);
+  assert.match(controller, /did-finish-load/);
+  assert.match(controller, /did-fail-load/);
+  assert.match(controller, /afterShow\?:\s*\(\)\s*=>\s*void/);
+  assert.match(controller, /afterShow:\s*\(\)\s*=>\s*this\.broadcastState\(\)/);
+  assert.doesNotMatch(
+    controller,
+    /this\.(settings|companion|info|community|support|report)Window\.show\(\);\s*this\.\1Window\.focus\(\);/
+  );
+});
+
+test('hidden windows and unchanged bounds do not trigger unnecessary smoothness work', () => {
+  const stateController = readText('src/main/app-state-controller.ts');
+  const boundsController = readText('src/main/app-overlay-bounds-controller.ts');
+  const windowController = readText('src/main/app-window-controller.ts');
+  const ipcHandlers = readText('src/main/app-ipc-handlers.ts');
+  const configStore = readText('src/main/services/config-store.ts');
+  const main = readText('src/main/main.ts');
+
+  assert.match(stateController, /function runGetOverlaySnapshot/);
+  assert.match(stateController, /guideEntries:\s*currentGuideEntry \? \[currentGuideEntry\] : \[\]/);
+  assert.match(stateController, /const overlayTargets = targetWindows\.filter/);
+  assert.match(stateController, /const appTargets = targetWindows\.filter/);
+  assert.match(main, /getOverlaySnapshot\(\)/);
+  assert.match(stateController, /win\.isVisible\(\)/);
+  assert.match(stateController, /!win\.webContents\.isLoading\(\)/);
+  assert.match(stateController, /if \(targetWindows\.length === 0\)/);
+  assert.match(windowController, /showInactive\(\);\s*this\.broadcastState\(\);/);
+  assert.match(boundsController, /areOverlayBoundsEqual\(currentBounds, normalizedBounds\)/);
+  assert.match(boundsController, /return this\.persistOverlayBoundsForState/);
+  assert.match(boundsController, /if \(changed\) \{\s*this\.broadcastState\(\);/);
+  assert.match(boundsController, /areOverlayBoundsEqual\(this\.config\.companionBounds, bounds\)/);
+  assert.match(ipcHandlers, /areOverlayBoundsEqual\(currentBounds, nextBounds\)/);
+  assert.match(ipcHandlers, /const changed = this\.persistOverlayBoundsForCurrentState/);
+  assert.match(configStore, /JSON\.stringify\(nextConfig\) === JSON\.stringify\(this\.config\)/);
+});
+
+test('overlay renderer memoizes heavy derived view state and throttles layout IPC', () => {
+  const overlay = readText('src/renderer/pages/OverlayPage.tsx');
+  const types = readText('src/shared/types.ts');
+
+  assert.match(overlay, /useMemo/);
+  assert.match(overlay, /const overlayDerived = useMemo/);
+  assert.match(overlay, /getImportantOverlayLines\(snapshot, language\)/);
+  assert.match(overlay, /getCurrentZoneCampaignBonuses\(snapshot\)/);
+  assert.match(overlay, /getOverlayUpcomingReminders\(snapshot, language\)/);
+  assert.match(overlay, /lastAdaptiveOverlayHeightRequestRef/);
+  assert.match(overlay, /lastAdaptiveOverlaySuspensionSyncAtRef/);
+  assert.match(overlay, /now - lastAdaptiveOverlaySuspensionSyncAtRef\.current > 500/);
+  assert.match(overlay, /event:\s*'overlay-render-frequency'/);
+  assert.match(types, /'overlay-render-frequency'/);
+});
+
+test('default motion avoids continuous compositor-heavy ambient animations', () => {
+  const fxControls = readText('src/renderer/styles/28-fx-controls-debug.css');
+  const modeTransitions = readText('src/renderer/styles/32-overlay-mode-transitions.css');
+
+  assert.match(fxControls, /\.overlay-page\.fx-normal:not\(\.overlay-page-timer-only\):not\(\.is-overlay-collapsed\) \.overlay-shell/);
+  assert.match(fxControls, /poe2-panel-enter var\(--motion-medium, 180ms\)/);
+  assert.match(fxControls, /\.companion-page\.fx-normal \.route-overview-card\.status-current:not\(\.is-focus-flash\)/);
+  assert.match(fxControls, /\.companion-page\.fx-subtle \.bonuses-tab-layout \.bonus-row\.is-pending/);
+  assert.doesNotMatch(modeTransitions, /will-change:\s*opacity,\s*transform,\s*filter/);
+
+  for (const keyframeName of [
+    'poe2-overlay-mode-enter-full',
+    'poe2-overlay-mode-enter-compact',
+    'poe2-overlay-mode-enter-collapsed'
+  ]) {
+    const keyframeStart = modeTransitions.indexOf(`@keyframes ${keyframeName}`);
+    const nextKeyframe = modeTransitions.indexOf('@keyframes', keyframeStart + 1);
+    const shellRule = modeTransitions.indexOf('.overlay-page.is-overlay-mode-transitioning .overlay-shell', keyframeStart);
+    const keyframeEnd = nextKeyframe === -1 ? shellRule : Math.min(nextKeyframe, shellRule);
+    const keyframeSource = modeTransitions.slice(keyframeStart, keyframeEnd);
+    assert.doesNotMatch(keyframeSource, /filter:/);
+  }
 });
 
 test('overlay supports full left-click drag with an icon-only lock toggle', () => {

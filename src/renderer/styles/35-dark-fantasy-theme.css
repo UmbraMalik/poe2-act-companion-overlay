@@ -1,0 +1,1970 @@
+/* Optional black-violet theme. Scoped by config-driven classes so classic UI stays unchanged. */
+.theme-dark-fantasy {
+  --theme-bg: #050409;
+  --theme-panel: rgba(13, 9, 22, 0.92);
+  --theme-panel-strong: rgba(19, 13, 32, 0.96);
+  --theme-card: rgba(28, 19, 45, 0.72);
+  --theme-card-soft: rgba(22, 15, 36, 0.58);
+  --theme-border: rgba(159, 112, 255, 0.28);
+  --theme-border-soft: rgba(210, 184, 255, 0.14);
+  --theme-text: #f1eaff;
+  --theme-muted: #b5a8ca;
+  --theme-violet: #a77bff;
+  --theme-violet-soft: rgba(167, 123, 255, 0.18);
+  --theme-gold: #d9a75f;
+  --theme-gold-soft: rgba(217, 167, 95, 0.16);
+  color: var(--theme-text);
+}
+
+.theme-dark-fantasy.fx-off {
+  --fx-gold: rgba(217, 167, 95, 0);
+  --fx-gold-soft: rgba(217, 167, 95, 0);
+  --fx-blue: rgba(125, 205, 255, 0);
+  --fx-blue-soft: rgba(82, 170, 255, 0);
+  --fx-green: rgba(99, 226, 170, 0);
+  --fx-green-soft: rgba(60, 185, 136, 0);
+  --fx-violet: rgba(167, 123, 255, 0);
+  --fx-violet-soft: rgba(167, 123, 255, 0);
+  --fx-red: rgba(255, 118, 104, 0);
+  --fx-red-soft: rgba(255, 76, 62, 0);
+  --fx-panel-edge:
+    inset 0 0 0 1px rgba(210, 184, 255, 0.040),
+    0 16px 34px rgba(0, 0, 0, 0.38);
+  --fx-panel-edge-blue:
+    inset 0 0 0 1px rgba(176, 222, 255, 0.035),
+    0 16px 34px rgba(0, 0, 0, 0.38);
+}
+
+.theme-dark-fantasy.fx-subtle {
+  --fx-gold: rgba(217, 167, 95, 0.34);
+  --fx-gold-soft: rgba(217, 167, 95, 0.070);
+  --fx-blue: rgba(125, 205, 255, 0.30);
+  --fx-blue-soft: rgba(82, 170, 255, 0.060);
+  --fx-green: rgba(99, 226, 170, 0.32);
+  --fx-green-soft: rgba(60, 185, 136, 0.060);
+  --fx-violet: rgba(167, 123, 255, 0.34);
+  --fx-violet-soft: rgba(167, 123, 255, 0.075);
+  --fx-red: rgba(255, 118, 104, 0.34);
+  --fx-red-soft: rgba(255, 76, 62, 0.065);
+  --fx-panel-edge:
+    inset 0 0 0 1px rgba(210, 184, 255, 0.060),
+    inset 0 0 20px rgba(167, 123, 255, 0.030),
+    0 18px 38px rgba(0, 0, 0, 0.42);
+  --fx-panel-edge-blue:
+    inset 0 0 0 1px rgba(176, 222, 255, 0.050),
+    inset 0 0 20px rgba(82, 170, 255, 0.022),
+    0 18px 38px rgba(0, 0, 0, 0.42);
+}
+
+.theme-dark-fantasy.fx-normal {
+  --fx-gold: rgba(217, 167, 95, 0.58);
+  --fx-gold-soft: rgba(217, 167, 95, 0.14);
+  --fx-blue: rgba(125, 205, 255, 0.48);
+  --fx-blue-soft: rgba(82, 170, 255, 0.10);
+  --fx-green: rgba(99, 226, 170, 0.50);
+  --fx-green-soft: rgba(60, 185, 136, 0.10);
+  --fx-violet: rgba(167, 123, 255, 0.56);
+  --fx-violet-soft: rgba(167, 123, 255, 0.14);
+  --fx-red: rgba(255, 118, 104, 0.54);
+  --fx-red-soft: rgba(255, 76, 62, 0.12);
+}
+
+.theme-dark-fantasy.fx-rich {
+  --fx-gold: rgba(242, 190, 101, 0.88);
+  --fx-gold-soft: rgba(217, 167, 95, 0.26);
+  --fx-blue: rgba(143, 214, 255, 0.74);
+  --fx-blue-soft: rgba(82, 170, 255, 0.18);
+  --fx-green: rgba(118, 250, 188, 0.76);
+  --fx-green-soft: rgba(60, 210, 150, 0.18);
+  --fx-violet: rgba(190, 162, 255, 0.86);
+  --fx-violet-soft: rgba(167, 123, 255, 0.27);
+  --fx-red: rgba(255, 128, 112, 0.82);
+  --fx-red-soft: rgba(255, 76, 62, 0.20);
+  --fx-panel-edge:
+    inset 0 0 0 1px rgba(210, 184, 255, 0.11),
+    inset 0 0 40px rgba(167, 123, 255, 0.085),
+    0 22px 48px rgba(0, 0, 0, 0.48);
+  --fx-panel-edge-blue:
+    inset 0 0 0 1px rgba(176, 222, 255, 0.095),
+    inset 0 0 36px rgba(82, 170, 255, 0.060),
+    0 22px 48px rgba(0, 0, 0, 0.48);
+}
+
+.theme-dark-fantasy.settings-page,
+.theme-dark-fantasy.companion-page,
+.theme-dark-fantasy.report-page {
+  background:
+    radial-gradient(circle at 15% 0%, rgba(115, 72, 210, 0.30), transparent 30%),
+    radial-gradient(circle at 92% 8%, rgba(217, 167, 95, 0.13), transparent 28%),
+    linear-gradient(180deg, #08050f 0%, #050409 100%);
+  color: var(--theme-text);
+}
+
+.theme-dark-fantasy.overlay-page {
+  background: transparent !important;
+}
+
+.theme-dark-fantasy .overlay-shell,
+.theme-dark-fantasy .overlay-timer-only-card,
+.theme-dark-fantasy .overlay-collapsed-shell,
+.theme-dark-fantasy .settings-card,
+.theme-dark-fantasy .companion-card,
+.theme-dark-fantasy .report-card {
+  border-color: var(--theme-border) !important;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(149, 99, 255, 0.14), transparent 34%),
+    linear-gradient(180deg, rgba(24, 15, 39, 0.96), rgba(9, 7, 16, 0.94)) !important;
+  box-shadow:
+    0 18px 42px rgba(0, 0, 0, 0.48),
+    0 0 34px rgba(98, 58, 184, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.045) !important;
+}
+
+.theme-dark-fantasy.overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-shell::after,
+.theme-dark-fantasy.overlay-page.overlay-page-timer-only .overlay-timer-only-card::after,
+.theme-dark-fantasy.overlay-page.is-overlay-collapsed .overlay-collapsed-shell::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  display: block;
+  padding: 2px;
+  border-radius: inherit;
+  pointer-events: none;
+  background: conic-gradient(
+    from var(--poe2-ambient-edge-angle),
+    transparent 0deg 34deg,
+    rgba(167, 123, 255, 0.68) 46deg,
+    rgba(217, 167, 95, 0.72) 58deg,
+    rgba(122, 83, 222, 0.54) 74deg,
+    rgba(82, 170, 255, 0.22) 88deg,
+    transparent 108deg 360deg
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0.70;
+  filter:
+    drop-shadow(0 0 10px rgba(167, 123, 255, 0.34))
+    drop-shadow(0 0 18px rgba(217, 167, 95, 0.16));
+  animation:
+    poe2-ambient-edge-orbit 9.6s linear infinite,
+    poe2-ambient-edge-breathe 6.2s ease-in-out infinite;
+}
+
+.theme-dark-fantasy.overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-shell::after {
+  content: none !important;
+}
+
+.theme-dark-fantasy.overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-shell::before {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  display: block;
+  padding: 2px;
+  border-radius: inherit;
+  pointer-events: none;
+  background: conic-gradient(
+    from var(--poe2-ambient-edge-angle),
+    transparent 0deg 34deg,
+    rgba(167, 123, 255, 0.68) 46deg,
+    rgba(217, 167, 95, 0.72) 58deg,
+    rgba(122, 83, 222, 0.54) 74deg,
+    rgba(82, 170, 255, 0.22) 88deg,
+    transparent 108deg 360deg
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0.62;
+  filter:
+    drop-shadow(0 0 10px rgba(167, 123, 255, 0.30))
+    drop-shadow(0 0 18px rgba(217, 167, 95, 0.14));
+  animation:
+    poe2-ambient-edge-orbit 9.6s linear infinite,
+    poe2-ambient-edge-breathe 6.2s ease-in-out infinite;
+}
+
+.theme-dark-fantasy.overlay-page .resize-grip:not(.is-disabled) {
+  opacity: 0.20 !important;
+  background:
+    linear-gradient(135deg, transparent 0 58%, rgba(167, 123, 255, 0.28) 59% 64%, transparent 65%),
+    linear-gradient(135deg, transparent 0 78%, rgba(217, 167, 95, 0.20) 79% 84%, transparent 85%) !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+.theme-dark-fantasy.overlay-page .resize-grip:not(.is-disabled):hover {
+  opacity: 0.56 !important;
+  filter: drop-shadow(0 0 7px rgba(167, 123, 255, 0.22)) !important;
+}
+
+.theme-dark-fantasy .settings-subsection,
+.theme-dark-fantasy .details-panel,
+.theme-dark-fantasy .info-cell,
+.theme-dark-fantasy .value-box,
+.theme-dark-fantasy .toggle-card,
+.theme-dark-fantasy .hud-block,
+.theme-dark-fantasy .hud-zone-title-card,
+.theme-dark-fantasy .timer-only-main-panel,
+.theme-dark-fantasy .timer-only-info-grid,
+.theme-dark-fantasy .overlay-onboarding-card,
+.theme-dark-fantasy .companion-summary-hero,
+.theme-dark-fantasy .route-card,
+.theme-dark-fantasy .bonus-row,
+.theme-dark-fantasy .reminder-card {
+  border-color: var(--theme-border-soft) !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.028), rgba(255, 255, 255, 0.012)),
+    var(--theme-card-soft) !important;
+}
+
+.theme-dark-fantasy .settings-section-title,
+.theme-dark-fantasy .settings-subtitle,
+.theme-dark-fantasy .eyebrow,
+.theme-dark-fantasy .hud-block h2,
+.theme-dark-fantasy .timer-only-kicker,
+.theme-dark-fantasy .hud-zone-act-pill {
+  color: var(--theme-gold) !important;
+}
+
+.theme-dark-fantasy .helper-text,
+.theme-dark-fantasy .settings-intro,
+.theme-dark-fantasy .hud-meta,
+.theme-dark-fantasy .timer-only-meta,
+.theme-dark-fantasy .timer-only-next,
+.theme-dark-fantasy .overlay-upcoming-note {
+  color: var(--theme-muted) !important;
+}
+
+.theme-dark-fantasy .hud-zone-name,
+.theme-dark-fantasy .hud-collapsed-zone-name,
+.theme-dark-fantasy .timer-only-time,
+.theme-dark-fantasy .timer-only-main-label,
+.theme-dark-fantasy .info-cell dd,
+.theme-dark-fantasy .value-box,
+.theme-dark-fantasy .overlay-upcoming-title {
+  color: var(--theme-text) !important;
+  text-shadow: 0 0 16px rgba(167, 123, 255, 0.20);
+}
+
+.theme-dark-fantasy button,
+.theme-dark-fantasy select,
+.theme-dark-fantasy input,
+.theme-dark-fantasy textarea {
+  border-color: var(--theme-border-soft) !important;
+  background: rgba(9, 6, 18, 0.76) !important;
+  color: var(--theme-text) !important;
+}
+
+.theme-dark-fantasy select option {
+  background: #100b1b;
+  color: var(--theme-text);
+}
+
+.theme-dark-fantasy button:hover:not(:disabled),
+.theme-dark-fantasy select:hover,
+.theme-dark-fantasy input:hover,
+.theme-dark-fantasy textarea:hover,
+.theme-dark-fantasy button:focus-visible,
+.theme-dark-fantasy select:focus-visible,
+.theme-dark-fantasy input:focus-visible,
+.theme-dark-fantasy textarea:focus-visible {
+  border-color: rgba(185, 145, 255, 0.48) !important;
+  box-shadow:
+    0 0 0 3px rgba(167, 123, 255, 0.13),
+    0 0 18px rgba(107, 66, 210, 0.16) !important;
+}
+
+.theme-dark-fantasy .button-primary,
+.theme-dark-fantasy .app-theme-choice .button-primary {
+  border-color: rgba(191, 151, 255, 0.58) !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(217, 167, 95, 0.22), transparent 55%),
+    linear-gradient(180deg, rgba(98, 58, 184, 0.62), rgba(43, 28, 82, 0.58)) !important;
+  color: #fff7e7 !important;
+}
+
+.theme-dark-fantasy .button-secondary,
+.theme-dark-fantasy .ghost-button {
+  background: rgba(18, 12, 31, 0.70) !important;
+  color: #e7dcff !important;
+}
+
+.app-theme-choice {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.app-theme-choice button {
+  min-width: 0;
+}
+
+.overlay-theme-preference-card {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(241, 185, 106, 0.30);
+  background:
+    radial-gradient(circle at 16% 0%, rgba(241, 185, 106, 0.14), transparent 38%),
+    linear-gradient(180deg, rgba(26, 21, 31, 0.92), rgba(10, 12, 18, 0.88));
+  box-shadow: 0 14px 26px rgba(0, 0, 0, 0.28);
+}
+
+.overlay-theme-preference-card h2,
+.overlay-theme-preference-card p {
+  margin: 0;
+}
+
+.overlay-theme-preference-card h2 {
+  color: #ffd791;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.overlay-theme-preference-card p {
+  color: rgba(226, 232, 240, 0.78);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.overlay-theme-preference-actions {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.overlay-theme-preference-actions button {
+  min-width: 0;
+  min-height: 34px;
+  padding: 7px 9px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.theme-dark-fantasy .overlay-quick-actions,
+.theme-dark-fantasy .overlay-language-toggle-hitarea,
+.theme-dark-fantasy .overlay-icon-button {
+  border-color: var(--theme-border-soft) !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.036), rgba(255, 255, 255, 0.012)),
+    rgba(13, 8, 23, 0.78) !important;
+}
+
+.theme-dark-fantasy .overlay-theme-preference-card {
+  border-color: var(--theme-border) !important;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(167, 123, 255, 0.18), transparent 36%),
+    linear-gradient(180deg, rgba(28, 19, 45, 0.94), rgba(10, 7, 17, 0.92)) !important;
+}
+
+.theme-dark-fantasy.overlay-page:not(.overlay-page-timer-only) .hud-block {
+  border-color: var(--overlay-section-border, var(--theme-border-soft)) !important;
+  background:
+    var(--overlay-section-glow, radial-gradient(circle at 12% 0%, rgba(167, 123, 255, 0.08), transparent 44%)),
+    linear-gradient(180deg, var(--overlay-section-bg-top, rgba(255, 255, 255, 0.028)), var(--overlay-section-bg-bottom, rgba(255, 255, 255, 0.012))),
+    var(--overlay-section-base, var(--theme-card-soft)) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.040),
+    inset 0 0 0 1px var(--overlay-section-inset, rgba(255, 255, 255, 0.020)),
+    0 0 18px var(--overlay-section-shadow, rgba(0, 0, 0, 0)) !important;
+}
+
+.theme-dark-fantasy.overlay-page:not(.overlay-page-timer-only) .hud-block h2 {
+  color: var(--overlay-section-title, var(--theme-gold)) !important;
+}
+
+.theme-dark-fantasy.overlay-page:not(.overlay-page-timer-only) .hud-block h2::after {
+  background: linear-gradient(90deg, var(--overlay-section-rule, rgba(217, 167, 95, 0.18)), transparent) !important;
+}
+
+.theme-dark-fantasy.overlay-page:not(.overlay-page-timer-only) .upcoming-overlay-section {
+  --overlay-section-border: rgba(217, 167, 95, 0.46);
+  --overlay-section-title: rgba(255, 211, 142, 0.94);
+  --overlay-section-rule: rgba(217, 167, 95, 0.34);
+  --overlay-section-glow: radial-gradient(circle at 14% 0%, rgba(217, 167, 95, 0.16), transparent 44%);
+  --overlay-section-bg-top: rgba(72, 45, 22, 0.32);
+  --overlay-section-bg-bottom: rgba(22, 14, 33, 0.66);
+  --overlay-section-base: rgba(11, 7, 18, 0.74);
+  --overlay-section-shadow: rgba(217, 167, 95, 0.09);
+  --overlay-section-edge: rgba(217, 167, 95, 0.34);
+  --overlay-section-edge-soft: rgba(217, 167, 95, 0.15);
+}
+
+.theme-dark-fantasy.overlay-page:not(.overlay-page-timer-only) .checklist-section {
+  --overlay-section-border: rgba(190, 162, 255, 0.24);
+  --overlay-section-title: rgba(232, 218, 255, 0.88);
+  --overlay-section-rule: rgba(190, 162, 255, 0.17);
+  --overlay-section-glow: radial-gradient(circle at 12% 0%, rgba(167, 123, 255, 0.085), transparent 44%);
+  --overlay-section-bg-top: rgba(35, 23, 54, 0.34);
+  --overlay-section-bg-bottom: rgba(12, 8, 20, 0.68);
+  --overlay-section-edge: rgba(190, 162, 255, 0.24);
+  --overlay-section-edge-soft: rgba(167, 123, 255, 0.11);
+}
+
+.theme-dark-fantasy.overlay-page:not(.overlay-page-timer-only) .zone-bonuses-section {
+  --overlay-section-border: rgba(99, 226, 170, 0.34);
+  --overlay-section-title: rgba(135, 255, 191, 0.88);
+  --overlay-section-rule: rgba(99, 226, 170, 0.22);
+  --overlay-section-glow: radial-gradient(circle at 12% 0%, rgba(72, 201, 139, 0.13), transparent 44%);
+  --overlay-section-bg-top: rgba(18, 57, 48, 0.32);
+  --overlay-section-bg-bottom: rgba(10, 12, 22, 0.68);
+  --overlay-section-shadow: rgba(72, 201, 139, 0.075);
+  --overlay-section-edge: rgba(99, 226, 170, 0.30);
+  --overlay-section-edge-soft: rgba(72, 201, 139, 0.13);
+}
+
+.theme-dark-fantasy.overlay-page:not(.overlay-page-timer-only) .league-reward-section {
+  --overlay-section-border: rgba(217, 167, 95, 0.38);
+  --overlay-section-title: rgba(255, 205, 135, 0.90);
+  --overlay-section-rule: rgba(217, 167, 95, 0.24);
+  --overlay-section-glow: radial-gradient(circle at 12% 0%, rgba(217, 167, 95, 0.13), transparent 42%);
+  --overlay-section-bg-top: rgba(62, 40, 20, 0.30);
+  --overlay-section-bg-bottom: rgba(18, 11, 23, 0.68);
+  --overlay-section-shadow: rgba(217, 167, 95, 0.070);
+  --overlay-section-edge: rgba(217, 167, 95, 0.31);
+  --overlay-section-edge-soft: rgba(217, 167, 95, 0.13);
+}
+
+.theme-dark-fantasy.overlay-page:not(.overlay-page-timer-only) .hud-next-block {
+  --overlay-section-border: rgba(96, 174, 255, 0.28);
+  --overlay-section-title: rgba(154, 204, 255, 0.88);
+  --overlay-section-rule: rgba(96, 174, 255, 0.19);
+  --overlay-section-glow: radial-gradient(circle at 12% 0%, rgba(96, 174, 255, 0.095), transparent 44%);
+  --overlay-section-bg-top: rgba(18, 38, 68, 0.28);
+  --overlay-section-bg-bottom: rgba(10, 10, 22, 0.68);
+  --overlay-section-shadow: rgba(96, 174, 255, 0.050);
+  --overlay-section-edge: rgba(96, 174, 255, 0.27);
+  --overlay-section-edge-soft: rgba(96, 174, 255, 0.11);
+}
+
+.theme-dark-fantasy.overlay-page:not(.overlay-page-timer-only) .skip-section {
+  --overlay-section-border: rgba(255, 116, 112, 0.27);
+  --overlay-section-title: rgba(255, 170, 158, 0.84);
+  --overlay-section-rule: rgba(255, 116, 112, 0.18);
+  --overlay-section-glow: radial-gradient(circle at 12% 0%, rgba(255, 116, 112, 0.095), transparent 42%);
+  --overlay-section-bg-top: rgba(62, 24, 32, 0.26);
+  --overlay-section-bg-bottom: rgba(17, 9, 19, 0.70);
+  --overlay-section-shadow: rgba(255, 116, 112, 0.040);
+  --overlay-section-edge: rgba(255, 116, 112, 0.24);
+  --overlay-section-edge-soft: rgba(255, 116, 112, 0.10);
+}
+
+.theme-dark-fantasy.overlay-page:not(.overlay-page-timer-only) .speedrun-section {
+  --overlay-section-border: rgba(192, 145, 85, 0.30);
+  --overlay-section-title: rgba(226, 178, 114, 0.86);
+  --overlay-section-rule: rgba(192, 145, 85, 0.18);
+  --overlay-section-glow: radial-gradient(circle at 12% 0%, rgba(192, 145, 85, 0.090), transparent 42%);
+  --overlay-section-bg-top: rgba(51, 38, 25, 0.25);
+  --overlay-section-bg-bottom: rgba(14, 10, 20, 0.70);
+  --overlay-section-shadow: rgba(192, 145, 85, 0.045);
+  --overlay-section-edge: rgba(192, 145, 85, 0.25);
+  --overlay-section-edge-soft: rgba(192, 145, 85, 0.10);
+}
+
+.theme-dark-fantasy.overlay-page:not(.overlay-page-timer-only) .info-section {
+  --overlay-section-border: rgba(190, 120, 255, 0.32);
+  --overlay-section-title: rgba(220, 190, 255, 0.90);
+  --overlay-section-rule: rgba(190, 120, 255, 0.22);
+  --overlay-section-glow: radial-gradient(circle at 12% 0%, rgba(190, 120, 255, 0.115), transparent 42%);
+  --overlay-section-bg-top: rgba(48, 24, 72, 0.30);
+  --overlay-section-bg-bottom: rgba(14, 8, 22, 0.70);
+  --overlay-section-shadow: rgba(190, 120, 255, 0.060);
+  --overlay-section-edge: rgba(190, 120, 255, 0.28);
+  --overlay-section-edge-soft: rgba(190, 120, 255, 0.12);
+}
+
+@keyframes poe2-overlay-section-frame-pulse {
+  0%,
+  100% {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.038),
+      inset 0 0 0 1px var(--overlay-section-inset, rgba(0, 0, 0, 0.08)),
+      0 0 0 1px var(--overlay-section-edge-soft, rgba(241, 185, 106, 0.12)),
+      0 0 8px var(--overlay-section-edge-soft, rgba(241, 185, 106, 0.12)),
+      0 0 18px var(--overlay-section-shadow, rgba(0, 0, 0, 0));
+  }
+
+  50% {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.044),
+      inset 0 0 0 1px var(--overlay-section-edge-soft, rgba(241, 185, 106, 0.14)),
+      0 0 0 1px var(--overlay-section-edge, rgba(241, 185, 106, 0.26)),
+      0 0 14px var(--overlay-section-edge-soft, rgba(241, 185, 106, 0.16)),
+      0 0 24px var(--overlay-section-shadow, rgba(0, 0, 0, 0));
+  }
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-block {
+  animation: poe2-overlay-section-frame-pulse 5.4s ease-in-out infinite !important;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-block::after {
+  content: "" !important;
+  background:
+    linear-gradient(90deg, transparent 0%, var(--overlay-section-edge-soft, rgba(241, 185, 106, 0.14)) 18%, transparent 36%),
+    linear-gradient(180deg, transparent 0%, var(--overlay-section-edge, rgba(241, 185, 106, 0.26)) 48%, transparent 74%) !important;
+  opacity: 0.52 !important;
+  animation: poe2-overlay-section-edge-breathe 4.8s ease-in-out infinite !important;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-block h2 {
+  color: var(--overlay-section-title, rgba(255, 220, 160, 0.88)) !important;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-block h2::after {
+  background: linear-gradient(90deg, var(--overlay-section-rule, rgba(241, 185, 106, 0.20)), transparent) !important;
+}
+
+.overlay-page.fx-subtle:not(.overlay-page-timer-only) .hud-block {
+  animation-duration: 7.4s !important;
+}
+
+.overlay-page.fx-subtle:not(.overlay-page-timer-only) .hud-block::after {
+  opacity: 0.34 !important;
+  animation-duration: 7.4s !important;
+}
+
+.overlay-page.fx-rich:not(.overlay-page-timer-only) .hud-block {
+  animation-duration: 4.4s !important;
+}
+
+.overlay-page.fx-rich:not(.overlay-page-timer-only) .hud-block::after {
+  opacity: 0.70 !important;
+  animation-duration: 4.4s !important;
+}
+
+.overlay-page.fx-off:not(.overlay-page-timer-only) .hud-block {
+  animation: none !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.038),
+    inset 0 0 0 1px var(--overlay-section-inset, rgba(0, 0, 0, 0.08)),
+    0 0 18px var(--overlay-section-shadow, rgba(0, 0, 0, 0)) !important;
+}
+
+.overlay-page.fx-off:not(.overlay-page-timer-only) .hud-block::after {
+  animation: none !important;
+  opacity: 0 !important;
+}
+
+/* Dark fantasy detailed panel: adapt every companion tab without changing layout. */
+.theme-dark-fantasy.companion-page {
+  --df-companion-panel: rgba(13, 8, 24, 0.94);
+  --df-companion-card: rgba(24, 15, 40, 0.74);
+  --df-companion-card-strong: rgba(32, 20, 52, 0.82);
+  --df-companion-border: rgba(176, 133, 255, 0.24);
+  --df-companion-border-soft: rgba(212, 184, 255, 0.13);
+  --df-companion-gold: rgba(217, 167, 95, 0.92);
+  --df-companion-gold-soft: rgba(217, 167, 95, 0.16);
+  --df-companion-blue: rgba(115, 184, 255, 0.78);
+  --df-companion-blue-soft: rgba(96, 174, 255, 0.13);
+  --df-companion-green: rgba(115, 235, 172, 0.78);
+  --df-companion-green-soft: rgba(72, 201, 139, 0.13);
+  --df-companion-red: rgba(255, 128, 116, 0.76);
+  --df-companion-red-soft: rgba(255, 116, 112, 0.12);
+  --df-companion-violet: rgba(190, 145, 255, 0.82);
+  --df-companion-violet-soft: rgba(167, 123, 255, 0.16);
+}
+
+.theme-dark-fantasy.companion-page .companion-card {
+  border-color: rgba(174, 128, 255, 0.34) !important;
+  background:
+    radial-gradient(circle at 14% 0%, rgba(167, 123, 255, 0.20), transparent 32%),
+    radial-gradient(circle at 88% 8%, rgba(217, 167, 95, 0.10), transparent 30%),
+    linear-gradient(180deg, rgba(20, 12, 35, 0.96), rgba(8, 5, 14, 0.96)) !important;
+  box-shadow:
+    0 22px 48px rgba(0, 0, 0, 0.54),
+    0 0 0 1px rgba(167, 123, 255, 0.10),
+    0 0 42px rgba(98, 58, 184, 0.20),
+    inset 0 1px 0 rgba(255, 255, 255, 0.045) !important;
+}
+
+.theme-dark-fantasy.companion-page .companion-tab-body {
+  border-radius: 14px;
+  overflow: hidden;
+  background-clip: padding-box;
+  background:
+    radial-gradient(circle at 10% 0%, rgba(167, 123, 255, 0.075), transparent 36%),
+    linear-gradient(180deg, rgba(10, 7, 18, 0.44), transparent 42%) !important;
+}
+
+.theme-dark-fantasy.companion-page .companion-card > .companion-tab-row .button-secondary {
+  border-color: rgba(190, 162, 255, 0.18) !important;
+  background:
+    linear-gradient(180deg, rgba(27, 18, 44, 0.86), rgba(14, 9, 24, 0.84)) !important;
+  color: rgba(236, 226, 255, 0.86) !important;
+}
+
+.theme-dark-fantasy.companion-page .companion-card > .companion-tab-row .button-primary {
+  border-color: rgba(217, 167, 95, 0.58) !important;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(217, 167, 95, 0.30), transparent 42%),
+    linear-gradient(180deg, rgba(92, 64, 145, 0.74), rgba(31, 20, 53, 0.84)) !important;
+  color: #fff3d7 !important;
+  box-shadow:
+    0 0 0 1px rgba(217, 167, 95, 0.12),
+    0 0 20px rgba(167, 123, 255, 0.20) !important;
+}
+
+.theme-dark-fantasy.companion-page .companion-block,
+.theme-dark-fantasy.companion-page .route-overview-card,
+.theme-dark-fantasy.companion-page .info-cell,
+.theme-dark-fantasy.companion-page .zone-metric-card,
+.theme-dark-fantasy.companion-page .timer-cockpit-details > div,
+.theme-dark-fantasy.companion-page .timer-segment-item,
+.theme-dark-fantasy.companion-page .act-split-row,
+.theme-dark-fantasy.companion-page .summary-act-breakdown-row,
+.theme-dark-fantasy.companion-page .summary-compare-act-pill,
+.theme-dark-fantasy.companion-page .summary-stat,
+.theme-dark-fantasy.companion-page .summary-history-row,
+.theme-dark-fantasy.companion-page .reminder-item,
+.theme-dark-fantasy.companion-page .vendor-checkpoint,
+.theme-dark-fantasy.companion-page .power-spike-timeline-card,
+.theme-dark-fantasy.companion-page .bonus-row {
+  border-color: var(--df-companion-border-soft) !important;
+  background:
+    radial-gradient(circle at 12% 0%, rgba(167, 123, 255, 0.070), transparent 44%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.026), rgba(255, 255, 255, 0.010)),
+    var(--df-companion-card) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.035),
+    0 14px 28px rgba(0, 0, 0, 0.20) !important;
+}
+
+.theme-dark-fantasy.companion-page .zone-hero-card,
+.theme-dark-fantasy.companion-page .timer-cockpit-card,
+.theme-dark-fantasy.companion-page .act-times-hero-card,
+.theme-dark-fantasy.companion-page .summary-result-panel,
+.theme-dark-fantasy.companion-page .bonuses-summary-card {
+  border-color: rgba(217, 167, 95, 0.44) !important;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(217, 167, 95, 0.20), transparent 38%),
+    radial-gradient(circle at 88% 12%, rgba(167, 123, 255, 0.16), transparent 34%),
+    linear-gradient(135deg, rgba(52, 36, 68, 0.72), rgba(10, 8, 16, 0.88)) !important;
+  box-shadow:
+    0 0 0 1px rgba(217, 167, 95, 0.08),
+    0 0 30px rgba(167, 123, 255, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.050) !important;
+}
+
+.theme-dark-fantasy.companion-page .zone-hero-copy h3,
+.theme-dark-fantasy.companion-page .timer-main-readout strong,
+.theme-dark-fantasy.companion-page .summary-result-main strong {
+  color: rgba(239, 179, 91, 0.96) !important;
+  text-shadow:
+    0 2px 0 rgba(0, 0, 0, 0.50),
+    0 0 18px rgba(217, 167, 95, 0.26),
+    0 0 28px rgba(167, 123, 255, 0.20) !important;
+}
+
+.theme-dark-fantasy.companion-page .companion-block h3,
+.theme-dark-fantasy.companion-page .summary-section-heading h3,
+.theme-dark-fantasy.companion-page .bonuses-act-card h3,
+.theme-dark-fantasy.companion-page .companion-inline-title {
+  color: var(--df-companion-gold) !important;
+}
+
+.theme-dark-fantasy.companion-page .zone-metric-card,
+.theme-dark-fantasy.companion-page .act-split-row.is-current,
+.theme-dark-fantasy.companion-page .summary-act-breakdown-row.is-current,
+.theme-dark-fantasy.companion-page .timer-cockpit-details > div {
+  border-color: rgba(96, 174, 255, 0.28) !important;
+  background:
+    radial-gradient(circle at 10% 0%, var(--df-companion-blue-soft), transparent 44%),
+    rgba(12, 15, 28, 0.76) !important;
+}
+
+.theme-dark-fantasy.companion-page .route-overview-card.status-current,
+.theme-dark-fantasy.companion-page .route-overview-card.is-route-next,
+.theme-dark-fantasy.companion-page .reminder-item.is-current,
+.theme-dark-fantasy.companion-page .reminder-item.is-nearest,
+.theme-dark-fantasy.companion-page .vendor-checkpoint.is-current,
+.theme-dark-fantasy.companion-page .vendor-checkpoint.is-nearest,
+.theme-dark-fantasy.companion-page .power-spike-timeline-item.is-nearest .power-spike-timeline-card {
+  border-color: rgba(217, 167, 95, 0.50) !important;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(217, 167, 95, 0.17), transparent 44%),
+    linear-gradient(180deg, rgba(50, 34, 59, 0.78), rgba(13, 9, 22, 0.82)) !important;
+  box-shadow:
+    0 0 0 1px rgba(217, 167, 95, 0.10),
+    0 0 22px rgba(217, 167, 95, 0.12),
+    inset 3px 0 0 rgba(217, 167, 95, 0.76) !important;
+}
+
+.theme-dark-fantasy.companion-page .route-overview-card.status-completed,
+.theme-dark-fantasy.companion-page .route-overview-card.status-visited,
+.theme-dark-fantasy.companion-page .route-overview-card.status-done,
+.theme-dark-fantasy.companion-page .bonus-row.is-done,
+.theme-dark-fantasy.companion-page .zone-bonus-details-list .bonus-line.is-done,
+.theme-dark-fantasy.companion-page .bonus-line.is-done {
+  border-color: rgba(99, 226, 170, 0.28) !important;
+  background:
+    radial-gradient(circle at 0% 0%, var(--df-companion-green-soft), transparent 42%),
+    rgba(11, 28, 25, 0.54) !important;
+}
+
+.theme-dark-fantasy.companion-page .route-overview-card.status-missed {
+  border-color: rgba(255, 128, 116, 0.24) !important;
+  background:
+    radial-gradient(circle at 0% 0%, var(--df-companion-red-soft), transparent 42%),
+    rgba(30, 14, 22, 0.50) !important;
+}
+
+.theme-dark-fantasy.companion-page .bonus-row.is-pending {
+  border-color: rgba(217, 167, 95, 0.26) !important;
+  background:
+    radial-gradient(circle at 0% 0%, var(--df-companion-gold-soft), transparent 42%),
+    rgba(26, 18, 32, 0.56) !important;
+}
+
+.theme-dark-fantasy.companion-page .route-step-index,
+.theme-dark-fantasy.companion-page .act-time-status-pill,
+.theme-dark-fantasy.companion-page .route-rec-badge,
+.theme-dark-fantasy.companion-page .route-state-pill,
+.theme-dark-fantasy.companion-page .bonus-category-pill,
+.theme-dark-fantasy.companion-page .bonus-verify-pill,
+.theme-dark-fantasy.companion-page .reminder-level,
+.theme-dark-fantasy.companion-page .reminder-badge,
+.theme-dark-fantasy.companion-page .summary-history-stats span,
+.theme-dark-fantasy.companion-page .summary-section-heading span {
+  border-color: rgba(190, 162, 255, 0.22) !important;
+  background: rgba(17, 11, 29, 0.72) !important;
+  color: rgba(229, 216, 255, 0.84) !important;
+}
+
+.theme-dark-fantasy.companion-page .bonus-status-marker,
+.theme-dark-fantasy.companion-page .bonus-state-marker,
+.theme-dark-fantasy.companion-page .delta-good {
+  color: var(--df-companion-green) !important;
+}
+
+.theme-dark-fantasy.companion-page .delta-bad,
+.theme-dark-fantasy.companion-page .warning-inline {
+  color: var(--df-companion-red) !important;
+}
+
+.theme-dark-fantasy.companion-page .route-zone-name,
+.theme-dark-fantasy.companion-page .summary-history-main strong,
+.theme-dark-fantasy.companion-page .bonus-title-line strong,
+.theme-dark-fantasy.companion-page .reminder-title,
+.theme-dark-fantasy.companion-page .act-split-time,
+.theme-dark-fantasy.companion-page .summary-stat strong,
+.theme-dark-fantasy.companion-page .summary-compare-lead strong {
+  color: rgba(245, 239, 255, 0.94) !important;
+  text-shadow: 0 0 14px rgba(167, 123, 255, 0.16);
+}
+
+.theme-dark-fantasy.companion-page .helper-text,
+.theme-dark-fantasy.companion-page .route-empty-note,
+.theme-dark-fantasy.companion-page .route-more-note,
+.theme-dark-fantasy.companion-page .bonus-meta,
+.theme-dark-fantasy.companion-page .bonus-detected-line,
+.theme-dark-fantasy.companion-page .summary-stat small,
+.theme-dark-fantasy.companion-page .summary-history-main span,
+.theme-dark-fantasy.companion-page .summary-history-stats span,
+.theme-dark-fantasy.companion-page .act-split-total,
+.theme-dark-fantasy.companion-page .timer-cockpit-details small {
+  color: rgba(184, 170, 207, 0.78) !important;
+}
+
+.theme-dark-fantasy.companion-page .compact-table,
+.theme-dark-fantasy.companion-page .act-split-table,
+.theme-dark-fantasy.companion-page .summary-act-breakdown-table,
+.theme-dark-fantasy.companion-page .summary-compare-panel,
+.theme-dark-fantasy.companion-page .summary-history-panel,
+.theme-dark-fantasy.companion-page .summary-longest-card,
+.theme-dark-fantasy.companion-page .run-save-card,
+.theme-dark-fantasy.companion-page .timer-action-bar {
+  border-color: var(--df-companion-border-soft) !important;
+  background:
+    radial-gradient(circle at 12% 0%, rgba(167, 123, 255, 0.060), transparent 42%),
+    rgba(12, 8, 20, 0.70) !important;
+}
+
+.theme-dark-fantasy.companion-page .summary-history-actions .button-secondary,
+.theme-dark-fantasy.companion-page .timer-action-button.button-secondary,
+.theme-dark-fantasy.companion-page .bonus-toggle-button.button-secondary {
+  border-color: rgba(190, 162, 255, 0.22) !important;
+  background: rgba(16, 10, 27, 0.78) !important;
+  color: rgba(238, 230, 255, 0.88) !important;
+}
+
+.theme-dark-fantasy.companion-page .button-danger,
+.theme-dark-fantasy.companion-page .timer-action-button.button-danger {
+  border-color: rgba(255, 128, 116, 0.32) !important;
+  background: rgba(72, 24, 32, 0.52) !important;
+  color: rgba(255, 213, 205, 0.92) !important;
+}
+
+.theme-dark-fantasy.companion-page .reminders-next-card .reminder-level,
+.theme-dark-fantasy.companion-page .reminders-next-card .summary-section-heading span,
+.theme-dark-fantasy.companion-page .act-times-card-list .summary-section-heading span,
+.theme-dark-fantasy.companion-page .timer-segment-card .summary-section-heading span,
+.theme-dark-fantasy.companion-page .summary-history-row .summary-history-stats span {
+  border-color: transparent !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.theme-dark-fantasy.companion-page .reminders-next-card .reminder-level {
+  padding: 0 !important;
+  color: rgba(218, 202, 244, 0.80) !important;
+}
+
+.theme-dark-fantasy.companion-page .reminders-next-card .summary-section-heading span,
+.theme-dark-fantasy.companion-page .act-times-card-list .summary-section-heading span {
+  padding: 0 !important;
+  color: rgba(218, 202, 244, 0.82) !important;
+}
+
+.theme-dark-fantasy.companion-page .timer-main-readout h3,
+.theme-dark-fantasy.companion-page .summary-result-main strong {
+  font-family: var(--font-caps) !important;
+  font-weight: var(--fw-heavy) !important;
+  letter-spacing: -0.035em !important;
+  line-height: 0.95 !important;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+.theme-dark-fantasy.companion-page .act-split-table {
+  border-color: transparent !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.theme-dark-fantasy.companion-page .act-split-table-head {
+  background: transparent !important;
+}
+
+.theme-dark-fantasy.companion-page .act-split-table-head span:last-child {
+  text-align: center;
+}
+
+.theme-dark-fantasy.companion-page .act-time-status-pill {
+  width: 92px;
+  min-height: 24px;
+  justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.theme-dark-fantasy.companion-page .route-overview-list.route-overview-grid > .route-overview-card.status-current,
+.theme-dark-fantasy.companion-page .route-overview-list.route-overview-grid > .route-overview-card.is-route-next {
+  border-color: rgba(217, 167, 95, 0.38) !important;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(217, 167, 95, 0.11), transparent 42%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.034), rgba(255, 255, 255, 0.014)),
+    rgba(18, 15, 31, 0.60) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.034),
+    0 10px 22px rgba(0, 0, 0, 0.12),
+    0 0 18px rgba(217, 167, 95, 0.08) !important;
+}
+
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-list.route-overview-grid > .route-overview-card.status-current,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-list.route-overview-grid > .route-overview-card.is-route-next {
+  min-height: 108px !important;
+  border-color: rgba(217, 167, 95, 0.32) !important;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(217, 167, 95, 0.085), transparent 40%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.034), rgba(255, 255, 255, 0.014)),
+    rgba(18, 15, 31, 0.58) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.034),
+    0 10px 22px rgba(0, 0, 0, 0.12) !important;
+}
+
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.status-current::before,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.is-route-next::before {
+  width: 0 !important;
+  opacity: 0 !important;
+  box-shadow: none !important;
+}
+
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.status-current .route-step-index,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.is-route-next .route-step-index {
+  border-color: rgba(190, 162, 255, 0.22) !important;
+  background: rgba(17, 11, 29, 0.72) !important;
+  color: rgba(229, 216, 255, 0.84) !important;
+  box-shadow: none !important;
+}
+
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.status-current,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.is-route-next,
+.theme-dark-fantasy.companion-page.fx-normal .route-polish-layout .route-overview-card.status-current:not(.is-focus-flash),
+.theme-dark-fantasy.companion-page.fx-subtle .route-polish-layout .route-overview-card.status-current:not(.is-focus-flash),
+.theme-dark-fantasy.companion-page.fx-normal .route-polish-layout .route-overview-card.is-route-next:not(.is-focus-flash),
+.theme-dark-fantasy.companion-page.fx-subtle .route-polish-layout .route-overview-card.is-route-next:not(.is-focus-flash),
+.theme-dark-fantasy.companion-page.fx-rich .route-polish-layout .route-overview-card.status-current,
+.theme-dark-fantasy.companion-page.fx-rich .route-polish-layout .route-overview-card.is-route-next {
+  min-height: 108px !important;
+  opacity: 0.82 !important;
+  transform: none !important;
+  filter: saturate(0.82) !important;
+  animation: none !important;
+  border-color: rgba(99, 226, 170, 0.28) !important;
+  background:
+    radial-gradient(circle at 0% 0%, var(--df-companion-green-soft), transparent 42%),
+    rgba(11, 28, 25, 0.54) !important;
+  box-shadow: none !important;
+}
+
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.status-current:hover,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.is-route-next:hover {
+  opacity: 0.94 !important;
+}
+
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.status-current::before,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.status-current::after,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.is-route-next::before,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.is-route-next::after,
+.theme-dark-fantasy.companion-page.fx-normal .route-polish-layout .route-overview-card.status-current:not(.is-focus-flash)::after,
+.theme-dark-fantasy.companion-page.fx-subtle .route-polish-layout .route-overview-card.status-current:not(.is-focus-flash)::after,
+.theme-dark-fantasy.companion-page.fx-rich .route-polish-layout .route-overview-card.status-current::after {
+  width: 0 !important;
+  opacity: 0 !important;
+  animation: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.status-current .route-zone-name,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.is-route-next .route-zone-name,
+.theme-dark-fantasy.companion-page.fx-normal .route-polish-layout .route-overview-card.status-current:not(.is-focus-flash) .route-zone-name,
+.theme-dark-fantasy.companion-page.fx-subtle .route-polish-layout .route-overview-card.status-current:not(.is-focus-flash) .route-zone-name,
+.theme-dark-fantasy.companion-page.fx-rich .route-polish-layout .route-overview-card.status-current .route-zone-name {
+  color: rgba(226, 216, 197, 0.76) !important;
+  animation: none !important;
+  text-shadow: none !important;
+}
+
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.status-current .route-rec-badge,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.is-route-next .route-rec-badge,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.status-current .route-overview-header > span.route-rec-badge,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.is-route-next .route-overview-header > span.route-rec-badge {
+  border-color: rgba(205, 220, 237, 0.075) !important;
+  background: rgba(255, 255, 255, 0.024) !important;
+  color: rgba(218, 227, 237, 0.58) !important;
+}
+
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.status-current .route-step-index,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.is-route-next .route-step-index {
+  border-color: rgba(122, 214, 144, 0.14) !important;
+  background: rgba(122, 214, 144, 0.055) !important;
+  color: rgba(198, 225, 202, 0.70) !important;
+  box-shadow: none !important;
+}
+
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.status-current .compact-reward-list li,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.is-route-next .compact-reward-list li {
+  color: rgba(197, 209, 220, 0.64) !important;
+}
+
+@keyframes poe2-route-current-card-pulse {
+  0%,
+  100% {
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 232, 176, 0.16),
+      inset 4px 0 0 rgba(241, 185, 106, 0.76),
+      0 0 18px rgba(241, 185, 106, 0.16),
+      0 12px 28px rgba(0, 0, 0, 0.18);
+  }
+
+  50% {
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 232, 176, 0.30),
+      inset 4px 0 0 rgba(255, 213, 128, 0.92),
+      0 0 30px rgba(241, 185, 106, 0.28),
+      0 16px 34px rgba(0, 0, 0, 0.22);
+  }
+}
+
+@keyframes poe2-route-current-title-pulse {
+  0%,
+  100% {
+    text-shadow:
+      0 1px 0 rgba(0, 0, 0, 0.68),
+      0 0 12px rgba(241, 185, 106, 0.24);
+  }
+
+  50% {
+    text-shadow:
+      0 1px 0 rgba(0, 0, 0, 0.72),
+      0 0 22px rgba(255, 218, 145, 0.48),
+      0 0 36px rgba(241, 185, 106, 0.20);
+  }
+}
+
+@keyframes poe2-zone-title-shimmer {
+  0%,
+  100% {
+    background-position: 0% 50%;
+    filter: saturate(1.04) brightness(1.02);
+  }
+
+  50% {
+    background-position: 100% 50%;
+    filter: saturate(1.18) brightness(1.08);
+  }
+}
+
+@keyframes poe2-dark-fx-field-sweep {
+  0%,
+  100% {
+    transform: translateX(-62%);
+    filter: saturate(1) brightness(1);
+  }
+
+  50% {
+    transform: translateX(62%);
+    filter: saturate(1.15) brightness(1.08);
+  }
+}
+
+@keyframes poe2-select-menu-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+:where(
+  html,
+  body,
+  .settings-shell,
+  .update-content,
+  .overlay-hud,
+  .overlay-shell,
+  .overlay-timer-only-card,
+  .overlay-collapsed-shell,
+  .companion-tab-body,
+  .companion-tab-layout,
+  .companion-scroll-layout,
+  .companion-zone-polished-layout,
+  .companion-zone-dashboard,
+  .route-overview-list,
+  .route-overview-grid,
+  .summary-scroll-body,
+  .companion-block,
+  .companion-tables-grid,
+  .compact-table-wrap,
+  .report-card
+) {
+  scroll-behavior: smooth;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where(
+    html,
+    body,
+    .settings-shell,
+    .update-content,
+    .overlay-hud,
+    .overlay-shell,
+    .overlay-timer-only-card,
+    .overlay-collapsed-shell,
+    .companion-tab-body,
+    .companion-tab-layout,
+    .companion-scroll-layout,
+    .companion-zone-polished-layout,
+    .companion-zone-dashboard,
+    .route-overview-list,
+    .route-overview-grid,
+    .summary-scroll-body,
+    .companion-block,
+    .companion-tables-grid,
+    .compact-table-wrap,
+    .report-card
+  ) {
+    scroll-behavior: auto !important;
+  }
+}
+
+.companion-page .companion-zone-polished-layout .zone-hero-copy h3 {
+  width: fit-content;
+  max-width: 100%;
+  color: transparent !important;
+  background:
+    linear-gradient(
+      90deg,
+      #fff5d6 0%,
+      #f1b96a 34%,
+      #d9c5ff 58%,
+      #fff5d6 100%
+    );
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation:
+    poe2-zone-title-shimmer 6.2s ease-in-out infinite,
+    poe2-route-current-title-pulse 4.8s ease-in-out infinite;
+  text-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.70),
+    0 0 18px rgba(241, 185, 106, 0.26);
+}
+
+.theme-dark-fantasy.companion-page .companion-zone-polished-layout .zone-hero-copy h3 {
+  background:
+    linear-gradient(
+      90deg,
+      #fff1cb 0%,
+      rgba(239, 179, 91, 0.98) 34%,
+      rgba(190, 145, 255, 0.98) 60%,
+      #fff1cb 100%
+    );
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  text-shadow:
+    0 2px 0 rgba(0, 0, 0, 0.56),
+    0 0 22px rgba(217, 167, 95, 0.30),
+    0 0 34px rgba(167, 123, 255, 0.20);
+}
+
+.theme-dark-fantasy.companion-page.fx-subtle .companion-zone-polished-layout .zone-hero-copy h3 {
+  animation-duration: 8.4s, 7.4s !important;
+  text-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.58),
+    0 0 14px rgba(217, 167, 95, 0.18) !important;
+}
+
+.theme-dark-fantasy.companion-page.fx-rich .companion-zone-polished-layout .zone-hero-copy h3 {
+  animation-duration: 4.8s, 3.9s !important;
+  text-shadow:
+    0 2px 0 rgba(0, 0, 0, 0.56),
+    0 0 28px rgba(242, 190, 101, 0.42),
+    0 0 44px rgba(190, 162, 255, 0.30) !important;
+}
+
+.theme-dark-fantasy.companion-page.fx-off .companion-zone-polished-layout .zone-hero-copy h3 {
+  color: #fff1cb !important;
+  background: none !important;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  animation: none !important;
+  filter: none !important;
+  text-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.58),
+    0 0 8px rgba(217, 167, 95, 0.10) !important;
+}
+
+.settings-page select {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  min-height: 42px;
+  padding: 10px 46px 10px 14px !important;
+  border-color: rgba(241, 185, 106, 0.24) !important;
+  background-color: rgba(7, 10, 14, 0.72) !important;
+  background-image:
+    linear-gradient(45deg, transparent 50%, rgba(255, 231, 184, 0.98) 50%),
+    linear-gradient(135deg, rgba(255, 231, 184, 0.98) 50%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(241, 185, 106, 0.18), rgba(241, 185, 106, 0.060) 62%, transparent 64%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.034), rgba(255, 255, 255, 0.010)) !important;
+  background-position:
+    calc(100% - 23px) calc(50% - 2px),
+    calc(100% - 17px) calc(50% - 2px),
+    calc(100% - 20px) 50%,
+    0 0 !important;
+  background-size: 6px 6px, 6px 6px, 28px 28px, 100% 100% !important;
+  background-repeat: no-repeat !important;
+  color: #f7ead3 !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.035),
+    inset 0 0 0 1px rgba(255, 232, 176, 0.026) !important;
+  cursor: pointer;
+}
+
+.settings-page select:hover {
+  border-color: rgba(241, 185, 106, 0.42) !important;
+  background-color: rgba(12, 16, 22, 0.84) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.045),
+    inset 0 0 0 1px rgba(255, 232, 176, 0.045),
+    0 0 16px rgba(241, 185, 106, 0.10) !important;
+}
+
+.settings-page select:focus,
+.settings-page select:focus-visible {
+  outline: none;
+  border-color: rgba(241, 185, 106, 0.66) !important;
+  box-shadow:
+    0 0 0 3px rgba(241, 185, 106, 0.13),
+    0 0 20px rgba(241, 185, 106, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.045) !important;
+}
+
+.settings-page select option {
+  background: #111820;
+  color: #f5ead8;
+}
+
+.theme-dark-fantasy.settings-page select {
+  border-color: rgba(190, 162, 255, 0.24) !important;
+  background-color: rgba(10, 7, 18, 0.88) !important;
+  background-image:
+    linear-gradient(45deg, transparent 50%, rgba(236, 222, 255, 0.98) 50%),
+    linear-gradient(135deg, rgba(236, 222, 255, 0.98) 50%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(167, 123, 255, 0.22), rgba(217, 167, 95, 0.075) 62%, transparent 64%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.030), rgba(255, 255, 255, 0.010)) !important;
+  color: #f4ecff !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.040),
+    inset 0 0 0 1px rgba(190, 162, 255, 0.038) !important;
+}
+
+.theme-dark-fantasy.settings-page select:hover {
+  border-color: rgba(190, 162, 255, 0.44) !important;
+  background-color: rgba(17, 11, 29, 0.94) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.050),
+    inset 0 0 0 1px rgba(190, 162, 255, 0.060),
+    0 0 18px rgba(167, 123, 255, 0.13) !important;
+}
+
+.theme-dark-fantasy.settings-page select:focus,
+.theme-dark-fantasy.settings-page select:focus-visible {
+  border-color: rgba(217, 167, 95, 0.58) !important;
+  box-shadow:
+    0 0 0 3px rgba(167, 123, 255, 0.14),
+    0 0 22px rgba(217, 167, 95, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.046) !important;
+}
+
+.theme-dark-fantasy.settings-page select option {
+  background: #100b1b;
+  color: #f4ecff;
+}
+
+.settings-page .toggle-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.settings-page .toggle-card input[type="checkbox"] {
+  position: relative;
+  z-index: 1;
+  appearance: none;
+  -webkit-appearance: none;
+  display: block;
+  align-self: center;
+  width: 18px;
+  min-width: 18px;
+  height: 18px;
+  min-height: 18px;
+  border-radius: 5px;
+  border: 1px solid rgba(205, 220, 237, 0.28);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.040), rgba(255, 255, 255, 0.010)),
+    rgba(0, 0, 0, 0.24);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.045),
+    0 0 0 rgba(125, 236, 162, 0);
+  cursor: pointer;
+}
+
+.settings-page .toggle-card input[type="checkbox"]::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 9px;
+  height: 5px;
+  border-left: 2px solid #082416;
+  border-bottom: 2px solid #082416;
+  opacity: 0;
+  transform: translate(-50%, -58%) rotate(-45deg) scale(0.82);
+  transform-origin: 50% 50%;
+  transition:
+    opacity var(--motion-fast) var(--motion-ease-standard),
+    transform var(--motion-fast) var(--motion-ease-standard);
+}
+
+.settings-page .toggle-card input[type="checkbox"]:checked {
+  border-color: rgba(125, 236, 162, 0.76);
+  background:
+    radial-gradient(circle at 50% 20%, rgba(230, 255, 236, 0.72), transparent 52%),
+    linear-gradient(180deg, #8df1ad, #3fcf76);
+  box-shadow:
+    0 0 0 3px rgba(84, 190, 112, 0.12),
+    0 0 18px rgba(84, 190, 112, 0.24);
+}
+
+.settings-page .toggle-card input[type="checkbox"]:checked::before {
+  opacity: 1;
+  transform: translate(-50%, -58%) rotate(-45deg) scale(1);
+}
+
+.settings-page .toggle-card:has(input[type="checkbox"]:checked) {
+  border-color: rgba(125, 236, 162, 0.46) !important;
+  background:
+    radial-gradient(circle at 3% 0%, rgba(125, 236, 162, 0.16), transparent 46%),
+    linear-gradient(180deg, rgba(125, 236, 162, 0.050), rgba(255, 255, 255, 0.012)),
+    rgba(0, 0, 0, 0.16) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(205, 255, 220, 0.08),
+    0 0 20px rgba(84, 190, 112, 0.12) !important;
+}
+
+.settings-page .toggle-card:has(input[type="checkbox"]:checked)::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background:
+    linear-gradient(100deg, transparent 0%, rgba(169, 255, 195, 0.13) 45%, transparent 72%);
+  opacity: 0.58;
+  transform: translateX(-60%);
+  animation: poe2-dark-fx-field-sweep 6.8s ease-in-out infinite;
+}
+
+.settings-page .toggle-card:has(input[type="checkbox"]:checked) span {
+  position: relative;
+  z-index: 1;
+  color: #f2fff5 !important;
+  text-shadow: 0 0 12px rgba(125, 236, 162, 0.18);
+}
+
+.theme-dark-fantasy.settings-page .toggle-card:has(input[type="checkbox"]:checked) {
+  border-color: rgba(99, 226, 170, 0.42) !important;
+  background:
+    radial-gradient(circle at 3% 0%, rgba(99, 226, 170, 0.14), transparent 44%),
+    radial-gradient(circle at 94% 16%, rgba(167, 123, 255, 0.10), transparent 42%),
+    linear-gradient(180deg, rgba(32, 21, 48, 0.58), rgba(10, 7, 18, 0.76)) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(205, 255, 220, 0.070),
+    0 0 18px rgba(99, 226, 170, 0.10),
+    0 0 22px rgba(167, 123, 255, 0.070) !important;
+}
+
+.theme-dark-fantasy.settings-page .toggle-card input[type="checkbox"]:checked {
+  border-color: rgba(125, 255, 178, 0.78) !important;
+  background:
+    radial-gradient(circle at 50% 18%, rgba(236, 255, 241, 0.86), transparent 48%),
+    linear-gradient(180deg, #89f4aa, #35c96f) !important;
+  box-shadow:
+    0 0 0 3px rgba(99, 226, 170, 0.16),
+    0 0 20px rgba(99, 226, 170, 0.34) !important;
+}
+
+.theme-dark-fantasy.settings-page .toggle-card input[type="checkbox"]:checked::before {
+  border-color: #05180f !important;
+  opacity: 1 !important;
+}
+
+.settings-page.fx-off .toggle-card:has(input[type="checkbox"]:checked)::after {
+  opacity: 0;
+  animation: none;
+}
+
+.settings-field:has(.settings-select.is-open) {
+  position: relative;
+  z-index: 30;
+}
+
+.visual-fx-intensity-field:has(.settings-select.is-open) {
+  overflow: visible;
+}
+
+.settings-select {
+  position: relative;
+  min-width: 0;
+}
+
+.settings-select-button {
+  width: 100%;
+  min-height: 42px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 28px;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 10px 10px 14px !important;
+  border-color: rgba(241, 185, 106, 0.24) !important;
+  background:
+    radial-gradient(circle at calc(100% - 20px) 50%, rgba(241, 185, 106, 0.18), transparent 18px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.034), rgba(255, 255, 255, 0.010)),
+    rgba(7, 10, 14, 0.72) !important;
+  color: #f7ead3 !important;
+  text-align: left;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.035),
+    inset 0 0 0 1px rgba(255, 232, 176, 0.026) !important;
+}
+
+.settings-select-button:hover,
+.settings-select.is-open .settings-select-button {
+  border-color: rgba(241, 185, 106, 0.48) !important;
+  background:
+    radial-gradient(circle at calc(100% - 20px) 50%, rgba(241, 185, 106, 0.26), transparent 18px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.014)),
+    rgba(12, 16, 22, 0.86) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.045),
+    inset 0 0 0 1px rgba(255, 232, 176, 0.050),
+    0 0 18px rgba(241, 185, 106, 0.12) !important;
+}
+
+.settings-select-button:focus-visible {
+  outline: none;
+  border-color: rgba(241, 185, 106, 0.66) !important;
+  box-shadow:
+    0 0 0 3px rgba(241, 185, 106, 0.13),
+    0 0 20px rgba(241, 185, 106, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.045) !important;
+}
+
+.settings-select-value {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 800;
+}
+
+.settings-select-chevron {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 50% 40%, rgba(255, 231, 184, 0.24), transparent 56%),
+    rgba(241, 185, 106, 0.10);
+  position: relative;
+  transition:
+    transform var(--motion-fast) var(--motion-ease-standard),
+    background var(--motion-fast) var(--motion-ease-standard);
+}
+
+.settings-select-chevron::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid rgba(255, 231, 184, 0.95);
+  border-bottom: 2px solid rgba(255, 231, 184, 0.95);
+  transform: translateY(-2px) rotate(45deg);
+  transition: transform var(--motion-fast) var(--motion-ease-standard);
+}
+
+.settings-select.is-open .settings-select-chevron::before {
+  transform: translateY(2px) rotate(225deg);
+}
+
+.settings-select-layer {
+  position: fixed;
+  z-index: 10000;
+  box-sizing: border-box;
+  pointer-events: auto;
+}
+
+.settings-select-menu {
+  box-sizing: border-box;
+  width: 100%;
+  max-height: inherit;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  display: grid;
+  gap: 6px;
+  padding: 6px;
+  border: 1px solid rgba(241, 185, 106, 0.28);
+  border-radius: 12px;
+  background:
+    radial-gradient(circle at 8% 0%, rgba(241, 185, 106, 0.14), transparent 48%),
+    linear-gradient(180deg, rgba(19, 24, 31, 0.98), rgba(7, 10, 14, 0.98));
+  box-shadow:
+    0 12px 26px rgba(0, 0, 0, 0.30),
+    0 0 24px rgba(241, 185, 106, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.040);
+  animation: poe2-select-menu-enter 120ms var(--motion-ease-out, ease-out) both;
+}
+
+.settings-select-option {
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 8px 10px !important;
+  border: 0 !important;
+  border-radius: 7px !important;
+  background: transparent !important;
+  color: rgba(247, 234, 211, 0.86) !important;
+  text-align: left;
+  box-shadow: none !important;
+}
+
+.settings-select-option:hover,
+.settings-select-option:focus-visible {
+  border-color: rgba(241, 185, 106, 0.24) !important;
+  background:
+    linear-gradient(180deg, rgba(241, 185, 106, 0.12), rgba(255, 255, 255, 0.020)) !important;
+  color: #fff3d7 !important;
+}
+
+.settings-select-option.is-selected {
+  border-color: rgba(241, 185, 106, 0.42) !important;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(241, 185, 106, 0.20), transparent 48%),
+    linear-gradient(180deg, rgba(241, 185, 106, 0.13), rgba(255, 255, 255, 0.018)) !important;
+  color: #fff3d7 !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 232, 176, 0.050) !important;
+}
+
+.settings-select-option.is-selected::after {
+  content: none !important;
+}
+
+.theme-dark-fantasy.settings-page .settings-select-button {
+  border-color: rgba(190, 162, 255, 0.24) !important;
+  background:
+    radial-gradient(circle at calc(100% - 20px) 50%, rgba(167, 123, 255, 0.24), transparent 18px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.030), rgba(255, 255, 255, 0.010)),
+    rgba(10, 7, 18, 0.88) !important;
+  color: #f4ecff !important;
+}
+
+.theme-dark-fantasy.settings-page .settings-select-button:hover,
+.theme-dark-fantasy.settings-page .settings-select.is-open .settings-select-button {
+  border-color: rgba(190, 162, 255, 0.48) !important;
+  background:
+    radial-gradient(circle at calc(100% - 20px) 50%, rgba(167, 123, 255, 0.34), transparent 18px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.040), rgba(255, 255, 255, 0.012)),
+    rgba(17, 11, 29, 0.94) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.050),
+    inset 0 0 0 1px rgba(190, 162, 255, 0.060),
+    0 0 18px rgba(167, 123, 255, 0.14) !important;
+}
+
+.theme-dark-fantasy.settings-page .settings-select-chevron {
+  background:
+    radial-gradient(circle at 50% 40%, rgba(236, 222, 255, 0.25), transparent 56%),
+    rgba(167, 123, 255, 0.13);
+}
+
+.theme-dark-fantasy.settings-page .settings-select-chevron::before {
+  border-color: rgba(236, 222, 255, 0.98);
+}
+
+.theme-dark-fantasy.settings-page .settings-select-menu {
+  border-color: rgba(190, 162, 255, 0.30);
+  background:
+    radial-gradient(circle at 8% 0%, rgba(167, 123, 255, 0.18), transparent 48%),
+    radial-gradient(circle at 100% 0%, rgba(217, 167, 95, 0.10), transparent 38%),
+    linear-gradient(180deg, rgba(22, 15, 36, 0.98), rgba(8, 6, 15, 0.98));
+  box-shadow:
+    0 12px 28px rgba(0, 0, 0, 0.36),
+    0 0 24px rgba(167, 123, 255, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.040);
+}
+
+.theme-dark-fantasy.settings-page .settings-select-option {
+  background: transparent !important;
+  color: rgba(244, 236, 255, 0.84) !important;
+}
+
+.theme-dark-fantasy.settings-page .settings-select-option:hover,
+.theme-dark-fantasy.settings-page .settings-select-option:focus-visible {
+  border-color: rgba(190, 162, 255, 0.26) !important;
+  background:
+    linear-gradient(180deg, rgba(167, 123, 255, 0.14), rgba(255, 255, 255, 0.018)) !important;
+  color: #fff4d9 !important;
+}
+
+.theme-dark-fantasy.settings-page .settings-select-option.is-selected {
+  border-color: rgba(217, 167, 95, 0.42) !important;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(217, 167, 95, 0.18), transparent 46%),
+    linear-gradient(180deg, rgba(217, 167, 95, 0.11), rgba(167, 123, 255, 0.030)) !important;
+  color: #fff1cb !important;
+}
+
+.settings-page:not(.theme-dark-fantasy) .visual-fx-intensity-field {
+  position: relative;
+  overflow: hidden;
+  padding: 10px 12px;
+  border: 1px solid rgba(241, 185, 106, 0.30);
+  border-radius: 12px;
+  background:
+    radial-gradient(circle at 5% 0%, rgba(241, 185, 106, 0.16), transparent 42%),
+    radial-gradient(circle at 92% 10%, rgba(82, 170, 255, 0.090), transparent 44%),
+    linear-gradient(180deg, rgba(31, 27, 20, 0.58), rgba(8, 11, 15, 0.68));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.046),
+    0 0 18px rgba(241, 185, 106, 0.08);
+}
+
+.settings-page:not(.theme-dark-fantasy) .visual-fx-intensity-field::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      115deg,
+      transparent 0%,
+      rgba(255, 230, 174, 0.00) 32%,
+      rgba(255, 230, 174, 0.17) 48%,
+      rgba(125, 205, 255, 0.080) 56%,
+      transparent 72%
+    );
+  opacity: 0.48;
+  will-change: transform, filter;
+  animation: poe2-dark-fx-field-sweep 7.6s ease-in-out infinite;
+}
+
+.settings-page:not(.theme-dark-fantasy) .visual-fx-intensity-field > span {
+  position: relative;
+  z-index: 1;
+  color: #ffd792 !important;
+  letter-spacing: 0.05em;
+}
+
+.settings-page:not(.theme-dark-fantasy) .visual-fx-intensity-field select {
+  position: relative;
+  z-index: 1;
+  border-color: rgba(241, 185, 106, 0.38) !important;
+  background-color: rgba(9, 12, 16, 0.82) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 232, 176, 0.055),
+    0 0 14px rgba(241, 185, 106, 0.10) !important;
+}
+
+.settings-page:not(.theme-dark-fantasy) .visual-fx-intensity-field .settings-select {
+  position: relative;
+  z-index: 1;
+}
+
+.settings-page:not(.theme-dark-fantasy) .visual-fx-intensity-field .settings-select-button {
+  border-color: rgba(241, 185, 106, 0.38) !important;
+  background:
+    radial-gradient(circle at calc(100% - 20px) 50%, rgba(241, 185, 106, 0.22), transparent 18px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.034), rgba(255, 255, 255, 0.010)),
+    rgba(9, 12, 16, 0.82) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 232, 176, 0.055),
+    0 0 14px rgba(241, 185, 106, 0.10) !important;
+}
+
+.settings-page:not(.theme-dark-fantasy) .visual-fx-intensity-field:focus-within {
+  border-color: rgba(241, 185, 106, 0.58);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.055),
+    0 0 0 1px rgba(241, 185, 106, 0.12),
+    0 0 24px rgba(241, 185, 106, 0.13);
+}
+
+.settings-page:not(.theme-dark-fantasy).fx-subtle .visual-fx-intensity-field::after {
+  opacity: 0.28;
+  animation-duration: 10.2s;
+}
+
+.settings-page:not(.theme-dark-fantasy).fx-rich .visual-fx-intensity-field {
+  border-color: rgba(241, 185, 106, 0.46);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.055),
+    0 0 22px rgba(241, 185, 106, 0.14),
+    0 0 26px rgba(82, 170, 255, 0.070);
+}
+
+.settings-page:not(.theme-dark-fantasy).fx-rich .visual-fx-intensity-field::after {
+  opacity: 0.72;
+  animation-duration: 5.6s;
+}
+
+.settings-page:not(.theme-dark-fantasy).fx-off .visual-fx-intensity-field::after {
+  opacity: 0;
+  animation: none;
+}
+
+.theme-dark-fantasy.settings-page .visual-fx-intensity-field {
+  position: relative;
+  overflow: hidden;
+  padding: 10px 12px;
+  border: 1px solid rgba(217, 167, 95, 0.24);
+  border-radius: 12px;
+  background:
+    radial-gradient(circle at 6% 0%, rgba(217, 167, 95, 0.13), transparent 42%),
+    radial-gradient(circle at 94% 12%, rgba(167, 123, 255, 0.13), transparent 44%),
+    linear-gradient(180deg, rgba(32, 21, 48, 0.80), rgba(11, 8, 19, 0.74));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.045),
+    0 0 24px rgba(167, 123, 255, 0.09);
+}
+
+.theme-dark-fantasy.settings-page .visual-fx-intensity-field::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      115deg,
+      transparent 0%,
+      rgba(255, 230, 174, 0.00) 32%,
+      rgba(255, 230, 174, 0.18) 48%,
+      rgba(190, 162, 255, 0.12) 56%,
+      transparent 72%
+  );
+  opacity: 0.56;
+  transform: translateX(-58%);
+  will-change: transform, filter;
+  animation: poe2-dark-fx-field-sweep 7.4s ease-in-out infinite;
+}
+
+.theme-dark-fantasy.settings-page .visual-fx-intensity-field > span {
+  position: relative;
+  z-index: 1;
+  color: #e9c992 !important;
+  letter-spacing: 0.05em;
+}
+
+.theme-dark-fantasy.settings-page .visual-fx-intensity-field select {
+  position: relative;
+  z-index: 1;
+  border-color: rgba(217, 167, 95, 0.34) !important;
+  background:
+    linear-gradient(180deg, rgba(39, 27, 58, 0.96), rgba(12, 9, 20, 0.96)) !important;
+  color: #fff1cb !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(167, 123, 255, 0.08),
+    0 0 16px rgba(217, 167, 95, 0.12) !important;
+}
+
+.theme-dark-fantasy.settings-page .visual-fx-intensity-field .settings-select {
+  position: relative;
+  z-index: 1;
+}
+
+.theme-dark-fantasy.settings-page .visual-fx-intensity-field .settings-select-button {
+  border-color: rgba(217, 167, 95, 0.34) !important;
+  background:
+    radial-gradient(circle at calc(100% - 20px) 50%, rgba(217, 167, 95, 0.18), transparent 18px),
+    linear-gradient(180deg, rgba(39, 27, 58, 0.96), rgba(12, 9, 20, 0.96)) !important;
+  color: #fff1cb !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(167, 123, 255, 0.08),
+    0 0 16px rgba(217, 167, 95, 0.12) !important;
+}
+
+.theme-dark-fantasy.settings-page .visual-fx-intensity-field:focus-within {
+  border-color: rgba(242, 190, 101, 0.56);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.055),
+    0 0 0 1px rgba(167, 123, 255, 0.16),
+    0 0 26px rgba(217, 167, 95, 0.16);
+}
+
+.theme-dark-fantasy.settings-page.fx-subtle .visual-fx-intensity-field::after {
+  opacity: 0.30;
+  animation-duration: 10s;
+}
+
+.theme-dark-fantasy.settings-page.fx-rich .visual-fx-intensity-field {
+  border-color: rgba(242, 190, 101, 0.42);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.055),
+    0 0 26px rgba(217, 167, 95, 0.14),
+    0 0 34px rgba(167, 123, 255, 0.12);
+}
+
+.theme-dark-fantasy.settings-page.fx-rich .visual-fx-intensity-field::after {
+  opacity: 0.74;
+  animation-duration: 5.4s;
+}
+
+.theme-dark-fantasy.settings-page.fx-off .visual-fx-intensity-field::after {
+  opacity: 0;
+  animation: none;
+}
+
+.companion-page:not(.theme-dark-fantasy) .route-polish-layout .route-overview-card.status-current,
+.companion-page:not(.theme-dark-fantasy).fx-normal .route-polish-layout .route-overview-card.status-current:not(.is-focus-flash),
+.companion-page:not(.theme-dark-fantasy).fx-subtle .route-polish-layout .route-overview-card.status-current:not(.is-focus-flash),
+.companion-page:not(.theme-dark-fantasy).fx-rich .route-polish-layout .route-overview-card.status-current {
+  min-height: 122px !important;
+  opacity: 1 !important;
+  transform: translateY(-1px) !important;
+  filter: saturate(1.08) brightness(1.04) !important;
+  animation: poe2-route-current-card-pulse 4.8s ease-in-out infinite !important;
+  border-color: rgba(241, 185, 106, 0.66) !important;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(241, 185, 106, 0.22), transparent 46%),
+    linear-gradient(180deg, rgba(241, 185, 106, 0.12), rgba(255, 255, 255, 0.018)),
+    rgba(12, 14, 19, 0.58) !important;
+}
+
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.status-current,
+.theme-dark-fantasy.companion-page.fx-normal .route-polish-layout .route-overview-card.status-current:not(.is-focus-flash),
+.theme-dark-fantasy.companion-page.fx-subtle .route-polish-layout .route-overview-card.status-current:not(.is-focus-flash),
+.theme-dark-fantasy.companion-page.fx-rich .route-polish-layout .route-overview-card.status-current {
+  min-height: 122px !important;
+  opacity: 1 !important;
+  transform: translateY(-1px) !important;
+  filter: saturate(1.10) brightness(1.05) !important;
+  animation: poe2-route-current-card-pulse 4.8s ease-in-out infinite !important;
+  border-color: rgba(217, 167, 95, 0.58) !important;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(217, 167, 95, 0.18), transparent 44%),
+    radial-gradient(circle at 92% 10%, rgba(167, 123, 255, 0.12), transparent 42%),
+    linear-gradient(180deg, rgba(50, 34, 59, 0.78), rgba(13, 9, 22, 0.84)) !important;
+}
+
+.companion-page:not(.theme-dark-fantasy) .route-polish-layout .route-overview-card.status-current::before,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.status-current::before {
+  width: 5px !important;
+  opacity: 1 !important;
+  background: linear-gradient(180deg, rgba(255, 226, 161, 0.96), rgba(201, 132, 47, 0.74)) !important;
+  box-shadow: 0 0 20px rgba(241, 185, 106, 0.36) !important;
+}
+
+.companion-page:not(.theme-dark-fantasy) .route-polish-layout .route-overview-card.status-current::after,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.status-current::after {
+  opacity: 0.54 !important;
+  animation: poe2-ambient-route-halo 5.9s ease-in-out infinite !important;
+  background:
+    radial-gradient(circle at 10% 0%, rgba(241, 185, 106, 0.16), transparent 44%),
+    linear-gradient(90deg, rgba(241, 185, 106, 0.10), transparent 38%) !important;
+  box-shadow:
+    inset 0 0 28px rgba(241, 185, 106, 0.08),
+    0 0 18px rgba(241, 185, 106, 0.12) !important;
+}
+
+.companion-page:not(.theme-dark-fantasy) .route-polish-layout .route-overview-card.status-current .route-zone-name,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.status-current .route-zone-name {
+  color: #fff3d0 !important;
+  animation: poe2-route-current-title-pulse 4.8s ease-in-out infinite !important;
+}
+
+.companion-page:not(.theme-dark-fantasy) .route-polish-layout .route-overview-card.status-current .route-step-index,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.status-current .route-step-index {
+  border-color: rgba(255, 230, 174, 0.62) !important;
+  background:
+    radial-gradient(circle at 50% 18%, rgba(255, 235, 185, 0.30), transparent 60%),
+    rgba(241, 185, 106, 0.22) !important;
+  color: #ffe6aa !important;
+  box-shadow: 0 0 16px rgba(241, 185, 106, 0.20) !important;
+}
+
+.companion-page:not(.theme-dark-fantasy) .route-polish-layout .route-overview-card.status-current .route-rec-badge,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.status-current .route-rec-badge,
+.companion-page:not(.theme-dark-fantasy) .route-polish-layout .route-overview-card.status-current .route-overview-header > span.route-rec-badge,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.status-current .route-overview-header > span.route-rec-badge {
+  border-color: rgba(241, 185, 106, 0.32) !important;
+  background: rgba(241, 185, 106, 0.10) !important;
+  color: rgba(255, 235, 194, 0.90) !important;
+}
+
+.companion-page:not(.theme-dark-fantasy) .route-polish-layout .route-overview-card.status-current .compact-reward-list li,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.status-current .compact-reward-list li {
+  color: rgba(249, 244, 232, 0.91) !important;
+}
+
+.theme-dark-fantasy.companion-page.fx-subtle .route-polish-layout .route-overview-card.status-current:not(.is-focus-flash) {
+  filter: saturate(1.04) brightness(1.025) !important;
+  animation-duration: 6.8s !important;
+  border-color: rgba(217, 167, 95, 0.46) !important;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(217, 167, 95, 0.13), transparent 44%),
+    radial-gradient(circle at 92% 10%, rgba(167, 123, 255, 0.085), transparent 42%),
+    linear-gradient(180deg, rgba(42, 29, 53, 0.74), rgba(13, 9, 22, 0.82)) !important;
+}
+
+.theme-dark-fantasy.companion-page.fx-subtle .route-polish-layout .route-overview-card.status-current:not(.is-focus-flash)::after {
+  opacity: 0.36 !important;
+  animation-duration: 8.2s !important;
+}
+
+.theme-dark-fantasy.companion-page.fx-subtle .route-polish-layout .route-overview-card.status-current:not(.is-focus-flash) .route-zone-name {
+  animation-duration: 6.8s !important;
+  text-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.60),
+    0 0 13px rgba(217, 167, 95, 0.18) !important;
+}
+
+.theme-dark-fantasy.companion-page.fx-rich .route-polish-layout .route-overview-card.status-current {
+  filter: saturate(1.20) brightness(1.07) !important;
+  animation-duration: 3.9s !important;
+  border-color: rgba(242, 190, 101, 0.70) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.055),
+    0 0 28px rgba(217, 167, 95, 0.16),
+    0 0 34px rgba(167, 123, 255, 0.14) !important;
+}
+
+.theme-dark-fantasy.companion-page.fx-rich .route-polish-layout .route-overview-card.status-current::after {
+  opacity: 0.68 !important;
+  animation-duration: 4.4s !important;
+}
+
+.theme-dark-fantasy.companion-page.fx-rich .route-polish-layout .route-overview-card.status-current .route-zone-name {
+  animation-duration: 3.9s !important;
+}
+
+.companion-page.fx-off .route-polish-layout .route-overview-card.status-current,
+.theme-dark-fantasy.companion-page.fx-off .route-polish-layout .route-overview-card.status-current {
+  transform: none !important;
+  filter: none !important;
+  animation: none !important;
+}
+
+.companion-page.fx-off .route-polish-layout .route-overview-card.status-current::after,
+.theme-dark-fantasy.companion-page.fx-off .route-polish-layout .route-overview-card.status-current::after {
+  opacity: 0 !important;
+  animation: none !important;
+}
+
+.companion-page.fx-off .route-polish-layout .route-overview-card.status-current .route-zone-name,
+.theme-dark-fantasy.companion-page.fx-off .route-polish-layout .route-overview-card.status-current .route-zone-name {
+  animation: none !important;
+  text-shadow: none !important;
+}
+
+.theme-dark-fantasy.overlay-page.overlay-page-timer-only .timer-only-main-panel .timer-only-time-control-row {
+  align-items: center !important;
+}
+
+.theme-dark-fantasy.overlay-page.overlay-page-timer-only .timer-only-main-panel .timer-only-controls-row {
+  align-self: center !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transform: translateY(-1px);
+}
+
+.theme-dark-fantasy.overlay-page.overlay-page-timer-only .timer-only-main-panel .timer-only-controls-row .overlay-timer-controls,
+.theme-dark-fantasy.overlay-page.overlay-page-timer-only .timer-only-main-panel .timer-only-controls-row .overlay-timer-icon-control {
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+}
+
+.theme-dark-fantasy.companion-page .companion-block::-webkit-scrollbar-thumb,
+.theme-dark-fantasy.companion-page .route-overview-grid::-webkit-scrollbar-thumb,
+.theme-dark-fantasy.companion-page .summary-scroll-body::-webkit-scrollbar-thumb {
+  background: rgba(167, 123, 255, 0.42) !important;
+}
+
+@media (max-width: 640px) {
+  .app-theme-choice,
+  .overlay-theme-preference-actions {
+    grid-template-columns: 1fr;
+  }
+}

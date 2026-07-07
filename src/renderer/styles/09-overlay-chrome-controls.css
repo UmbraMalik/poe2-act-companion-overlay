@@ -184,6 +184,13 @@
 /* Final overlay chrome fix: no transparent outer drag band, cleaner top-right controls, centered timer icons. */
 .overlay-page {
   padding: 0 !important;
+  background: transparent !important;
+  pointer-events: none;
+  clip-path: inset(0 round 20px);
+}
+
+.overlay-page .overlay-shell {
+  pointer-events: auto;
 }
 
 .overlay-page .window-drag-strip {

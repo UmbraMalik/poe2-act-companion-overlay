@@ -3,6 +3,7 @@ import {
   memo,
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
   type ReactNode,
@@ -40,12 +41,15 @@ import {
   scheduleOverlayRenderCommit,
   type OverlayRenderTask
 } from '../render-scheduler';
+import { reportOverlayRenderDiagnostics } from '../render-diagnostics';
+import { getAppThemeClassName } from '../theme';
 import leagueMechanicRewardsData from '../../data/league-mechanic-rewards.json';
 import { getCampaignBonusView, getGuideView, getLevelReminderView, getPowerSpikeView } from '../../i18n/data';
 import { translateSystemText } from '../../i18n/runtime';
 import { translate } from '../../i18n/translations';
 import type {
   AppLanguage,
+  AppTheme,
   CampaignBonusDefinition,
   GuideEntry,
   GuideProfile,
@@ -872,10 +876,14 @@ export function OverlayPage() {
   const overlayPageRef = useRef<HTMLElement | null>(null);
   const overlayShellRef = useRef<HTMLElement | null>(null);
   const autoResizeFrameRef = useRef<OverlayRenderTask | null>(null);
+  const lastAdaptiveOverlayHeightRequestRef = useRef<{ height: number; allowBelowMinimum: boolean } | null>(null);
+  const lastAdaptiveOverlaySuspensionSyncAtRef = useRef(0);
   const adaptiveOverlayHeightSuspendedUntilRef = useRef(0);
+  const overlayRenderCountRef = useRef(0);
   const [isOverlayCollapsed, setIsOverlayCollapsed] = useState(false);
   const [overlayModeTransition, setOverlayModeTransition] = useState<OverlayModeTransitionState | null>(null);
   const [dismissedEndgameNoticeAt, setDismissedEndgameNoticeAt] = useState<string | null>(null);
+  overlayRenderCountRef.current += 1;
   const isTimerOnlySnapshot = snapshot?.runtime.overlayMode === 'timer_only';
   const autoResizeMinimumHeight = snapshot
     ? isOverlayCollapsed && !isTimerOnlySnapshot
@@ -899,23 +907,55 @@ export function OverlayPage() {
     }
   }, [isOverlayCollapsed, snapshot?.runtime.overlayMode]);
 
+  useEffect(() => {
+    if (!import.meta.env.DEV) {
+      return;
+    }
+
+    let previousCount = overlayRenderCountRef.current;
+    const intervalId = window.setInterval(() => {
+      const currentCount = overlayRenderCountRef.current;
+      reportOverlayRenderDiagnostics({
+        event: 'overlay-render-frequency',
+        source: 'renderer.overlay',
+        component: 'OverlayPage',
+        renderCommitCount: currentCount - previousCount,
+        lastRenderCommittedAtMs: Date.now(),
+        note: 'dev-overlay-render-frequency-10s',
+        documentHidden: document.hidden,
+        visibilityState: document.visibilityState
+      });
+      previousCount = currentCount;
+    }, 10000);
+
+    return () => {
+      window.clearInterval(intervalId);
+    };
+  }, []);
+
   const isAdaptiveOverlayHeightSuspended = useCallback(() => (
     Date.now() < adaptiveOverlayHeightSuspendedUntilRef.current
   ), []);
 
   const suspendAdaptiveOverlayHeight = useCallback((durationMs = 900) => {
+    const now = Date.now();
     adaptiveOverlayHeightSuspendedUntilRef.current = Math.max(
       adaptiveOverlayHeightSuspendedUntilRef.current,
-      Date.now() + durationMs
+      now + durationMs
     );
-    void window.poe2Overlay?.setOverlayAutoResizeSuspended(true);
+    if (now - lastAdaptiveOverlaySuspensionSyncAtRef.current > 500) {
+      lastAdaptiveOverlaySuspensionSyncAtRef.current = now;
+      void window.poe2Overlay?.setOverlayAutoResizeSuspended(true);
+    }
   }, []);
 
   const releaseAdaptiveOverlayHeightSuspension = useCallback((durationMs = 500) => {
+    const now = Date.now();
     adaptiveOverlayHeightSuspendedUntilRef.current = Math.max(
       adaptiveOverlayHeightSuspendedUntilRef.current,
-      Date.now() + durationMs
+      now + durationMs
     );
+    lastAdaptiveOverlaySuspensionSyncAtRef.current = now;
     void window.poe2Overlay?.setOverlayAutoResizeSuspended(false);
   }, []);
 
@@ -994,6 +1034,16 @@ export function OverlayPage() {
       if (!force && Math.abs(currentHeight - nextHeight) < 8) {
         return;
       }
+
+      const lastRequest = lastAdaptiveOverlayHeightRequestRef.current;
+      if (
+        !force &&
+        lastRequest?.height === nextHeight &&
+        lastRequest.allowBelowMinimum === allowBelowMinimum
+      ) {
+        return;
+      }
+      lastAdaptiveOverlayHeightRequestRef.current = { height: nextHeight, allowBelowMinimum };
 
       // Keep width as the main-process source of truth so adaptive height never widens
       // the overlay while the user is only moving it.
@@ -1224,13 +1274,74 @@ export function OverlayPage() {
       });
   }, [releaseAdaptiveOverlayHeightSuspension, suspendAdaptiveOverlayHeight]);
 
+  const overlayDerived = useMemo(() => {
+    if (!snapshot) {
+      return null;
+    }
+
+    const { config, currentGuideEntry, currentZone, runtime } = snapshot;
+    const guide = currentGuideEntry;
+    const guideView = getGuideView(guide, language);
+    const guideChecklist = (guideView?.checklist ?? []).filter((item) => item.displayInOverlay !== false);
+    const sceneName = getSceneDisplayName(snapshot, language);
+    const levelState = getLevelState(snapshot);
+    const currentActTimerAct =
+      typeof currentZone.actHint === 'number'
+        ? currentZone.actHint
+        : guide && typeof guide.act === 'number'
+          ? guide.act
+          : runtime.lastGameplayAct ?? null;
+    const currentActTimerLabel =
+      currentActTimerAct !== null
+        ? formatActTitle(currentActTimerAct, language)
+        : guide?.act === 'interlude' || currentZone.actHint === 'interlude'
+          ? translate(language, 'route.interludes')
+          : null;
+    const importantLines = getImportantOverlayLines(snapshot, language);
+    const zoneBonusItems = getCurrentZoneCampaignBonuses(snapshot);
+    const leagueRewardItem = getCurrentZoneLeagueReward(snapshot, sceneName);
+    const upcomingOverlayReminders = getOverlayUpcomingReminders(snapshot, language);
+    const visibleSections = config.overlayVisibleSections;
+    const skipLines =
+      visibleSections.skip && guide
+        ? (guideView?.skip ?? []).slice(0, 3)
+        : [];
+    const speedrunLines = visibleSections.speedrun ? getOverlaySpeedrunLines(guide, language) : [];
+    const actTitle = formatActTitle(currentZone.actHint ?? guide?.act ?? null, language);
+    const overlayTitle = guide ? `${actTitle} · ${sceneName}` : sceneName;
+    const overlayActLabel = guide
+      ? actTitle
+      : currentZone.actHint
+        ? formatActTitle(currentZone.actHint, language)
+        : translate(language, 'overlay.currentZoneFallback');
+
+    return {
+      guide,
+      guideView,
+      guideChecklist,
+      levelState,
+      currentActTimerAct,
+      currentActTimerLabel,
+      importantLines,
+      zoneBonusItems,
+      leagueRewardItem,
+      upcomingOverlayReminders,
+      visibleSections,
+      skipLines,
+      speedrunLines,
+      overlayTitle,
+      overlayZoneName: sceneName,
+      overlayActLabel
+    };
+  }, [snapshot, language]);
+
   useDocumentTitle(t('titles.overlay'));
 
-  if (!snapshot) {
+  if (!snapshot || !overlayDerived) {
     return <div className="overlay-shell loading-shell">{t('common.loading')}</div>;
   }
 
-  const { config, currentGuideEntry, currentZone, runtime } = snapshot;
+  const { config, currentZone, runtime } = snapshot;
   const displayRunTimer = syncedRunTimer ?? config.runTimer;
   const endgameT15CompletionNotice = runtime.endgameT15CompletionNotice;
   const showEndgameT15CompletionNotice = Boolean(endgameT15CompletionNotice) &&
@@ -1239,46 +1350,28 @@ export function OverlayPage() {
   const endgameT15CompletionDuration = formatDuration(
     endgameT15CompletionNotice?.totalElapsedMs ?? config.lastRunSummary?.totalElapsedMs ?? displayRunTimer.elapsedMs
   );
-  const guide = currentGuideEntry;
-  const guideView = getGuideView(guide, language);
-  const guideChecklist = (guideView?.checklist ?? []).filter((item) => item.displayInOverlay !== false);
-  const sceneName = getSceneDisplayName(snapshot, language);
-  const levelState = getLevelState(snapshot);
-  const currentActTimerAct =
-    typeof currentZone.actHint === 'number'
-      ? currentZone.actHint
-      : guide && typeof guide.act === 'number'
-        ? guide.act
-        : runtime.lastGameplayAct ?? null;
-  const currentActTimerLabel =
-    currentActTimerAct !== null
-      ? formatActTitle(currentActTimerAct, language)
-      : guide?.act === 'interlude' || currentZone.actHint === 'interlude'
-        ? translate(language, 'route.interludes')
-        : null;
-  const importantLines = getImportantOverlayLines(snapshot, language);
-  const zoneBonusItems = getCurrentZoneCampaignBonuses(snapshot);
-  const leagueRewardItem = getCurrentZoneLeagueReward(snapshot, sceneName);
-  // Always keep near-level vendor/power reminders visible in the main overlay.
-  // Rule: show reminders from the current level up to +2 levels, and hide them after the target level is passed.
-  const upcomingOverlayReminders = getOverlayUpcomingReminders(snapshot, language);
-  const visibleSections = config.overlayVisibleSections;
-  const skipLines =
-    visibleSections.skip && guide
-      ? (guideView?.skip ?? []).slice(0, 3)
-      : [];
-  const speedrunLines = visibleSections.speedrun ? getOverlaySpeedrunLines(guide, language) : [];
-  const actTitle = formatActTitle(currentZone.actHint ?? guide?.act ?? null, language);
-  const overlayTitle = guide ? `${actTitle} · ${sceneName}` : sceneName;
-  const overlayZoneName = sceneName;
-  const overlayActLabel = guide
-    ? actTitle
-    : currentZone.actHint
-      ? formatActTitle(currentZone.actHint, language)
-      : t('overlay.currentZoneFallback');
+  const {
+    guide,
+    guideView,
+    guideChecklist,
+    levelState,
+    currentActTimerAct,
+    currentActTimerLabel,
+    importantLines,
+    zoneBonusItems,
+    leagueRewardItem,
+    upcomingOverlayReminders,
+    visibleSections,
+    skipLines,
+    speedrunLines,
+    overlayTitle,
+    overlayZoneName,
+    overlayActLabel
+  } = overlayDerived;
   const isTimerOnlyMode = runtime.overlayMode === 'timer_only';
   const isCompactOverlay = config.overlayDensity === 'compact';
   const overlayFxClass = config.overlayEffectsEnabled ? `fx-${config.visualFxIntensity}` : 'fx-off';
+  const overlayThemeClass = getAppThemeClassName(config.theme);
   const overlayDebugClass = import.meta.env.DEV && config.overlayDebugLayoutEnabled ? ' debug-layout' : '';
   const overlayLockClass = config.overlayMovementLocked ? ' is-overlay-locked' : '';
   const overlayVisualMode: OverlayVisualMode = isTimerOnlyMode
@@ -1520,6 +1613,12 @@ export function OverlayPage() {
   const handleLanguageToggle = () => {
     handleLanguageChange(language === 'en' ? 'ru' : 'en');
   };
+  const handleThemePreferenceChoice = (theme: AppTheme) => {
+    void window.poe2Overlay?.updateSettings({
+      theme,
+      themePreferencePrompted: true
+    });
+  };
 
   const handleToggleSettings = () => {
     void window.poe2Overlay?.toggleSettings();
@@ -1703,6 +1802,21 @@ export function OverlayPage() {
       {timerPrimaryButton}
     </div>
   );
+  const themePreferencePrompt = !config.themePreferencePrompted ? (
+    <section className="overlay-theme-preference-card no-drag" role="dialog" aria-labelledby="overlay-theme-preference-title">
+      <div>
+        <h2 id="overlay-theme-preference-title">{t('overlay.themePromptTitle')}</h2>
+        <p>{t('overlay.themePromptText')}</p>
+      </div>
+      <div className="overlay-theme-preference-actions">
+        {(['classic', 'dark_fantasy'] as AppTheme[]).map((theme) => (
+          <button key={theme} type="button" onClick={() => handleThemePreferenceChoice(theme)}>
+            {t(theme === 'dark_fantasy' ? 'appTheme.darkFantasy' : 'appTheme.classic')}
+          </button>
+        ))}
+      </div>
+    </section>
+  ) : null;
 
   const endgameT15CompletionBlock = showEndgameT15CompletionNotice ? (
     <section className="hud-block overlay-endgame-completion-card no-drag" role="status" aria-live="polite">
@@ -1735,10 +1849,9 @@ export function OverlayPage() {
     return (
       <main
         ref={overlayPageRef}
-        className={`overlay-page overlay-page-timer-only density-${config.overlayDensity} scale-${config.overlayScale} text-size-${config.overlayTextSize} ${overlayFxClass}${overlayDebugClass}${overlayLockClass}${overlayModeTransitionClass}`}
-        onPointerDownCapture={beginOverlayDrag}
+        className={`overlay-page overlay-page-timer-only density-${config.overlayDensity} scale-${config.overlayScale} text-size-${config.overlayTextSize} ${overlayFxClass} ${overlayThemeClass}${overlayDebugClass}${overlayLockClass}${overlayModeTransitionClass}`}
       >
-        <section ref={overlayShellRef} className="overlay-shell overlay-hud overlay-timer-only-card">
+        <section ref={overlayShellRef} className="overlay-shell overlay-hud overlay-timer-only-card" onPointerDownCapture={beginOverlayDrag}>
           <header className="timer-only-header">
             <div className="timer-only-heading">
               <p className="timer-only-kicker">{overlayTitle}</p>
@@ -1762,6 +1875,7 @@ export function OverlayPage() {
               {overlayQuickActions}
             </div>
           </header>
+          {themePreferencePrompt}
 
           <section className="timer-only-main-panel" aria-label={t('overlay.mainTimer')}>
             <p className="timer-only-main-label">{timerOnlyPrimaryLabel}</p>
@@ -1810,10 +1924,9 @@ export function OverlayPage() {
     return (
       <main
         ref={overlayPageRef}
-        className={`overlay-page is-overlay-collapsed density-${config.overlayDensity} scale-${config.overlayScale} text-size-${config.overlayTextSize} ${overlayFxClass}${overlayDebugClass}${overlayLockClass}${overlayModeTransitionClass}`}
-        onPointerDownCapture={beginOverlayDrag}
+        className={`overlay-page is-overlay-collapsed density-${config.overlayDensity} scale-${config.overlayScale} text-size-${config.overlayTextSize} ${overlayFxClass} ${overlayThemeClass}${overlayDebugClass}${overlayLockClass}${overlayModeTransitionClass}`}
       >
-        <section ref={overlayShellRef} className="overlay-shell overlay-hud overlay-main-compact overlay-collapsed-shell">
+        <section ref={overlayShellRef} className="overlay-shell overlay-hud overlay-main-compact overlay-collapsed-shell" onPointerDownCapture={beginOverlayDrag}>
           <header className="hud-collapsed-bar">
             <div className="hud-collapsed-main">
               <span className="hud-zone-act-pill">{overlayActLabel}</span>
@@ -1823,6 +1936,7 @@ export function OverlayPage() {
               {overlayQuickActions}
             </div>
           </header>
+          {themePreferencePrompt}
         </section>
       </main>
     );
@@ -1831,10 +1945,9 @@ export function OverlayPage() {
   return (
     <main
       ref={overlayPageRef}
-      className={`overlay-page density-${config.overlayDensity} scale-${config.overlayScale} text-size-${config.overlayTextSize} ${overlayFxClass}${overlayDebugClass}${overlayLockClass}${overlayModeTransitionClass}`}
-      onPointerDownCapture={beginOverlayDrag}
+      className={`overlay-page density-${config.overlayDensity} scale-${config.overlayScale} text-size-${config.overlayTextSize} ${overlayFxClass} ${overlayThemeClass}${overlayDebugClass}${overlayLockClass}${overlayModeTransitionClass}`}
     >
-      <section ref={overlayShellRef} className="overlay-shell overlay-hud overlay-main-compact">
+      <section ref={overlayShellRef} className="overlay-shell overlay-hud overlay-main-compact" onPointerDownCapture={beginOverlayDrag}>
         <header className="hud-header">
           <div className="hud-title-row">
             <div className="hud-zone-title-card">
@@ -1864,6 +1977,7 @@ export function OverlayPage() {
             />
           </p>
         </header>
+        {themePreferencePrompt}
 
         {endgameT15CompletionBlock}
 
@@ -1950,13 +2064,7 @@ export function OverlayPage() {
           <section className="hud-block league-reward-section">
             <h2>{t('overlay.league')}</h2>
             <div className="league-reward-line">
-              <span className="league-reward-marker">◆</span>
-              <span>
-                {t('overlay.guaranteedReward', {
-                  reward: language === 'en' ? leagueRewardItem.reward_en : leagueRewardItem.reward_ru
-                })}
-                {leagueRewardItem.uncertain ? ` · ${t('overlay.verify')}` : ''}
-              </span>
+              <span>{language === 'en' ? leagueRewardItem.reward_en : leagueRewardItem.reward_ru}</span>
             </div>
             {leagueRewardItem.oneTimeGuaranteed && (
               <p className="league-reward-note">{t('overlay.oneTimeLeagueReward')}</p>

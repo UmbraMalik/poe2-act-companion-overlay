@@ -425,17 +425,22 @@ export function runGetCompanionBounds(this: any) {
 
 export function runPersistOverlayBoundsForState(this: any, mode: any, density: any, bounds: any) {
         const normalizedBounds = this.normalizeOverlayBoundsForMode(bounds, mode, density);
+        const currentBounds = this.getSavedOverlayBoundsForState(mode, density);
+        if (currentBounds && areOverlayBoundsEqual(currentBounds, normalizedBounds)) {
+            return false;
+        }
         if (mode === 'timer_only') {
             this.config = this.configStore.setOverlayTimerOnlyBounds(normalizedBounds);
-            return;
+            return true;
         }
         this.config = density === 'compact'
             ? this.configStore.setOverlayCompactBounds(normalizedBounds)
             : this.configStore.setOverlayBounds(normalizedBounds);
+        return true;
     }
 
 export function runPersistOverlayBoundsForCurrentState(this: any, bounds: any) {
-        this.persistOverlayBoundsForState(this.overlayMode, this.config.overlayDensity, bounds);
+        return this.persistOverlayBoundsForState(this.overlayMode, this.config.overlayDensity, bounds);
     }
 
 export function runPersistOverlayBoundsImmediately(this: any) {
@@ -461,8 +466,10 @@ export function runPersistOverlayBounds(this: any) {
                 return;
             }
             const bounds = this.overlayWindow.getBounds();
-            this.persistOverlayBoundsForCurrentState(bounds);
-            this.broadcastState();
+            const changed = this.persistOverlayBoundsForCurrentState(bounds);
+            if (changed) {
+                this.broadcastState();
+            }
         }, 350);
     }
 
@@ -478,6 +485,9 @@ export function runPersistCompanionBounds(this: any) {
                 return;
             }
             const bounds = this.companionWindow.getBounds();
+            if (this.config.companionBounds && areOverlayBoundsEqual(this.config.companionBounds, bounds)) {
+                return;
+            }
             this.config = this.configStore.setCompanionBounds(bounds);
             this.broadcastState();
         }, 350);

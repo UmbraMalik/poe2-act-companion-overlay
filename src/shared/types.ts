@@ -53,6 +53,7 @@ export type OverlayTextSize = 0 | 1 | 2 | 3;
 export type VisualFxIntensity = 'off' | 'subtle' | 'normal' | 'rich';
 export type OverlayMode = 'full' | 'timer_only';
 export type AppLanguage = 'ru' | 'en';
+export type AppTheme = 'classic' | 'dark_fantasy';
 
 export interface OverlayVisibleSections {
   /** Compact reminder cards above the current-zone content. */
@@ -399,6 +400,8 @@ export interface AppConfig {
   overlayDensity: OverlayDensity;
   visualFxIntensity: VisualFxIntensity;
   overlayEffectsEnabled: boolean;
+  theme: AppTheme;
+  themePreferencePrompted: boolean;
   overlayDebugLayoutEnabled: boolean;
   overlayVisibleSections: OverlayVisibleSections;
   mainOverlaySettings: MainOverlaySettings;
@@ -564,6 +567,8 @@ export interface SettingsPatch {
   overlayDensity?: OverlayDensity;
   visualFxIntensity?: VisualFxIntensity;
   overlayEffectsEnabled?: boolean;
+  theme?: AppTheme;
+  themePreferencePrompted?: boolean;
   overlayDebugLayoutEnabled?: boolean;
   overlayVisibleSections?: Partial<OverlayVisibleSections>;
   mainOverlaySettings?: Partial<MainOverlaySettings>;
@@ -603,6 +608,7 @@ export type TimerDiagnosticsEvent =
   | 'timer-renderer-unmount'
   | 'overlay-render-scheduler-ready'
   | 'overlay-render-commit-delay'
+  | 'overlay-render-frequency'
   | 'overlay-direct-composition-compat-enabled';
 
 export interface TimerDiagnosticsPayload {

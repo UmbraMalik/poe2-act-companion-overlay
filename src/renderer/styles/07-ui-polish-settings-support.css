@@ -702,3 +702,186 @@
   width: 100%;
   min-width: 0;
 }
+
+/* Semantic overlay blocks: each frame should read as a different kind of data. */
+@keyframes poe2-overlay-section-edge-breathe {
+  0%,
+  100% {
+    opacity: 0.22;
+    filter: drop-shadow(0 0 4px var(--overlay-section-edge-soft, rgba(241, 185, 106, 0.10)));
+  }
+
+  50% {
+    opacity: 0.48;
+    filter: drop-shadow(0 0 10px var(--overlay-section-edge-soft, rgba(241, 185, 106, 0.16)));
+  }
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-block {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden !important;
+  border-color: var(--overlay-section-border, rgba(205, 220, 237, 0.12)) !important;
+  background:
+    var(--overlay-section-glow, radial-gradient(circle at 12% 0%, rgba(255, 255, 255, 0.036), transparent 44%)),
+    linear-gradient(180deg, var(--overlay-section-bg-top, rgba(255, 255, 255, 0.044)), var(--overlay-section-bg-bottom, rgba(255, 255, 255, 0.020))),
+    var(--overlay-section-base, rgba(0, 0, 0, 0.115)) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.038),
+    inset 0 0 0 1px var(--overlay-section-inset, rgba(0, 0, 0, 0.08)),
+    0 0 18px var(--overlay-section-shadow, rgba(0, 0, 0, 0)) !important;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-block::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    linear-gradient(135deg, transparent 0 16%, var(--overlay-section-edge, rgba(241, 185, 106, 0.28)) 38%, transparent 64%),
+    linear-gradient(315deg, transparent 0 24%, var(--overlay-section-edge-soft, rgba(241, 185, 106, 0.12)) 52%, transparent 78%);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0.30;
+  animation: poe2-overlay-section-edge-breathe 6.4s ease-in-out infinite;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-block > :not(.resize-grip) {
+  position: relative;
+  z-index: 1;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-block h2 {
+  color: var(--overlay-section-title, rgba(255, 220, 160, 0.88)) !important;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-block h2::after {
+  background: linear-gradient(90deg, var(--overlay-section-rule, rgba(241, 185, 106, 0.20)), transparent) !important;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .upcoming-overlay-section {
+  --overlay-section-border: rgba(241, 185, 106, 0.46);
+  --overlay-section-title: rgba(255, 211, 132, 0.94);
+  --overlay-section-rule: rgba(241, 185, 106, 0.34);
+  --overlay-section-glow: radial-gradient(circle at 12% 0%, rgba(241, 185, 106, 0.145), transparent 46%);
+  --overlay-section-bg-top: rgba(77, 47, 16, 0.34);
+  --overlay-section-bg-bottom: rgba(15, 18, 22, 0.58);
+  --overlay-section-base: rgba(0, 0, 0, 0.12);
+  --overlay-section-shadow: rgba(241, 185, 106, 0.08);
+  --overlay-section-edge: rgba(241, 185, 106, 0.34);
+  --overlay-section-edge-soft: rgba(241, 185, 106, 0.16);
+}
+
+.overlay-page:not(.overlay-page-timer-only) .checklist-section {
+  --overlay-section-border: rgba(214, 186, 142, 0.22);
+  --overlay-section-title: rgba(255, 220, 160, 0.86);
+  --overlay-section-rule: rgba(214, 186, 142, 0.18);
+  --overlay-section-glow: radial-gradient(circle at 10% 0%, rgba(214, 186, 142, 0.070), transparent 44%);
+  --overlay-section-bg-top: rgba(255, 255, 255, 0.040);
+  --overlay-section-bg-bottom: rgba(255, 255, 255, 0.016);
+  --overlay-section-edge: rgba(214, 186, 142, 0.22);
+  --overlay-section-edge-soft: rgba(214, 186, 142, 0.10);
+}
+
+.overlay-page:not(.overlay-page-timer-only) .zone-bonuses-section {
+  --overlay-section-border: rgba(103, 211, 162, 0.36);
+  --overlay-section-title: rgba(124, 236, 177, 0.92);
+  --overlay-section-rule: rgba(103, 211, 162, 0.24);
+  --overlay-section-glow: radial-gradient(circle at 10% 0%, rgba(84, 190, 112, 0.14), transparent 45%);
+  --overlay-section-bg-top: rgba(21, 64, 46, 0.34);
+  --overlay-section-bg-bottom: rgba(10, 20, 20, 0.60);
+  --overlay-section-shadow: rgba(84, 190, 112, 0.075);
+  --overlay-section-edge: rgba(103, 211, 162, 0.30);
+  --overlay-section-edge-soft: rgba(84, 190, 112, 0.14);
+}
+
+.overlay-page:not(.overlay-page-timer-only) .league-reward-section {
+  --overlay-section-border: rgba(241, 185, 106, 0.38);
+  --overlay-section-title: rgba(255, 203, 122, 0.92);
+  --overlay-section-rule: rgba(241, 185, 106, 0.25);
+  --overlay-section-glow: radial-gradient(circle at 12% 0%, rgba(241, 185, 106, 0.13), transparent 42%);
+  --overlay-section-bg-top: rgba(68, 43, 17, 0.34);
+  --overlay-section-bg-bottom: rgba(17, 17, 19, 0.62);
+  --overlay-section-shadow: rgba(241, 185, 106, 0.070);
+  --overlay-section-edge: rgba(241, 185, 106, 0.32);
+  --overlay-section-edge-soft: rgba(241, 185, 106, 0.14);
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-next-block {
+  --overlay-section-border: rgba(93, 166, 255, 0.29);
+  --overlay-section-title: rgba(147, 197, 253, 0.92);
+  --overlay-section-rule: rgba(93, 166, 255, 0.20);
+  --overlay-section-glow: radial-gradient(circle at 10% 0%, rgba(93, 166, 255, 0.105), transparent 44%);
+  --overlay-section-bg-top: rgba(15, 41, 68, 0.30);
+  --overlay-section-bg-bottom: rgba(10, 16, 24, 0.62);
+  --overlay-section-shadow: rgba(93, 166, 255, 0.055);
+  --overlay-section-edge: rgba(93, 166, 255, 0.28);
+  --overlay-section-edge-soft: rgba(93, 166, 255, 0.12);
+}
+
+.overlay-page:not(.overlay-page-timer-only) .skip-section {
+  --overlay-section-border: rgba(255, 112, 91, 0.28);
+  --overlay-section-title: rgba(255, 168, 148, 0.86);
+  --overlay-section-rule: rgba(255, 112, 91, 0.19);
+  --overlay-section-glow: radial-gradient(circle at 10% 0%, rgba(255, 112, 91, 0.105), transparent 42%);
+  --overlay-section-bg-top: rgba(78, 28, 25, 0.25);
+  --overlay-section-bg-bottom: rgba(19, 13, 15, 0.64);
+  --overlay-section-shadow: rgba(255, 112, 91, 0.045);
+  --overlay-section-edge: rgba(255, 112, 91, 0.25);
+  --overlay-section-edge-soft: rgba(255, 112, 91, 0.10);
+}
+
+.overlay-page:not(.overlay-page-timer-only) .speedrun-section {
+  --overlay-section-border: rgba(224, 174, 94, 0.30);
+  --overlay-section-title: rgba(226, 178, 103, 0.88);
+  --overlay-section-rule: rgba(224, 174, 94, 0.19);
+  --overlay-section-glow: radial-gradient(circle at 10% 0%, rgba(224, 174, 94, 0.090), transparent 42%);
+  --overlay-section-bg-top: rgba(54, 42, 22, 0.24);
+  --overlay-section-bg-bottom: rgba(16, 17, 18, 0.64);
+  --overlay-section-shadow: rgba(224, 174, 94, 0.045);
+  --overlay-section-edge: rgba(224, 174, 94, 0.25);
+  --overlay-section-edge-soft: rgba(224, 174, 94, 0.10);
+}
+
+.overlay-page:not(.overlay-page-timer-only) .info-section {
+  --overlay-section-border: rgba(177, 147, 255, 0.30);
+  --overlay-section-title: rgba(204, 183, 255, 0.90);
+  --overlay-section-rule: rgba(177, 147, 255, 0.22);
+  --overlay-section-glow: radial-gradient(circle at 10% 0%, rgba(177, 147, 255, 0.11), transparent 42%);
+  --overlay-section-bg-top: rgba(45, 31, 74, 0.28);
+  --overlay-section-bg-bottom: rgba(15, 13, 23, 0.64);
+  --overlay-section-shadow: rgba(177, 147, 255, 0.055);
+  --overlay-section-edge: rgba(177, 147, 255, 0.28);
+  --overlay-section-edge-soft: rgba(177, 147, 255, 0.12);
+}
+
+.overlay-page:not(.overlay-page-timer-only) .league-reward-line {
+  grid-template-columns: minmax(0, 1fr) !important;
+  justify-items: center;
+  padding: 7px 10px !important;
+  text-align: center;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .league-reward-marker {
+  display: none !important;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .league-reward-note {
+  margin: 6px 0 0 !important;
+  text-align: center;
+}
+
+.overlay-page:not(.overlay-page-timer-only) .hud-next-zone {
+  text-align: center;
+}
+
+.overlay-page.fx-off:not(.overlay-page-timer-only) .hud-block::after {
+  animation: none !important;
+  opacity: 0 !important;
+}

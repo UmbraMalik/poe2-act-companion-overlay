@@ -16,7 +16,10 @@ import {
 import { getGuideView, getLevelReminderView } from '../../i18n/data';
 import { formatZoneMatcherReason, translateSystemText } from '../../i18n/runtime';
 import { translate } from '../../i18n/translations';
+import { getAppThemeClassName } from '../theme';
+import { SettingsSelect } from '../settings/SettingsSelect';
 import type {
+  AppTheme,
   AppLanguage,
   HotkeySettings,
   OverlayDensity,
@@ -179,6 +182,10 @@ function formatVisualFxIntensity(value: VisualFxIntensity, language: AppLanguage
     default:
       return translate(language, 'visualFxIntensity.normal');
   }
+}
+
+function formatAppTheme(value: AppTheme, language: AppLanguage): string {
+  return translate(language, value === 'dark_fantasy' ? 'appTheme.darkFantasy' : 'appTheme.classic');
 }
 
 function formatLogSelectionMode(mode: 'auto' | 'manual' | null, language: AppLanguage): string {
@@ -634,7 +641,7 @@ export function SettingsPage() {
   })();
 
   return (
-    <main className={`settings-page fx-${config.visualFxIntensity}`}>
+    <main className={`settings-page fx-${config.visualFxIntensity} ${getAppThemeClassName(config.theme)}`}>
       <header className="settings-header window-drag-strip">
         <div className="settings-header-copy">
           <p className="eyebrow">{t('common.appName')}</p>
@@ -685,18 +692,19 @@ export function SettingsPage() {
           <div className="settings-grid">
             <label className="settings-field">
               <span>{t('settings.languageField')}</span>
-              <select
+              <SettingsSelect
+                ariaLabel={t('settings.languageField')}
                 value={appLanguage}
-                onChange={(event) => {
-                  const nextLanguage = event.target.value === 'en' ? 'en' : 'ru';
+                options={[
+                  { value: 'ru', label: t('common.russian') },
+                  { value: 'en', label: t('common.english') }
+                ]}
+                onChange={(nextLanguage) => {
                   void window.poe2Overlay.updateSettings({
-                    appLanguage: nextLanguage
+                    appLanguage: nextLanguage === 'en' ? 'en' : 'ru'
                   });
                 }}
-              >
-                <option value="ru">{t('common.russian')}</option>
-                <option value="en">{t('common.english')}</option>
-              </select>
+              />
             </label>
           </div>
         </section>
@@ -944,19 +952,21 @@ export function SettingsPage() {
           <div className="settings-grid">
             <label className="settings-field">
               <span>{t('settings.autoStartMode')}</span>
-              <select
+              <SettingsSelect
+                ariaLabel={t('settings.autoStartMode')}
                 value={config.runTimerSettings.autoStartMode}
-                onChange={(event) => {
+                options={[
+                  { value: 'scheduled_time', label: t('settings.autoStartScheduled') },
+                  { value: 'manual', label: t('settings.autoStartManual') }
+                ]}
+                onChange={(autoStartMode) => {
                   void window.poe2Overlay.updateSettings({
                     runTimerSettings: {
-                      autoStartMode: event.target.value as RunTimerAutoStartMode
+                      autoStartMode: autoStartMode as RunTimerAutoStartMode
                     }
                   });
                 }}
-              >
-                <option value="scheduled_time">{t('settings.autoStartScheduled')}</option>
-                <option value="manual">{t('settings.autoStartManual')}</option>
-              </select>
+              />
             </label>
 
             <label className="settings-field">
@@ -1094,72 +1104,99 @@ export function SettingsPage() {
 
             <label className="settings-field">
               <span>{t('settings.overlayScale')}</span>
-              <select
+              <SettingsSelect
+                ariaLabel={t('settings.overlayScale')}
                 value={config.overlayScale}
-                onChange={(event) => {
+                options={[
+                  { value: 70, label: '70%' },
+                  { value: 80, label: '80%' },
+                  { value: 90, label: '90%' },
+                  { value: 100, label: '100%' },
+                  { value: 110, label: '110%' },
+                  { value: 120, label: '120%' }
+                ]}
+                onChange={(overlayScale) => {
                   void window.poe2Overlay.updateSettings({
-                    overlayScale: Number(event.target.value) as OverlayScale
+                    overlayScale: Number(overlayScale) as OverlayScale
                   });
                 }}
-              >
-                <option value={70}>70%</option>
-                <option value={80}>80%</option>
-                <option value={90}>90%</option>
-                <option value={100}>100%</option>
-                <option value={110}>110%</option>
-                <option value={120}>120%</option>
-              </select>
+              />
             </label>
 
             <label className="settings-field">
               <span>{t('settings.overlayTextSize')}</span>
-              <select
+              <SettingsSelect
+                ariaLabel={t('settings.overlayTextSize')}
                 value={config.overlayTextSize}
-                onChange={(event) => {
+                options={[
+                  { value: 0, label: formatOverlayTextSize(0, appLanguage) },
+                  { value: 1, label: formatOverlayTextSize(1, appLanguage) },
+                  { value: 2, label: formatOverlayTextSize(2, appLanguage) },
+                  { value: 3, label: formatOverlayTextSize(3, appLanguage) }
+                ]}
+                onChange={(overlayTextSize) => {
                   void window.poe2Overlay.updateSettings({
-                    overlayTextSize: Number(event.target.value) as OverlayTextSize
+                    overlayTextSize: Number(overlayTextSize) as OverlayTextSize
                   });
                 }}
-              >
-                <option value={0}>{formatOverlayTextSize(0, appLanguage)}</option>
-                <option value={1}>{formatOverlayTextSize(1, appLanguage)}</option>
-                <option value={2}>{formatOverlayTextSize(2, appLanguage)}</option>
-                <option value={3}>{formatOverlayTextSize(3, appLanguage)}</option>
-              </select>
+              />
             </label>
 
             <label className="settings-field">
               <span>{t('settings.overlayDensity')}</span>
-              <select
+              <SettingsSelect
+                ariaLabel={t('settings.overlayDensity')}
                 value={config.overlayDensity}
-                onChange={(event) => {
+                options={[
+                  { value: 'compact', label: formatOverlayDensity('compact', appLanguage) },
+                  { value: 'normal', label: formatOverlayDensity('normal', appLanguage) },
+                  { value: 'detailed', label: formatOverlayDensity('detailed', appLanguage) }
+                ]}
+                onChange={(overlayDensity) => {
                   void window.poe2Overlay.updateSettings({
-                    overlayDensity: event.target.value as OverlayDensity
+                    overlayDensity: overlayDensity as OverlayDensity
                   });
                 }}
-              >
-                <option value="compact">{formatOverlayDensity('compact', appLanguage)}</option>
-                <option value="normal">{formatOverlayDensity('normal', appLanguage)}</option>
-                <option value="detailed">{formatOverlayDensity('detailed', appLanguage)}</option>
-              </select>
+              />
             </label>
 
-            <label className="settings-field">
+            <label className="settings-field visual-fx-intensity-field">
               <span>{t('settings.visualFxIntensity')}</span>
-              <select
+              <SettingsSelect
+                ariaLabel={t('settings.visualFxIntensity')}
                 value={config.visualFxIntensity}
-                onChange={(event) => {
+                options={[
+                  { value: 'off', label: formatVisualFxIntensity('off', appLanguage) },
+                  { value: 'subtle', label: formatVisualFxIntensity('subtle', appLanguage) },
+                  { value: 'normal', label: formatVisualFxIntensity('normal', appLanguage) },
+                  { value: 'rich', label: formatVisualFxIntensity('rich', appLanguage) }
+                ]}
+                onChange={(visualFxIntensity) => {
                   void window.poe2Overlay.updateSettings({
-                    visualFxIntensity: event.target.value as VisualFxIntensity
+                    visualFxIntensity: visualFxIntensity as VisualFxIntensity
                   });
                 }}
-              >
-                <option value="off">{formatVisualFxIntensity('off', appLanguage)}</option>
-                <option value="subtle">{formatVisualFxIntensity('subtle', appLanguage)}</option>
-                <option value="normal">{formatVisualFxIntensity('normal', appLanguage)}</option>
-                <option value="rich">{formatVisualFxIntensity('rich', appLanguage)}</option>
-              </select>
+              />
             </label>
+            <div className="settings-field settings-field-full app-theme-field">
+              <span>{t('settings.theme')}</span>
+              <div className="app-theme-choice" role="group" aria-label={t('settings.theme')}>
+                {(['classic', 'dark_fantasy'] as AppTheme[]).map((theme) => (
+                  <button
+                    key={theme}
+                    className={config.theme === theme ? 'button-primary' : 'button-secondary'}
+                    type="button"
+                    aria-pressed={config.theme === theme}
+                    onClick={() => {
+                      void window.poe2Overlay.updateSettings({ theme, themePreferencePrompted: true });
+                    }}
+                  >
+                    {formatAppTheme(theme, appLanguage)}
+                  </button>
+                ))}
+              </div>
+              <p className="helper-text">{t('settings.themeDescription')}</p>
+            </div>
           </div>
 
           <div className="settings-subsection">
@@ -1338,16 +1375,18 @@ export function SettingsPage() {
           <div className="settings-grid settings-grid-wide">
             <label className="settings-field">
               <span>{t('settings.guideProfile')}</span>
-              <select
+              <SettingsSelect
+                ariaLabel={t('settings.guideProfile')}
                 value={config.guideProfile}
-                onChange={(event) => {
+                options={[
+                  { value: 'universal', label: t('settings.universalProfile') }
+                ]}
+                onChange={(guideProfile) => {
                   void window.poe2Overlay.updateSettings({
-                    guideProfile: event.target.value as 'universal'
+                    guideProfile: guideProfile as 'universal'
                   });
                 }}
-              >
-                <option value="universal">{t('settings.universalProfile')}</option>
-              </select>
+              />
             </label>
 
             <div className="settings-field">
@@ -1403,17 +1442,15 @@ export function SettingsPage() {
           <div className="settings-grid settings-grid-actions">
             <label className="settings-field settings-field-full">
               <span>{t('settings.selectZone')}</span>
-              <select
+              <SettingsSelect
+                ariaLabel={t('settings.selectZone')}
                 value={simulateZone}
-                onChange={(event) => setSimulateZone(event.target.value)}
-              >
-                <option value="">{t('settings.selectZonePlaceholder')}</option>
-                {zoneOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
+                options={[
+                  { value: '', label: t('settings.selectZonePlaceholder') },
+                  ...zoneOptions
+                ]}
+                onChange={setSimulateZone}
+              />
             </label>
             <div className="button-row">
               <button

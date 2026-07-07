@@ -40,6 +40,8 @@
 }
 
 .overlay-page .resize-grip {
+  border-radius: 0 0 16px 0;
+  box-shadow: none !important;
   pointer-events: auto;
   transition:
     opacity var(--motion-medium, 180ms) var(--motion-ease-out, ease-out),
@@ -53,9 +55,7 @@
   filter:
     saturate(1.08)
     drop-shadow(0 0 6px rgba(241, 185, 106, 0.24));
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 232, 176, 0.16),
-    0 0 12px rgba(241, 185, 106, 0.18) !important;
+  box-shadow: none !important;
 }
 
 .overlay-page:not(.is-overlay-locked) .resize-grip:not(.is-disabled):hover,
@@ -65,9 +65,7 @@
     saturate(1.18)
     brightness(1.08)
     drop-shadow(0 0 10px rgba(241, 185, 106, 0.36));
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 232, 176, 0.28),
-    0 0 18px rgba(241, 185, 106, 0.28) !important;
+  box-shadow: none !important;
 }
 
 .overlay-page.is-overlay-locked .resize-grip,
@@ -78,9 +76,7 @@
     saturate(0.72)
     brightness(0.78)
     drop-shadow(0 0 3px rgba(0, 0, 0, 0.35)) !important;
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.060),
-    0 0 8px rgba(0, 0, 0, 0.28) !important;
+  box-shadow: none !important;
 }
 
 .overlay-page.is-overlay-locked .resize-grip:hover,

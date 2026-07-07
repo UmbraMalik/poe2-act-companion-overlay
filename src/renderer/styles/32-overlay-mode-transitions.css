@@ -7,51 +7,42 @@
 @keyframes poe2-overlay-mode-enter-full {
   from {
     transform: translateY(4px) scale(0.988);
-    filter: saturate(0.96) brightness(0.94);
   }
 
   58% {
     transform: translateY(0) scale(1.002);
-    filter: saturate(1.04) brightness(1.025);
   }
 
   to {
     transform: translateY(0) scale(1);
-    filter: saturate(1) brightness(1);
   }
 }
 
 @keyframes poe2-overlay-mode-enter-compact {
   from {
     transform: translateY(3px) scale(0.990);
-    filter: saturate(0.96) brightness(0.94);
   }
 
   60% {
     transform: translateY(0) scale(1.002);
-    filter: saturate(1.04) brightness(1.025);
   }
 
   to {
     transform: translateY(0) scale(1);
-    filter: saturate(1) brightness(1);
   }
 }
 
 @keyframes poe2-overlay-mode-enter-collapsed {
   from {
     transform: translateY(-2px) scaleX(0.988) scaleY(0.992);
-    filter: saturate(0.96) brightness(0.94);
   }
 
   62% {
     transform: translateY(0) scaleX(1.004) scaleY(1);
-    filter: saturate(1.05) brightness(1.03);
   }
 
   to {
     transform: translateY(0) scale(1);
-    filter: saturate(1) brightness(1);
   }
 }
 
@@ -74,7 +65,7 @@
 
 .overlay-page.is-overlay-mode-transitioning .overlay-shell {
   transform-origin: top center;
-  will-change: opacity, transform, filter;
+  will-change: opacity, transform;
 }
 
 .overlay-page.is-overlay-mode-transitioning .overlay-hud {

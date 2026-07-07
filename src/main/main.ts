@@ -264,6 +264,7 @@ import {
   runUndoLastChecklistMark as runUndoLastChecklistMarkMethod,
   runSetLogStatus as runSetLogStatusMethod,
   runGetSnapshot as runGetSnapshotMethod,
+  runGetOverlaySnapshot as runGetOverlaySnapshotMethod,
   runClearBroadcastTimer as runClearBroadcastTimerMethod,
   runFlushBroadcastState as runFlushBroadcastStateMethod,
   runBroadcastState as runBroadcastStateMethod
@@ -1140,6 +1141,9 @@ export class PoeOverlayApp {
     }
     getSnapshot() {
         return runGetSnapshotMethod.apply(this, arguments as any);
+    }
+    getOverlaySnapshot() {
+        return runGetOverlaySnapshotMethod.apply(this, arguments as any);
     }
     clearBroadcastTimer() {
         return runClearBroadcastTimerMethod.apply(this, arguments as any);

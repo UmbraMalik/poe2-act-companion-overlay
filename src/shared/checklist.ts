@@ -302,6 +302,7 @@ function createChecklistItem(
 
 export function buildChecklistDefinition(guide: GuideEntry): ChecklistItemDefinition[] {
   const explicitChecklist = guide.checklist ?? [];
+  const guideKeywords = Array.isArray(guide.keywords_done) ? guide.keywords_done : [];
 
   if (explicitChecklist.length > 0) {
     return explicitChecklist.map((item, index) => {
@@ -312,7 +313,7 @@ export function buildChecklistDefinition(guide: GuideEntry): ChecklistItemDefini
         ...inferred.phrases
       ]);
 
-      for (const keyword of guide.keywords_done) {
+      for (const keyword of guideKeywords) {
         if (
           hasKeywordSignal(item.text, keyword) ||
           hasKeywordSignal(keyword, item.text)
@@ -362,7 +363,7 @@ export function buildChecklistDefinition(guide: GuideEntry): ChecklistItemDefini
         bucket,
         index,
         text,
-        guide.keywords_done,
+        guideKeywords,
         forceType,
         forceRequired
       )
@@ -412,7 +413,7 @@ export function buildChecklistDefinition(guide: GuideEntry): ChecklistItemDefini
     );
   });
 
-  guide.keywords_done.forEach((text, index) => {
+  guideKeywords.forEach((text, index) => {
     const inferred = inferChecklistItemType(text);
     pushUniqueItem(
       'keyword',
