@@ -353,3 +353,112 @@
     padding: 12px;
   }
 }
+
+/* Dark fantasy companion fixes: keep the header and summary internals in the same theme. */
+.theme-dark-fantasy.companion-page .settings-header.window-drag-strip {
+  border-color: rgba(174, 128, 255, 0.34) !important;
+  background:
+    radial-gradient(circle at 12% 0%, rgba(167, 123, 255, 0.20), transparent 34%),
+    radial-gradient(circle at 88% 12%, rgba(217, 167, 95, 0.090), transparent 30%),
+    linear-gradient(180deg, rgba(20, 12, 35, 0.96), rgba(8, 5, 14, 0.96)) !important;
+  box-shadow:
+    0 18px 42px rgba(0, 0, 0, 0.46),
+    0 0 0 1px rgba(167, 123, 255, 0.10),
+    0 0 36px rgba(98, 58, 184, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.045) !important;
+}
+
+.theme-dark-fantasy.companion-page .settings-header-copy h1,
+.theme-dark-fantasy.companion-page .settings-header-copy .eyebrow {
+  color: var(--companion-title) !important;
+  text-shadow: 0 0 16px rgba(217, 167, 95, 0.20);
+}
+
+.theme-dark-fantasy.companion-page .settings-header-copy .settings-intro,
+.theme-dark-fantasy.companion-page .settings-header-copy .settings-subtitle {
+  color: rgba(190, 176, 214, 0.78) !important;
+}
+
+.theme-dark-fantasy.companion-page .settings-header button {
+  border-color: rgba(190, 162, 255, 0.18) !important;
+  background:
+    linear-gradient(180deg, rgba(27, 18, 44, 0.86), rgba(14, 9, 24, 0.84)) !important;
+  color: rgba(236, 226, 255, 0.88) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.030),
+    0 8px 18px rgba(0, 0, 0, 0.16) !important;
+}
+
+.theme-dark-fantasy.companion-page .settings-header button:hover:not(:disabled),
+.theme-dark-fantasy.companion-page .settings-header button:focus-visible {
+  border-color: rgba(217, 167, 95, 0.44) !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(217, 167, 95, 0.18), transparent 58%),
+    linear-gradient(180deg, rgba(92, 64, 145, 0.62), rgba(31, 20, 53, 0.78)) !important;
+  color: #fff3d7 !important;
+}
+
+.theme-dark-fantasy.companion-page .companion-tab-body,
+.theme-dark-fantasy.companion-page .summary-scroll-body {
+  background:
+    radial-gradient(circle at 12% 0%, rgba(167, 123, 255, 0.075), transparent 36%),
+    linear-gradient(180deg, rgba(16, 10, 27, 0.36), transparent 44%) !important;
+}
+
+.theme-dark-fantasy.companion-page .summary-result-facts .summary-stat {
+  border-color: rgba(190, 162, 255, 0.18) !important;
+  background:
+    radial-gradient(circle at 12% 0%, rgba(167, 123, 255, 0.070), transparent 44%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.026), rgba(255, 255, 255, 0.010)),
+    rgba(18, 12, 31, 0.70) !important;
+}
+
+.theme-dark-fantasy.companion-page .summary-diagnostic-card,
+.theme-dark-fantasy.companion-page .summary-longest-card,
+.theme-dark-fantasy.companion-page .summary-compare-panel,
+.theme-dark-fantasy.companion-page .summary-history-panel,
+.theme-dark-fantasy.companion-page .summary-act-breakdown-panel,
+.theme-dark-fantasy.companion-page .summary-support-grid > .companion-block,
+.theme-dark-fantasy.companion-page .summary-breakdown-grid > .companion-block {
+  border-color: rgba(190, 162, 255, 0.16) !important;
+  background:
+    radial-gradient(circle at 12% 0%, rgba(167, 123, 255, 0.060), transparent 42%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.024), rgba(255, 255, 255, 0.008)),
+    rgba(10, 6, 18, 0.76) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.032),
+    0 14px 28px rgba(0, 0, 0, 0.20) !important;
+}
+
+.theme-dark-fantasy.companion-page .companion-summary-layout .longest-zone-list li,
+.theme-dark-fantasy.companion-page .summary-history-row,
+.theme-dark-fantasy.companion-page .summary-compare-act-pill,
+.theme-dark-fantasy.companion-page .summary-act-breakdown-row {
+  border-color: rgba(190, 162, 255, 0.14) !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.024), rgba(255, 255, 255, 0.008)),
+    rgba(18, 12, 31, 0.62) !important;
+}
+
+.theme-dark-fantasy.companion-page .companion-summary-layout .longest-zone-list li:first-child {
+  border-color: rgba(217, 167, 95, 0.34) !important;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(217, 167, 95, 0.16), transparent 48%),
+    linear-gradient(180deg, rgba(92, 64, 145, 0.34), rgba(18, 12, 31, 0.68)) !important;
+}
+
+.theme-dark-fantasy.companion-page .companion-summary-layout .longest-zone-rank {
+  border-color: rgba(217, 167, 95, 0.24) !important;
+  background: rgba(217, 167, 95, 0.10) !important;
+  color: rgba(255, 226, 174, 0.92) !important;
+}
+
+.theme-dark-fantasy.companion-page .summary-compare-lead {
+  border-bottom-color: rgba(190, 162, 255, 0.12) !important;
+}
+
+.theme-dark-fantasy.companion-page .summary-history-actions .button-danger {
+  border-color: rgba(255, 128, 116, 0.34) !important;
+  background: rgba(72, 24, 32, 0.54) !important;
+  color: rgba(255, 213, 205, 0.94) !important;
+}
