@@ -147,6 +147,7 @@ export function runFlushBroadcastState(this: any) {
             win &&
             !win.isDestroyed() &&
             win.isVisible() &&
+            !win.webContents.isDestroyed() &&
             !win.webContents.isLoading()
         ));
         if (targetWindows.length === 0) {

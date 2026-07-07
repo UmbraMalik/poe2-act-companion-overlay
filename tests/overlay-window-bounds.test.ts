@@ -140,9 +140,10 @@ test('auto-height IPC is ignored while overlay drag is active', async () => {
 
   const before = app.overlayWindow.getBounds();
   await invokeIpcHandler('app:set-overlay-drag-active', true);
-  await invokeIpcHandler('app:resize-overlay-height', before.height + 180);
+  const changed = await invokeIpcHandler<boolean>('app:resize-overlay-height', before.height + 180);
   const after = app.overlayWindow.getBounds();
 
+  assert.equal(changed, false);
   assert.equal(after.width, before.width);
   assert.equal(after.height, before.height);
 });
@@ -155,9 +156,12 @@ test('manual resize IPC still changes overlay width and height', async () => {
   app.overlayWindow = new BrowserWindow({ width: 520, height: 410 });
   app.registerIpc();
 
-  await invokeIpcHandler('app:resize-overlay', 680, 460);
+  const changed = await invokeIpcHandler<boolean>('app:resize-overlay', 680, 460);
   const after = app.overlayWindow.getBounds();
+  const unchanged = await invokeIpcHandler<boolean>('app:resize-overlay', after.width, after.height);
 
+  assert.equal(changed, true);
+  assert.equal(unchanged, false);
   assert.equal(after.width, 680);
   assert.equal(after.height, 460);
 });

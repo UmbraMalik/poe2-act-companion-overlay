@@ -485,7 +485,7 @@ export function runRegisterIpc(this: any) {
         ipcMain.handle('app:resize-overlay', async (_event: any, width: any, height: any) => {
             const targetWindow = this.overlayWindow;
             if (!targetWindow || targetWindow.isDestroyed()) {
-                return this.getSnapshot();
+                return false;
             }
             const currentBounds = targetWindow.getBounds();
             const nextBounds = this.normalizeOverlayBoundsForMode({
@@ -495,14 +495,14 @@ export function runRegisterIpc(this: any) {
                 height: Math.round(Number(height) || currentBounds.height)
             }, this.overlayMode, this.config.overlayDensity);
             if (areOverlayBoundsEqual(currentBounds, nextBounds)) {
-                return this.getSnapshot();
+                return false;
             }
             this.applyOverlayWindowBounds('manualResize', nextBounds);
             const changed = this.persistOverlayBoundsForCurrentState(targetWindow.getBounds());
             if (changed) {
                 this.broadcastState();
             }
-            return this.getSnapshot();
+            return true;
         });
         ipcMain.handle('app:set-overlay-auto-resize-suspended', async (_event: any, suspended: any) => {
             this.overlayAutoResizeSuspendedUntil = suspended
@@ -544,7 +544,7 @@ export function runRegisterIpc(this: any) {
         ipcMain.handle('app:resize-overlay-height', async (_event: any, height: any, options: any = {}) => {
             const targetWindow = this.overlayWindow;
             if (!targetWindow || targetWindow.isDestroyed()) {
-                return this.getSnapshot();
+                return false;
             }
             const forceAutoHeight = Boolean(options?.force);
             const allowBelowMinimum = Boolean(options?.allowBelowMinimum);
@@ -563,7 +563,7 @@ export function runRegisterIpc(this: any) {
                     requestedHeight,
                     bounds: targetWindow.getBounds()
                 });
-                return this.getSnapshot();
+                return false;
             }
             let nextBounds = this.normalizeOverlayBoundsForMode({
                 ...currentBounds,
@@ -591,14 +591,14 @@ export function runRegisterIpc(this: any) {
                 };
             }
             if (areOverlayBoundsEqual(currentBounds, nextBounds)) {
-                return this.getSnapshot();
+                return false;
             }
             this.applyOverlayWindowBounds('autoHeight', nextBounds);
             const changed = this.persistOverlayBoundsForCurrentState(targetWindow.getBounds());
             if (changed) {
                 this.broadcastState();
             }
-            return this.getSnapshot();
+            return true;
         });
         ipcMain.handle('app:set-overlay-position', async (_event: any, x: any, y: any) => {
             this.overlayAutoResizeSuspendedUntil = Math.max(this.overlayAutoResizeSuspendedUntil, Date.now() + 800);

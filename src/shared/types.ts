@@ -672,8 +672,8 @@ export interface ElectronApi {
   isTimerDiagnosticsEnabled: () => Promise<boolean>;
   sendTimerDiagnostics: (payload: TimerDiagnosticsPayload) => Promise<boolean>;
   getOverlayBounds: () => Promise<OverlayBounds | null>;
-  resizeOverlay: (width: number, height: number) => Promise<AppSnapshot>;
-  resizeOverlayHeight: (height: number, options?: { force?: boolean; allowBelowMinimum?: boolean }) => Promise<AppSnapshot>;
+  resizeOverlay: (width: number, height: number) => Promise<boolean>;
+  resizeOverlayHeight: (height: number, options?: { force?: boolean; allowBelowMinimum?: boolean }) => Promise<boolean>;
   setOverlayAutoResizeSuspended: (suspended: boolean) => Promise<boolean>;
   setOverlayDragActive: (active: boolean) => Promise<boolean>;
   setOverlayPosition: (x: number, y: number) => Promise<boolean>;

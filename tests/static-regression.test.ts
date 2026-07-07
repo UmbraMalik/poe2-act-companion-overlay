@@ -116,6 +116,19 @@ test('snapshot updates use the shared render scheduler with a timeout fallback',
   assert.match(main, /BROADCAST_THROTTLE_MS\s*=\s*32/);
 });
 
+test('snapshot broadcast skips destroyed webContents before sending', () => {
+  const stateController = readText('src/main/app-state-controller.ts');
+  const flushState = stateController.slice(
+    stateController.indexOf('export function runFlushBroadcastState'),
+    stateController.indexOf('export function runBroadcastState')
+  );
+
+  assert.match(flushState, /!win\.isDestroyed\(\)/);
+  assert.match(flushState, /!win\.webContents\.isDestroyed\(\)/);
+  assert.match(flushState, /!win\.webContents\.isLoading\(\)/);
+  assert.match(flushState, /webContents\.send\('app:state-changed'/);
+});
+
 test('run timer snapshot sync tracks act split content changes', () => {
   const hooks = readText('src/renderer/hooks.ts');
   const runTimerHook = hooks.slice(
@@ -126,6 +139,17 @@ test('run timer snapshot sync tracks act split content changes', () => {
   assert.match(hooks, /function getRunTimerActSplitsSignature/);
   assert.match(runTimerHook, /runTimerActSplitsSignature/);
   assert.doesNotMatch(runTimerHook, /runTimer\?\.actSplits\.length/);
+});
+
+test('settings page memoizes repeated snapshot-derived option lists', () => {
+  const settingsPage = readText('src/renderer/pages/SettingsPage.tsx');
+
+  assert.match(settingsPage, /import \{ useEffect, useMemo, useState/);
+  assert.match(settingsPage, /const zoneOptions = useMemo\(/);
+  assert.match(settingsPage, /\[snapshot\?\.guideEntries, language\]/);
+  assert.match(settingsPage, /const settingsQuickLinks = useMemo\(/);
+  assert.doesNotMatch(settingsPage, /const zoneOptions = snapshot\.guideEntries\.map/);
+  assert.doesNotMatch(settingsPage, /const settingsQuickLinks = SETTINGS_QUICK_LINKS\.filter/);
 });
 
 

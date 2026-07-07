@@ -1040,7 +1040,7 @@ export function OverlayPage() {
 
       // Keep width as the main-process source of truth so adaptive height never widens
       // the overlay while the user is only moving it.
-      void api.resizeOverlayHeight(nextHeight, { force, allowBelowMinimum });
+      void api.resizeOverlayHeight(nextHeight, { force, allowBelowMinimum }).catch(() => false);
       }
     });
   }, [autoResizeMinimumHeight, isAdaptiveOverlayHeightSuspended, isOverlayCollapsed]);
@@ -1504,11 +1504,13 @@ export function OverlayPage() {
       }
 
       state.frame = requestAnimationFrame(() => {
-        void window.poe2Overlay.resizeOverlay(nextWidth, currentHeight).then(() => {
-          // Manual width resize is expected to reflow text. Let the overlay grow
-          // downward to fit the new wrapped content, but keep this separate from
-          // normal window dragging where size must stay locked.
-          scheduleAdaptiveOverlayHeight({ allowDuringManualResize: true });
+        void window.poe2Overlay.resizeOverlay(nextWidth, currentHeight).then((changed) => {
+          if (changed) {
+            // Manual width resize is expected to reflow text. Let the overlay grow
+            // downward to fit the new wrapped content, but keep this separate from
+            // normal window dragging where size must stay locked.
+            scheduleAdaptiveOverlayHeight({ allowDuringManualResize: true });
+          }
         });
       });
     };

@@ -106,6 +106,39 @@ test('overlay drag IPC routes absolute movement through the dragMove helper path
   assert.doesNotMatch(overlayBounds, /Number\(bounds\.y\)\s*\|\|/);
 });
 
+test('overlay geometry IPC returns compact booleans instead of full snapshots', () => {
+  const main = readMainProcessSource();
+  const preload = readText('src/main/preload.ts');
+  const types = readText('src/shared/types.ts');
+  const overlayPage = readText('src/renderer/pages/OverlayPage.tsx');
+  const resizeStart = main.indexOf("ipcMain.handle('app:resize-overlay'");
+  const resizeEnd = main.indexOf("ipcMain.handle('app:set-overlay-auto-resize-suspended'", resizeStart);
+  const heightStart = main.indexOf("ipcMain.handle('app:resize-overlay-height'");
+  const heightEnd = main.indexOf("ipcMain.handle('app:set-overlay-position'", heightStart);
+
+  assert.notEqual(resizeStart, -1);
+  assert.notEqual(resizeEnd, -1);
+  assert.notEqual(heightStart, -1);
+  assert.notEqual(heightEnd, -1);
+
+  const resizeHandler = main.slice(resizeStart, resizeEnd);
+  const heightHandler = main.slice(heightStart, heightEnd);
+
+  assert.doesNotMatch(resizeHandler, /getSnapshot\(/);
+  assert.doesNotMatch(heightHandler, /getSnapshot\(/);
+  assert.match(resizeHandler, /return false/);
+  assert.match(resizeHandler, /return true/);
+  assert.match(heightHandler, /return false/);
+  assert.match(heightHandler, /return true/);
+  assert.match(types, /resizeOverlay: \(width: number, height: number\) => Promise<boolean>/);
+  assert.match(types, /resizeOverlayHeight: \(height: number, options\?: \{ force\?: boolean; allowBelowMinimum\?: boolean \}\) => Promise<boolean>/);
+  assert.match(preload, /resizeOverlay: \(width: number, height: number\) =>\s*\n\s*ipcRenderer\.invoke\('app:resize-overlay', width, height\)/);
+  assert.match(preload, /resizeOverlayHeight: \(height: number, options\?: \{ force\?: boolean; allowBelowMinimum\?: boolean \}\) =>\s*\n\s*ipcRenderer\.invoke\('app:resize-overlay-height', height, options\)/);
+  assert.match(overlayPage, /resizeOverlay\(nextWidth, currentHeight\)\.then\(\(changed\)/);
+  assert.match(overlayPage, /if \(changed\) \{/);
+  assert.match(overlayPage, /resizeOverlayHeight\(nextHeight, \{ force, allowBelowMinimum \}\)\.catch\(\(\) => false\)/);
+});
+
 test('update settings IPC normalizes unknown renderer payloads before reading fields', () => {
   const main = readMainProcessSource();
   const handlerStart = main.indexOf("ipcMain.handle('app:update-settings'");

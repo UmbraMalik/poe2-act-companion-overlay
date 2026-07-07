@@ -1,4 +1,4 @@
-import { useEffect, useState, type KeyboardEvent, type ReactNode } from 'react';
+import { useEffect, useMemo, useState, type KeyboardEvent, type ReactNode } from 'react';
 import { useAppSnapshot, useLiveRunTimer } from '../hooks';
 import { useDocumentTitle, useI18n } from '../useI18n';
 import {
@@ -326,6 +326,18 @@ export function SettingsPage() {
     snapshot?.config.runTimerSettings.leagueStartTimeLabel
   ]);
 
+  const zoneOptions = useMemo(
+    () => (snapshot?.guideEntries ?? []).map((entry) => ({
+      value: entry.id,
+      label: formatZoneOption(entry, language)
+    })),
+    [snapshot?.guideEntries, language]
+  );
+  const settingsQuickLinks = useMemo(
+    () => SETTINGS_QUICK_LINKS.filter((entry) => !entry.devOnly || SHOW_DEVELOPER_SETTINGS),
+    []
+  );
+
   if (!snapshot) {
     return <div className="settings-shell">{t('settings.loading')}</div>;
   }
@@ -343,10 +355,6 @@ export function SettingsPage() {
   );
   const currentCountdownMs = liveRunTimer.countdownMs;
   const sceneName = getSceneDisplayName(snapshot, appLanguage);
-  const zoneOptions = snapshot.guideEntries.map((entry) => ({
-    value: entry.id,
-    label: formatZoneOption(entry, appLanguage)
-  }));
   const hasSelectedLogFile = Boolean(runtime.watchedLogPath ?? config.logFilePath);
   const logFileStatusText = !hasSelectedLogFile
     ? t('settings.logStatusPending')
@@ -391,8 +399,6 @@ export function SettingsPage() {
         : autoUpdateStatus === 'error'
         ? 'is-warning'
           : 'is-pending';
-  const settingsQuickLinks = SETTINGS_QUICK_LINKS.filter((entry) => !entry.devOnly || SHOW_DEVELOPER_SETTINGS);
-
   const runTask = async (name: string, action: () => Promise<unknown>) => {
     try {
       setBusy(name);
