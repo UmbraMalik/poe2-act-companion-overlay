@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useAppSnapshot, useLiveRunTimer } from '../hooks';
 import { useDocumentTitle, useI18n } from '../useI18n';
 import { getAppThemeClassName } from '../theme';
@@ -11,7 +11,6 @@ import {
   getNearestPowerSpike,
   getRequiredRewardLabelsForZone,
   getRouteActs,
-  getRouteOverviewForAct,
   getRouteProgressState,
   getSceneDisplayName,
   getUpcomingVendorReminders,
@@ -41,6 +40,8 @@ type TimerSplitFeedbackState = {
   id: number;
   text: string;
 };
+
+type RouteActOverview = ReturnType<typeof getRouteActs>;
 
 const ROUTE_OVERVIEW_VISIBLE_ITEMS = 2;
 const TOTAL_CAMPAIGN_ACTS = 5;
@@ -133,6 +134,10 @@ function formatActTitle(act: ZoneAct | null, language: AppLanguage) {
   return act === 'interlude'
     ? translate(language, 'companion.interludes')
     : translate(language, 'route.act', { act });
+}
+
+function getRouteOverviewFromActs(routeActs: RouteActOverview, act: ZoneAct | null) {
+  return routeActs.find((entry) => entry.act === act)?.zones ?? [];
 }
 
 function formatRunStatus(status: string, language: AppLanguage) {
@@ -1137,17 +1142,206 @@ export function CompanionPage() {
 
   useDocumentTitle(t('titles.companion'));
 
+  const displayRunTimer = liveRunTimer.runTimer ?? snapshot?.config.runTimer ?? null;
+  const nowAct = useMemo(
+    () => snapshot ? getCurrentRouteAct(snapshot) : null,
+    [
+      snapshot?.currentGuideEntry?.act,
+      snapshot?.currentGuideEntry?.id,
+      snapshot?.currentZone.actHint
+    ]
+  );
+  const guide = snapshot?.currentGuideEntry ?? null;
+  const guideView = useMemo(
+    () => getGuideView(guide, language),
+    [guide, language]
+  );
+  const guideChecklist = guideView?.checklist ?? [];
+  const sceneName = useMemo(
+    () => snapshot ? getSceneDisplayName(snapshot, language) : '',
+    [
+      snapshot?.currentZone.rawZoneName,
+      snapshot?.currentZone.sceneKind,
+      snapshot?.currentZone.guide?.id,
+      snapshot?.currentGuideEntry?.id,
+      language
+    ]
+  );
+  const routeActs = useMemo(
+    () => snapshot ? getRouteActs(snapshot, language) : [],
+    [
+      snapshot?.guideEntries,
+      snapshot?.config.zoneProgress,
+      snapshot?.config.visitedZones,
+      snapshot?.currentGuideEntry?.id,
+      snapshot?.currentGuideEntry?.act,
+      snapshot?.currentZone.actHint,
+      language
+    ]
+  );
+  const selectedRouteAct = selectedAct ?? nowAct;
+  const routeZones = useMemo(
+    () => getRouteOverviewFromActs(routeActs, selectedRouteAct),
+    [routeActs, selectedRouteAct]
+  );
+  const xpStatus = useMemo(
+    () => snapshot ? getXpStatus(snapshot, language) : null,
+    [snapshot?.config.currentLevel, snapshot?.currentGuideEntry?.id, language]
+  );
+  const nearestPowerSpike = useMemo(
+    () => snapshot
+      ? getNearestPowerSpike(
+        snapshot.powerSpikes,
+        snapshot.config.currentLevel,
+        snapshot.config.guideProfile,
+        99
+      )
+      : null,
+    [snapshot?.powerSpikes, snapshot?.config.currentLevel, snapshot?.config.guideProfile]
+  );
+  const visibleActiveLevelReminder = useMemo(
+    () => {
+      const activeLevelReminder = snapshot?.activeLevelReminder ?? null;
+      const currentLevel = snapshot?.config.currentLevel ?? null;
+      return activeLevelReminder && (currentLevel === null || activeLevelReminder.level >= currentLevel)
+        ? activeLevelReminder
+        : null;
+    },
+    [snapshot?.activeLevelReminder, snapshot?.config.currentLevel]
+  );
+  const upcomingVendorReminders = useMemo(
+    () => snapshot ? getUpcomingVendorReminders(snapshot.vendorCheckpoints, snapshot.config.currentLevel) : [],
+    [snapshot?.vendorCheckpoints, snapshot?.config.currentLevel]
+  );
+  const dismissedReminders = useMemo(
+    () => snapshot
+      ? getDismissedReminderHistory(
+        snapshot.vendorCheckpoints,
+        snapshot.config.levelRemindersState.dismissed
+      )
+      : [],
+    [snapshot?.vendorCheckpoints, snapshot?.config.levelRemindersState.dismissed]
+  );
+  const longestZones = useMemo(
+    () => getLongestZones(snapshot?.config.zoneTimeHistory ?? []),
+    [snapshot?.config.zoneTimeHistory]
+  );
+  const campaignBonusProgress: Record<string, CampaignBonusProgress> = snapshot?.config.campaignBonusProgress ?? {};
+  const campaignBonusTotals = useMemo(
+    () => getCampaignBonusTotals(snapshot?.campaignBonuses ?? [], campaignBonusProgress),
+    [snapshot?.campaignBonuses, campaignBonusProgress]
+  );
+  const runHistory = snapshot?.config.runHistory ?? [];
+  const currentZoneBonuses = useMemo(
+    () => snapshot ? getCurrentZoneCampaignBonuses(snapshot) : [],
+    [
+      snapshot?.currentGuideEntry,
+      snapshot?.currentZone.rawZoneName,
+      snapshot?.campaignBonuses,
+      snapshot?.config.campaignBonusProgress
+    ]
+  );
+  const localizedCurrentZoneBonuses = useMemo(
+    () => currentZoneBonuses.map(({ bonus, done }) => ({
+      bonus: getCampaignBonusView(bonus, language) ?? bonus,
+      done
+    })),
+    [currentZoneBonuses, language]
+  );
+  const currentRunElapsed = liveRunTimer.runElapsedMs;
+  const currentNumericAct = typeof nowAct === 'number' ? nowAct : null;
+  const needsActTimeRows = activeTab === 'timer' || activeTab === 'actTimes' || activeTab === 'summary';
+  const actTimeRows = useMemo(
+    () => displayRunTimer && needsActTimeRows
+      ? getActTimeRowsFromSplits(displayRunTimer.actSplits, currentRunElapsed, {
+        currentAct: currentNumericAct,
+        includeCurrentAct: displayRunTimer.status === 'running' || displayRunTimer.status === 'paused',
+        currentStatus: displayRunTimer.status
+      })
+      : [],
+    [displayRunTimer, currentRunElapsed, currentNumericAct, needsActTimeRows]
+  );
+  const selectedRouteProgress = useMemo(
+    () => {
+      const selectedRouteActIndex = routeActs.findIndex((entry) => entry.act === selectedRouteAct);
+      const currentRouteActIndex = routeActs.findIndex((entry) => entry.act === nowAct);
+      const isSelectedRouteActCurrent =
+        selectedRouteActIndex >= 0 &&
+        currentRouteActIndex >= 0 &&
+        selectedRouteActIndex === currentRouteActIndex;
+      const isSelectedRouteActBeforeCurrent =
+        selectedRouteActIndex >= 0 &&
+        currentRouteActIndex >= 0 &&
+        selectedRouteActIndex < currentRouteActIndex;
+
+      return {
+        ...getRouteProgressState(routeZones, {
+          isSelectedRouteActCurrent,
+          isSelectedRouteActBeforeCurrent
+        }),
+        isSelectedRouteActBeforeCurrent
+      };
+    },
+    [routeActs, routeZones, selectedRouteAct, nowAct]
+  );
+  const reminderFlasks = useMemo(
+    () => snapshot?.vendorCheckpoints.filter((entry) => entry.type === 'flasks') ?? [],
+    [snapshot?.vendorCheckpoints]
+  );
+  const reminderBases = useMemo(
+    () => snapshot?.vendorCheckpoints.filter((entry) => entry.type === 'weapon_armor_bases') ?? [],
+    [snapshot?.vendorCheckpoints]
+  );
+  const filteredPowerSpikes = useMemo(
+    () => snapshot
+      ? snapshot.powerSpikes.filter(
+        (entry) => !entry.profiles || entry.profiles.includes(snapshot.config.guideProfile)
+      )
+      : [],
+    [snapshot?.powerSpikes, snapshot?.config.guideProfile]
+  );
+  const nearestReminderItems = useMemo(
+    () => getUniqueReminderList([
+      ...(visibleActiveLevelReminder ? [visibleActiveLevelReminder] : []),
+      ...upcomingVendorReminders,
+      ...(nearestPowerSpike ? [nearestPowerSpike] : [])
+    ]).slice(0, 3),
+    [visibleActiveLevelReminder, upcomingVendorReminders, nearestPowerSpike]
+  );
+  const bonusGroups = useMemo(
+    () => (snapshot?.campaignBonuses ?? []).reduce<Record<string, CampaignBonusDefinition[]>>(
+      (groups, bonus) => {
+        const key = bonus.act === 'interlude' ? 'interlude' : String(bonus.act);
+        groups[key] = [...(groups[key] ?? []), bonus];
+        return groups;
+      },
+      {}
+    ),
+    [snapshot?.campaignBonuses]
+  );
+  const bonusGroupOrder = useMemo(
+    () => Object.keys(bonusGroups).sort((left, right) => {
+      if (left === 'interlude') return 1;
+      if (right === 'interlude') return -1;
+      return Number(left) - Number(right);
+    }),
+    [bonusGroups]
+  );
+  const bestSavedRun = useMemo(
+    () => getBestSavedRun(runHistory),
+    [runHistory]
+  );
+
   useEffect(() => {
     if (!snapshot) {
       return;
     }
 
-    const currentAct = getCurrentRouteAct(snapshot);
-    const availableActs = new Set(getRouteActs(snapshot, language).map((entry) => entry.act));
+    const availableActs = new Set(routeActs.map((entry) => entry.act));
     if (selectedAct === null || !availableActs.has(selectedAct)) {
-      setSelectedAct(currentAct);
+      setSelectedAct(nowAct);
     }
-  }, [snapshot, selectedAct, language]);
+  }, [snapshot, selectedAct, routeActs, nowAct]);
 
   const splitSnapshotAct = snapshot ? getCurrentRouteAct(snapshot) : null;
   const splitNumericAct = typeof splitSnapshotAct === 'number' ? splitSnapshotAct : null;
@@ -1234,61 +1428,16 @@ export function CompanionPage() {
     return <div className="settings-shell">{t('companion.loading')}</div>;
   }
 
-  const { config, currentGuideEntry, currentZone, activeLevelReminder } =
+  const { config, currentZone } =
     snapshot;
-  const displayRunTimer = liveRunTimer.runTimer ?? config.runTimer;
-  const nowAct = getCurrentRouteAct(snapshot);
-  const guide = currentGuideEntry;
-  const guideView = getGuideView(guide, language);
-  const guideChecklist = guideView?.checklist ?? [];
-  const sceneName = getSceneDisplayName(snapshot, language);
-  const routeActs = getRouteActs(snapshot, language);
-  const selectedRouteAct = selectedAct ?? nowAct;
-  const routeZones = getRouteOverviewForAct(snapshot, selectedRouteAct, language);
-  const xpStatus = getXpStatus(snapshot, language);
+  const activeDisplayRunTimer = displayRunTimer ?? config.runTimer;
+  const activeXpStatus = xpStatus ?? getXpStatus(snapshot, language);
   const countdownMs = liveRunTimer.countdownMs;
-  const currentRunElapsed = liveRunTimer.runElapsedMs;
-  const currentNumericAct = typeof nowAct === 'number' ? nowAct : null;
   const currentActElapsed = getCurrentActElapsedMsForAct(
-    displayRunTimer,
+    activeDisplayRunTimer,
     currentNumericAct,
     liveRunTimer.nowMs
   );
-  const nearestPowerSpike = getNearestPowerSpike(
-    snapshot.powerSpikes,
-    config.currentLevel,
-    config.guideProfile,
-    99
-  );
-  const visibleActiveLevelReminder =
-    activeLevelReminder && (config.currentLevel === null || activeLevelReminder.level >= config.currentLevel)
-      ? activeLevelReminder
-      : null;
-  const upcomingVendorReminders = getUpcomingVendorReminders(
-    snapshot.vendorCheckpoints,
-    config.currentLevel
-  );
-  const dismissedReminders = getDismissedReminderHistory(
-    snapshot.vendorCheckpoints,
-    config.levelRemindersState.dismissed
-  );
-  const longestZones = getLongestZones(config.zoneTimeHistory);
-  const campaignBonusProgress = config.campaignBonusProgress ?? {};
-  const campaignBonusTotals = getCampaignBonusTotals(
-    snapshot.campaignBonuses,
-    campaignBonusProgress
-  );
-  const runHistory = config.runHistory ?? [];
-  const currentZoneBonuses = getCurrentZoneCampaignBonuses(snapshot);
-  const localizedCurrentZoneBonuses = currentZoneBonuses.map(({ bonus, done }) => ({
-    bonus: getCampaignBonusView(bonus, language) ?? bonus,
-    done
-  }));
-  const actTimeRows = getActTimeRowsFromSplits(displayRunTimer.actSplits, currentRunElapsed, {
-    currentAct: currentNumericAct,
-    includeCurrentAct: displayRunTimer.status === 'running' || displayRunTimer.status === 'paused',
-    currentStatus: displayRunTimer.status
-  });
   const hasNoGuideForKnownZone =
     !guide &&
     Boolean(currentZone.rawZoneName) &&
@@ -1297,26 +1446,12 @@ export function CompanionPage() {
       currentZone.sceneKind === 'gameplay' ||
       currentZone.sceneKind === 'town'
     );
-  const selectedRouteActIndex = routeActs.findIndex((entry) => entry.act === selectedRouteAct);
-  const currentRouteActIndex = routeActs.findIndex((entry) => entry.act === nowAct);
-  const isSelectedRouteActCurrent =
-    selectedRouteActIndex >= 0 &&
-    currentRouteActIndex >= 0 &&
-    selectedRouteActIndex === currentRouteActIndex;
-  const isSelectedRouteActBeforeCurrent =
-    selectedRouteActIndex >= 0 &&
-    currentRouteActIndex >= 0 &&
-    selectedRouteActIndex < currentRouteActIndex;
-  const selectedRouteProgress = getRouteProgressState(routeZones, {
-    isSelectedRouteActCurrent,
-    isSelectedRouteActBeforeCurrent
-  });
   const currentRouteIndex = selectedRouteProgress.currentIndex;
   const routeProgressTotal = selectedRouteProgress.total;
   const routeProgressCurrentCount = selectedRouteProgress.currentCount;
   const routeProgressPercent = selectedRouteProgress.percent;
   const currentRouteZone = currentRouteIndex >= 0 ? routeZones[currentRouteIndex] : null;
-  const nextRouteZone = isSelectedRouteActBeforeCurrent
+  const nextRouteZone = selectedRouteProgress.isSelectedRouteActBeforeCurrent
     ? null
     : currentRouteIndex >= 0
       ? routeZones.find((entry, index) => entry.status === 'pending' && index > currentRouteIndex) ?? null
@@ -1341,7 +1476,7 @@ export function CompanionPage() {
     }
   };
 
-  const hasRunDataToSave = currentRunElapsed > 0 || displayRunTimer.actSplits.length > 0 || config.zoneTimeHistory.length > 0;
+  const hasRunDataToSave = currentRunElapsed > 0 || activeDisplayRunTimer.actSplits.length > 0 || config.zoneTimeHistory.length > 0;
 
   const createDefaultRunLabel = () =>
     `${t('companion.savedRunFallback')} · ${new Date().toLocaleString(language === 'en' ? 'en-US' : 'ru-RU')}`;
@@ -1441,7 +1576,7 @@ export function CompanionPage() {
     });
   };
 
-  const zoneTab = (
+  const zoneTab = activeTab === 'zone' ? (
     <div className="companion-tab-layout companion-zone-polished-layout">
       <section className="companion-block companion-overview-card zone-hero-card">
         <div className="zone-hero-copy">
@@ -1466,7 +1601,7 @@ export function CompanionPage() {
           </div>
           <div className="zone-metric-card">
             <dt>{t('companion.experience')}</dt>
-            <dd>{xpStatus.longLabel}</dd>
+            <dd>{activeXpStatus.longLabel}</dd>
           </div>
           <div className="zone-metric-card">
             <dt>{t('companion.sceneLabel')}</dt>
@@ -1533,9 +1668,9 @@ export function CompanionPage() {
         </div>
       </div>
     </div>
-  );
+  ) : null;
 
-  const routeTab = (
+  const routeTab = activeTab === 'route' ? (
     <div className="companion-tab-layout route-polish-layout">
       <section className="companion-block companion-route-toolbar">
         <div className="companion-tab-row">
@@ -1650,19 +1785,19 @@ export function CompanionPage() {
         </div>
       </section>
     </div>
-  );
+  ) : null;
 
   const latestActRow = actTimeRows[actTimeRows.length - 1] ?? null;
   const slowestActRow = getSlowestActRow(actTimeRows);
   const activeZoneLabel = guideView?.zoneName ?? sceneName;
-  const timerTab = (
+  const timerTab = activeTab === 'timer' ? (
     <div className="companion-tab-layout timer-rework-layout">
       <section className="companion-block timer-cockpit-card">
         <div className="timer-main-readout">
           <p className="eyebrow">{t('companion.timerTitle')}</p>
           <h3>{formatDuration(currentRunElapsed)}</h3>
-          <span className={`timer-status-pill is-${displayRunTimer.status}`}>
-            {formatRunStatus(displayRunTimer.status, language)}
+          <span className={`timer-status-pill is-${activeDisplayRunTimer.status}`}>
+            {formatRunStatus(activeDisplayRunTimer.status, language)}
           </span>
         </div>
         <div className="timer-cockpit-details">
@@ -1678,7 +1813,7 @@ export function CompanionPage() {
           </div>
           <div>
             <span>{t('companion.pauses')}</span>
-            <strong>{displayRunTimer.pauseCount}</strong>
+            <strong>{activeDisplayRunTimer.pauseCount}</strong>
             <small>{t('companion.pauseCountHint')}</small>
           </div>
           <div>
@@ -1697,7 +1832,7 @@ export function CompanionPage() {
       <section className="companion-block timer-segment-card">
         <div className="summary-section-heading">
           <h3>{t('companion.timerNowTitle')}</h3>
-          <span>{displayRunTimer.status === 'finished' ? t('common.finish') : formatRunStatus(displayRunTimer.status, language)}</span>
+          <span>{activeDisplayRunTimer.status === 'finished' ? t('common.finish') : formatRunStatus(activeDisplayRunTimer.status, language)}</span>
         </div>
         <div className="timer-segment-list">
           <div>
@@ -1721,7 +1856,7 @@ export function CompanionPage() {
           <p className="helper-text">{t('companion.runControlsIntro')}</p>
         </div>
         <div className="timer-action-buttons">
-          {displayRunTimer.status === 'running' ? (
+          {activeDisplayRunTimer.status === 'running' ? (
             <button
               type="button"
               className="button-secondary timer-action-button"
@@ -1734,7 +1869,7 @@ export function CompanionPage() {
             >
               {t('common.pause')}
             </button>
-          ) : displayRunTimer.status === 'paused' ? (
+          ) : activeDisplayRunTimer.status === 'paused' ? (
             <button
               type="button"
               className="button-primary timer-action-button"
@@ -1784,14 +1919,14 @@ export function CompanionPage() {
         </div>
       </section>
     </div>
-  );
+  ) : null;
 
-  const actTimesTab = (
+  const actTimesTab = activeTab === 'actTimes' ? (
     <div className="companion-tab-layout">
       {renderActTimesDashboard(
         actTimeRows,
         currentRunElapsed,
-        displayRunTimer.status === 'finished'
+        activeDisplayRunTimer.status === 'finished'
           ? t('companion.actTimesEmptyFinished')
           : t('companion.actTimesEmptyRunning'),
         language
@@ -1819,20 +1954,9 @@ export function CompanionPage() {
         </div>
       </section>
     </div>
-  );
+  ) : null;
 
-  const reminderFlasks = snapshot.vendorCheckpoints.filter((entry) => entry.type === 'flasks');
-  const reminderBases = snapshot.vendorCheckpoints.filter((entry) => entry.type === 'weapon_armor_bases');
-  const filteredPowerSpikes = snapshot.powerSpikes.filter(
-    (entry) => !entry.profiles || entry.profiles.includes(config.guideProfile)
-  );
-  const nearestReminderItems = getUniqueReminderList([
-    ...(visibleActiveLevelReminder ? [visibleActiveLevelReminder] : []),
-    ...upcomingVendorReminders,
-    ...(nearestPowerSpike ? [nearestPowerSpike] : [])
-  ]).slice(0, 3);
-
-  const remindersTab = (
+  const remindersTab = activeTab === 'reminders' ? (
     <div className="companion-tab-layout reminders-tab-layout">
       <section className="companion-block reminders-next-card">
         <div className="summary-section-heading">
@@ -1872,24 +1996,9 @@ export function CompanionPage() {
         </section>
       )}
     </div>
-  );
+  ) : null;
 
-  const bonusGroups = snapshot.campaignBonuses.reduce<Record<string, CampaignBonusDefinition[]>>(
-    (groups, bonus) => {
-      const key = bonus.act === 'interlude' ? 'interlude' : String(bonus.act);
-      groups[key] = [...(groups[key] ?? []), bonus];
-      return groups;
-    },
-    {}
-  );
-
-  const bonusGroupOrder = Object.keys(bonusGroups).sort((left, right) => {
-    if (left === 'interlude') return 1;
-    if (right === 'interlude') return -1;
-    return Number(left) - Number(right);
-  });
-
-  const bonusesTab = (
+  const bonusesTab = activeTab === 'bonuses' ? (
     <div className="companion-tab-layout bonuses-tab-layout">
       <section className="companion-block bonuses-summary-card">
         <h3>{t('companion.bonusesTitle')}</h3>
@@ -2032,16 +2141,15 @@ export function CompanionPage() {
         })}
       </div>
     </div>
-  );
+  ) : null;
 
-  const bestSavedRun = getBestSavedRun(runHistory);
-  const summaryContent = displayRunTimer.status === 'finished' ? (
+  const summaryContent = activeTab === 'summary' && activeDisplayRunTimer.status === 'finished' ? (
     renderFinishedResults(config.lastRunSummary, bestSavedRun, language)
-  ) : (
+  ) : activeTab === 'summary' ? (
     <div className="summary-results-dashboard">
       {renderLiveSummary(
         currentRunElapsed,
-        formatRunStatus(displayRunTimer.status, language),
+        formatRunStatus(activeDisplayRunTimer.status, language),
         getCompletedActCount(actTimeRows),
         nowAct === null ? '—' : formatActTitle(nowAct, language),
         currentActElapsed !== null ? formatDuration(currentActElapsed) : t('common.notAvailable'),
@@ -2057,9 +2165,9 @@ export function CompanionPage() {
         {renderLongestZoneList(longestZones, language, t('companion.zoneHistoryEmpty'))}
       </section>
     </div>
-  );
+  ) : null;
 
-  const summaryTab = (
+  const summaryTab = activeTab === 'summary' ? (
     <div className="companion-tab-layout companion-summary-layout">
       <div className="summary-scroll-body summary-scroll-body--full">
         {summaryContent}
@@ -2067,7 +2175,7 @@ export function CompanionPage() {
         {renderCompactRunHistory(runHistory, language, restoreSavedRun, deleteSavedRun)}
       </div>
     </div>
-  );
+  ) : null;
 
 
   const renderRunConfirmDialog = () => {
@@ -2178,7 +2286,7 @@ export function CompanionPage() {
     reminders: remindersTab,
     bonuses: bonusesTab,
     summary: summaryTab
-  } satisfies Record<CompanionTab, JSX.Element>;
+  } satisfies Record<CompanionTab, JSX.Element | null>;
 
   return (
     <main className={`settings-page companion-page fx-${config.visualFxIntensity} ${getAppThemeClassName(config.theme)}`}>
