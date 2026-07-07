@@ -2,11 +2,14 @@ import supportQrImage from '../assets/support-qr.png';
 import alfaBankLogo from '../assets/support-alfa-bank-logo.png';
 import donationAlertsLogo from '../assets/support-donationalerts-logo.png';
 import { useDocumentTitle, useI18n } from '../useI18n';
+import { useAppSnapshot } from '../hooks';
+import { getAppThemeClassName } from '../theme';
 
 const DONATION_ALERTS_URL = 'https://www.donationalerts.com/r/umbramalik';
 
 export function SupportPage() {
-  const { t } = useI18n();
+  const snapshot = useAppSnapshot();
+  const { t } = useI18n(snapshot?.config.appLanguage);
 
   useDocumentTitle(t('titles.support'));
 
@@ -15,7 +18,7 @@ export function SupportPage() {
   };
 
   return (
-    <main className="settings-page info-page support-page">
+    <main className={`settings-page info-page support-page fx-${snapshot?.config.visualFxIntensity ?? 'normal'} ${getAppThemeClassName(snapshot?.config.theme)}`}>
       <section className="settings-shell info-shell">
         <header className="settings-header window-drag-strip">
           <div className="settings-header-copy">

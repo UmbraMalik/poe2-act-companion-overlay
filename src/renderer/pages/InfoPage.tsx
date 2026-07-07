@@ -1,12 +1,15 @@
 import { useDocumentTitle, useI18n } from '../useI18n';
+import { useAppSnapshot } from '../hooks';
+import { getAppThemeClassName } from '../theme';
 
 export function InfoPage() {
-  const { t } = useI18n();
+  const snapshot = useAppSnapshot();
+  const { t } = useI18n(snapshot?.config.appLanguage);
 
   useDocumentTitle(t('titles.info'));
 
   return (
-    <main className="settings-page info-page">
+    <main className={`settings-page info-page fx-${snapshot?.config.visualFxIntensity ?? 'normal'} ${getAppThemeClassName(snapshot?.config.theme)}`}>
       <section className="settings-shell info-shell">
         <header className="settings-header window-drag-strip">
           <div className="settings-header-copy">

@@ -1,9 +1,12 @@
 import { COMMUNITY_LINKS } from '../../shared/community-links';
 import { getCommunityLinkView } from '../../i18n/data';
 import { useDocumentTitle, useI18n } from '../useI18n';
+import { useAppSnapshot } from '../hooks';
+import { getAppThemeClassName } from '../theme';
 
 export function CommunityPage() {
-  const { t, language } = useI18n();
+  const snapshot = useAppSnapshot();
+  const { t, language } = useI18n(snapshot?.config.appLanguage);
 
   useDocumentTitle(t('titles.community'));
 
@@ -12,7 +15,7 @@ export function CommunityPage() {
   };
 
   return (
-    <main className="settings-page info-page">
+    <main className={`settings-page info-page fx-${snapshot?.config.visualFxIntensity ?? 'normal'} ${getAppThemeClassName(snapshot?.config.theme)}`}>
       <section className="settings-shell info-shell">
         <header className="settings-header window-drag-strip">
           <div className="settings-header-copy">

@@ -462,3 +462,135 @@
   background: rgba(72, 24, 32, 0.54) !important;
   color: rgba(255, 213, 205, 0.94) !important;
 }
+
+/* Route act tabs: selected tab is user focus, current tab is player location. */
+.companion-page .companion-route-toolbar .companion-tab-row button {
+  position: relative;
+}
+
+.companion-page .companion-route-toolbar .companion-tab-row button.is-current-act {
+  border-color: rgba(241, 185, 106, 0.54) !important;
+  color: #ffe4a8 !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 232, 176, 0.13),
+    0 0 18px rgba(241, 185, 106, 0.16) !important;
+}
+
+.companion-page .companion-route-toolbar .companion-tab-row button.is-current-act::after {
+  content: "";
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 7px;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, rgba(255, 218, 145, 0.92), transparent);
+  pointer-events: none;
+}
+
+.companion-page .companion-route-toolbar .companion-tab-row .button-secondary.is-current-act {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(241, 185, 106, 0.17), transparent 58%),
+    linear-gradient(180deg, rgba(241, 185, 106, 0.11), rgba(255, 255, 255, 0.012)),
+    var(--companion-surface-soft) !important;
+}
+
+.theme-dark-fantasy.companion-page .companion-route-toolbar .companion-tab-row button.is-current-act {
+  border-color: rgba(217, 167, 95, 0.56) !important;
+  color: #fff0c9 !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 232, 176, 0.13),
+    0 0 0 1px rgba(167, 123, 255, 0.10),
+    0 0 20px rgba(167, 123, 255, 0.20),
+    0 0 18px rgba(217, 167, 95, 0.13) !important;
+}
+
+.theme-dark-fantasy.companion-page .companion-route-toolbar .companion-tab-row .button-secondary.is-current-act {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(217, 167, 95, 0.16), transparent 58%),
+    linear-gradient(180deg, rgba(92, 64, 145, 0.48), rgba(31, 20, 53, 0.76)) !important;
+}
+
+/* Dark fantasy utility windows share the same shell as the detailed panel. */
+.theme-dark-fantasy.settings-page:not(.companion-page) .settings-header.window-drag-strip {
+  border-color: rgba(174, 128, 255, 0.34) !important;
+  background:
+    radial-gradient(circle at 12% 0%, rgba(167, 123, 255, 0.20), transparent 34%),
+    radial-gradient(circle at 88% 12%, rgba(217, 167, 95, 0.090), transparent 30%),
+    linear-gradient(180deg, rgba(20, 12, 35, 0.96), rgba(8, 5, 14, 0.96)) !important;
+  box-shadow:
+    0 18px 42px rgba(0, 0, 0, 0.46),
+    0 0 0 1px rgba(167, 123, 255, 0.10),
+    0 0 36px rgba(98, 58, 184, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.045) !important;
+}
+
+.theme-dark-fantasy.settings-page:not(.companion-page) .settings-header-copy h1,
+.theme-dark-fantasy.settings-page:not(.companion-page) .settings-header-copy .eyebrow,
+.theme-dark-fantasy.settings-page:not(.companion-page) .settings-section-title,
+.theme-dark-fantasy.settings-page:not(.companion-page) .settings-subtitle {
+  color: var(--theme-gold) !important;
+  text-shadow: 0 0 16px rgba(217, 167, 95, 0.18);
+}
+
+.theme-dark-fantasy.settings-page:not(.companion-page) .settings-header-copy .settings-intro,
+.theme-dark-fantasy.settings-page:not(.companion-page) .helper-text {
+  color: rgba(190, 176, 214, 0.78) !important;
+}
+
+.theme-dark-fantasy.settings-page:not(.companion-page) .settings-card,
+.theme-dark-fantasy.settings-page:not(.companion-page) .settings-subsection,
+.theme-dark-fantasy.settings-page:not(.companion-page) .details-panel,
+.theme-dark-fantasy.settings-page:not(.companion-page) .info-cell,
+.theme-dark-fantasy.settings-page:not(.companion-page) .value-box,
+.theme-dark-fantasy.settings-page:not(.companion-page) .toggle-card,
+.theme-dark-fantasy.settings-page:not(.companion-page) .hotkey-field,
+.theme-dark-fantasy.settings-page:not(.companion-page) .support-method-card,
+.theme-dark-fantasy.settings-page:not(.companion-page) .support-inline-box,
+.theme-dark-fantasy.settings-page:not(.companion-page) .project-link-box {
+  border-color: rgba(190, 162, 255, 0.16) !important;
+  background:
+    radial-gradient(circle at 12% 0%, rgba(167, 123, 255, 0.060), transparent 42%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.024), rgba(255, 255, 255, 0.008)),
+    rgba(10, 6, 18, 0.76) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.032),
+    0 14px 28px rgba(0, 0, 0, 0.20) !important;
+}
+
+.theme-dark-fantasy.settings-page:not(.companion-page) .value-box strong,
+.theme-dark-fantasy.settings-page:not(.companion-page) .project-link-box strong,
+.theme-dark-fantasy.settings-page:not(.companion-page) .support-method-card h4 {
+  color: rgba(255, 226, 174, 0.92) !important;
+}
+
+.theme-dark-fantasy.settings-page:not(.companion-page) .value-box span,
+.theme-dark-fantasy.settings-page:not(.companion-page) .project-link-box span,
+.theme-dark-fantasy.settings-page:not(.companion-page) .support-copy {
+  color: rgba(239, 232, 255, 0.88) !important;
+}
+
+.theme-dark-fantasy.settings-page:not(.companion-page) button,
+.theme-dark-fantasy.settings-page:not(.companion-page) select,
+.theme-dark-fantasy.settings-page:not(.companion-page) input,
+.theme-dark-fantasy.settings-page:not(.companion-page) textarea {
+  border-color: rgba(190, 162, 255, 0.18) !important;
+  background:
+    linear-gradient(180deg, rgba(27, 18, 44, 0.86), rgba(14, 9, 24, 0.84)) !important;
+  color: rgba(236, 226, 255, 0.88) !important;
+}
+
+.theme-dark-fantasy.settings-page:not(.companion-page) button:hover:not(:disabled),
+.theme-dark-fantasy.settings-page:not(.companion-page) select:hover,
+.theme-dark-fantasy.settings-page:not(.companion-page) input:hover,
+.theme-dark-fantasy.settings-page:not(.companion-page) textarea:hover,
+.theme-dark-fantasy.settings-page:not(.companion-page) button:focus-visible,
+.theme-dark-fantasy.settings-page:not(.companion-page) select:focus-visible,
+.theme-dark-fantasy.settings-page:not(.companion-page) input:focus-visible,
+.theme-dark-fantasy.settings-page:not(.companion-page) textarea:focus-visible {
+  border-color: rgba(217, 167, 95, 0.44) !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(217, 167, 95, 0.18), transparent 58%),
+    linear-gradient(180deg, rgba(92, 64, 145, 0.62), rgba(31, 20, 53, 0.78)) !important;
+  color: #fff3d7 !important;
+}

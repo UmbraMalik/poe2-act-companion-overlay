@@ -1539,16 +1539,26 @@ export function CompanionPage() {
     <div className="companion-tab-layout route-polish-layout">
       <section className="companion-block companion-route-toolbar">
         <div className="companion-tab-row">
-          {routeActs.map((entry) => (
-            <button
-              key={entry.key}
-              type="button"
-              className={selectedAct === entry.act ? 'button-primary' : 'button-secondary'}
-              onClick={() => setSelectedAct(entry.act)}
-            >
-              {entry.label}
-            </button>
-          ))}
+          {routeActs.map((entry) => {
+            const isSelectedAct = selectedAct === entry.act;
+            const isCurrentAct = nowAct === entry.act;
+            const actButtonClassName = [
+              isSelectedAct ? 'button-primary' : 'button-secondary',
+              isCurrentAct ? 'is-current-act' : ''
+            ].filter(Boolean).join(' ');
+
+            return (
+              <button
+                key={entry.key}
+                type="button"
+                className={actButtonClassName}
+                aria-current={isCurrentAct ? 'location' : undefined}
+                onClick={() => setSelectedAct(entry.act)}
+              >
+                {entry.label}
+              </button>
+            );
+          })}
         </div>
         <div className="button-row">
           <button type="button" className="button-secondary" onClick={focusCurrentZone}>
