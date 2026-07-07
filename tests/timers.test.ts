@@ -374,6 +374,9 @@ test('Endgame refuge starts the To T15 segment after Act 5', () => {
 
 test('level 79 map area auto-finishes and saves the To T15 run', () => {
   const app = createTestAppInstance();
+  (app as any).config = (app as any).configStore.update({
+    appLanguage: 'en'
+  });
 
   withMockedNow(1_000, () => {
     applyAppLogLine(app as never, '2026/05/24 16:50:00 123 [DEBUG Client] Generating level 59 area "P1_6" with seed 1');
@@ -397,8 +400,10 @@ test('level 79 map area auto-finishes and saves the To T15 run', () => {
   assert.equal((app as any).config.runHistory.length, 1);
   assert.equal((app as any).config.runHistory[0].status, 'finished');
   assert.equal((app as any).config.runHistory[0].totalElapsedMs, 4_000);
+  assert.match((app as any).config.runHistory[0].label, /^To T15\b/);
   assert.ok((app as any).runtime.endgameT15CompletionNotice);
   assert.equal((app as any).runtime.endgameT15CompletionNotice.totalElapsedMs, 4_000);
+  assert.match((app as any).runtime.endgameT15CompletionNotice.savedLabel, /^To T15\b/);
 });
 
 test('Kingsmarch town scene starts Act 4 timer after Act 3', () => {

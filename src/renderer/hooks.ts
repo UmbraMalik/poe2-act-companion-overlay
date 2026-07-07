@@ -667,9 +667,18 @@ function reportTimerDisplayJump(
   });
 }
 
+function getRunTimerActSplitsSignature(
+  runTimer: RunTimerState | null | undefined
+): string {
+  return (runTimer?.actSplits ?? [])
+    .map((split) => `${split.act}:${split.elapsedMs}:${split.timestamp}`)
+    .join('|');
+}
+
 export function useRunTimerState(
   runTimer: RunTimerState | null | undefined
 ): RunTimerState | null {
+  const runTimerActSplitsSignature = getRunTimerActSplitsSignature(runTimer);
   const [independentRunTimer, setIndependentRunTimer] = useState<RunTimerState | null>(
     runTimer ?? null
   );
@@ -687,7 +696,7 @@ export function useRunTimerState(
     runTimer?.currentZoneElapsedMs,
     runTimer?.currentZoneStartedAt,
     runTimer?.pauseCount,
-    runTimer?.actSplits.length
+    runTimerActSplitsSignature
   ]);
 
   useEffect(() => {

@@ -116,6 +116,18 @@ test('snapshot updates use the shared render scheduler with a timeout fallback',
   assert.match(main, /BROADCAST_THROTTLE_MS\s*=\s*32/);
 });
 
+test('run timer snapshot sync tracks act split content changes', () => {
+  const hooks = readText('src/renderer/hooks.ts');
+  const runTimerHook = hooks.slice(
+    hooks.indexOf('export function useRunTimerState'),
+    hooks.indexOf('export function useLiveRunTimerDisplay')
+  );
+
+  assert.match(hooks, /function getRunTimerActSplitsSignature/);
+  assert.match(runTimerHook, /runTimerActSplitsSignature/);
+  assert.doesNotMatch(runTimerHook, /runTimer\?\.actSplits\.length/);
+});
+
 
 test('timer text updates are routed through the shared render scheduler', () => {
   const hooks = readText('src/renderer/hooks.ts');
@@ -143,6 +155,17 @@ test('timer diagnostics IPC is registered before the overlay renderer can emit s
   assert.notEqual(registerIpcIndex, -1);
   assert.notEqual(createOverlayWindowIndex, -1);
   assert.ok(registerIpcIndex < createOverlayWindowIndex);
+});
+
+test('town timer legacy surface stays intentionally disabled', () => {
+  const timerController = readText('src/main/app-timer-controller.ts');
+  const guideLogController = readText('src/main/app-guide-log-controller.ts');
+
+  assert.match(timerController, /Town timer is intentionally disabled/);
+  assert.match(timerController, /runGetCurrentTownElapsedMs[\s\S]*?return 0;/);
+  assert.match(timerController, /runGetTotalTownElapsedMs[\s\S]*?return 0;/);
+  assert.match(guideLogController, /Town timer removed/);
+  assert.match(guideLogController, /Towns no longer close or pause the active gameplay zone timer/);
 });
 
 

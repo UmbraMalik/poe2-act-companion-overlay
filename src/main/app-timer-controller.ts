@@ -109,6 +109,8 @@ export function runGetCurrentZoneElapsedMs(this: any, now: any = Date.now()) {
         return getZoneTimerDisplayElapsed(this.config.runTimer, now);
     }
 
+// Town timer is intentionally disabled; keep these legacy getters at zero for
+// older renderer/config surfaces without reintroducing separate town tracking.
 export function runGetCurrentTownElapsedMs(this: any, _now: any = Date.now()) {
         return 0;
     }
@@ -361,7 +363,8 @@ export function runCompleteEndgameT15Run(this: any, line: any) {
 
         const finishedAt = this.config.runTimer.finishedAt ?? now;
         const totalElapsedMs = this.config.runTimer.elapsedMs;
-        const savedLabel = `До Т15 · ${new Date(finishedAt).toLocaleString('ru-RU')}`;
+        const savedLabelLocale = this.config.appLanguage === 'en' ? 'en-US' : 'ru-RU';
+        const savedLabel = `${this.t('route.endgameToT15')} · ${new Date(finishedAt).toLocaleString(savedLabelLocale)}`;
         this.saveCurrentRunToHistory(savedLabel);
         this.runtime.endgameT15CompletionNotice = {
             completedAt: new Date(finishedAt).toISOString(),
