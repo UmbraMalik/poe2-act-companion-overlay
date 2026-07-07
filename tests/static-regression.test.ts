@@ -365,6 +365,32 @@ test('overlay renderer memoizes heavy derived view state and throttles layout IP
   assert.match(types, /'overlay-render-frequency'/);
 });
 
+test('companion route tab memoizes route card derived labels outside render map', () => {
+  const companion = readText('src/renderer/pages/CompanionPage.tsx');
+  const helpers = readText('src/renderer/companion-helpers.ts');
+  const routeCardModelsStart = companion.indexOf('{routeCardModels.map');
+  const routeCardModelsEnd = companion.indexOf('const latestActRow', routeCardModelsStart);
+  const routeCardRender = companion.slice(routeCardModelsStart, routeCardModelsEnd);
+  const routeActsMemoStart = companion.indexOf('const routeActs = useMemo');
+  const routeActsMemoEnd = companion.indexOf('const selectedRouteAct', routeActsMemoStart);
+  const routeActsMemo = companion.slice(routeActsMemoStart, routeActsMemoEnd);
+
+  assert.notEqual(routeCardModelsStart, -1);
+  assert.notEqual(routeCardModelsEnd, -1);
+  assert.match(companion, /function getRouteCardModels/);
+  assert.match(companion, /const routeCardModels = useMemo/);
+  assert.match(companion, /getRequiredRewardLabelsForZone\(entry\.guide, snapshot, language\)/);
+  assert.doesNotMatch(routeCardRender, /getRequiredRewardLabelsForZone/);
+  assert.doesNotMatch(routeCardRender, /getRouteFallbackLabels/);
+  assert.doesNotMatch(routeCardRender, /getGuideView\(entry\.guide/);
+  assert.match(routeCardRender, /model\.visibleRouteLabels/);
+  assert.match(routeCardRender, /model\.recommendedLevelLabel/);
+  assert.doesNotMatch(routeActsMemo, /currentZone\.actHint/);
+  assert.doesNotMatch(routeActsMemo, /currentGuideEntry\?\.act/);
+  assert.match(helpers, /const visitedZoneIds = new Set\(snapshot\.config\.visitedZones\.map/);
+  assert.match(helpers, /getRouteZoneStatus\(guide, snapshot, visitedZoneIds\)/);
+});
+
 test('default motion avoids continuous compositor-heavy ambient animations', () => {
   const fxControls = readText('src/renderer/styles/28-fx-controls-debug.css');
   const modeTransitions = readText('src/renderer/styles/32-overlay-mode-transitions.css');
