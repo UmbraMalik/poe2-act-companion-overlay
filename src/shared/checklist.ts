@@ -1,11 +1,9 @@
 import type {
-  ChecklistDetectedBy,
   ChecklistItemDefinition,
   ChecklistItemProgress,
   ChecklistItemState,
   ChecklistItemType,
   ChecklistViewItem,
-  CurrentZoneState,
   GuideEntry,
   GuideZoneProgress
 } from './types';
@@ -15,43 +13,6 @@ interface KeywordGroup {
   type: ChecklistItemType;
   required: boolean;
 }
-
-export const GENERAL_LOG_REWARD_KEYWORDS = [
-  'сопротивление холоду',
-  'сопротивления холоду',
-  'сопротивлению холоду',
-  '+10% к сопротивлению холоду',
-  'cold resistance',
-  '+10% to cold resistance',
-  'сопротивление молнии',
-  'сопротивления молнии',
-  'сопротивлению молнии',
-  '+10% к сопротивлению молнии',
-  'lightning resistance',
-  '+10% to lightning resistance',
-  'сопротивление огню',
-  'сопротивления огню',
-  'сопротивлению огню',
-  '+10% к сопротивлению огню',
-  'fire resistance',
-  '+10% to fire resistance',
-  'дух',
-  'spirit',
-  'пассив',
-  'пассивных',
-  'пассивное умение',
-  'passive skill point',
-  'weapon set passive skill point',
-  'максимум здоровья',
-  'maximum life',
-  'максимум маны',
-  'maximum mana',
-  'сфера ювелира',
-  'сфера царей',
-  'сфера алхимии',
-  'экзальт',
-  'руна'
-] as const;
 
 const KEYWORD_GROUPS: KeywordGroup[] = [
   {
@@ -146,7 +107,7 @@ const MISSED_TYPES = new Set<ChecklistItemType>([
   'mana'
 ]);
 
-export function normalizeMatchText(input: string): string {
+function normalizeMatchText(input: string): string {
   return String(input ?? '')
     .replace(/\[[^\]|]+\|([^\]]+)\]/g, '$1')
     .toLowerCase()
@@ -172,7 +133,7 @@ function getMatchTokens(input: string): string[] {
     .filter((token) => token.length >= 3);
 }
 
-export function hasKeywordSignal(haystack: string, keyword: string): boolean {
+function hasKeywordSignal(haystack: string, keyword: string): boolean {
   const normalizedHaystack = normalizeMatchText(haystack);
   const normalizedKeyword = normalizeMatchText(keyword);
 
@@ -431,7 +392,7 @@ export function shouldItemBeMissed(item: ChecklistItemDefinition): boolean {
   return MISSED_TYPES.has(item.type);
 }
 
-export function getChecklistItemProgress(
+function getChecklistItemProgress(
   zoneProgress: GuideZoneProgress | undefined,
   itemId: string
 ): ChecklistItemProgress | null {
@@ -483,167 +444,4 @@ export function buildChecklistViewItems(
       originalIndex: index
     };
   });
-}
-
-export function sortChecklistViewItems(items: ChecklistViewItem[]): ChecklistViewItem[] {
-  return [...items].sort((left, right) => {
-    if (left.displayState === 'current' && right.displayState !== 'current') {
-      return -1;
-    }
-
-    if (right.displayState === 'current' && left.displayState !== 'current') {
-      return 1;
-    }
-
-    return left.originalIndex - right.originalIndex;
-  });
-}
-
-
-export function matchChecklistItemIdsFromLine(
-  line: string,
-  guide: GuideEntry | null
-): { itemIds: string[]; matchedKeywords: string[] } {
-  if (!guide) {
-    return { itemIds: [], matchedKeywords: [] };
-  }
-
-  const checklist = buildChecklistDefinition(guide);
-  const matchedKeywords = new Set<string>();
-  const itemIds = checklist
-    .filter((item) => {
-      const candidates = [item.text, ...item.autoCompleteKeywords];
-      const matches = candidates.filter((keyword) => hasKeywordSignal(line, keyword));
-
-      for (const match of matches) {
-        matchedKeywords.add(match);
-      }
-
-      return matches.length > 0;
-    })
-    .map((item) => item.id);
-
-  return {
-    itemIds: [...new Set(itemIds)],
-    matchedKeywords: [...matchedKeywords]
-  };
-}
-
-
-export function matchChecklistItemIdsFromKeywords(
-  guide: GuideEntry | null,
-  keywords: string[]
-): { itemIds: string[]; matchedKeywords: string[] } {
-  if (!guide || keywords.length === 0) {
-    return { itemIds: [], matchedKeywords: [] };
-  }
-
-  const checklist = buildChecklistDefinition(guide);
-  const matchedKeywords = new Set<string>();
-  const itemIds = checklist
-    .filter((item) => {
-      const candidates = [item.text, ...item.autoCompleteKeywords];
-      const matches = keywords.filter((keyword) =>
-        candidates.some(
-          (candidate) =>
-            hasKeywordSignal(candidate, keyword) || hasKeywordSignal(keyword, candidate)
-        )
-      );
-
-      for (const match of matches) {
-        matchedKeywords.add(match);
-      }
-
-      return matches.length > 0;
-    })
-    .map((item) => item.id);
-
-  return {
-    itemIds: [...new Set(itemIds)],
-    matchedKeywords: [...matchedKeywords]
-  };
-}
-
-
-export function summarizeMissedWarning(items: string[]): string {
-  return items.join(', ');
-}
-
-export function getChecklistBadges(guide: GuideEntry | null): string[] {
-  if (!guide) {
-    return [];
-  }
-
-  const badges: string[] = [];
-
-  if (guide.skip.length > 0) {
-    badges.push('есть skip');
-  }
-
-  if (guide.important.length > 0) {
-    badges.push('есть важное');
-  }
-
-  if (guide.after.length > 0) {
-    badges.push('есть после');
-  }
-
-  return badges;
-}
-
-export function getCurrentChecklistItem(
-  guide: GuideEntry | null,
-  zoneProgress: GuideZoneProgress | undefined
-): ChecklistViewItem | null {
-  return (
-    buildChecklistViewItems(guide, zoneProgress).find(
-      (item) => item.displayState === 'current'
-    ) ?? null
-  );
-}
-
-export function getMissableUncheckedItems(
-  _guide: GuideEntry | null,
-  _zoneProgress: GuideZoneProgress | undefined
-): ChecklistItemDefinition[] {
-  // Missed reward warnings were too noisy and unreliable for this workflow.
-  // Keep the guide as a reminder, not as a pass/fail tracker.
-  return [];
-}
-
-
-export function getChecklistStateForZone(
-  guide: GuideEntry | null,
-  zoneProgress: GuideZoneProgress | undefined,
-  itemId: string
-): ChecklistItemState {
-  return (
-    buildChecklistViewItems(guide, zoneProgress).find((item) => item.id === itemId)
-      ?.displayState ?? 'pending'
-  );
-}
-
-export function getVisibleHudChecklist(
-  guide: GuideEntry | null,
-  zoneProgress: GuideZoneProgress | undefined,
-  limit = 4
-): { visibleItems: ChecklistViewItem[]; hiddenCount: number; totalCount: number } {
-  const sortedItems = sortChecklistViewItems(
-    buildChecklistViewItems(guide, zoneProgress)
-  );
-  const visibleItems = sortedItems.slice(0, limit);
-
-  return {
-    visibleItems,
-    hiddenCount: Math.max(0, sortedItems.length - visibleItems.length),
-    totalCount: sortedItems.length
-  };
-}
-
-export function findZoneProgressForCurrentZone(
-  currentZone: CurrentZoneState,
-  zoneProgress: Record<string, GuideZoneProgress>
-): GuideZoneProgress | undefined {
-  const guideId = currentZone.guide?.id;
-  return guideId ? zoneProgress[guideId] : undefined;
 }

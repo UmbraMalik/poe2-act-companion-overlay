@@ -30,7 +30,7 @@ const GUIDE_UPDATE_MARKERS = [
   'vaal ruins'
 ];
 
-export function isGuideUpdateText(value: string | null | undefined): boolean {
+function isGuideUpdateText(value: string | null | undefined): boolean {
   const normalized = (value ?? '').trim().toLocaleLowerCase('ru');
 
   return GUIDE_UPDATE_MARKERS.some((marker) => normalized.includes(marker));

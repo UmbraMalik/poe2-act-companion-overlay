@@ -6,7 +6,7 @@ export { formatDuration } from '../shared/timers';
 
 export type LevelState = 'ok' | 'low' | 'unknown';
 
-export function getRecommendedMinLevel(
+function getRecommendedMinLevel(
   recommendedLevel: number | null | undefined
 ): number | null {
   return typeof recommendedLevel === 'number' ? recommendedLevel : null;
@@ -56,7 +56,7 @@ export function formatZoneOption(entry: GuideEntry, language: AppLanguage): stri
   return `${formatActLabel(entry, language)} · ${zoneName}`;
 }
 
-export function formatActLabel(
+function formatActLabel(
   entry: Pick<GuideEntry, 'act'>,
   language: AppLanguage = 'ru'
 ): string {
@@ -154,12 +154,6 @@ export function getReleaseNoteItems(body: unknown): ReleaseNoteItem[] {
     });
 }
 
-export function getReleaseNotesLines(body: unknown): string[] {
-  return getReleaseNoteItems(body).map((item) =>
-    item.kind === 'item' ? `— ${item.text}` : item.text
-  );
-}
-
 export function formatGuideLabel(
   guide: GuideEntry | null | undefined,
   language: AppLanguage
@@ -170,17 +164,6 @@ export function formatGuideLabel(
 
   const guideView = getGuideView(guide, language);
   return `${formatActLabel(guide, language)} · ${guideView?.zoneName ?? guide.zone_ru}`;
-}
-
-export function formatGuideZoneName(
-  guide: GuideEntry | null | undefined,
-  language: AppLanguage
-): string {
-  if (!guide) {
-    return translate(language, 'scene.unknownZone');
-  }
-
-  return getGuideView(guide, language)?.zoneName ?? guide.zone_ru;
 }
 
 export function formatRecommendedLevelLabel(
