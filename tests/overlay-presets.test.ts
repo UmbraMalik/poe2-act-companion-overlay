@@ -4,6 +4,8 @@ import { DEFAULT_CONFIG } from '../src/shared/defaults';
 import type { AppConfig, SettingsPatch } from '../src/shared/types';
 import {
   buildOverlayPresetPatch,
+  formatOverlayPresetLabel,
+  formatOverlayPresetState,
   getMatchingOverlayPreset,
   OVERLAY_PRESET_IDS
 } from '../src/renderer/overlay-presets';
@@ -92,6 +94,23 @@ test('timer only preset switches overlay display without touching timer state', 
   assert.deepEqual(config.townTimer, DEFAULT_CONFIG.townTimer);
   assert.equal(config.runTimerSettings.autoStartMode, DEFAULT_CONFIG.runTimerSettings.autoStartMode);
   assert.equal(config.runTimerSettings.autoStart, DEFAULT_CONFIG.runTimerSettings.autoStart);
+});
+
+test('quiet preset returns from timer-only into full normal-density overlay', () => {
+  const patch = buildOverlayPresetPatch('quiet');
+  const config = applyPatchToConfig(patch);
+
+  assert.equal(config.mainOverlaySettings.overlayMode, 'full');
+  assert.equal(config.mainOverlaySettings.overlayTimerOnlyMode, false);
+  assert.equal(config.overlayDensity, 'normal');
+});
+
+test('overlay preset labels are localized for Russian settings', () => {
+  assert.equal(formatOverlayPresetLabel('quiet', 'ru'), 'Тихий');
+  assert.equal(formatOverlayPresetLabel('route', 'ru'), 'Маршрут');
+  assert.equal(formatOverlayPresetLabel('speedrun', 'ru'), 'Спидран');
+  assert.equal(formatOverlayPresetLabel('timer_only', 'ru'), 'Только таймер');
+  assert.equal(formatOverlayPresetState('quiet', 'ru'), 'Сейчас: Тихий');
 });
 
 test('overlay preset patches are cloned before use', () => {

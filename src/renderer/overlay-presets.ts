@@ -63,7 +63,7 @@ export const OVERLAY_PRESET_PATCHES: Record<OverlayPresetId, OverlayPresetPatch>
   quiet: {
     overlayOpacity: 0.9,
     overlayScale: 90,
-    overlayDensity: 'compact',
+    overlayDensity: 'normal',
     visualFxIntensity: 'off',
     overlayEffectsEnabled: false,
     overlayVisibleSections: {
@@ -211,10 +211,10 @@ const LABELS: Record<AppLanguage, Record<OverlayPresetId | 'custom' | 'title' | 
     title: 'Пресеты оверлея',
     current: 'Сейчас',
     custom: 'Свои настройки',
-    quiet: 'Quiet',
-    route: 'Route',
-    speedrun: 'Speedrun',
-    timer_only: 'Timer only'
+    quiet: 'Тихий',
+    route: 'Маршрут',
+    speedrun: 'Спидран',
+    timer_only: 'Только таймер'
   },
   en: {
     title: 'Overlay presets',
