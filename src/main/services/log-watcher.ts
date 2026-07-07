@@ -347,6 +347,28 @@ export class LogWatcher {
     }
   }
 
+  private async resyncLargeFileFromTail(
+    filePath: string,
+    fileSize: number,
+    readAt: string
+  ): Promise<boolean> {
+    if (fileSize <= TAIL_BYTES) {
+      return false;
+    }
+
+    await this.bootstrapFromTail(filePath, fileSize);
+    this.filePosition = fileSize;
+    this.resetTextState();
+    this.updateRuntimeState({
+      fileExists: true,
+      lastFileSize: fileSize,
+      currentOffset: this.filePosition,
+      lastReadAt: readAt
+    });
+    this.emitStatus('ready', 'Р§С‚РµРЅРёРµ Р»РѕРіР° Р°РєС‚РёРІРЅРѕ');
+    return true;
+  }
+
   private async readNewContent(options?: {
     allowBootstrap?: boolean;
   }): Promise<void> {
@@ -431,10 +453,14 @@ export class LogWatcher {
         return;
       }
 
-      if (this.needsResync || fileStat.size < this.filePosition) {
-        this.filePosition = 0;
+      const requiresResync = this.needsResync || fileStat.size < this.filePosition;
+      if (requiresResync) {
         this.resetTextState();
         this.needsResync = false;
+        if (await this.resyncLargeFileFromTail(this.filePath, fileStat.size, readAt)) {
+          return;
+        }
+        this.filePosition = 0;
       }
 
       this.updateRuntimeState({
