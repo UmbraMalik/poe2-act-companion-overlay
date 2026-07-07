@@ -72,6 +72,20 @@ const OVERLAY_SECTION_VISIBILITY_LABELS = [
   ['important', 'settings.overlayShowImportant']
 ] as const;
 
+const SETTINGS_QUICK_LINKS = [
+  { id: 'settings-first-run', labelKey: 'settings.firstRunTitle' },
+  { id: 'settings-language', labelKey: 'settings.languageTitle' },
+  { id: 'settings-updates', labelKey: 'settings.updateTitle' },
+  { id: 'settings-log-file', labelKey: 'settings.logFileTitle' },
+  { id: 'settings-timer', labelKey: 'settings.timerTitle' },
+  { id: 'settings-level-reminders', labelKey: 'settings.levelReminderTitle' },
+  { id: 'settings-overlay', labelKey: 'settings.overlayTitle' },
+  { id: 'settings-detail-panel', labelKey: 'settings.detailPanelTitle' },
+  { id: 'settings-local-progress', labelKey: 'settings.localProgressTitle' },
+  { id: 'settings-simulate', labelKey: 'settings.simulateTitle', devOnly: true },
+  { id: 'settings-developer', labelKey: 'settings.developerTitle', devOnly: true }
+] as const;
+
 function hotkeyFromKeyboardEvent(event: KeyboardEvent<HTMLInputElement>): string | null {
   const key = event.key;
   if (!key || key === 'Control' || key === 'Shift' || key === 'Alt' || key === 'Meta') {
@@ -376,8 +390,9 @@ export function SettingsPage() {
       : autoUpdateStatus === 'not_available'
         ? 'is-success'
         : autoUpdateStatus === 'error'
-          ? 'is-warning'
+        ? 'is-warning'
           : 'is-pending';
+  const settingsQuickLinks = SETTINGS_QUICK_LINKS.filter((entry) => !entry.devOnly || SHOW_DEVELOPER_SETTINGS);
 
   const runTask = async (name: string, action: () => Promise<unknown>) => {
     try {
@@ -658,7 +673,18 @@ export function SettingsPage() {
       </header>
 
       <section className="settings-shell">
-        <section className="settings-card first-run-card">
+        <nav className="settings-card settings-quick-nav" aria-label={t('settings.quickLinksTitle')}>
+          <h2 className="settings-section-title">{t('settings.quickLinksTitle')}</h2>
+          <div className="settings-quick-link-grid">
+            {settingsQuickLinks.map((entry) => (
+              <a key={entry.id} className="settings-quick-link" href={`#${entry.id}`}>
+                {t(entry.labelKey)}
+              </a>
+            ))}
+          </div>
+        </nav>
+
+        <section id="settings-first-run" className="settings-card first-run-card">
           <div className="settings-card-header">
             <h2 className="settings-section-title">{t('settings.firstRunTitle')}</h2>
             <span className={`settings-status-pill ${logFileStatusTone}`}>{logFileStatusText}</span>
@@ -686,7 +712,7 @@ export function SettingsPage() {
           </div>
         </section>
 
-        <section className="settings-card i18n-language-card" data-i18n-language-card="true">
+        <section id="settings-language" className="settings-card i18n-language-card" data-i18n-language-card="true">
           <h2 className="settings-section-title">{t('settings.languageTitle')}</h2>
           <p className="helper-text">{t('settings.languageDescription')}</p>
           <div className="settings-grid">
@@ -709,7 +735,7 @@ export function SettingsPage() {
           </div>
         </section>
 
-        <section className="settings-card">
+        <section id="settings-updates" className="settings-card">
           <div className="settings-card-header">
             <div>
               <h2 className="settings-section-title">{t('settings.updateTitle')}</h2>
@@ -865,7 +891,7 @@ export function SettingsPage() {
             </section>
           )}
         </section>
-        <section className="settings-card">
+        <section id="settings-log-file" className="settings-card">
           <h2 className="settings-section-title">{t('settings.logFileTitle')}</h2>
           <p className="helper-text">{t('settings.logFileDescription')}</p>
           <div className="value-box">{config.logFilePath ?? t('settings.logFileNotSelected')}</div>
@@ -938,7 +964,7 @@ export function SettingsPage() {
 
         )}
 
-        <section className="settings-card">
+        <section id="settings-timer" className="settings-card">
           <h2 className="settings-section-title">{t('settings.timerTitle')}</h2>
           <InfoGrid
             items={[
@@ -1043,7 +1069,7 @@ export function SettingsPage() {
           </div>
         </section>
 
-        <section className="settings-card">
+        <section id="settings-level-reminders" className="settings-card">
           <h2 className="settings-section-title">{t('settings.levelReminderTitle')}</h2>
           <InfoGrid
             items={[
@@ -1081,7 +1107,7 @@ export function SettingsPage() {
           </div>
         </section>
 
-        <section className="settings-card">
+        <section id="settings-overlay" className="settings-card">
           <h2 className="settings-section-title">{t('settings.overlayTitle')}</h2>
           <p className="helper-text">{t('settings.overlayDescription')}</p>
 
@@ -1332,7 +1358,7 @@ export function SettingsPage() {
           </div>
         </section>
 
-        <section className="settings-card">
+        <section id="settings-detail-panel" className="settings-card">
           <h2 className="settings-section-title">{t('settings.detailPanelTitle')}</h2>
           <p className="helper-text">{t('settings.detailPanelDescription')}</p>
           <InfoGrid
@@ -1436,7 +1462,7 @@ export function SettingsPage() {
         </section>
 
         {SHOW_DEVELOPER_SETTINGS && (
-        <section className="settings-card">
+        <section id="settings-simulate" className="settings-card">
           <h2 className="settings-section-title">{t('settings.simulateTitle')}</h2>
           <p className="helper-text">{t('settings.simulateDescription')}</p>
           <div className="settings-grid settings-grid-actions">
@@ -1471,7 +1497,7 @@ export function SettingsPage() {
 
         )}
 
-        <section className="settings-card danger-card">
+        <section id="settings-local-progress" className="settings-card danger-card">
           <h2 className="settings-section-title">{t('settings.localProgressTitle')}</h2>
           <InfoGrid
             items={[
@@ -1497,7 +1523,7 @@ export function SettingsPage() {
         </section>
 
         {SHOW_DEVELOPER_SETTINGS && (
-          <section className="settings-card">
+          <section id="settings-developer" className="settings-card">
             <h2 className="settings-section-title">{t('settings.developerTitle')}</h2>
             <p className="helper-text">{t('settings.developerDescription')}</p>
             <div className="checkbox-grid">

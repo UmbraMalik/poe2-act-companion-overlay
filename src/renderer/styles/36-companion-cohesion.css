@@ -590,6 +590,7 @@
 }
 
 .theme-dark-fantasy.settings-page:not(.companion-page) button,
+.theme-dark-fantasy.settings-page:not(.companion-page) .settings-quick-link,
 .theme-dark-fantasy.settings-page:not(.companion-page) select,
 .theme-dark-fantasy.settings-page:not(.companion-page) input,
 .theme-dark-fantasy.settings-page:not(.companion-page) textarea {
@@ -600,10 +601,12 @@
 }
 
 .theme-dark-fantasy.settings-page:not(.companion-page) button:hover:not(:disabled),
+.theme-dark-fantasy.settings-page:not(.companion-page) .settings-quick-link:hover,
 .theme-dark-fantasy.settings-page:not(.companion-page) select:hover,
 .theme-dark-fantasy.settings-page:not(.companion-page) input:hover,
 .theme-dark-fantasy.settings-page:not(.companion-page) textarea:hover,
 .theme-dark-fantasy.settings-page:not(.companion-page) button:focus-visible,
+.theme-dark-fantasy.settings-page:not(.companion-page) .settings-quick-link:focus-visible,
 .theme-dark-fantasy.settings-page:not(.companion-page) select:focus-visible,
 .theme-dark-fantasy.settings-page:not(.companion-page) input:focus-visible,
 .theme-dark-fantasy.settings-page:not(.companion-page) textarea:focus-visible {

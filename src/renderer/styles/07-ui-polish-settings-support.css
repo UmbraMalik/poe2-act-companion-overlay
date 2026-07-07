@@ -401,6 +401,60 @@
     0 12px 28px rgba(0, 0, 0, 0.18);
 }
 
+.settings-page:not(.companion-page) .settings-card[id] {
+  scroll-margin-top: 14px;
+}
+
+.settings-page:not(.companion-page) .settings-quick-nav {
+  position: sticky;
+  top: 8px;
+  z-index: 5;
+  gap: 10px;
+  padding-block: 12px;
+  backdrop-filter: blur(10px);
+}
+
+.settings-page:not(.companion-page) .settings-quick-link-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+}
+
+.settings-page:not(.companion-page) .settings-quick-link {
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1 1 128px;
+  min-width: 0;
+  padding: 8px 10px;
+  border-radius: 11px;
+  border: 1px solid rgba(205, 220, 237, 0.14);
+  background: rgba(255, 255, 255, 0.045);
+  color: rgba(238, 243, 248, 0.90);
+  font-size: 12px;
+  font-weight: 850;
+  line-height: 1.1;
+  text-align: center;
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.02),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+.settings-page:not(.companion-page) .settings-quick-link:hover,
+.settings-page:not(.companion-page) .settings-quick-link:focus-visible {
+  border-color: rgba(241, 185, 106, 0.36);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(241, 185, 106, 0.16), transparent 58%),
+    rgba(12, 16, 21, 0.78);
+  color: #fff0d2;
+  outline: none;
+}
+
 .settings-page:not(.companion-page) .first-run-card {
   border-color: rgba(241, 185, 106, 0.24);
   background:
@@ -609,6 +663,14 @@
 }
 
 @media (max-width: 760px) {
+  .settings-page:not(.companion-page) .settings-quick-nav {
+    position: static;
+  }
+
+  .settings-page:not(.companion-page) .settings-quick-link {
+    flex-basis: 140px;
+  }
+
   .settings-page:not(.companion-page) .settings-card {
     padding: 14px;
   }

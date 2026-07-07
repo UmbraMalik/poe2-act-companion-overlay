@@ -179,6 +179,7 @@ const baseTranslations = {
     settings: {
       title: 'Настройки',
       intro: 'Единая панель для лог-файла, оверлея, подробной панели, таймера и локального прогресса.',
+      quickLinksTitle: 'БЫСТРЫЕ ПЕРЕХОДЫ',
       languageTitle: 'ЯЗЫК',
       languageDescription: 'Меняет язык интерфейса и карточек во всех окнах без перезапуска.',
       languageField: 'Язык интерфейса',
@@ -876,6 +877,7 @@ const baseTranslations = {
     settings: {
       title: 'Settings',
       intro: 'One panel for the log file, overlay, detailed panel, timer, and local progress.',
+      quickLinksTitle: 'QUICK LINKS',
       languageTitle: 'LANGUAGE',
       languageDescription: 'Changes the interface and card language in every window without restarting the app.',
       languageField: 'Interface language',
