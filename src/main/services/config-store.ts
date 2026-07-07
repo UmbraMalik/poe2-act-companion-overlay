@@ -1,5 +1,5 @@
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { dirname } from 'node:path';
+import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
+import { basename, dirname, extname, join } from 'node:path';
 import {
   DEFAULT_CONFIG,
   DEFAULT_RUN_TIMER,
@@ -638,6 +638,7 @@ export class ConfigStore {
       const parsed = JSON.parse(raw) as Partial<AppConfig>;
       this.config = normalizeAppConfig(parsed);
     } catch {
+      this.backupCorruptConfig();
       this.config = { ...DEFAULT_CONFIG };
       this.save();
     }
@@ -810,7 +811,33 @@ export class ConfigStore {
   }
 
   private save(): void {
-    mkdirSync(dirname(this.configPath), { recursive: true });
-    writeFileSync(this.configPath, JSON.stringify(this.config, null, 2), 'utf8');
+    const configDir = dirname(this.configPath);
+    const tempPath = `${this.configPath}.tmp`;
+    mkdirSync(configDir, { recursive: true });
+    rmSync(tempPath, { force: true });
+    try {
+      writeFileSync(tempPath, JSON.stringify(this.config, null, 2), 'utf8');
+      renameSync(tempPath, this.configPath);
+    } catch (error) {
+      rmSync(tempPath, { force: true });
+      throw error;
+    }
+  }
+
+  private backupCorruptConfig(): void {
+    if (!existsSync(this.configPath)) {
+      return;
+    }
+
+    try {
+      const raw = readFileSync(this.configPath, 'utf8');
+      const extension = extname(this.configPath);
+      const baseName = basename(this.configPath, extension);
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+      const backupPath = join(dirname(this.configPath), `${baseName}.corrupt-${timestamp}.json`);
+      writeFileSync(backupPath, raw, 'utf8');
+    } catch {
+      // Best effort only: a failed backup must not prevent config recovery.
+    }
   }
 }

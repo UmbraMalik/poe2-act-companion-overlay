@@ -21,7 +21,10 @@ class MockBrowserWindow {
 
   webContents = {
     send: noop,
-    isDestroyed: () => false
+    isDestroyed: () => false,
+    on: noop,
+    once: noop,
+    setWindowOpenHandler: noop
   };
 
   private destroyed = false;

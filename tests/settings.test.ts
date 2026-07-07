@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { DEFAULT_CONFIG, DEFAULT_HOTKEYS } from '../src/shared/defaults';
 import { ConfigStore, normalizeAppConfig } from '../src/main/services/config-store';
@@ -301,6 +302,35 @@ test('ConfigStore persists log path and merges settings safely', () => {
   assert.equal(reloaded.realtimePriorityEnabled, true);
   assert.equal(reloaded.hotkeys.openCompanion, 'Ctrl+F9');
   assert.equal(reloaded.hotkeys.toggleOverlayMode, DEFAULT_HOTKEYS.toggleOverlayMode);
+
+  const persisted = JSON.parse(readFileSync(configPath, 'utf8')) as typeof DEFAULT_CONFIG;
+  assert.equal(persisted.logFilePath, 'Z:\\invalid\\LatestClient.txt');
+  assert.equal(persisted.overlayOpacity, 0.77);
+  assert.equal(persisted.overlayScale, 110);
+});
+
+test('ConfigStore backs up corrupt JSON and rewrites a valid default config', () => {
+  const configDir = join(
+    process.cwd(),
+    '.tmp-tests',
+    `settings-corrupt-config-${process.pid}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
+  );
+  const configPath = join(configDir, 'config.json');
+  const corruptJson = '{"logFilePath":"C:\\\\temp\\\\LatestClient.txt",';
+  mkdirSync(configDir, { recursive: true });
+  writeFileSync(configPath, corruptJson, 'utf8');
+
+  const loaded = new ConfigStore(configPath).load();
+
+  assert.equal(loaded.logFilePath, DEFAULT_CONFIG.logFilePath);
+  const backupNames = readdirSync(configDir).filter((fileName) =>
+    /^config\.corrupt-.+\.json$/.test(fileName)
+  );
+  assert.equal(backupNames.length, 1);
+  assert.equal(readFileSync(join(configDir, backupNames[0]), 'utf8'), corruptJson);
+
+  const rewritten = JSON.parse(readFileSync(configPath, 'utf8')) as typeof DEFAULT_CONFIG;
+  assert.equal(rewritten.logFilePath, DEFAULT_CONFIG.logFilePath);
 });
 
 test('settings page keeps hotkey settings but no longer embeds reload-guide or support-link UI blocks', () => {

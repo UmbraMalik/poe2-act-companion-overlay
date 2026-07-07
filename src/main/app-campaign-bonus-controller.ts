@@ -60,6 +60,10 @@ export function runCampaignBonusRuleMatches(this: any, rule: any, line: any) {
     }
 
 export function runSetCampaignBonusDone(this: any, bonusId: any, detectedBy: any, line: any = null) {
+        const matchedBonus = this.campaignBonuses.find((bonus: any) => bonus.id === bonusId) ?? null;
+        if (!matchedBonus) {
+            return false;
+        }
         const existing = this.config.campaignBonusProgress[bonusId];
         const nextProgress = { ...this.config.campaignBonusProgress };
         if (detectedBy === null) {
@@ -76,13 +80,10 @@ export function runSetCampaignBonusDone(this: any, bonusId: any, detectedBy: any
                 ...(line ? { logLine: line } : {})
             };
         }
-        const matchedBonus = this.campaignBonuses.find((bonus: any) => bonus.id === bonusId) ?? null;
         this.config = this.configStore.update({
             campaignBonusProgress: nextProgress
         });
-        if (matchedBonus) {
-            this.syncCampaignBonusWithChecklist(matchedBonus, detectedBy, line);
-        }
+        this.syncCampaignBonusWithChecklist(matchedBonus, detectedBy, line);
         this.broadcastState();
         return true;
     }

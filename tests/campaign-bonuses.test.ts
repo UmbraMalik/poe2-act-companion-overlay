@@ -220,3 +220,13 @@ test('manual campaign bonus marking can be toggled on and off without auto-track
   assert.equal((app as any).setCampaignBonusDone('act1_ogham_village_salvage_bench', null), true);
   assert.deepEqual(getDoneBonusIds(app), []);
 });
+
+test('manual campaign bonus marking ignores unknown bonus ids', () => {
+  const app = createTestAppInstance();
+  const beforeProgress = JSON.stringify((app as any).config.campaignBonusProgress);
+
+  assert.equal((app as any).setCampaignBonusDone('unknown_bonus_id', 'manual'), false);
+
+  assert.equal(JSON.stringify((app as any).config.campaignBonusProgress), beforeProgress);
+  assert.deepEqual(getDoneBonusIds(app), []);
+});

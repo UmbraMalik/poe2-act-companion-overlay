@@ -1,4 +1,3 @@
-import { join } from 'node:path';
 import { app, BrowserWindow } from 'electron';
 
 import { checkForUpdates } from './services/update-service';
@@ -7,6 +6,10 @@ import {
   UPDATE_CHECK_DELAY_MS,
   isDev
 } from './app-environment';
+import {
+  attachWindowNavigationGuards,
+  getSecureWebPreferences
+} from './window-security';
 
 
 export function runGetUpdateWindowOwner(this: any) {
@@ -111,13 +114,9 @@ export function runOpenUpdateWindow(this: any, updateInfo: any = null) {
             skipTaskbar: true,
             alwaysOnTop: true,
             ...(parentWindow ? { parent: parentWindow } : {}),
-            webPreferences: {
-                preload: join(__dirname, 'preload.js'),
-                contextIsolation: true,
-                nodeIntegration: false,
-                backgroundThrottling: false
-            }
+            webPreferences: getSecureWebPreferences()
         });
+        attachWindowNavigationGuards(this.updateWindow);
         this.updateWindow.setMenuBarVisibility(false);
         this.updateWindow.removeMenu();
         this.updateWindow.setAlwaysOnTop(true, 'screen-saver');

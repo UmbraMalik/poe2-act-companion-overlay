@@ -1,5 +1,4 @@
 import { appendFile } from 'node:fs/promises';
-import { join } from 'node:path';
 import {
   app,
   BrowserWindow,
@@ -21,6 +20,10 @@ import {
   devServerUrl,
   isDev
 } from './app-environment';
+import {
+  attachWindowNavigationGuards,
+  getSecureWebPreferences
+} from './window-security';
 
 function showWindowWhenReady(
         window: BrowserWindow | null | undefined,
@@ -86,13 +89,9 @@ export function runCreateOverlayWindow(this: any) {
             focusable: true,
             hasShadow: false,
             backgroundColor: '#00000000',
-            webPreferences: {
-                preload: join(__dirname, 'preload.js'),
-                contextIsolation: true,
-                nodeIntegration: false,
-                backgroundThrottling: false
-            }
+            webPreferences: getSecureWebPreferences()
         });
+        attachWindowNavigationGuards(this.overlayWindow);
         this.attachManualHotkeys(this.overlayWindow);
         this.overlayWindow.setAlwaysOnTop(true, 'screen-saver');
         this.overlayWindow.setVisibleOnAllWorkspaces(true, {
@@ -290,13 +289,9 @@ export function runOpenSettingsWindow(this: any) {
             backgroundColor: '#10161f',
             show: false,
             autoHideMenuBar: true,
-            webPreferences: {
-                preload: join(__dirname, 'preload.js'),
-                contextIsolation: true,
-                nodeIntegration: false,
-                backgroundThrottling: false
-            }
+            webPreferences: getSecureWebPreferences()
         });
+        attachWindowNavigationGuards(this.settingsWindow);
         this.attachManualHotkeys(this.settingsWindow);
         this.settingsWindow.on('close', (event: any) => {
             if (!this.isQuitting) {
@@ -341,13 +336,9 @@ export function runOpenCompanionWindow(this: any) {
             autoHideMenuBar: true,
             backgroundColor: '#0f151d',
             alwaysOnTop: this.config.companionAlwaysOnTop,
-            webPreferences: {
-                preload: join(__dirname, 'preload.js'),
-                contextIsolation: true,
-                nodeIntegration: false,
-                backgroundThrottling: false
-            }
+            webPreferences: getSecureWebPreferences()
         });
+        attachWindowNavigationGuards(this.companionWindow);
         this.attachManualHotkeys(this.companionWindow);
         this.companionWindow.on('close', (event: any) => {
             if (!this.isQuitting) {
@@ -386,13 +377,9 @@ export function runOpenInfoWindow(this: any) {
             backgroundColor: '#10161f',
             show: false,
             autoHideMenuBar: true,
-            webPreferences: {
-                preload: join(__dirname, 'preload.js'),
-                contextIsolation: true,
-                nodeIntegration: false,
-                backgroundThrottling: false
-            }
+            webPreferences: getSecureWebPreferences()
         });
+        attachWindowNavigationGuards(this.infoWindow);
         this.attachManualHotkeys(this.infoWindow);
         this.infoWindow.on('close', (event: any) => {
             if (!this.isQuitting) {
@@ -425,13 +412,9 @@ export function runOpenCommunityWindow(this: any) {
             backgroundColor: '#10161f',
             show: false,
             autoHideMenuBar: true,
-            webPreferences: {
-                preload: join(__dirname, 'preload.js'),
-                contextIsolation: true,
-                nodeIntegration: false,
-                backgroundThrottling: false
-            }
+            webPreferences: getSecureWebPreferences()
         });
+        attachWindowNavigationGuards(this.communityWindow);
         this.attachManualHotkeys(this.communityWindow);
         this.communityWindow.on('close', (event: any) => {
             if (!this.isQuitting) {
@@ -464,13 +447,9 @@ export function runOpenSupportWindow(this: any) {
             backgroundColor: '#10161f',
             show: false,
             autoHideMenuBar: true,
-            webPreferences: {
-                preload: join(__dirname, 'preload.js'),
-                contextIsolation: true,
-                nodeIntegration: false,
-                backgroundThrottling: false
-            }
+            webPreferences: getSecureWebPreferences()
         });
+        attachWindowNavigationGuards(this.supportWindow);
         this.attachManualHotkeys(this.supportWindow);
         this.supportWindow.on('close', (event: any) => {
             if (!this.isQuitting) {
@@ -503,13 +482,9 @@ export function runOpenReportIssueWindow(this: any) {
             backgroundColor: '#10161f',
             show: false,
             autoHideMenuBar: true,
-            webPreferences: {
-                preload: join(__dirname, 'preload.js'),
-                contextIsolation: true,
-                nodeIntegration: false,
-                backgroundThrottling: false
-            }
+            webPreferences: getSecureWebPreferences()
         });
+        attachWindowNavigationGuards(this.reportWindow);
         this.attachManualHotkeys(this.reportWindow);
         this.reportWindow.on('close', (event: any) => {
             if (!this.isQuitting) {
@@ -617,6 +592,9 @@ export function runShowOverlay(this: any) {
     }
 
 export function runSetOverlayMode(this: any, mode: any) {
+        if (mode !== 'full' && mode !== 'timer_only') {
+            return;
+        }
         if (this.overlayMode === mode && this.runtime.overlayMode === mode) {
             return;
         }

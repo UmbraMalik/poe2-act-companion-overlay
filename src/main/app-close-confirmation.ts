@@ -1,6 +1,5 @@
 import { access, appendFile, stat } from 'node:fs/promises';
 import { constants } from 'node:fs';
-import { join } from 'node:path';
 import {
   app,
   BrowserWindow,
@@ -27,6 +26,10 @@ import { LogWatcher } from './services/log-watcher';
 import { resolveRuntimePath } from './services/runtime-paths';
 import { checkForUpdates } from './services/update-service';
 import { AutoUpdateService } from './services/auto-update-service';
+import {
+  attachWindowNavigationGuards,
+  getSecureWebPreferences
+} from './window-security';
 import {
   DEFAULT_COMPACT_OVERLAY_BOUNDS,
   DEFAULT_COMPANION_BOUNDS,
@@ -141,13 +144,9 @@ export async function runShowCustomQuitConfirmation(this: any) {
                 alwaysOnTop: true,
                 modal: Boolean(parentWindow),
                 ...(parentWindow ? { parent: parentWindow } : {}),
-                webPreferences: {
-                    preload: join(__dirname, 'preload.js'),
-                    contextIsolation: true,
-                    nodeIntegration: false,
-                    backgroundThrottling: false
-                }
+                webPreferences: getSecureWebPreferences()
             });
+            attachWindowNavigationGuards(closeConfirmWindow);
             closeConfirmWindow.setMenuBarVisibility(false);
             closeConfirmWindow.removeMenu();
             closeConfirmWindow.setAlwaysOnTop(true, 'screen-saver');

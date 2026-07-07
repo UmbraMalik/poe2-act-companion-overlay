@@ -13,17 +13,50 @@ import {
   shouldIgnoreOverlayAutoHeight
 } from './overlay-window-bounds';
 import { isTimerDiagnosticsEnabled } from './timer-diagnostics-log';
-import type { SettingsPatch } from '../shared/types';
+import type { OverlayMode, SettingsPatch } from '../shared/types';
 import {
   DEV_SAMPLE_ZONE_LINE,
   clampOpacity,
+  isDev,
   isSafeExternalUrl
 } from './app-environment';
+
+const MAX_DEV_LOG_LINE_LENGTH = 4000;
 
 function normalizeSettingsPatchInput(value: unknown): SettingsPatch {
     return typeof value === 'object' && value !== null && !Array.isArray(value)
         ? value as SettingsPatch
         : {};
+}
+
+function isOverlayMode(value: unknown): value is OverlayMode {
+    return value === 'full' || value === 'timer_only';
+}
+
+function normalizeOverlayModeSettingsPatch(patch: SettingsPatch): SettingsPatch {
+    const overlayMode = patch.mainOverlaySettings?.overlayMode;
+    if (!patch.mainOverlaySettings || overlayMode === undefined || isOverlayMode(overlayMode)) {
+        return patch;
+    }
+
+    const { overlayMode: _invalidOverlayMode, ...mainOverlaySettings } = patch.mainOverlaySettings;
+    return {
+        ...patch,
+        mainOverlaySettings
+    };
+}
+
+function finiteRoundedNumber(value: unknown, fallback: number): number {
+    const numericValue = typeof value === 'number' ? value : Number(value);
+    return Number.isFinite(numericValue) ? Math.round(numericValue) : fallback;
+}
+
+function normalizeDevLogLine(value: unknown): string | null {
+    if (typeof value !== 'string') {
+        return null;
+    }
+
+    return value.slice(0, MAX_DEV_LOG_LINE_LENGTH).trim() || DEV_SAMPLE_ZONE_LINE;
 }
 
 export function runRegisterIpc(this: any) {
@@ -81,6 +114,7 @@ export function runRegisterIpc(this: any) {
         });
         ipcMain.handle('app:update-settings', async (_event: any, patch: any) => {
             patch = normalizeSettingsPatchInput(patch);
+            patch = normalizeOverlayModeSettingsPatch(patch);
             const previousOverlayMode = this.overlayMode;
             const previousOverlayDensity = this.config.overlayDensity;
             const previousOverlayScale = this.config.overlayScale;
@@ -223,11 +257,17 @@ export function runRegisterIpc(this: any) {
             return this.getSnapshot();
         });
         ipcMain.handle('app:append-dev-log-line', async (_event: any, rawLine: any) => {
+            if (!isDev && !this.config.devPanelEnabled) {
+                return this.getSnapshot();
+            }
+            const line = normalizeDevLogLine(rawLine);
+            if (line === null) {
+                return this.getSnapshot();
+            }
             const targetPath = this.config.logFilePath ?? this.runtime.watchedLogPath;
             if (!targetPath) {
                 return this.getSnapshot();
             }
-            const line = rawLine.trim() || DEV_SAMPLE_ZONE_LINE;
             const payload = line.endsWith('\n') ? line : `${line}\r\n`;
             await appendFile(targetPath, payload, 'utf8');
             await this.refreshLogFileInfo(targetPath);
@@ -413,8 +453,8 @@ export function runRegisterIpc(this: any) {
                 return false;
             }
             const currentBounds = targetWindow.getBounds();
-            const nextX = Math.round(Number(x) || currentBounds.x);
-            const nextY = Math.round(Number(y) || currentBounds.y);
+            const nextX = finiteRoundedNumber(x, currentBounds.x);
+            const nextY = finiteRoundedNumber(y, currentBounds.y);
             if (nextX === currentBounds.x && nextY === currentBounds.y) {
                 return true;
             }
@@ -426,6 +466,9 @@ export function runRegisterIpc(this: any) {
             return true;
         });
         ipcMain.handle('app:set-overlay-mode', async (_event: any, mode: any) => {
+            if (!isOverlayMode(mode)) {
+                return this.getSnapshot();
+            }
             this.setOverlayMode(mode);
             return this.getSnapshot();
         });

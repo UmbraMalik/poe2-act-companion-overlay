@@ -81,6 +81,44 @@ test('absolute overlay position IPC repositions the overlay without changing wid
   assert.equal(after.height, 410);
 });
 
+test('absolute overlay position IPC accepts zero coordinates', async () => {
+  resetElectronMockState();
+  const app = createTestAppInstance() as any;
+  const { BrowserWindow } = require('electron') as typeof import('electron');
+
+  app.overlayWindow = new BrowserWindow({ width: 520, height: 410 });
+  app.overlayWindow.setPosition(140, 95);
+  app.registerIpc();
+
+  await invokeIpcHandler('app:set-overlay-position', 0, 0);
+  const after = app.overlayWindow.getBounds();
+
+  assert.equal(after.x, 0);
+  assert.equal(after.y, 0);
+  assert.equal(after.width, 520);
+  assert.equal(after.height, 410);
+});
+
+test('overlay mode IPC ignores unknown mode values', async () => {
+  resetElectronMockState();
+  const app = createTestAppInstance() as any;
+  app.overlayMode = 'full';
+  app.runtime.overlayMode = 'full';
+  const previousConfigMode = app.config.mainOverlaySettings.overlayMode;
+  app.registerIpc();
+
+  await invokeIpcHandler('app:set-overlay-mode', 'banana');
+  await invokeIpcHandler('app:update-settings', {
+    mainOverlaySettings: {
+      overlayMode: 'floating'
+    }
+  });
+
+  assert.equal(app.overlayMode, 'full');
+  assert.equal(app.runtime.overlayMode, 'full');
+  assert.equal(app.config.mainOverlaySettings.overlayMode, previousConfigMode);
+});
+
 test('auto-height IPC is ignored while overlay drag is active', async () => {
   resetElectronMockState();
   const app = createTestAppInstance() as any;
