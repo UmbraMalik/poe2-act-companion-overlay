@@ -208,6 +208,7 @@ export function runLogTimerDiagnostics(this: any, event: any, payload: any = {})
 
 const GENERATED_AREA_LEVEL_REGEX = /Generating level\s+(?<level>\d+)\s+area\b/i;
 const T15_MAP_AREA_LEVEL = 79;
+const MAX_RUN_TIMER_START_TIMEOUT_MS = 2_147_483_647;
 
 function getGeneratedAreaLevel(line: unknown): number | null {
         const match = String(line ?? '').match(GENERATED_AREA_LEVEL_REGEX);
@@ -426,8 +427,19 @@ export function runScheduleRunTimerAutoStart(this: any) {
         }
         this.runTimerStartTimer = setTimeout(() => {
             this.runTimerStartTimer = null;
-            this.startRunTimerFromAnchor(settings.leagueStartAt ?? Date.now(), 'main.scheduled-start-timeout');
-        }, Math.min(delayMs, 2_147_483_647));
+            const { runTimer: latestRunTimer, runTimerSettings: latestSettings } = this.config;
+            if (latestRunTimer.status !== 'armed' ||
+                latestSettings.autoStartMode !== 'scheduled_time' ||
+                !latestSettings.autoStart ||
+                !latestSettings.leagueStartAt) {
+                return;
+            }
+            if (Date.now() < latestSettings.leagueStartAt) {
+                this.scheduleRunTimerAutoStart();
+                return;
+            }
+            this.startRunTimerFromAnchor(latestSettings.leagueStartAt, 'main.scheduled-start-timeout');
+        }, Math.min(delayMs, MAX_RUN_TIMER_START_TIMEOUT_MS));
     }
 
 export function runReconcileRunTimerState(this: any) {
@@ -877,7 +889,7 @@ export function runStopTimerVisualHeartbeat(this: any) {
 
 export function runEmitRunTimerState(this: any) {
         for (const win of [this.overlayWindow, this.settingsWindow, this.companionWindow, this.infoWindow, this.communityWindow, this.supportWindow]) {
-            if (win && !win.isDestroyed()) {
+            if (win && !win.isDestroyed() && !win.webContents.isDestroyed()) {
                 win.webContents.send('timer:state-changed', this.config.runTimer);
             }
         }

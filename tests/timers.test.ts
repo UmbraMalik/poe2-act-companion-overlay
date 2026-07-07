@@ -17,6 +17,8 @@ import {
   createTestAppInstance
 } from './helpers/zoneTestUtils';
 
+const MAX_NODE_TIMEOUT_MS = 2_147_483_647;
+
 test('formatDuration safely formats edge values for timer display', () => {
   assert.equal(formatDuration(0), '00:00');
   assert.equal(formatDuration(59_999), '00:59');
@@ -52,6 +54,106 @@ test('display timer helpers preserve elapsed time and countdown safety', () => {
   assert.equal(getCountdownDisplayMs({ leagueStartAt: null } as never, 1000), null);
   assert.equal(getCountdownDisplayMs({ leagueStartAt: 5000 } as never, 1000), 4000);
   assert.equal(getCountdownDisplayMs({ leagueStartAt: 5000 } as never, 6000), 0);
+});
+
+test('scheduled auto-start stays armed when max timeout fires before league start', () => {
+  const app = createTestAppInstance();
+  const startNow = 1_000;
+  const leagueStartAt = startNow + MAX_NODE_TIMEOUT_MS + 60_000;
+  const originalSetTimeout = global.setTimeout;
+  const originalClearTimeout = global.clearTimeout;
+
+  interface CapturedTimeout {
+    active: boolean;
+    delayMs: number;
+    fire: () => void;
+  }
+
+  const scheduledTimeouts: CapturedTimeout[] = [];
+
+  global.setTimeout = ((callback: (...args: unknown[]) => void, delay?: number, ...args: unknown[]) => {
+    const timeout: CapturedTimeout = {
+      active: true,
+      delayMs: Number(delay ?? 0),
+      fire: () => {
+        if (!timeout.active) {
+          return;
+        }
+        timeout.active = false;
+        callback(...args);
+      }
+    };
+    scheduledTimeouts.push(timeout);
+    return timeout as unknown as ReturnType<typeof setTimeout>;
+  }) as typeof setTimeout;
+
+  global.clearTimeout = ((timeout?: ReturnType<typeof setTimeout>) => {
+    if (timeout && typeof timeout === 'object' && 'active' in timeout) {
+      (timeout as unknown as CapturedTimeout).active = false;
+    }
+  }) as typeof clearTimeout;
+
+  try {
+    withMockedNow(startNow, () => {
+      (app as any).config = (app as any).configStore.update({
+        runTimer: {
+          ...(app as any).config.runTimer,
+          status: 'armed'
+        },
+        runTimerSettings: {
+          ...(app as any).config.runTimerSettings,
+          autoStartMode: 'scheduled_time',
+          autoStart: true,
+          leagueStartAt
+        }
+      });
+      (app as any).scheduleRunTimerAutoStart();
+    });
+
+    assert.equal(scheduledTimeouts.length, 1);
+    assert.equal(scheduledTimeouts[0]?.delayMs, MAX_NODE_TIMEOUT_MS);
+
+    withMockedNow(startNow + MAX_NODE_TIMEOUT_MS, () => {
+      scheduledTimeouts[0]?.fire();
+    });
+
+    assert.equal((app as any).config.runTimer.status, 'armed');
+    assert.equal(scheduledTimeouts.length, 2);
+    assert.equal(scheduledTimeouts[1]?.delayMs, 60_000);
+    assert.ok((app as any).runTimerStartTimer);
+  } finally {
+    global.setTimeout = originalSetTimeout;
+    global.clearTimeout = originalClearTimeout;
+  }
+});
+
+test('timer state broadcast skips windows with destroyed webContents', () => {
+  const app = createTestAppInstance();
+  const sentChannels: string[] = [];
+
+  (app as any).overlayWindow = {
+    isDestroyed: () => false,
+    webContents: {
+      isDestroyed: () => true,
+      send: () => {
+        sentChannels.push('destroyed-window');
+      }
+    }
+  };
+  (app as any).settingsWindow = {
+    isDestroyed: () => false,
+    webContents: {
+      isDestroyed: () => false,
+      send: (channel: string) => {
+        sentChannels.push(channel);
+      }
+    }
+  };
+
+  assert.doesNotThrow(() => {
+    (app as any).emitRunTimerState();
+  });
+  assert.deepEqual(sentChannels, ['timer:state-changed']);
 });
 
 test('run timer start, pause, resume and reset preserve accumulated elapsed time', () => {
