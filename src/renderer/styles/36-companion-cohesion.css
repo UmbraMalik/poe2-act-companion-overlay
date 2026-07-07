@@ -1,0 +1,355 @@
+/* Final companion panel cohesion: one visual language across detailed tabs and themes. */
+.companion-page {
+  --companion-surface: rgba(8, 11, 15, 0.72);
+  --companion-surface-strong: rgba(17, 21, 27, 0.86);
+  --companion-surface-soft: rgba(255, 255, 255, 0.024);
+  --companion-border: rgba(205, 220, 237, 0.105);
+  --companion-border-strong: rgba(241, 185, 106, 0.34);
+  --companion-title: rgba(255, 219, 158, 0.94);
+  --companion-text: rgba(244, 247, 250, 0.92);
+  --companion-muted: rgba(207, 219, 232, 0.68);
+  --companion-gold: rgba(241, 185, 106, 0.92);
+  --companion-gold-soft: rgba(241, 185, 106, 0.135);
+  --companion-blue: rgba(112, 190, 255, 0.78);
+  --companion-blue-soft: rgba(93, 166, 255, 0.105);
+  --companion-green: rgba(122, 214, 144, 0.78);
+  --companion-green-soft: rgba(122, 214, 144, 0.095);
+  --companion-red: rgba(255, 116, 96, 0.76);
+  --companion-red-soft: rgba(226, 97, 97, 0.095);
+  --companion-card-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.032),
+    0 12px 26px rgba(0, 0, 0, 0.14);
+}
+
+.theme-dark-fantasy.companion-page {
+  --companion-surface: rgba(12, 8, 21, 0.80);
+  --companion-surface-strong: rgba(22, 14, 36, 0.88);
+  --companion-surface-soft: rgba(167, 123, 255, 0.055);
+  --companion-border: rgba(212, 184, 255, 0.13);
+  --companion-border-strong: rgba(217, 167, 95, 0.40);
+  --companion-title: rgba(239, 179, 91, 0.96);
+  --companion-text: rgba(245, 239, 255, 0.94);
+  --companion-muted: rgba(188, 174, 211, 0.76);
+  --companion-gold: rgba(217, 167, 95, 0.92);
+  --companion-gold-soft: rgba(217, 167, 95, 0.16);
+  --companion-blue: rgba(115, 184, 255, 0.80);
+  --companion-blue-soft: rgba(96, 174, 255, 0.13);
+  --companion-green: rgba(115, 235, 172, 0.76);
+  --companion-green-soft: rgba(72, 201, 139, 0.12);
+  --companion-red: rgba(255, 128, 116, 0.76);
+  --companion-red-soft: rgba(255, 116, 112, 0.12);
+}
+
+.companion-page .companion-card {
+  background:
+    radial-gradient(circle at 8% 0%, var(--companion-gold-soft), transparent 32%),
+    linear-gradient(180deg, var(--companion-surface-strong), var(--companion-surface)) !important;
+  border-color: var(--companion-border-strong) !important;
+}
+
+.theme-dark-fantasy.companion-page .companion-card {
+  background:
+    radial-gradient(circle at 12% 0%, rgba(167, 123, 255, 0.18), transparent 34%),
+    radial-gradient(circle at 90% 10%, var(--companion-gold-soft), transparent 32%),
+    linear-gradient(180deg, rgba(20, 12, 34, 0.96), rgba(8, 5, 14, 0.96)) !important;
+}
+
+.companion-card > .companion-tab-row {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.companion-card > .companion-tab-row button {
+  min-width: 0;
+  padding-inline: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.companion-card > .companion-tab-row .button-secondary,
+.companion-page .companion-route-toolbar .button-secondary {
+  border-color: var(--companion-border) !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.030), rgba(255, 255, 255, 0.010)),
+    var(--companion-surface-soft) !important;
+  color: var(--companion-muted) !important;
+}
+
+.companion-card > .companion-tab-row .button-primary,
+.companion-page .companion-route-toolbar .button-primary {
+  border-color: var(--companion-border-strong) !important;
+  background:
+    radial-gradient(circle at 50% 0%, var(--companion-gold-soft), transparent 58%),
+    linear-gradient(180deg, rgba(241, 185, 106, 0.18), rgba(255, 255, 255, 0.018)),
+    var(--companion-surface-soft) !important;
+  color: var(--companion-title) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 232, 176, 0.075),
+    0 0 18px rgba(241, 185, 106, 0.10) !important;
+}
+
+.theme-dark-fantasy.companion-page .companion-card > .companion-tab-row .button-primary,
+.theme-dark-fantasy.companion-page .companion-route-toolbar .button-primary {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(217, 167, 95, 0.24), transparent 58%),
+    linear-gradient(180deg, rgba(92, 64, 145, 0.70), rgba(31, 20, 53, 0.82)) !important;
+}
+
+.companion-page .companion-tab-body {
+  border-radius: 14px;
+  background:
+    radial-gradient(circle at 12% 0%, var(--companion-blue-soft), transparent 36%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.018), transparent 44%);
+}
+
+.companion-page .companion-tab-layout {
+  padding: 1px;
+}
+
+.companion-page .companion-block,
+.companion-page .zone-metric-card,
+.companion-page .timer-cockpit-details > div,
+.companion-page .timer-segment-list > div,
+.companion-page .run-metric-card,
+.companion-page .summary-stat,
+.companion-page .summary-compare-act-pill,
+.companion-page .summary-history-row,
+.companion-page .act-split-row,
+.companion-page .summary-act-breakdown-row,
+.companion-page .reminder-item,
+.companion-page .vendor-checkpoint,
+.companion-page .power-spike-timeline-card,
+.companion-page .info-cell,
+.companion-page .bonus-row {
+  border-color: var(--companion-border) !important;
+  background:
+    radial-gradient(circle at 12% 0%, var(--companion-surface-soft), transparent 44%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.026), rgba(255, 255, 255, 0.010)),
+    rgba(0, 0, 0, 0.10) !important;
+  box-shadow: var(--companion-card-shadow) !important;
+}
+
+.companion-page .zone-hero-card,
+.companion-page .timer-cockpit-card,
+.companion-page .act-times-hero-card,
+.companion-page .summary-result-panel,
+.companion-page .bonuses-summary-card {
+  border-color: var(--companion-border-strong) !important;
+  background:
+    radial-gradient(circle at 0 0, var(--companion-gold-soft), transparent 40%),
+    radial-gradient(circle at 92% 8%, var(--companion-blue-soft), transparent 34%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.036), rgba(255, 255, 255, 0.010)),
+    var(--companion-surface) !important;
+}
+
+.companion-page .companion-block h3,
+.companion-page .companion-inline-title,
+.companion-page .zone-section-heading h3,
+.companion-page .summary-section-heading h3,
+.companion-page .bonuses-summary-card h3,
+.companion-page .bonuses-act-card h3,
+.companion-page .vendor-roadmap-section h4 {
+  color: var(--companion-title) !important;
+}
+
+.companion-page .zone-hero-copy h3,
+.companion-page .timer-main-readout h3,
+.companion-page .timer-main-readout strong,
+.companion-page .summary-result-main strong {
+  color: var(--companion-title) !important;
+  text-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.62),
+    0 0 18px rgba(241, 185, 106, 0.18) !important;
+}
+
+.theme-dark-fantasy.companion-page .zone-hero-copy h3,
+.theme-dark-fantasy.companion-page .timer-main-readout h3,
+.theme-dark-fantasy.companion-page .timer-main-readout strong,
+.theme-dark-fantasy.companion-page .summary-result-main strong {
+  text-shadow:
+    0 2px 0 rgba(0, 0, 0, 0.55),
+    0 0 18px rgba(217, 167, 95, 0.24),
+    0 0 28px rgba(167, 123, 255, 0.18) !important;
+}
+
+.companion-page .route-overview-list.route-overview-grid {
+  scrollbar-color: var(--companion-gold) rgba(255, 255, 255, 0.045);
+}
+
+.companion-page .route-overview-list.route-overview-grid::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--companion-gold), rgba(149, 98, 35, 0.74));
+}
+
+.companion-page .route-polish-layout .route-overview-card.status-current,
+.companion-page .route-polish-layout .route-overview-card.is-route-next,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.status-current,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.is-route-next {
+  min-height: 120px !important;
+  opacity: 1 !important;
+  transform: translateY(-1px) !important;
+  filter: none !important;
+  border-color: var(--companion-border-strong) !important;
+  background:
+    radial-gradient(circle at 0 0, var(--companion-gold-soft), transparent 46%),
+    linear-gradient(180deg, rgba(241, 185, 106, 0.13), rgba(255, 255, 255, 0.014)),
+    var(--companion-surface) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 232, 176, 0.13),
+    inset 4px 0 0 var(--companion-gold),
+    0 0 24px rgba(241, 185, 106, 0.13),
+    0 14px 28px rgba(0, 0, 0, 0.16) !important;
+}
+
+.companion-page .route-polish-layout .route-overview-card.status-current::before,
+.companion-page .route-polish-layout .route-overview-card.is-route-next::before,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.status-current::before,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.is-route-next::before {
+  width: 4px !important;
+  opacity: 1 !important;
+  background: linear-gradient(180deg, rgba(255, 230, 174, 0.96), var(--companion-gold)) !important;
+  box-shadow: 0 0 18px rgba(241, 185, 106, 0.26) !important;
+}
+
+.companion-page .route-polish-layout .route-overview-card.status-current::after,
+.companion-page .route-polish-layout .route-overview-card.is-route-next::after,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.status-current::after,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.is-route-next::after {
+  width: auto !important;
+  opacity: 0.38 !important;
+  background: linear-gradient(135deg, rgba(255, 232, 176, 0.070), transparent 44%) !important;
+}
+
+.companion-page .route-polish-layout .route-overview-card.status-current .route-zone-name,
+.companion-page .route-polish-layout .route-overview-card.is-route-next .route-zone-name,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.status-current .route-zone-name,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.is-route-next .route-zone-name {
+  color: var(--companion-title) !important;
+  text-shadow: 0 0 14px rgba(241, 185, 106, 0.16) !important;
+}
+
+.companion-page .route-polish-layout .route-overview-card.status-current .route-step-index,
+.companion-page .route-polish-layout .route-overview-card.is-route-next .route-step-index,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.status-current .route-step-index,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.is-route-next .route-step-index {
+  color: rgba(35, 21, 4, 0.94) !important;
+  border-color: rgba(255, 230, 174, 0.68) !important;
+  background: linear-gradient(180deg, rgba(255, 217, 143, 0.96), rgba(204, 139, 56, 0.94)) !important;
+  box-shadow: 0 0 14px rgba(241, 185, 106, 0.16) !important;
+}
+
+.companion-page .route-polish-layout .route-overview-card.status-current .route-rec-badge,
+.companion-page .route-polish-layout .route-overview-card.is-route-next .route-rec-badge,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.status-current .route-rec-badge,
+.theme-dark-fantasy.companion-page .route-polish-layout .route-overview-card.is-route-next .route-rec-badge {
+  border-color: rgba(241, 185, 106, 0.25) !important;
+  background: var(--companion-gold-soft) !important;
+  color: rgba(255, 239, 204, 0.90) !important;
+}
+
+.companion-page .route-polish-layout .route-overview-card.status-completed,
+.companion-page .route-polish-layout .route-overview-card.status-visited,
+.companion-page .route-polish-layout .route-overview-card.status-done {
+  opacity: 0.72 !important;
+  border-color: rgba(122, 214, 144, 0.18) !important;
+  background:
+    radial-gradient(circle at 0 0, var(--companion-green-soft), transparent 42%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.016), rgba(255, 255, 255, 0.006)),
+    rgba(0, 0, 0, 0.075) !important;
+}
+
+.companion-page .act-split-row.is-current,
+.companion-page .summary-act-breakdown-row.is-current,
+.companion-page .reminder-item.is-current,
+.companion-page .reminder-item.is-nearest,
+.companion-page .vendor-checkpoint.is-current,
+.companion-page .power-spike-timeline-item.is-nearest .power-spike-timeline-card {
+  border-color: var(--companion-border-strong) !important;
+  background:
+    radial-gradient(circle at 0 0, var(--companion-gold-soft), transparent 48%),
+    var(--companion-surface) !important;
+}
+
+.companion-page .bonus-row.is-done,
+.companion-page .zone-bonus-details-list .bonus-line.is-done,
+.companion-page .bonus-line.is-done {
+  border-color: rgba(122, 214, 144, 0.26) !important;
+  background:
+    radial-gradient(circle at 0 0, var(--companion-green-soft), transparent 42%),
+    rgba(0, 0, 0, 0.08) !important;
+}
+
+.companion-page .bonus-row.is-pending,
+.companion-page .route-overview-card.status-missed {
+  border-color: rgba(255, 116, 96, 0.22) !important;
+  background:
+    radial-gradient(circle at 0 0, var(--companion-red-soft), transparent 42%),
+    rgba(0, 0, 0, 0.08) !important;
+}
+
+.companion-page .helper-text,
+.companion-page .route-empty-note,
+.companion-page .route-more-note,
+.companion-page .bonus-meta,
+.companion-page .bonus-detected-line,
+.companion-page .summary-stat small,
+.companion-page .summary-history-main span,
+.companion-page .summary-history-stats span,
+.companion-page .act-split-total,
+.companion-page .timer-cockpit-details small {
+  color: var(--companion-muted) !important;
+}
+
+.companion-page .route-zone-name,
+.companion-page .bonus-title-line strong,
+.companion-page .reminder-title,
+.companion-page .act-split-time,
+.companion-page .summary-stat strong,
+.companion-page .summary-history-main strong,
+.companion-page .summary-compare-lead strong {
+  color: var(--companion-text) !important;
+}
+
+.companion-page .route-step-index,
+.companion-page .route-rec-badge,
+.companion-page .route-state-pill,
+.companion-page .act-time-status-pill,
+.companion-page .bonus-category-pill,
+.companion-page .bonus-verify-pill,
+.companion-page .reminder-level,
+.companion-page .reminder-badge,
+.companion-page .summary-section-heading span,
+.companion-page .summary-history-stats span {
+  border-color: var(--companion-border) !important;
+  background: rgba(255, 255, 255, 0.026) !important;
+  color: var(--companion-muted) !important;
+}
+
+.companion-page .button-row button,
+.companion-page .timer-action-button,
+.companion-page .bonus-toggle-button {
+  min-width: 0;
+}
+
+.companion-page .summary-history-row,
+.companion-page .bonus-row,
+.companion-page .reminder-item,
+.companion-page .route-overview-card {
+  overflow: hidden;
+}
+
+@media (max-width: 1180px) {
+  .companion-card > .companion-tab-row {
+    grid-template-columns: repeat(auto-fit, minmax(118px, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .companion-card > .companion-tab-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .companion-page .companion-card {
+    padding: 12px;
+  }
+}

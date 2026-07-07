@@ -17,6 +17,7 @@ The app uses the numbered CSS partials in this folder as the single source of tr
 11. `11-overlay-header-actions.css` — header layout, close UX, intent hover/focus colors, compact header fixes.
 12. `12-localization-toggle.css` — very narrow overlay and RU/EN language toggle.
 13. `13-guide-update-highlights.css` and later numbered partials — focused late-stage overlay/companion polish. Keep new overrides at the end of the numbered chain.
+14. `36-companion-cohesion.css` — final companion panel pass that aligns tab surfaces, current states and theme-specific accents.
 
 Keep imports in `src/renderer/styles.css` in numeric order unless you intentionally change cascade priority.
 

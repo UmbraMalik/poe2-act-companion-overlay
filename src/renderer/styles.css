@@ -41,3 +41,4 @@
 @import './styles/33-click-feedback.css'; /* Short click confirmation bursts for overlay, companion and app controls */
 @import './styles/34-event-feedback-polish.css'; /* One-shot route, bonus, timer split and overlay event feedback */
 @import './styles/35-dark-fantasy-theme.css'; /* Optional persisted black-violet fantasy theme */
+@import './styles/36-companion-cohesion.css'; /* Final companion panel cohesion across tabs and themes */

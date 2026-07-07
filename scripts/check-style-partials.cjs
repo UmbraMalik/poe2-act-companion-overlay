@@ -89,6 +89,7 @@ const expected = [
   '33-click-feedback.css',
   '34-event-feedback-polish.css',
   '35-dark-fantasy-theme.css',
+  '36-companion-cohesion.css',
 ];
 const expectedCssFiles = [...expected, ...trackedNonNumberedPartials].sort();
 const expectedImports = [
