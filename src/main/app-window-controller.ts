@@ -133,8 +133,6 @@ export function runCreateOverlayWindow(this: any) {
 
 export function runGetConfiguredHotkeys(this: any) {
         return {
-            markChecklistDone: formatConfiguredHotkey(this.config.hotkeys.markChecklistDone, DEFAULT_HOTKEYS.markChecklistDone),
-            undoChecklistMark: formatConfiguredHotkey(this.config.hotkeys.undoChecklistMark, DEFAULT_HOTKEYS.undoChecklistMark),
             toggleTimerPause: formatConfiguredHotkey(this.config.hotkeys.toggleTimerPause, DEFAULT_HOTKEYS.toggleTimerPause),
             openCompanion: formatConfiguredHotkey(this.config.hotkeys.openCompanion, DEFAULT_HOTKEYS.openCompanion),
             toggleOverlayMode: formatConfiguredHotkey(this.config.hotkeys.toggleOverlayMode, DEFAULT_HOTKEYS.toggleOverlayMode)
@@ -162,9 +160,6 @@ export function runRegisterGlobalHotkeys(this: any) {
             ['openCompanion', hotkeys.openCompanion, () => this.toggleCompanionWindow()],
             ['toggleOverlayMode', hotkeys.toggleOverlayMode, () => this.toggleOverlayMode()]
         ];
-        if (this.config.manualHotkeysEnabled) {
-            shortcuts.push(['markChecklistDone', hotkeys.markChecklistDone, () => this.markCurrentChecklistItemDone()], ['undoChecklistMark', hotkeys.undoChecklistMark, () => this.undoLastChecklistMark()]);
-        }
         const usedAccelerators = new Map<string, string>();
         for (const [action, accelerator, handler] of shortcuts) {
             const normalized = normalizeHotkeyAccelerator(accelerator);
@@ -243,19 +238,6 @@ export function runAttachManualHotkeys(this: any, window: any) {
                 else if (this.config.runTimer.status === 'paused') {
                     this.resumeRunTimer();
                 }
-                return;
-            }
-            if (!this.config.manualHotkeysEnabled) {
-                return;
-            }
-            if (matches(hotkeys.markChecklistDone)) {
-                event.preventDefault();
-                this.markCurrentChecklistItemDone();
-                return;
-            }
-            if (matches(hotkeys.undoChecklistMark)) {
-                event.preventDefault();
-                this.undoLastChecklistMark();
                 return;
             }
         });
@@ -513,10 +495,6 @@ export function runCreateTray(this: any) {
 export function runGetHotkeyTrayLabel(this: any) {
         const hotkeys = this.getConfiguredHotkeys();
         const segments: string[] = [];
-        if (this.config.manualHotkeysEnabled) {
-            segments.push(`${hotkeys.markChecklistDone} — ${this.t('main.hotkeysMark')}`);
-            segments.push(`${hotkeys.undoChecklistMark} — ${this.t('main.hotkeysUndo')}`);
-        }
         segments.push(`${hotkeys.toggleTimerPause} — ${this.t('main.hotkeysPause')}`);
         segments.push(`${hotkeys.openCompanion} — ${this.t('main.hotkeysCompanion')}`);
         segments.push(`${hotkeys.toggleOverlayMode} — ${this.t('main.hotkeysOverlayMode')}`);

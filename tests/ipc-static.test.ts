@@ -271,6 +271,9 @@ test('manual checklist IPC stays a legacy no-op compatibility surface', () => {
   const main = readMainProcessSource();
   const preload = readText('src/main/preload.ts');
   const stateController = readText('src/main/app-state-controller.ts');
+  const appWindow = readText('src/main/app-window-controller.ts');
+  const settingsPage = readText('src/renderer/pages/SettingsPage.tsx');
+  const hotkeyUtils = readText('src/main/hotkey-utils.ts');
 
   assert.match(main, /ipcMain\.handle\('app:mark-current-checklist-item-done'/);
   assert.match(main, /ipcMain\.handle\('app:undo-last-checklist-mark'/);
@@ -287,6 +290,11 @@ test('manual checklist IPC stays a legacy no-op compatibility surface', () => {
 
   const noOpBodies = stateController.slice(markStart, nextStart);
   assert.doesNotMatch(noOpBodies, /configStore\.update|broadcastState|checklistHistory|zoneProgress/);
+  assert.doesNotMatch(appWindow, /shortcuts\.push\(\['markChecklistDone'/);
+  assert.doesNotMatch(appWindow, /matches\(hotkeys\.(markChecklistDone|undoChecklistMark)\)/);
+  assert.doesNotMatch(appWindow, /hotkeys\.(markChecklistDone|undoChecklistMark)/);
+  assert.doesNotMatch(settingsPage, /key: '(markChecklistDone|undoChecklistMark)'/);
+  assert.doesNotMatch(hotkeyUtils, /(markChecklistDone|undoChecklistMark):/);
 });
 
 test('default saved run labels use the configured app language outside timer controller', () => {
