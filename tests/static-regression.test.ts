@@ -292,6 +292,10 @@ test('quality gates keep source reachability and release artifact checks wired',
   assert.match(packageJson.scripts['test:regression'], /check:main-modules/);
   assert.match(packageJson.scripts['test:regression'], /check:renderer-modules/);
   assert.match(packageJson.scripts['dist:checked'], /check:release/);
+  assert.deepEqual(
+    packageJson.scripts['dist:checked'].split('&&').map((step: string) => step.trim()),
+    ['npm run clean:release', 'npm run build:checked', 'electron-builder', 'npm run check:release']
+  );
   assert.match(mainCheck, /collectReachableSources/);
   assert.match(mainCheck, /Unreachable main-process source files/);
   assert.match(mainCheck, /page-model/i);
@@ -300,6 +304,9 @@ test('quality gates keep source reachability and release artifact checks wired',
   assert.match(rendererCheck, /page-model/i);
   assert.match(releaseCheck, /packageJson\.version/);
   assert.match(releaseCheck, /expectedExeName/);
+  assert.match(releaseCheck, /latestFileEntries/);
+  assert.match(releaseCheck, /duplicate installer entries/);
+  assert.match(releaseCheck, /file entry sha512 does not match top-level sha512/);
   assert.match(releaseCheck, /latest\.yml sha512 does not match/);
   assert.match(releaseCheck, /latest\.yml installer size/);
 });
