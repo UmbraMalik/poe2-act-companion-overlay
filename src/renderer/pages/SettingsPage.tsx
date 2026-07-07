@@ -18,6 +18,15 @@ import { formatZoneMatcherReason, translateSystemText } from '../../i18n/runtime
 import { translate } from '../../i18n/translations';
 import { getAppThemeClassName } from '../theme';
 import { SettingsSelect } from '../settings/SettingsSelect';
+import {
+  buildOverlayPresetPatch,
+  formatOverlayPresetLabel,
+  formatOverlayPresetState,
+  formatOverlayPresetTitle,
+  getMatchingOverlayPreset,
+  OVERLAY_PRESET_IDS,
+  type OverlayPresetId
+} from '../overlay-presets';
 import type {
   AppTheme,
   AppLanguage,
@@ -355,6 +364,8 @@ export function SettingsPage() {
   );
   const currentCountdownMs = liveRunTimer.countdownMs;
   const sceneName = getSceneDisplayName(snapshot, appLanguage);
+  const activeOverlayPreset = getMatchingOverlayPreset(config);
+  const overlayPresetTitle = formatOverlayPresetTitle(appLanguage);
   const hasSelectedLogFile = Boolean(runtime.watchedLogPath ?? config.logFilePath);
   const logFileStatusText = !hasSelectedLogFile
     ? t('settings.logStatusPending')
@@ -406,6 +417,12 @@ export function SettingsPage() {
     } finally {
       setBusy(null);
     }
+  };
+
+  const applyOverlayPreset = async (presetId: OverlayPresetId) => {
+    await runTask(`overlay-preset-${presetId}`, async () => {
+      await window.poe2Overlay.updateSettings(buildOverlayPresetPatch(presetId));
+    });
   };
 
 
@@ -1115,6 +1132,35 @@ export function SettingsPage() {
         <section id="settings-overlay" className="settings-card">
           <h2 className="settings-section-title">{t('settings.overlayTitle')}</h2>
           <p className="helper-text">{t('settings.overlayDescription')}</p>
+
+          <div className="settings-subsection overlay-presets-subsection">
+            <div className="settings-card-header settings-card-header-compact">
+              <div>
+                <h3>{overlayPresetTitle}</h3>
+                <p className="helper-text">{formatOverlayPresetState(activeOverlayPreset, appLanguage)}</p>
+              </div>
+            </div>
+            <div className="button-row overlay-preset-row" role="group" aria-label={overlayPresetTitle}>
+              {OVERLAY_PRESET_IDS.map((presetId) => {
+                const isActivePreset = activeOverlayPreset === presetId;
+
+                return (
+                  <button
+                    key={presetId}
+                    type="button"
+                    className={isActivePreset ? 'button-primary' : 'button-secondary'}
+                    aria-pressed={isActivePreset}
+                    disabled={busy !== null}
+                    onClick={() => {
+                      void applyOverlayPreset(presetId);
+                    }}
+                  >
+                    {formatOverlayPresetLabel(presetId, appLanguage)}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
 
           <div className="settings-grid">
             <label className="settings-field settings-field-full">

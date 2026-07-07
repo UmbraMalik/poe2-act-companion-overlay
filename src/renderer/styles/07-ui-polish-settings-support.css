@@ -550,6 +550,14 @@
   gap: 8px;
 }
 
+.settings-page:not(.companion-page) .overlay-preset-row {
+  align-items: stretch;
+}
+
+.settings-page:not(.companion-page) .overlay-preset-row button {
+  min-width: 112px;
+}
+
 .settings-page:not(.companion-page) button,
 .settings-page:not(.companion-page) select,
 .settings-page:not(.companion-page) input,
