@@ -847,7 +847,7 @@ function getRendererViewportHeight(): number {
 }
 
 export function OverlayPage() {
-  const snapshot = useAppSnapshot();
+  const snapshot = useAppSnapshot({ initialSnapshot: 'overlay' });
   const { t, language } = useI18n(snapshot?.config.appLanguage);
   const syncedRunTimer = useRunTimerState(snapshot?.config.runTimer);
   const resizeStateRef = useRef<{

@@ -638,6 +638,7 @@ export interface TimerDiagnosticsPayload {
 
 export interface ElectronApi {
   getSnapshot: () => Promise<AppSnapshot>;
+  getOverlaySnapshot: () => Promise<AppSnapshot>;
   getAppVersion: () => Promise<string>;
   getCachedUpdateCheckResult: () => Promise<UpdateCheckResult | null>;
   getStartupUpdateInfo: () => Promise<UpdateInfo | null>;

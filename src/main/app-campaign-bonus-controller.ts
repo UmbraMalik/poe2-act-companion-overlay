@@ -3,6 +3,25 @@ import {
   parsePermanentReward
 } from './services/log-parser';
 import { buildChecklistDefinition } from '../shared/checklist';
+import type {
+  AppConfig,
+  CampaignBonusDefinition
+} from '../shared/types';
+import type { ConfigStore } from './services/config-store';
+
+type CampaignBonusDetectedBy = 'log' | 'manual' | null;
+
+interface CampaignBonusDoneContext {
+  campaignBonuses: CampaignBonusDefinition[];
+  config: AppConfig;
+  configStore: Pick<ConfigStore, 'update'>;
+  syncCampaignBonusWithChecklist: (
+    bonus: CampaignBonusDefinition,
+    detectedBy: CampaignBonusDetectedBy,
+    line: string | null
+  ) => void;
+  broadcastState: () => void;
+}
 
 
 export function runNormalizeCampaignBonusSceneName(this: any, value: any) {
@@ -59,13 +78,19 @@ export function runCampaignBonusRuleMatches(this: any, rule: any, line: any) {
         return true;
     }
 
-export function runSetCampaignBonusDone(this: any, bonusId: any, detectedBy: any, line: any = null) {
-        const matchedBonus = this.campaignBonuses.find((bonus: any) => bonus.id === bonusId) ?? null;
+export function runSetCampaignBonusDone(
+        this: unknown,
+        bonusId: string,
+        detectedBy: CampaignBonusDetectedBy,
+        line: string | null = null
+    ) {
+        const app = this as CampaignBonusDoneContext;
+        const matchedBonus = app.campaignBonuses.find((bonus) => bonus.id === bonusId) ?? null;
         if (!matchedBonus) {
             return false;
         }
-        const existing = this.config.campaignBonusProgress[bonusId];
-        const nextProgress = { ...this.config.campaignBonusProgress };
+        const existing = app.config.campaignBonusProgress[bonusId];
+        const nextProgress = { ...app.config.campaignBonusProgress };
         if (detectedBy === null) {
             if (!existing) {
                 return false;
@@ -80,11 +105,11 @@ export function runSetCampaignBonusDone(this: any, bonusId: any, detectedBy: any
                 ...(line ? { logLine: line } : {})
             };
         }
-        this.config = this.configStore.update({
+        app.config = app.configStore.update({
             campaignBonusProgress: nextProgress
         });
-        this.syncCampaignBonusWithChecklist(matchedBonus, detectedBy, line);
-        this.broadcastState();
+        app.syncCampaignBonusWithChecklist(matchedBonus, detectedBy, line);
+        app.broadcastState();
         return true;
     }
 

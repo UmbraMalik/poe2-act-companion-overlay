@@ -6,6 +6,7 @@ test('preload exposes only specific safe IPC APIs and not the raw ipcRenderer', 
   const preload = readText('src/main/preload.ts');
 
   for (const channel of [
+    'app:get-overlay-snapshot',
     'app:update-settings',
     'app:open-report-issue',
     'app:open-external',
@@ -21,6 +22,34 @@ test('preload exposes only specific safe IPC APIs and not the raw ipcRenderer', 
   assert.match(preload, /sendTimerDiagnostics/);
   assert.match(preload, /contextBridge\.exposeInMainWorld\('poe2Overlay', api\)/);
   assert.doesNotMatch(preload, /exposeInMainWorld\([^)]*ipcRenderer/);
+});
+
+test('overlay initial snapshot uses trimmed overlay IPC while app pages keep full snapshot', () => {
+  const main = readMainProcessSource();
+  const preload = readText('src/main/preload.ts');
+  const types = readText('src/shared/types.ts');
+  const hooks = readText('src/renderer/hooks.ts');
+  const overlayPage = readText('src/renderer/pages/OverlayPage.tsx');
+  const settingsPage = readText('src/renderer/pages/SettingsPage.tsx');
+  const companionPage = readText('src/renderer/pages/CompanionPage.tsx');
+  const useI18n = readText('src/renderer/useI18n.ts');
+  const snapshotHook = hooks.slice(
+    hooks.indexOf('export interface UseAppSnapshotOptions'),
+    hooks.indexOf('export function useLiveNow')
+  );
+
+  assert.match(main, /ipcMain\.handle\('app:get-overlay-snapshot', async \(\) => this\.getOverlaySnapshot\(\)\)/);
+  assert.match(preload, /getOverlaySnapshot: \(\) => ipcRenderer\.invoke\('app:get-overlay-snapshot'\)/);
+  assert.match(types, /getOverlaySnapshot: \(\) => Promise<AppSnapshot>/);
+  assert.match(snapshotHook, /initialSnapshot\?: 'full' \| 'overlay'/);
+  assert.match(snapshotHook, /initialSnapshot === 'overlay'/);
+  assert.match(snapshotHook, /window\.poe2Overlay\.getOverlaySnapshot\(\)/);
+  assert.match(snapshotHook, /window\.poe2Overlay\.getSnapshot\(\)/);
+  assert.match(overlayPage, /useAppSnapshot\(\{\s*initialSnapshot:\s*'overlay'\s*\}\)/);
+  assert.match(settingsPage, /const snapshot = useAppSnapshot\(\);/);
+  assert.match(companionPage, /const snapshot = useAppSnapshot\(\);/);
+  assert.match(useI18n, /const shouldReadSnapshot = arguments\.length === 0/);
+  assert.match(useI18n, /useAppSnapshot\(\{\s*enabled:\s*shouldReadSnapshot\s*\}\)/);
 });
 
 test('main process keeps renderer windows isolated and guards shell.openExternal', () => {

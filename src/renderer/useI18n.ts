@@ -12,7 +12,8 @@ function readStoredLanguage(): AppLanguage {
 }
 
 export function useI18n(languageOverride?: AppLanguage | null) {
-  const snapshot = useAppSnapshot();
+  const shouldReadSnapshot = arguments.length === 0;
+  const snapshot = useAppSnapshot({ enabled: shouldReadSnapshot });
   const language = languageOverride ?? snapshot?.config.appLanguage ?? readStoredLanguage();
   const i18n = useMemo(() => createI18n(language), [language]);
 

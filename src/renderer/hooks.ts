@@ -21,11 +21,25 @@ import {
   type OverlayRenderTask
 } from './render-scheduler';
 
-export function useAppSnapshot() {
+export interface UseAppSnapshotOptions {
+  enabled?: boolean;
+  initialSnapshot?: 'full' | 'overlay';
+}
+
+export function useAppSnapshot(options: UseAppSnapshotOptions = {}) {
+  const enabled = options.enabled ?? true;
+  const initialSnapshot = options.initialSnapshot ?? 'full';
   const [snapshot, setSnapshot] = useState<AppSnapshot | null>(null);
 
   useEffect(() => {
     let isMounted = true;
+    if (!enabled) {
+      setSnapshot(null);
+      return () => {
+        isMounted = false;
+      };
+    }
+
     const previewMode =
       new URLSearchParams(window.location.search).get('preview') === '1';
     const hasElectronApi =
@@ -39,7 +53,12 @@ export function useAppSnapshot() {
       };
     }
 
-    void window.poe2Overlay.getSnapshot().then((nextSnapshot) => {
+    const initialSnapshotPromise = initialSnapshot === 'overlay' &&
+      typeof window.poe2Overlay.getOverlaySnapshot === 'function'
+      ? window.poe2Overlay.getOverlaySnapshot()
+      : window.poe2Overlay.getSnapshot();
+
+    void initialSnapshotPromise.then((nextSnapshot) => {
       if (isMounted) {
         setSnapshot(nextSnapshot);
       }
@@ -127,7 +146,7 @@ export function useAppSnapshot() {
       clearPendingFlush();
       unsubscribe();
     };
-  }, []);
+  }, [enabled, initialSnapshot]);
 
   return snapshot;
 }

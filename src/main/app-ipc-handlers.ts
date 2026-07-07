@@ -64,6 +64,7 @@ function normalizeDevLogLine(value: unknown): string | null {
 
 export function runRegisterIpc(this: any) {
         ipcMain.handle('app:get-snapshot', async () => this.getSnapshot());
+        ipcMain.handle('app:get-overlay-snapshot', async () => this.getOverlaySnapshot());
         ipcMain.handle('app:get-version', async () => app.getVersion());
         ipcMain.handle('app:get-cached-update-check-result', async () => this.cachedUpdateCheckResult);
         ipcMain.handle('app:get-startup-update-info', async () => this.startupUpdateInfo);

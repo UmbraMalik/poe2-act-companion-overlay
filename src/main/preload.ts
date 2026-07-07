@@ -14,6 +14,7 @@ const timerDiagnosticsEnabled = process.env.POE2_TIMER_DIAGNOSTICS === '1';
 
 const api: ElectronApi = {
   getSnapshot: () => ipcRenderer.invoke('app:get-snapshot'),
+  getOverlaySnapshot: () => ipcRenderer.invoke('app:get-overlay-snapshot'),
   getAppVersion: () => ipcRenderer.invoke('app:get-version'),
   getCachedUpdateCheckResult: () => ipcRenderer.invoke('app:get-cached-update-check-result'),
   getStartupUpdateInfo: () => ipcRenderer.invoke('app:get-startup-update-info'),

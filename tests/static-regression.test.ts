@@ -1,7 +1,7 @@
 // @ts-nocheck
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readMainProcessSource, readText } from './test-utils';
+import { readJson, readMainProcessSource, readText } from './test-utils';
 
 const readRendererStyles = () => {
   const index = readText('src/renderer/styles.css');
@@ -234,6 +234,27 @@ test('no forbidden performance hacks are reintroduced', () => {
   assert.doesNotMatch(source, /powerSaveBlocker/);
   assert.doesNotMatch(source, /setPriority\s*\(/);
   assert.doesNotMatch(source, /\[Perf\].*(priority|power save)/i);
+});
+
+test('quality gates keep source reachability and release artifact checks wired', () => {
+  const packageJson = readJson('package.json') as any;
+  const mainCheck = readText('scripts/check-main-modules.cjs');
+  const rendererCheck = readText('scripts/check-renderer-source-modules.cjs');
+  const releaseCheck = readText('scripts/check-release-files.cjs');
+
+  assert.match(packageJson.scripts['test:regression'], /check:main-modules/);
+  assert.match(packageJson.scripts['test:regression'], /check:renderer-modules/);
+  assert.match(packageJson.scripts['dist:checked'], /check:release/);
+  assert.match(mainCheck, /collectReachableSources/);
+  assert.match(mainCheck, /Unreachable main-process source files/);
+  assert.match(mainCheck, /page-model/i);
+  assert.match(rendererCheck, /src\/renderer\/main\.tsx/);
+  assert.match(rendererCheck, /is not reachable from src\/renderer\/main\.tsx/);
+  assert.match(rendererCheck, /page-model/i);
+  assert.match(releaseCheck, /packageJson\.version/);
+  assert.match(releaseCheck, /expectedExeName/);
+  assert.match(releaseCheck, /latest\.yml sha512 does not match/);
+  assert.match(releaseCheck, /latest\.yml installer size/);
 });
 
 test('secondary app windows share smooth show/focus handling', () => {
