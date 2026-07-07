@@ -5,6 +5,7 @@ import {
 } from '../shared/timers';
 import type {
   AppSnapshot,
+  OverlaySnapshot,
   RunTimerSettings,
   RunTimerState,
   TimerDiagnosticsPayload,
@@ -27,10 +28,12 @@ export interface UseAppSnapshotOptions {
   initialSnapshot?: 'full' | 'overlay';
 }
 
+export function useAppSnapshot(options: UseAppSnapshotOptions & { initialSnapshot: 'overlay' }): OverlaySnapshot | null;
+export function useAppSnapshot(options?: UseAppSnapshotOptions): AppSnapshot | null;
 export function useAppSnapshot(options: UseAppSnapshotOptions = {}) {
   const enabled = options.enabled ?? true;
   const initialSnapshot = options.initialSnapshot ?? 'full';
-  const [snapshot, setSnapshot] = useState<AppSnapshot | null>(null);
+  const [snapshot, setSnapshot] = useState<AppSnapshot | OverlaySnapshot | null>(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -65,7 +68,7 @@ export function useAppSnapshot(options: UseAppSnapshotOptions = {}) {
       }
     });
 
-    let pendingSnapshot: AppSnapshot | null = null;
+    let pendingSnapshot: AppSnapshot | OverlaySnapshot | null = null;
     let pendingRenderTask: OverlayRenderTask | null = null;
     let snapshotReceivedCount = 0;
     let snapshotCommitCount = 0;

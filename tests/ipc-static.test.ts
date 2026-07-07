@@ -42,7 +42,8 @@ test('overlay initial snapshot uses trimmed overlay IPC while app pages keep ful
 
   assert.match(main, /ipcMain\.handle\('app:get-overlay-snapshot', async \(\) => this\.getOverlaySnapshot\(\)\)/);
   assert.match(preload, /getOverlaySnapshot: \(\) => ipcRenderer\.invoke\('app:get-overlay-snapshot'\)/);
-  assert.match(types, /getOverlaySnapshot: \(\) => Promise<AppSnapshot>/);
+  assert.match(types, /export type OverlaySnapshot = Omit/);
+  assert.match(types, /getOverlaySnapshot: \(\) => Promise<OverlaySnapshot>/);
   assert.match(snapshotHook, /initialSnapshot\?: 'full' \| 'overlay'/);
   assert.match(snapshotHook, /initialSnapshot === 'overlay'/);
   assert.match(snapshotHook, /window\.poe2Overlay\.getOverlaySnapshot\(\)/);
@@ -52,6 +53,30 @@ test('overlay initial snapshot uses trimmed overlay IPC while app pages keep ful
   assert.match(companionPage, /const snapshot = useAppSnapshot\(\);/);
   assert.match(useI18n, /const shouldReadSnapshot = arguments\.length === 0/);
   assert.match(useI18n, /useAppSnapshot\(\{\s*enabled:\s*shouldReadSnapshot\s*\}\)/);
+});
+
+test('overlay snapshot omits unused top-level fields while full snapshot keeps them', () => {
+  const stateController = readText('src/main/app-state-controller.ts');
+  const types = readText('src/shared/types.ts');
+  const fullSnapshotBuilder = stateController.slice(
+    stateController.indexOf('export function runGetSnapshot'),
+    stateController.indexOf('export function runGetOverlaySnapshot')
+  );
+  const overlaySnapshotBuilder = stateController.slice(
+    stateController.indexOf('export function runGetOverlaySnapshot'),
+    stateController.indexOf('export function runGetUiPreferencesSnapshot')
+  );
+
+  assert.match(types, /'currentZoneProgress' \| 'currentChecklist' \| 'guideEntries' \| 'activeLevelReminder'/);
+
+  for (const field of ['currentZoneProgress', 'currentChecklist', 'guideEntries', 'activeLevelReminder']) {
+    assert.match(fullSnapshotBuilder, new RegExp(`${field}[,:]`));
+    assert.doesNotMatch(overlaySnapshotBuilder, new RegExp(`${field}[,:]`));
+  }
+
+  for (const retainedField of ['currentGuideEntry', 'vendorCheckpoints', 'powerSpikes', 'campaignBonuses']) {
+    assert.match(overlaySnapshotBuilder, new RegExp(`${retainedField}[,:]`));
+  }
 });
 
 test('static info community support pages use lightweight UI preferences snapshots', () => {

@@ -493,6 +493,11 @@ export interface AppSnapshot {
   runtime: RuntimeState;
 }
 
+export type OverlaySnapshot = Omit<
+  AppSnapshot,
+  'currentZoneProgress' | 'currentChecklist' | 'guideEntries' | 'activeLevelReminder'
+>;
+
 export interface UiPreferencesSnapshot {
   config: Pick<AppConfig, 'appLanguage' | 'theme' | 'visualFxIntensity'>;
 }
@@ -642,7 +647,7 @@ export interface TimerDiagnosticsPayload {
 
 export interface ElectronApi {
   getSnapshot: () => Promise<AppSnapshot>;
-  getOverlaySnapshot: () => Promise<AppSnapshot>;
+  getOverlaySnapshot: () => Promise<OverlaySnapshot>;
   getUiPreferencesSnapshot: () => Promise<UiPreferencesSnapshot>;
   getAppVersion: () => Promise<string>;
   getCachedUpdateCheckResult: () => Promise<UpdateCheckResult | null>;
@@ -703,6 +708,6 @@ export interface ElectronApi {
   onRunTimerChanged: (callback: (runTimer: RunTimerState) => void) => () => void;
   onRunResetConfirmationRequested: (callback: () => void) => () => void;
   onTimerVisualTick: (callback: (payload: TimerVisualTickPayload) => void) => () => void;
-  onStateChanged: (callback: (snapshot: AppSnapshot) => void) => () => void;
+  onStateChanged: (callback: (snapshot: AppSnapshot | OverlaySnapshot) => void) => () => void;
   onUiPreferencesChanged: (callback: (snapshot: UiPreferencesSnapshot) => void) => () => void;
 }

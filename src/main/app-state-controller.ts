@@ -106,20 +106,13 @@ export function runGetSnapshot(this: any) {
 
 export function runGetOverlaySnapshot(this: any) {
         const currentGuideEntry = this.currentZone.guide;
-        const currentZoneProgress = currentGuideEntry
-            ? this.getZoneProgress(currentGuideEntry.id)
-            : null;
         return {
             config: this.config,
             currentZone: this.currentZone,
             currentGuideEntry,
-            currentZoneProgress,
-            currentChecklist: buildChecklistViewItems(currentGuideEntry, currentZoneProgress ?? undefined),
-            guideEntries: currentGuideEntry ? [currentGuideEntry] : [],
             vendorCheckpoints: this.guideService.getVendorCheckpoints(),
             powerSpikes: this.guideService.getPowerSpikes(),
             campaignBonuses: this.campaignBonuses,
-            activeLevelReminder: this.getActiveLevelReminder(),
             runtime: {
                 ...this.runtime,
                 timerNowMs: Date.now()

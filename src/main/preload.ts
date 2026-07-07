@@ -2,6 +2,7 @@ import { contextBridge, ipcRenderer } from 'electron';
 import type {
   AppSnapshot,
   ElectronApi,
+  OverlaySnapshot,
   OverlayMode,
   RunTimerState,
   SettingsPatch,
@@ -122,8 +123,8 @@ const api: ElectronApi = {
       ipcRenderer.removeListener('timer:visual-tick', listener);
     };
   },
-  onStateChanged: (callback: (snapshot: AppSnapshot) => void) => {
-    const listener = (_event: Electron.IpcRendererEvent, snapshot: AppSnapshot) => {
+  onStateChanged: (callback: (snapshot: AppSnapshot | OverlaySnapshot) => void) => {
+    const listener = (_event: Electron.IpcRendererEvent, snapshot: AppSnapshot | OverlaySnapshot) => {
       callback(snapshot);
     };
     ipcRenderer.on('app:state-changed', listener);

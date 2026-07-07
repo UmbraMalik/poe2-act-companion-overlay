@@ -27,6 +27,10 @@ export interface XpStatus {
   variant: 'ok' | 'low' | 'farm' | 'unknown';
 }
 
+type XpStatusSnapshot = Pick<AppSnapshot, 'config' | 'currentGuideEntry'>;
+
+type SceneDisplaySnapshot = Pick<AppSnapshot, 'currentGuideEntry' | 'currentZone'>;
+
 export interface RouteZoneStatus {
   guide: GuideEntry;
   status: 'current' | 'missed' | 'completed' | 'visited' | 'pending';
@@ -152,7 +156,7 @@ export function getActTimeRowsFromSplits(
 }
 
 export function getXpStatus(
-  snapshot: AppSnapshot,
+  snapshot: XpStatusSnapshot,
   language: AppLanguage = 'ru'
 ): XpStatus {
   const currentLevel = snapshot.config.currentLevel;
@@ -236,7 +240,7 @@ export function getDismissedReminderHistory(
 }
 
 export function getSceneDisplayName(
-  snapshot: AppSnapshot,
+  snapshot: SceneDisplaySnapshot,
   language: AppLanguage = 'ru'
 ): string {
   const currentGuideView = getGuideView(snapshot.currentGuideEntry, language);

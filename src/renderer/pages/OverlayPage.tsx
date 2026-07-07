@@ -54,10 +54,13 @@ import type {
   GuideEntry,
   LevelReminder,
   PowerSpike,
+  OverlaySnapshot,
   RunTimerSettings,
   RunTimerState,
   ZoneAct
 } from '../../shared/types';
+
+type OverlayPageSnapshot = OverlaySnapshot;
 
 function formatActTitle(act: ZoneAct | null, language: AppLanguage): string {
   if (act === null) {
@@ -133,7 +136,7 @@ const LEAGUE_MECHANIC_REWARDS = (
 ).rewards ?? [];
 
 function getOverlayUpcomingReminders(
-  snapshot: NonNullable<ReturnType<typeof useAppSnapshot>>,
+  snapshot: OverlayPageSnapshot,
   language: AppLanguage,
   maxDelta = 2
 ): OverlayUpcomingReminder[] {
@@ -190,7 +193,7 @@ function getOverlayUpcomingReminders(
 }
 
 function getImportantOverlayLines(
-  snapshot: NonNullable<ReturnType<typeof useAppSnapshot>>,
+  snapshot: OverlayPageSnapshot,
   language: AppLanguage
 ) {
   const guide = snapshot.currentGuideEntry;
@@ -261,7 +264,7 @@ function addLeagueZoneCandidate(candidates: Set<string>, value: string | null | 
 }
 
 function getCurrentZoneLeagueReward(
-  snapshot: NonNullable<ReturnType<typeof useAppSnapshot>>,
+  snapshot: OverlayPageSnapshot,
   sceneName: string
 ): LeagueMechanicRewardEntry | null {
   const guide = snapshot.currentGuideEntry;
@@ -373,7 +376,7 @@ function isKhariCrossingCampaignBonus(bonus: CampaignBonusDefinition): boolean {
   );
 }
 
-function getCurrentZoneCampaignBonuses(snapshot: NonNullable<ReturnType<typeof useAppSnapshot>>) {
+function getCurrentZoneCampaignBonuses(snapshot: OverlayPageSnapshot) {
   const guide = snapshot.currentGuideEntry;
   const rawZoneName = snapshot.currentZone.rawZoneName;
   const guideId = guide?.id ?? null;

@@ -6,13 +6,15 @@ export { formatDuration } from '../shared/timers';
 
 export type LevelState = 'ok' | 'low' | 'unknown';
 
+type LevelStateSnapshot = Pick<AppSnapshot, 'config' | 'currentGuideEntry' | 'currentZone'>;
+
 function getRecommendedMinLevel(
   recommendedLevel: number | null | undefined
 ): number | null {
   return typeof recommendedLevel === 'number' ? recommendedLevel : null;
 }
 
-export function getLevelState(snapshot: AppSnapshot | null): {
+export function getLevelState(snapshot: LevelStateSnapshot | null): {
   state: LevelState;
   label: string;
 } {

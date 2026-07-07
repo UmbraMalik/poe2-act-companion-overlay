@@ -326,9 +326,13 @@ test('hidden windows and unchanged bounds do not trigger unnecessary smoothness 
   const ipcHandlers = readText('src/main/app-ipc-handlers.ts');
   const configStore = readText('src/main/services/config-store.ts');
   const main = readText('src/main/main.ts');
+  const overlaySnapshotBuilder = stateController.slice(
+    stateController.indexOf('export function runGetOverlaySnapshot'),
+    stateController.indexOf('export function runGetUiPreferencesSnapshot')
+  );
 
   assert.match(stateController, /function runGetOverlaySnapshot/);
-  assert.match(stateController, /guideEntries:\s*currentGuideEntry \? \[currentGuideEntry\] : \[\]/);
+  assert.doesNotMatch(overlaySnapshotBuilder, /guideEntries/);
   assert.match(stateController, /const overlayTargets = targetWindows\.filter/);
   assert.match(stateController, /const appTargets = targetWindows\.filter/);
   assert.match(main, /getOverlaySnapshot\(\)/);
