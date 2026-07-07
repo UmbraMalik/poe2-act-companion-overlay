@@ -204,6 +204,117 @@ test('run timer start, pause, resume and reset preserve accumulated elapsed time
   assert.equal(runTimer.actSplits.length, 0);
 });
 
+test('finished saved runs restore as paused and can be resumed', () => {
+  const app = createTestAppInstance();
+
+  withMockedNow(1_000, () => {
+    applyAppLogLine(app as never, '2026/05/16 22:00:10 123 [DEBUG Client] Generating level 6 area "G1_4" with seed 1');
+    applyAppLogLine(app as never, '[SCENE] Set Source [Clearfell]');
+    (app as any).startRunTimerFromAnchor(1_000);
+  });
+
+  withMockedNow(5_000, () => {
+    (app as any).finishRunTimer();
+  });
+
+  assert.equal((app as any).config.runTimer.status, 'finished');
+  assert.equal((app as any).config.runTimer.elapsedMs, 4_000);
+
+  withMockedNow(6_000, () => {
+    (app as any).saveCurrentRunToHistory('finished characterization');
+  });
+
+  const savedRun = (app as any).config.runHistory[0];
+  assert.ok(savedRun);
+  assert.equal(savedRun.status, 'finished');
+  assert.equal(savedRun.runTimer.status, 'finished');
+  assert.equal(savedRun.totalElapsedMs, 4_000);
+
+  withMockedNow(7_000, () => {
+    (app as any).restoreSavedRun(savedRun.id);
+  });
+
+  let runTimer = (app as any).config.runTimer;
+  assert.equal(runTimer.status, 'paused');
+  assert.equal(runTimer.elapsedMs, 4_000);
+  assert.equal(runTimer.finishedAt, null);
+  assert.equal(runTimer.pausedAt, 7_000);
+  assert.equal(runTimer.pauseReason, 'manual');
+
+  withMockedNow(8_000, () => {
+    (app as any).resumeRunTimer();
+  });
+
+  runTimer = (app as any).config.runTimer;
+  assert.equal(runTimer.status, 'running');
+  assert.equal(runTimer.resumedAt, 8_000);
+});
+
+test('main elapsed calculation follows wall-clock jumps while running', () => {
+  const app = createTestAppInstance();
+
+  withMockedNow(10_000, () => {
+    applyAppLogLine(app as never, '2026/05/16 22:00:10 123 [DEBUG Client] Generating level 6 area "G1_4" with seed 1');
+    applyAppLogLine(app as never, '[SCENE] Set Source [Clearfell]');
+    (app as any).startRunTimerFromAnchor(10_000);
+  });
+
+  withMockedNow(12_500, () => {
+    assert.equal((app as any).getRunTimerDisplayElapsedMs(), 2_500);
+  });
+
+  withMockedNow(9_000, () => {
+    assert.equal((app as any).getRunTimerDisplayElapsedMs(), 0);
+  });
+
+  withMockedNow(70_000, () => {
+    assert.equal((app as any).getRunTimerDisplayElapsedMs(), 60_000);
+  });
+});
+
+test('batched zone log lines use processing time for splits and zone history', () => {
+  const app = createTestAppInstance();
+
+  withMockedNow(1_000, () => {
+    applyAppLogLine(app as never, '2026/05/16 23:40:00 123 [DEBUG Client] Generating level 16 area "G1_15" with seed 1');
+    applyAppLogLine(app as never, '2026/05/16 23:40:01 [SCENE] Set Source [Ogham Manor]');
+    (app as any).startRunTimerFromAnchor(1_000);
+  });
+
+  withMockedNow(5_000, () => {
+    applyAppLogLines(app as never, [
+      '2026/05/16 23:41:01 [SCENE] Set Source [Vastiri Outskirts]',
+      '2026/05/16 23:43:01 [SCENE] Set Source [Sandswept Marsh]'
+    ]);
+  });
+
+  const runTimer = (app as any).config.runTimer;
+  assert.equal((app as any).currentZone.guide?.zone_en, 'Sandswept Marsh');
+  assert.equal(runTimer.lastZoneEnteredAt, 5_000);
+  assert.deepEqual(
+    runTimer.actSplits.map((split: { act: number; elapsedMs: number; timestamp: number }) => [
+      split.act,
+      split.elapsedMs,
+      split.timestamp
+    ]),
+    [
+      [1, 4_000, 5_000],
+      [2, 4_000, 5_000]
+    ]
+  );
+  assert.deepEqual(
+    (app as any).config.zoneTimeHistory.map((entry: { zoneId: string; elapsedMs: number; enteredAt: number; leftAt: number }) => [
+      entry.zoneId,
+      entry.elapsedMs,
+      entry.enteredAt,
+      entry.leftAt
+    ]),
+    [
+      ['a1_ogham_manor', 4_000, 1_000, 5_000]
+    ]
+  );
+});
+
 test('act splits survive transitions from Act 1 through Act 5 and finalise correctly', () => {
   const app = createTestAppInstance();
   const lines = loadLogFixtureLines('act-transition.txt');
