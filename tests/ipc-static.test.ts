@@ -115,3 +115,34 @@ test('dev log append IPC accepts bounded strings only and is gated outside dev m
   assert.match(appendHandler, /line === null/);
   assert.match(appendHandler, /appendFile\(targetPath, payload, 'utf8'\)/);
 });
+
+test('manual checklist IPC stays a legacy no-op compatibility surface', () => {
+  const main = readMainProcessSource();
+  const preload = readText('src/main/preload.ts');
+  const stateController = readText('src/main/app-state-controller.ts');
+
+  assert.match(main, /ipcMain\.handle\('app:mark-current-checklist-item-done'/);
+  assert.match(main, /ipcMain\.handle\('app:undo-last-checklist-mark'/);
+  assert.match(preload, /markCurrentChecklistItemDone: \(\) =>/);
+  assert.match(preload, /undoLastChecklistMark: \(\) =>/);
+  assert.match(stateController, /Legacy compatibility no-op/);
+
+  const markStart = stateController.indexOf('export function runMarkCurrentChecklistItemDone');
+  const undoStart = stateController.indexOf('export function runUndoLastChecklistMark');
+  const nextStart = stateController.indexOf('export function runSetLogStatus');
+  assert.notEqual(markStart, -1);
+  assert.notEqual(undoStart, -1);
+  assert.notEqual(nextStart, -1);
+
+  const noOpBodies = stateController.slice(markStart, nextStart);
+  assert.doesNotMatch(noOpBodies, /configStore\.update|broadcastState|checklistHistory|zoneProgress/);
+});
+
+test('default saved run labels use the configured app language outside timer controller', () => {
+  const main = readText('src/main/main.ts');
+
+  assert.match(main, /const runLabelLocale = this\.config\.appLanguage === 'en' \? 'en-US' : 'ru-RU'/);
+  assert.match(main, /this\.t\('companion\.savedRunFallback'\)/);
+  assert.match(main, /label: safeLabel \?\? defaultRunLabel/);
+  assert.doesNotMatch(main, /label: safeLabel \?\? `Run \$\{new Date\(now\)\.toLocaleString\('ru-RU'\)\}`/);
+});

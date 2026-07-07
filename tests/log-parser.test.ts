@@ -11,6 +11,7 @@ import {
   parseSceneSource
 } from '../src/main/services/log-parser';
 import { loadLogFixtureLines } from './helpers/logFixtures';
+import { readText } from './helpers/loadJson';
 import {
   applyAppLogLine,
   applyAppLogLines,
@@ -49,6 +50,15 @@ test('parseLogLine keeps stable event types for core log events and ignores unre
   assert.equal(parseLogLine('[Client] Lost focus').type, 'none');
   assert.equal(parseLogLine('[Client] Gained focus').type, 'none');
   assert.equal(parseClientRestart('***** LOG FILE OPENING *****'), true);
+});
+
+test('log parser keeps JSON pattern regexes precompiled', () => {
+  const parserSource = readText('src/main/services/log-parser.ts');
+
+  assert.doesNotMatch(parserSource, /SCENE_SOURCE_REGEXES/);
+  assert.match(parserSource, /const logPatternRegexes =/);
+  assert.match(parserSource, /function firstMatch\(patterns: RegExp\[\], line: string\)/);
+  assert.doesNotMatch(parserSource, /line\.match\(makeRegex\(pattern\)\)/);
 });
 
 test('RU act 1 fixture leaves the app in town while preserving the last gameplay zone and level', () => {

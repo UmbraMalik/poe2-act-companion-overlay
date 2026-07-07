@@ -356,6 +356,7 @@ export class LogWatcher {
       return false;
     }
 
+    // Large resyncs use the same capped tail path as startup bootstrap.
     await this.bootstrapFromTail(filePath, fileSize);
     this.filePosition = fileSize;
     this.resetTextState();

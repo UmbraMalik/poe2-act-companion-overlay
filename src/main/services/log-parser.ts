@@ -122,7 +122,6 @@ const logPatterns = {
   }
 };
 
-const SCENE_SOURCE_REGEXES = logPatterns.scene.enter.map((pattern) => new RegExp(pattern, 'i'));
 const GENERATED_AREA_REGEX = /Generating level \d+ area "(?<scene>[^"]+)" with seed \d+/i;
 const SCENE_SET_SOURCE_REGEX = /\[SCENE\]\s+Set Source\s+\[(?<scene>.*?)\]/i;
 
@@ -141,9 +140,32 @@ function makeRegex(pattern: string): RegExp {
   return new RegExp(pattern, 'i');
 }
 
-function firstMatch(patterns: string[], line: string): RegExpMatchArray | null {
+function compileRegexes(patterns: string[]): RegExp[] {
+  return patterns.map(makeRegex);
+}
+
+const logPatternRegexes = {
+  events: {
+    clientRestart: compileRegexes(logPatterns.events.clientRestart),
+    levelUp: compileRegexes(logPatterns.events.levelUp),
+    playerDeath: compileRegexes(logPatterns.events.playerDeath),
+    rewardResistance: compileRegexes(logPatterns.events.rewardResistance),
+    rewardSpirit: compileRegexes(logPatterns.events.rewardSpirit),
+    rewardLife: compileRegexes(logPatterns.events.rewardLife),
+    rewardLifePercent: compileRegexes(logPatterns.events.rewardLifePercent),
+    rewardManaPercent: compileRegexes(logPatterns.events.rewardManaPercent),
+    rewardPassivePoints: compileRegexes(logPatterns.events.rewardPassivePoints),
+    rewardWeaponSetPoints: compileRegexes(logPatterns.events.rewardWeaponSetPoints),
+    rewardCharm: compileRegexes(logPatterns.events.rewardCharm),
+    rewardFlaskRecovery: compileRegexes(logPatterns.events.rewardFlaskRecovery),
+    rewardStunThreshold: compileRegexes(logPatterns.events.rewardStunThreshold),
+    rewardElementalAilmentThreshold: compileRegexes(logPatterns.events.rewardElementalAilmentThreshold)
+  }
+};
+
+function firstMatch(patterns: RegExp[], line: string): RegExpMatchArray | null {
   for (const pattern of patterns) {
-    const match = line.match(makeRegex(pattern));
+    const match = line.match(pattern);
     if (match) {
       return match;
     }
@@ -232,7 +254,7 @@ export function parseSceneSource(line: string): ParsedSceneSourceEvent | null {
 }
 
 export function parseLevelUp(line: string): ParsedLevelUpEvent | null {
-  const directMatch = firstMatch(logPatterns.events.levelUp, line);
+  const directMatch = firstMatch(logPatternRegexes.events.levelUp, line);
   const directLevel = directMatch?.groups?.level ?? directMatch?.[1];
   const normalized = normalizeText(line);
   const fallbackMatch = normalized.match(/достигает\s+(\d{1,3})\s+уровня/) ?? normalized.match(/is now level\s+(\d{1,3})/);
@@ -251,13 +273,13 @@ export function parseLevelUp(line: string): ParsedLevelUpEvent | null {
 }
 
 export function parsePlayerDeath(line: string): { player: string } | null {
-  const match = firstMatch(logPatterns.events.playerDeath, line);
+  const match = firstMatch(logPatternRegexes.events.playerDeath, line);
   const player = match?.groups?.player ?? match?.[1];
   return player ? { player } : null;
 }
 
 export function parseClientRestart(line: string): boolean {
-  return logPatterns.events.clientRestart.some((pattern) => makeRegex(pattern).test(line));
+  return logPatternRegexes.events.clientRestart.some((pattern) => pattern.test(line));
 }
 
 function includesAll(line: string, required: string[]): boolean {
@@ -497,7 +519,7 @@ export function parsePermanentReward(line: string): ParsedPermanentRewardEvent |
   }
   const gotReward = normalized.includes('получил') || normalized.includes('получили') || normalized.includes('has received') || normalized.includes('have received') || normalized.includes('you have received');
 
-  const resistanceMatch = firstMatch(logPatterns.events.rewardResistance, line);
+  const resistanceMatch = firstMatch(logPatternRegexes.events.rewardResistance, line);
   if (resistanceMatch?.groups) {
     const amount = getNumber(resistanceMatch.groups.amount);
     const element = normalizeText(resistanceMatch.groups.element ?? '');
@@ -573,7 +595,7 @@ export function parsePermanentReward(line: string): ParsedPermanentRewardEvent |
     ], line, { amount, element: 'всем стихиям' });
   }
 
-  const spiritMatch = firstMatch(logPatterns.events.rewardSpirit, line);
+  const spiritMatch = firstMatch(logPatternRegexes.events.rewardSpirit, line);
   const spiritFallbackMatch =
     gotReward ? (normalized.match(/\+(\d+)\s+к\s+духу/) ?? normalized.match(/\+(\d+)\s+(?:to\s+)?spirit/)) : null;
   if (spiritMatch?.groups || spiritFallbackMatch) {
@@ -581,7 +603,7 @@ export function parsePermanentReward(line: string): ParsedPermanentRewardEvent |
     return createReward(amount >= 40 ? 'spirit40' : 'spirit30', [`+${amount} духа`, 'дух'], line, { amount });
   }
 
-  const lifePercentMatch = firstMatch(logPatterns.events.rewardLifePercent, line);
+  const lifePercentMatch = firstMatch(logPatternRegexes.events.rewardLifePercent, line);
   const lifePercentFallbackMatch =
     gotReward ? (normalized.match(/\+(\d+)%\s+к\s+максимуму\s+здоровья/) ?? normalized.match(/(\d+)%\s+increased\s+maximum\s+life/)) : null;
   if (lifePercentMatch?.groups || lifePercentFallbackMatch) {
@@ -589,7 +611,7 @@ export function parsePermanentReward(line: string): ParsedPermanentRewardEvent |
     return createReward('life5', [`+${amount}% к максимуму здоровья`, 'maximum life'], line, { amount });
   }
 
-  const lifeMatch = firstMatch(logPatterns.events.rewardLife, line);
+  const lifeMatch = firstMatch(logPatternRegexes.events.rewardLife, line);
   const lifeFallbackMatch =
     gotReward ? (normalized.match(/\+(\d+)\s+к\s+максимуму\s+здоровья/) ?? normalized.match(/\+(\d+)\s+to\s+maximum\s+life/)) : null;
   if (lifeMatch?.groups || lifeFallbackMatch) {
@@ -597,7 +619,7 @@ export function parsePermanentReward(line: string): ParsedPermanentRewardEvent |
     return createReward('life20', [`+${amount} максимум здоровья`, 'максимум здоровья'], line, { amount });
   }
 
-  const manaMatch = firstMatch(logPatterns.events.rewardManaPercent, line);
+  const manaMatch = firstMatch(logPatternRegexes.events.rewardManaPercent, line);
   const manaFallbackMatch =
     gotReward ? (normalized.match(/\+(\d+)%\s+к\s+максимуму\s+маны/) ?? normalized.match(/(\d+)%\s+increased\s+maximum\s+mana/)) : null;
   if (manaMatch?.groups || manaFallbackMatch) {
@@ -605,19 +627,19 @@ export function parsePermanentReward(line: string): ParsedPermanentRewardEvent |
     return createReward('mana5', [`+${amount}% максимум маны`, 'максимум маны'], line, { amount });
   }
 
-  const passiveMatch = firstMatch(logPatterns.events.rewardPassivePoints, line);
+  const passiveMatch = firstMatch(logPatternRegexes.events.rewardPassivePoints, line);
   if (passiveMatch?.groups || normalized.includes('вы получили очков пассивных умений') || normalized.includes('you have received') && normalized.includes('passive skill points') && !normalized.includes('weapon set')) {
     const amount = getNumber(passiveMatch?.groups?.points) ?? 2;
     return createReward('passivePoints', [`${amount} пассивных очка`, 'пассивные очки', 'пассивных умений'], line, { amount });
   }
 
-  const weaponSetMatch = firstMatch(logPatterns.events.rewardWeaponSetPoints, line);
+  const weaponSetMatch = firstMatch(logPatternRegexes.events.rewardWeaponSetPoints, line);
   if (weaponSetMatch?.groups || normalized.includes('очк') && normalized.includes('для набора оружия') || normalized.includes('weapon set passive skill points')) {
     const amount = getNumber(weaponSetMatch?.groups?.points) ?? 2;
     return createReward('weaponSetPassivePoints', [`${amount} очка для набора оружия`, 'набор оружия'], line, { amount });
   }
 
-  if (firstMatch(logPatterns.events.rewardCharm, line) || (gotReward && normalized.includes('charm'))) {
+  if (firstMatch(logPatternRegexes.events.rewardCharm, line) || (gotReward && normalized.includes('charm'))) {
     if (normalized.includes('+1') || normalized.includes('ячей') || normalized.includes('slot')) {
       return createReward('charmSlot', ['+1 ячейка оберегов', 'charm slot'], line);
     }
@@ -636,7 +658,7 @@ export function parsePermanentReward(line: string): ParsedPermanentRewardEvent |
     );
   }
 
-  const flaskMatch = firstMatch(logPatterns.events.rewardFlaskRecovery, line);
+  const flaskMatch = firstMatch(logPatternRegexes.events.rewardFlaskRecovery, line);
   if (flaskMatch?.groups || normalized.includes('восстановления здоровья') && normalized.includes('флакон') || normalized.includes('life recovery') && normalized.includes('flask')) {
     const amount = getNumber(flaskMatch?.groups?.amount) ?? 30;
     return createReward('flaskLifeRecovery', [`${amount}% восстановление здоровья от флаконов`, 'флаконы', 'восстановление здоровья'], line, { amount });
@@ -650,7 +672,7 @@ export function parsePermanentReward(line: string): ParsedPermanentRewardEvent |
     });
   }
 
-  const elementalAilmentMatch = firstMatch(logPatterns.events.rewardElementalAilmentThreshold, line);
+  const elementalAilmentMatch = firstMatch(logPatternRegexes.events.rewardElementalAilmentThreshold, line);
   const elementalAilmentFallbackMatch = normalized.match(/(\d+)%\s+increased\s+elemental\s+ailment\s+threshold/);
   if (elementalAilmentMatch?.groups || elementalAilmentFallbackMatch) {
     const amount = getNumber(elementalAilmentMatch?.groups?.amount ?? elementalAilmentFallbackMatch?.[1]) ?? 30;
@@ -662,7 +684,7 @@ export function parsePermanentReward(line: string): ParsedPermanentRewardEvent |
     );
   }
 
-  const stunMatch = firstMatch(logPatterns.events.rewardStunThreshold, line);
+  const stunMatch = firstMatch(logPatternRegexes.events.rewardStunThreshold, line);
   if (stunMatch?.groups || normalized.includes('порога оглушения') || normalized.includes('stun threshold')) {
     const amount = getNumber(stunMatch?.groups?.amount) ?? 25;
     return createReward('stunThreshold', [`${amount}% порог оглушения`, 'порог оглушения'], line, { amount });

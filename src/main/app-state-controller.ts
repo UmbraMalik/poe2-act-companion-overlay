@@ -66,11 +66,12 @@ export function runMergeLikelyDoneKeywords(this: any, guide: any, matchedKeyword
     }
 
 export function runMarkCurrentChecklistItemDone(this: any) {
-        // Manual checklist completion disabled. Items are reminders only.
+        // Legacy compatibility no-op: old preload/hotkey surfaces may still call this,
+        // but manual checklist completion is disabled and must not mutate progress.
     }
 
 export function runUndoLastChecklistMark(this: any) {
-        // Manual checklist completion disabled. Nothing to undo.
+        // Legacy compatibility no-op: kept so older renderer calls resolve safely.
     }
 
 export function runSetLogStatus(this: any, status: any, message: any) {

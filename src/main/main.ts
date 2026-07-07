@@ -974,9 +974,11 @@ export class PoeOverlayApp {
         const safeLabel = typeof label === 'string' && label.trim().length > 0
             ? label.trim().slice(0, 80)
             : null;
+        const runLabelLocale = this.config.appLanguage === 'en' ? 'en-US' : 'ru-RU';
+        const defaultRunLabel = `${this.t('companion.savedRunFallback')} · ${new Date(now).toLocaleString(runLabelLocale)}`;
         const entry: SavedRunHistoryEntry = {
             id: `run-${now}-${Math.random().toString(36).slice(2, 8)}`,
-            label: safeLabel ?? `Run ${new Date(now).toLocaleString('ru-RU')}`,
+            label: safeLabel ?? defaultRunLabel,
             savedAt: now,
             totalElapsedMs,
             currentAct,
