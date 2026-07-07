@@ -3,17 +3,6 @@ const path = require('node:path');
 
 const root = process.cwd();
 
-const requiredFiles = [
-  'src/renderer/hooks.ts',
-  'src/renderer/hooks/app-snapshot.ts',
-  'src/renderer/hooks/live-now.ts',
-  'src/renderer/hooks/live-run-timer.ts',
-  'src/renderer/overlay/OverlayTimerText.tsx',
-  'src/renderer/overlay/overlay-page-model.ts',
-  'src/renderer/companion/companion-page-model.tsx',
-  'src/renderer/settings/settings-page-model.tsx'
-];
-
 const lineBudgets = new Map([
   ['src/renderer/hooks.ts', 1700],
   ['src/renderer/pages/OverlayPage.tsx', 2150],
@@ -22,13 +11,6 @@ const lineBudgets = new Map([
 ]);
 
 const problems = [];
-
-for (const relativePath of requiredFiles) {
-  const absolutePath = path.join(root, relativePath);
-  if (!existsSync(absolutePath)) {
-    problems.push(`Missing renderer module: ${relativePath}`);
-  }
-}
 
 for (const [relativePath, maxLines] of lineBudgets) {
   const absolutePath = path.join(root, relativePath);

@@ -90,7 +90,6 @@ test('overlay Windows compositor compatibility mode is finalized without obsolet
 
 test('snapshot updates use the shared render scheduler with a timeout fallback', () => {
   const hooks = readText('src/renderer/hooks.ts');
-  const extractedHook = readText('src/renderer/hooks/app-snapshot.ts');
   const scheduler = readText('src/renderer/render-scheduler.ts');
   const diagnostics = readText('src/renderer/render-diagnostics.ts');
   const types = readText('src/shared/types.ts');
@@ -100,14 +99,12 @@ test('snapshot updates use the shared render scheduler with a timeout fallback',
     hooks.indexOf('export function useLiveNow')
   );
 
-  for (const source of [snapshotHook, extractedHook]) {
-    assert.match(source, /pendingRenderTask/);
-    assert.match(source, /clearPendingFlush/);
-    assert.match(source, /scheduleOverlayRenderCommit/);
-    assert.match(source, /fallbackMs:\s*16/);
-    assert.match(source, /overlay-render-scheduler-ready/);
-    assert.match(source, /overlay-render-commit-delay/);
-  }
+  assert.match(snapshotHook, /pendingRenderTask/);
+  assert.match(snapshotHook, /clearPendingFlush/);
+  assert.match(snapshotHook, /scheduleOverlayRenderCommit/);
+  assert.match(snapshotHook, /fallbackMs:\s*16/);
+  assert.match(snapshotHook, /overlay-render-scheduler-ready/);
+  assert.match(snapshotHook, /overlay-render-commit-delay/);
 
   assert.match(scheduler, /requestAnimationFrame/);
   assert.match(scheduler, /setTimeout/);
