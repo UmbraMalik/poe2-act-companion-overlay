@@ -1001,6 +1001,132 @@
   }
 }
 
+/* Settings selects render through a body portal. Keep the portal outside the window-shell rules. */
+.settings-select-layer.settings-page {
+  position: fixed !important;
+  display: block !important;
+  width: var(--settings-select-width, auto) !important;
+  height: auto !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  overflow: visible !important;
+  isolation: auto !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  z-index: 10000 !important;
+  -webkit-app-region: no-drag !important;
+  app-region: no-drag !important;
+}
+
+.settings-select-layer.settings-page::before,
+.settings-select-layer.settings-page::after {
+  content: none !important;
+}
+
+.theme-dark-fantasy.settings-select-layer.settings-page {
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.settings-page:not(.companion-page) .settings-window-resize-handles {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  pointer-events: none;
+}
+
+.settings-page:not(.companion-page) .settings-window-resize-handle {
+  position: fixed;
+  pointer-events: auto;
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
+}
+
+.settings-page:not(.companion-page) .settings-window-resize-handle--n,
+.settings-page:not(.companion-page) .settings-window-resize-handle--s {
+  left: 14px;
+  right: 14px;
+  height: 8px;
+  cursor: ns-resize;
+}
+
+.settings-page:not(.companion-page) .settings-window-resize-handle--n {
+  top: 0;
+}
+
+.settings-page:not(.companion-page) .settings-window-resize-handle--s {
+  bottom: 0;
+}
+
+.settings-page:not(.companion-page) .settings-window-resize-handle--e,
+.settings-page:not(.companion-page) .settings-window-resize-handle--w {
+  top: 14px;
+  bottom: 14px;
+  width: 8px;
+  cursor: ew-resize;
+}
+
+.settings-page:not(.companion-page) .settings-window-resize-handle--e {
+  right: 0;
+}
+
+.settings-page:not(.companion-page) .settings-window-resize-handle--w {
+  left: 0;
+}
+
+.settings-page:not(.companion-page) .settings-window-resize-handle--ne,
+.settings-page:not(.companion-page) .settings-window-resize-handle--se,
+.settings-page:not(.companion-page) .settings-window-resize-handle--sw,
+.settings-page:not(.companion-page) .settings-window-resize-handle--nw {
+  width: 18px;
+  height: 18px;
+}
+
+.settings-page:not(.companion-page) .settings-window-resize-handle--ne {
+  top: 0;
+  right: 0;
+  cursor: nesw-resize;
+}
+
+.settings-page:not(.companion-page) .settings-window-resize-handle--se {
+  right: 0;
+  bottom: 0;
+  cursor: nwse-resize;
+}
+
+.settings-page:not(.companion-page) .settings-window-resize-handle--sw {
+  left: 0;
+  bottom: 0;
+  cursor: nesw-resize;
+}
+
+.settings-page:not(.companion-page) .settings-window-resize-handle--nw {
+  top: 0;
+  left: 0;
+  cursor: nwse-resize;
+}
+
+.settings-page:not(.companion-page) .settings-window-resize-handle--se::after {
+  content: "";
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+  width: 12px;
+  height: 12px;
+  border-radius: 0 0 10px 0;
+  background:
+    linear-gradient(135deg, transparent 42%, rgba(255, 232, 176, 0.28) 44%, transparent 47%),
+    linear-gradient(135deg, transparent 58%, rgba(255, 232, 176, 0.18) 60%, transparent 63%);
+  opacity: 0.58;
+}
+
+.settings-page:not(.companion-page) .settings-window-resize-handle--se:hover::after {
+  opacity: 1;
+}
+
 @media (max-width: 760px) {
   .companion-page .route-toolbar-context,
   .companion-page .route-polish-layout .route-filter-row,
@@ -1046,4 +1172,290 @@
   width: 100% !important;
   min-width: 0 !important;
   white-space: nowrap !important;
+}
+
+
+/* Settings window transparency: keep Electron's transparent frame from showing square CSS corners. */
+html.settings-window-html,
+html.settings-window-html body,
+html.settings-window-html #root {
+  background: transparent !important;
+}
+
+body.settings-window-body {
+  background: transparent !important;
+}
+
+body.settings-window-resizing,
+body.settings-window-resizing * {
+  cursor: inherit !important;
+}
+
+body.settings-window-resizing .settings-page:not(.companion-page) {
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
+}
+
+/* Settings window shell polish: softer standalone utility window chrome. */
+.settings-page:not(.companion-page) {
+  position: relative;
+  isolation: isolate;
+  -webkit-app-region: drag;
+  app-region: drag;
+  padding: 16px 18px 18px;
+  border: 1px solid rgba(231, 184, 109, 0.32);
+  border-radius: 24px;
+  overflow: hidden;
+  clip-path: inset(0 round 24px);
+  background:
+    radial-gradient(circle at 100% 0%, rgba(239, 180, 93, 0.16), transparent 30%),
+    radial-gradient(circle at 0% 100%, rgba(112, 146, 188, 0.10), transparent 36%),
+    linear-gradient(180deg, rgba(15, 21, 29, 0.98), rgba(7, 10, 14, 0.98)) !important;
+  box-shadow:
+    0 24px 58px rgba(0, 0, 0, 0.42),
+    inset 0 1px 0 rgba(255, 236, 194, 0.08),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.028);
+}
+
+.settings-page:not(.companion-page)::before,
+.settings-page:not(.companion-page)::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.settings-page:not(.companion-page)::before {
+  inset: 0;
+  border-radius: inherit;
+  border: 1px solid rgba(255, 232, 176, 0.075);
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 0, 0, 0.22),
+    inset 0 0 42px rgba(0, 0, 0, 0.30);
+}
+
+.settings-page:not(.companion-page)::after {
+  inset: 1px;
+  border-radius: 23px;
+  background:
+    linear-gradient(90deg, transparent, rgba(241, 185, 106, 0.13), transparent) top / 100% 1px no-repeat,
+    radial-gradient(circle at 12% 0%, rgba(241, 185, 106, 0.10), transparent 28%),
+    radial-gradient(circle at 88% 4%, rgba(143, 172, 216, 0.075), transparent 26%);
+  opacity: 0.9;
+}
+
+.settings-page:not(.companion-page) > .settings-header,
+.settings-page:not(.companion-page) > .settings-shell {
+  position: relative;
+  z-index: 1;
+}
+
+.settings-page:not(.companion-page) button,
+.settings-page:not(.companion-page) input,
+.settings-page:not(.companion-page) select,
+.settings-page:not(.companion-page) textarea,
+.settings-page:not(.companion-page) a,
+.settings-page:not(.companion-page) label,
+.settings-page:not(.companion-page) .settings-select,
+.settings-page:not(.companion-page) .settings-window-resize-handle {
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
+}
+
+.settings-page:not(.companion-page) .settings-header.window-drag-strip {
+  -webkit-app-region: drag;
+  app-region: drag;
+  width: min(100%, 1080px);
+  max-width: 1080px;
+  border-radius: 22px;
+  border-color: rgba(231, 184, 109, 0.34);
+  box-shadow:
+    0 18px 42px rgba(0, 0, 0, 0.30),
+    0 0 0 1px rgba(241, 185, 106, 0.06),
+    inset 0 1px 0 rgba(255, 236, 194, 0.08),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.028);
+}
+
+.settings-page:not(.companion-page) .settings-shell {
+  width: min(100%, 1080px);
+  max-width: 1080px;
+  padding: 0 8px 12px 0;
+}
+
+.settings-page:not(.companion-page) .settings-card,
+.settings-page:not(.companion-page) .settings-subsection,
+.settings-page:not(.companion-page) .details-panel,
+.settings-page:not(.companion-page) .info-cell,
+.settings-page:not(.companion-page) .value-box,
+.settings-page:not(.companion-page) .toggle-card,
+.settings-page:not(.companion-page) .hotkey-field,
+.settings-page:not(.companion-page) .update-result-card,
+.settings-page:not(.companion-page) .update-notes-card,
+.settings-page:not(.companion-page) .update-inline-message,
+.settings-page:not(.companion-page) .update-progress-card {
+  border-radius: 18px;
+}
+
+.settings-page:not(.companion-page) .settings-card {
+  border-color: rgba(205, 220, 237, 0.14);
+  box-shadow:
+    0 14px 32px rgba(0, 0, 0, 0.20),
+    inset 0 1px 0 rgba(255, 255, 255, 0.035),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.10);
+}
+
+.theme-dark-fantasy.settings-page:not(.companion-page) {
+  border-color: rgba(174, 128, 255, 0.34);
+  background:
+    radial-gradient(circle at 12% 0%, rgba(167, 123, 255, 0.20), transparent 32%),
+    radial-gradient(circle at 88% 4%, rgba(217, 167, 95, 0.10), transparent 28%),
+    linear-gradient(180deg, rgba(17, 9, 31, 0.99), rgba(5, 3, 10, 0.99)) !important;
+  box-shadow:
+    0 24px 58px rgba(0, 0, 0, 0.48),
+    0 0 0 1px rgba(167, 123, 255, 0.12),
+    0 0 40px rgba(98, 58, 184, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.theme-dark-fantasy.settings-page:not(.companion-page)::before {
+  border-color: rgba(217, 167, 95, 0.08);
+  box-shadow:
+    inset 0 0 0 1px rgba(167, 123, 255, 0.12),
+    inset 0 0 46px rgba(0, 0, 0, 0.38);
+}
+
+.theme-dark-fantasy.settings-page:not(.companion-page)::after {
+  background:
+    linear-gradient(90deg, transparent, rgba(217, 167, 95, 0.16), transparent) top / 100% 1px no-repeat,
+    radial-gradient(circle at 12% 0%, rgba(167, 123, 255, 0.14), transparent 28%),
+    radial-gradient(circle at 88% 4%, rgba(217, 167, 95, 0.10), transparent 26%);
+}
+
+.theme-dark-fantasy.settings-page:not(.companion-page) .settings-header.window-drag-strip {
+  border-radius: 22px;
+}
+
+
+/* Settings window density pass: keep the new frame, but make the utility UI less bulky. */
+.settings-page:not(.companion-page) {
+  padding: 12px 14px 14px;
+  gap: 10px;
+}
+
+.settings-page:not(.companion-page) .settings-header.window-drag-strip {
+  align-items: center;
+  gap: 14px;
+  padding: 11px 16px;
+  border-radius: 20px;
+}
+
+.settings-page:not(.companion-page) .settings-header-copy {
+  gap: 4px;
+}
+
+.settings-page:not(.companion-page) .settings-header-copy h1 {
+  font-size: clamp(22px, 2.4vw, 25px);
+  line-height: 1.08;
+}
+
+.settings-page:not(.companion-page) .settings-header-copy .eyebrow {
+  margin-bottom: 2px;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+}
+
+.settings-page:not(.companion-page) .settings-header-copy .settings-intro,
+.settings-page:not(.companion-page) .helper-text {
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.settings-page:not(.companion-page) .settings-header > .button-secondary {
+  align-self: center;
+  min-width: 126px;
+  min-height: 40px;
+  padding: 0 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.settings-page:not(.companion-page) .settings-shell {
+  gap: 10px;
+  padding: 0 6px 14px 0;
+}
+
+.settings-page:not(.companion-page) .settings-card {
+  gap: 10px;
+  padding: 13px 16px;
+  border-radius: 16px;
+}
+
+.settings-page:not(.companion-page) .settings-subsection,
+.settings-page:not(.companion-page) .details-panel,
+.settings-page:not(.companion-page) .info-cell,
+.settings-page:not(.companion-page) .value-box,
+.settings-page:not(.companion-page) .toggle-card,
+.settings-page:not(.companion-page) .hotkey-field,
+.settings-page:not(.companion-page) .update-result-card,
+.settings-page:not(.companion-page) .update-notes-card,
+.settings-page:not(.companion-page) .update-inline-message,
+.settings-page:not(.companion-page) .update-progress-card {
+  border-radius: 16px;
+}
+
+.settings-page:not(.companion-page) .settings-quick-nav {
+  top: 6px;
+  gap: 8px;
+  padding-block: 10px;
+}
+
+.settings-page:not(.companion-page) .settings-quick-link-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(116px, 1fr));
+  gap: 7px;
+}
+
+.settings-page:not(.companion-page) .settings-quick-link {
+  min-height: 31px;
+  flex: initial;
+  padding: 7px 9px;
+  border-radius: 10px;
+  font-size: 11px;
+}
+
+.settings-page:not(.companion-page) .settings-search-field {
+  gap: 5px;
+}
+
+.settings-page:not(.companion-page) .settings-search-field input {
+  min-height: 34px;
+  padding: 7px 10px;
+}
+
+.settings-page:not(.companion-page) .settings-task-group-title {
+  margin-top: 6px;
+}
+
+@media (max-width: 760px) {
+  .settings-page:not(.companion-page) {
+    padding: 12px;
+    border-radius: 20px;
+  }
+
+  .settings-page:not(.companion-page)::after {
+    border-radius: 19px;
+  }
+
+  .settings-page:not(.companion-page) .settings-header.window-drag-strip,
+  .settings-page:not(.companion-page) .settings-card,
+  .settings-page:not(.companion-page) .settings-subsection,
+  .settings-page:not(.companion-page) .details-panel,
+  .settings-page:not(.companion-page) .info-cell,
+  .settings-page:not(.companion-page) .value-box,
+  .settings-page:not(.companion-page) .toggle-card,
+  .settings-page:not(.companion-page) .hotkey-field {
+    border-radius: 16px;
+  }
 }

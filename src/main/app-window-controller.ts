@@ -262,13 +262,17 @@ export function runOpenSettingsWindow(this: any) {
         }
         this.settingsWindow = new BrowserWindow({
             icon: createAppIcon(),
-            width: 760,
-            height: 860,
-            minWidth: 680,
-            minHeight: 720,
+            width: 900,
+            height: 840,
+            minWidth: 720,
+            minHeight: 600,
+            center: true,
             frame: false,
+            resizable: true,
             titleBarStyle: 'hidden',
-            backgroundColor: '#10161f',
+            transparent: true,
+            hasShadow: true,
+            backgroundColor: '#00000000',
             show: false,
             autoHideMenuBar: true,
             webPreferences: getSecureWebPreferences()
@@ -286,7 +290,7 @@ export function runOpenSettingsWindow(this: any) {
         });
         void this.loadWindowPage(this.settingsWindow, 'settings');
         this.settingsWindow.once('ready-to-show', () => {
-            showWindowWhenReady(this.settingsWindow, { focus: false, afterShow: () => this.broadcastState() });
+            showWindowWhenReady(this.settingsWindow, { afterShow: () => this.broadcastState() });
         });
     }
 

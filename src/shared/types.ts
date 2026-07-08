@@ -135,6 +135,18 @@ export interface GuideZoneProgress {
   lastVisitedAt: string | null;
 }
 
+export type SettingsWindowResizeEdge = 'n' | 'ne' | 'e' | 'se' | 's' | 'sw' | 'w' | 'nw';
+
+export interface SettingsWindowBoundsPatch {
+  x?: number;
+  y?: number;
+  width?: number;
+  height?: number;
+  edge?: SettingsWindowResizeEdge;
+  deltaX?: number;
+  deltaY?: number;
+}
+
 export interface OverlayBounds {
   x: number;
   y: number;
@@ -685,6 +697,7 @@ export interface ElectronApi {
   sendTimerDiagnostics: (payload: TimerDiagnosticsPayload) => Promise<boolean>;
   getOverlayBounds: () => Promise<OverlayBounds | null>;
   resizeOverlay: (width: number, height: number) => Promise<boolean>;
+  resizeSettingsWindow: (bounds: SettingsWindowBoundsPatch) => Promise<boolean>;
   resizeOverlayHeight: (height: number, options?: { force?: boolean; allowBelowMinimum?: boolean }) => Promise<boolean>;
   setOverlayAutoResizeSuspended: (suspended: boolean) => Promise<boolean>;
   setOverlayDragActive: (active: boolean) => Promise<boolean>;

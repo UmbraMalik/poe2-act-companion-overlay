@@ -18,6 +18,8 @@ import { formatZoneMatcherReason, translateSystemText } from '../../i18n/runtime
 import { translate } from '../../i18n/translations';
 import { getAppThemeClassName } from '../theme';
 import { SettingsSelect } from '../settings/SettingsSelect';
+import { SettingsWindowResizeGrip } from '../settings/SettingsWindowResizeGrip';
+import { SettingsWindowShellEffects } from '../settings/SettingsWindowShellEffects';
 import {
   buildOverlayPresetPatch,
   formatOverlayPresetLabel,
@@ -1583,6 +1585,8 @@ export function SettingsPage() {
           </section>
         )}
       </section>
+      <SettingsWindowShellEffects />
+      <SettingsWindowResizeGrip />
     </main>
   );
 }
