@@ -626,9 +626,11 @@ export function runToggleOverlayMode(this: any) {
     }
 
 export async function runLoadWindowPage(this: any, window: any, page: any) {
+        const pageName = String(page);
+        const pageSearch = `?page=${encodeURIComponent(pageName)}`;
         if (isDev) {
             try {
-                await window.loadURL(`${devServerUrl}/${page}.html`);
+                await window.loadURL(`${devServerUrl}/${pageName}.html${pageSearch}`);
                 if (this.config.realtimePriorityEnabled) {
                     this.scheduleRealtimePriorityApply(true);
                 }
@@ -638,7 +640,7 @@ export async function runLoadWindowPage(this: any, window: any, page: any) {
                 // If Vite is not running, fall back to built files.
             }
         }
-        await window.loadFile(resolveRuntimePath('dist', `${page}.html`));
+        await window.loadFile(resolveRuntimePath('dist', `${pageName}.html`), { search: pageSearch });
         if (this.config.realtimePriorityEnabled) {
             this.scheduleRealtimePriorityApply(true);
         }

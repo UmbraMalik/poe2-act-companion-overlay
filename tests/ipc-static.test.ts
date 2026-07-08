@@ -8,6 +8,8 @@ test('preload exposes only specific safe IPC APIs and not the raw ipcRenderer', 
   for (const channel of [
     'app:get-overlay-snapshot',
     'app:get-ui-preferences-snapshot',
+    'app:get-debug-bundle-log-tail',
+    'app:export-debug-bundle',
     'app:update-settings',
     'app:open-report-issue',
     'app:open-external',
@@ -22,8 +24,51 @@ test('preload exposes only specific safe IPC APIs and not the raw ipcRenderer', 
 
   assert.match(preload, /isTimerDiagnosticsEnabled/);
   assert.match(preload, /sendTimerDiagnostics/);
+  assert.match(preload, /getDebugBundleLogTail/);
+  assert.match(preload, /exportDebugBundle/);
   assert.match(preload, /contextBridge\.exposeInMainWorld\('poe2Overlay', api\)/);
   assert.doesNotMatch(preload, /exposeInMainWorld\([^)]*ipcRenderer/);
+});
+
+test('debug bundle IPC reads bounded redacted log tail and exports preview text only', () => {
+  const main = readMainProcessSource();
+  const preload = readText('src/main/preload.ts');
+  const types = readText('src/shared/types.ts');
+  const mainDebugBundle = readText('src/main/debug-bundle.ts');
+  const sharedDebugBundle = readText('src/shared/debug-bundle.ts');
+  const reportPage = readText('src/renderer/pages/ReportIssuePage.tsx');
+  const settingsPage = readText('src/renderer/pages/SettingsPage.tsx');
+  const logTailStart = main.indexOf("ipcMain.handle('app:get-debug-bundle-log-tail'");
+  const logTailEnd = main.indexOf("ipcMain.handle('app:export-debug-bundle'", logTailStart);
+  const exportStart = logTailEnd;
+  const exportEnd = main.indexOf("ipcMain.handle('app:get-cached-update-check-result'", exportStart);
+
+  assert.notEqual(logTailStart, -1);
+  assert.notEqual(logTailEnd, -1);
+  assert.notEqual(exportEnd, -1);
+
+  const logTailHandler = main.slice(logTailStart, logTailEnd);
+  const exportHandler = main.slice(exportStart, exportEnd);
+
+  assert.match(logTailHandler, /readRedactedDebugLogTail/);
+  assert.doesNotMatch(logTailHandler, /getSnapshot\(/);
+  assert.match(exportHandler, /normalizeDebugBundleExportText\(rawText\)/);
+  assert.match(exportHandler, /dialog\.showSaveDialog/);
+  assert.match(exportHandler, /writeFile\(result\.filePath/);
+  assert.doesNotMatch(exportHandler, /getSnapshot\(/);
+  assert.match(mainDebugBundle, /DEBUG_LOG_TAIL_READ_BYTES = 128 \* 1024/);
+  assert.match(mainDebugBundle, /Buffer\.alloc\(readSize\)/);
+  assert.match(sharedDebugBundle, /DEBUG_BUNDLE_LOG_LINE_LIMIT = 20/);
+  assert.match(sharedDebugBundle, /redactSensitiveText/);
+  assert.match(sharedDebugBundle, /normalizeDebugBundleExportText/);
+  assert.match(preload, /getDebugBundleLogTail: \(\) => ipcRenderer\.invoke\('app:get-debug-bundle-log-tail'\)/);
+  assert.match(preload, /exportDebugBundle: \(text: string\) =>\s*\n\s*ipcRenderer\.invoke\('app:export-debug-bundle', text\)/);
+  assert.match(types, /getDebugBundleLogTail: \(\) => Promise<string\[\]>/);
+  assert.match(types, /exportDebugBundle: \(text: string\) => Promise<boolean>/);
+  assert.match(reportPage, /DiagnosticsBundlePanel/);
+  assert.ok(reportPage.indexOf('DiagnosticsBundlePanel') < reportPage.indexOf('settings-card report-card'));
+  assert.doesNotMatch(settingsPage, /DiagnosticsBundlePanel/);
+  assert.doesNotMatch(settingsPage, /settings-debug-bundle/);
 });
 
 test('overlay initial snapshot uses trimmed overlay IPC while app pages keep full snapshot', () => {

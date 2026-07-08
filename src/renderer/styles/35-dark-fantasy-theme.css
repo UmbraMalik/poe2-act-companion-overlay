@@ -626,6 +626,8 @@
 .theme-dark-fantasy.companion-page .summary-compare-act-pill,
 .theme-dark-fantasy.companion-page .summary-stat,
 .theme-dark-fantasy.companion-page .summary-history-row,
+.theme-dark-fantasy.companion-page .run-history-detail-metrics > div,
+.theme-dark-fantasy.companion-page .run-history-detail-table-row,
 .theme-dark-fantasy.companion-page .reminder-item,
 .theme-dark-fantasy.companion-page .vendor-checkpoint,
 .theme-dark-fantasy.companion-page .power-spike-timeline-card,
@@ -771,6 +773,9 @@
 .theme-dark-fantasy.companion-page .summary-stat small,
 .theme-dark-fantasy.companion-page .summary-history-main span,
 .theme-dark-fantasy.companion-page .summary-history-stats span,
+.theme-dark-fantasy.companion-page .run-history-detail-metrics span,
+.theme-dark-fantasy.companion-page .run-history-detail-table-head,
+.theme-dark-fantasy.companion-page .run-history-detail-table-row small,
 .theme-dark-fantasy.companion-page .act-split-total,
 .theme-dark-fantasy.companion-page .timer-cockpit-details small {
   color: rgba(184, 170, 207, 0.78) !important;
@@ -781,6 +786,7 @@
 .theme-dark-fantasy.companion-page .summary-act-breakdown-table,
 .theme-dark-fantasy.companion-page .summary-compare-panel,
 .theme-dark-fantasy.companion-page .summary-history-panel,
+.theme-dark-fantasy.companion-page .run-history-detail-card,
 .theme-dark-fantasy.companion-page .summary-longest-card,
 .theme-dark-fantasy.companion-page .run-save-card,
 .theme-dark-fantasy.companion-page .timer-action-bar {

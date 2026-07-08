@@ -16,6 +16,12 @@ function getDoneBonusIds(app: unknown): string[] {
   return Object.keys((app as { config: { campaignBonusProgress: Record<string, unknown> } }).config.campaignBonusProgress).sort();
 }
 
+function getBonusProgress(app: unknown, bonusId: string) {
+  return (app as {
+    config: { campaignBonusProgress: Record<string, { detectedBy?: string; logLine?: string }> };
+  }).config.campaignBonusProgress[bonusId] ?? null;
+}
+
 test('repeated reward families exist across acts and remain context-sensitive', () => {
   const grouped = groupBonusesByRewardSignature();
   const repeatedGroups = [...grouped.values()].filter((entries) => entries.length > 1);
@@ -53,6 +59,8 @@ test('ordinary passive points never auto-complete weapon-set bonuses', () => {
 
   applyAppLogLine(app as never, ': Вы получили 2 очка пассивных умений для набора оружия.');
   assert.deepEqual(getDoneBonusIds(app), ['act1_hunting_grounds_crowbell_weapon_points']);
+  assert.equal(getBonusProgress(app, 'act1_hunting_grounds_crowbell_weapon_points')?.detectedBy, 'log');
+  assert.match(getBonusProgress(app, 'act1_hunting_grounds_crowbell_weapon_points')?.logLine ?? '', /набор[а]? оружия/);
 });
 
 test('repeated same reward line does not tick the next similar weapon-set bonus', () => {
@@ -216,6 +224,8 @@ test('manual campaign bonus marking can be toggled on and off without auto-track
 
   assert.equal((app as any).setCampaignBonusDone('act1_ogham_village_salvage_bench', 'manual'), true);
   assert.deepEqual(getDoneBonusIds(app), ['act1_ogham_village_salvage_bench']);
+  assert.equal(getBonusProgress(app, 'act1_ogham_village_salvage_bench')?.detectedBy, 'manual');
+  assert.equal(getBonusProgress(app, 'act1_ogham_village_salvage_bench')?.logLine, undefined);
 
   assert.equal((app as any).setCampaignBonusDone('act1_ogham_village_salvage_bench', null), true);
   assert.deepEqual(getDoneBonusIds(app), []);

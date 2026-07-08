@@ -129,6 +129,23 @@ test('snapshot broadcast skips destroyed webContents before sending', () => {
   assert.match(flushState, /webContents\.send\('app:state-changed'/);
 });
 
+test('window page routing uses html body markers before URL fallback', () => {
+  const rendererMain = readText('src/renderer/main.tsx');
+  const windowController = readText('src/main/app-window-controller.ts');
+
+  assert.match(rendererMain, /new URLSearchParams\(window\.location\.search\)/);
+  assert.match(rendererMain, /params\.get\('page'\)/);
+  assert.match(rendererMain, /window\.location\.pathname\.split\('\/'\)\.pop\(\)/);
+  assert.match(rendererMain, /const bodyPage = getRendererPageCandidate\(document\.body\.dataset\.page\)/);
+  assert.match(rendererMain, /return bodyPage \?\? getRendererPageFromLocation\(\) \?\? 'overlay'/);
+  assert.match(windowController, /const pageSearch = `\?page=\$\{encodeURIComponent\(pageName\)\}`/);
+  assert.match(windowController, /loadURL\(`\$\{devServerUrl\}\/\$\{pageName\}\.html\$\{pageSearch\}`\)/);
+  assert.match(
+    windowController,
+    /loadFile\(resolveRuntimePath\('dist', `\$\{pageName\}\.html`\), \{ search: pageSearch \}\)/
+  );
+});
+
 test('run timer snapshot sync tracks act split content changes', () => {
   const hooks = readText('src/renderer/hooks.ts');
   const runTimerHook = hooks.slice(
@@ -444,12 +461,36 @@ test('companion route tab keeps search and filters in helper-backed memoized flo
 
 test('companion bonus manual marks keep visible source-specific feedback', () => {
   const companion = readText('src/renderer/pages/CompanionPage.tsx');
+  const provenance = readText('src/shared/campaign-bonus-provenance.ts');
+  const translations = readText('src/i18n/translations.ts');
   const cohesion = readText('src/renderer/styles/36-companion-cohesion.css');
 
-  assert.match(companion, /className=\{`bonus-detected-line is-\$\{progress\.detectedBy\}`\}/);
-  assert.match(companion, /progress\.detectedBy === 'manual'/);
+  assert.match(companion, /getCampaignBonusProvenanceView\(progress, language\)/);
+  assert.match(companion, /className=\{`bonus-detected-line is-\$\{provenance\.source\}`\}/);
+  assert.match(provenance, /log_reward_line/);
+  assert.match(translations, /Detected from reward line/);
   assert.match(cohesion, /\.bonus-detected-line\.is-manual/);
-  assert.match(cohesion, /\.bonus-detected-line\.is-log/);
+  assert.match(cohesion, /\.bonus-detected-line\.is-log_reward_line/);
+  assert.match(cohesion, /\.bonus-detected-line\.is-context/);
+  assert.match(cohesion, /\.bonus-detected-line\.is-unknown/);
+});
+
+test('companion run history details button opens an inline detail card', () => {
+  const detailPanel = readText('src/renderer/RunHistoryDetailPanel.tsx');
+  const companion = readText('src/renderer/pages/CompanionPage.tsx');
+
+  assert.match(detailPanel, /const \[isDetailOpen,\s*setIsDetailOpen\] = useState\(false\)/);
+  assert.match(detailPanel, /const openRunDetails = \(runId: string\)/);
+  assert.match(detailPanel, /setPendingRunId\(runId\);\s*setSelectedRunId\(null\);\s*setIsDetailOpen\(true\);/);
+  assert.match(detailPanel, /window\.setTimeout\(\(\) => \{\s*setSelectedRunId\(runId\);/);
+  assert.match(detailPanel, /<RunHistoryDetailLoading language=\{language\} \/>/);
+  assert.match(detailPanel, /<RunHistoryDetailCard model=\{model\} language=\{language\} \/>/);
+  assert.match(detailPanel, /export const RunHistoryDetailPanel = memo\(RunHistoryDetailPanelInner\)/);
+  assert.doesNotMatch(detailPanel, /getRunHistorySignature\(previous\.history\)/);
+  assert.match(companion, /stableRunHistoryRef/);
+  assert.match(companion, /getRunHistorySignature\(rawRunHistory\)/);
+  assert.match(companion, /const restoreSavedRun = useCallback/);
+  assert.match(companion, /const deleteSavedRun = useCallback/);
 });
 
 test('default motion avoids continuous compositor-heavy ambient animations', () => {

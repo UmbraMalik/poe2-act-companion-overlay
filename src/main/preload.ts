@@ -19,6 +19,9 @@ const api: ElectronApi = {
   getOverlaySnapshot: () => ipcRenderer.invoke('app:get-overlay-snapshot'),
   getUiPreferencesSnapshot: () => ipcRenderer.invoke('app:get-ui-preferences-snapshot'),
   getAppVersion: () => ipcRenderer.invoke('app:get-version'),
+  getDebugBundleLogTail: () => ipcRenderer.invoke('app:get-debug-bundle-log-tail'),
+  exportDebugBundle: (text: string) =>
+    ipcRenderer.invoke('app:export-debug-bundle', text),
   getCachedUpdateCheckResult: () => ipcRenderer.invoke('app:get-cached-update-check-result'),
   getStartupUpdateInfo: () => ipcRenderer.invoke('app:get-startup-update-info'),
   checkForUpdates: () => ipcRenderer.invoke('app:check-for-updates'),

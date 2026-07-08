@@ -222,7 +222,7 @@ export interface CampaignBonusDefinition {
 export interface CampaignBonusProgress {
   state: 'done';
   timestamp: string;
-  detectedBy: 'log' | 'manual';
+  detectedBy: 'log' | 'manual' | 'context' | 'unknown';
   logLine?: string;
 }
 
@@ -650,6 +650,8 @@ export interface ElectronApi {
   getOverlaySnapshot: () => Promise<OverlaySnapshot>;
   getUiPreferencesSnapshot: () => Promise<UiPreferencesSnapshot>;
   getAppVersion: () => Promise<string>;
+  getDebugBundleLogTail: () => Promise<string[]>;
+  exportDebugBundle: (text: string) => Promise<boolean>;
   getCachedUpdateCheckResult: () => Promise<UpdateCheckResult | null>;
   getStartupUpdateInfo: () => Promise<UpdateInfo | null>;
   checkForUpdates: () => Promise<UpdateCheckResult>;

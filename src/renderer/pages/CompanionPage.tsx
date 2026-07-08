@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useAppSnapshot, useLiveRunTimer } from '../hooks';
 import { useDocumentTitle, useI18n } from '../useI18n';
 import { getAppThemeClassName } from '../theme';
@@ -18,10 +18,13 @@ import {
 } from '../companion-helpers';
 import { formatDuration, formatRecommendedLevelLabel } from '../utils';
 import { getCampaignBonusView, getGuideView, translateDataText } from '../../i18n/data';
+import { getCampaignBonusProvenanceView } from '../../shared/campaign-bonus-provenance';
 import { translate } from '../../i18n/translations';
 import { isEndgameT15Act } from '../../shared/timers';
 import { getGuideUpdateClassName } from '../guide-update-highlights';
 import { getZoneRecognitionView } from '../log-health';
+import { RunHistoryDetailPanel } from '../RunHistoryDetailPanel';
+import { getRunHistorySignature } from '../run-history-detail';
 import { RouteCardBonusPanel, getRouteCampaignBonusModels, type RouteCardBonusModel } from '../RouteCardBonuses';
 import { RouteTabControls } from '../RouteTabControls';
 import { filterRouteCards, getRouteFilterEmptyText, type RouteFilterMode } from '../route-tab-search';
@@ -563,53 +566,6 @@ function renderBestComparison(
                   {delta === null ? '—' : formatDelta(delta)}
                 </strong>
               </div>
-            );
-          })}
-        </div>
-      )}
-    </section>
-  );
-}
-
-function renderCompactRunHistory(
-  history: SavedRunHistoryEntry[],
-  language: AppLanguage,
-  onRestore: (runId: string) => void,
-  onDelete: (runId: string) => void
-) {
-  return (
-    <section className="companion-block summary-history-panel">
-      <div className="summary-section-heading">
-        <h3>{translate(language, 'companion.runHistoryTitle')}</h3>
-        <span>{translate(language, 'companion.runHistoryCount', { count: history.length })}</span>
-      </div>
-      {history.length === 0 ? (
-        <p className="helper-text">{translate(language, 'companion.runHistoryEmpty')}</p>
-      ) : (
-        <div className="summary-history-list">
-          {history.slice(0, 8).map((entry) => {
-            const rows = getSavedRunActRows(entry);
-            const longestZone = entry.longestZones[0] ?? null;
-            return (
-              <article key={entry.id} className="summary-history-row">
-                <div className="summary-history-main">
-                  <strong>{entry.label || translate(language, 'companion.savedRunFallback')}</strong>
-                  <span>{formatSavedRunDate(entry.savedAt, language)}</span>
-                </div>
-                <div className="summary-history-stats">
-                  <span><b>{formatDuration(entry.totalElapsedMs)}</b></span>
-                  <span>{getCompletedActCount(rows)} / {TOTAL_CAMPAIGN_ACTS}</span>
-                  <span>{longestZone ? `${translateDataText(longestZone.zone_ru, language)} · ${formatDuration(longestZone.elapsedMs)}` : '—'}</span>
-                </div>
-                <div className="button-row summary-history-actions">
-                  <button type="button" className="button-secondary" onClick={() => onRestore(entry.id)}>
-                    {translate(language, 'companion.continueSavedRun')}
-                  </button>
-                  <button type="button" className="button-danger" onClick={() => onDelete(entry.id)}>
-                    {translate(language, 'companion.deleteSavedRun')}
-                  </button>
-                </div>
-              </article>
             );
           })}
         </div>
@@ -1192,6 +1148,10 @@ export function CompanionPage() {
   const runSaveNoticeTimeoutRef = useRef<number | null>(null);
   const timerSplitFeedbackTimeoutRef = useRef<number | null>(null);
   const previousActSplitRef = useRef<{ act: ZoneAct | null; elapsedMs: number | null } | null>(null);
+  const stableRunHistoryRef = useRef<{ signature: string; history: SavedRunHistoryEntry[] }>({
+    signature: '',
+    history: []
+  });
 
   useDocumentTitle(t('titles.companion'));
 
@@ -1289,7 +1249,16 @@ export function CompanionPage() {
     () => getCampaignBonusTotals(snapshot?.campaignBonuses ?? [], campaignBonusProgress),
     [snapshot?.campaignBonuses, campaignBonusProgress]
   );
-  const runHistory = snapshot?.config.runHistory ?? [];
+  const rawRunHistory = snapshot?.config.runHistory ?? [];
+  const runHistory = useMemo(() => {
+    const signature = getRunHistorySignature(rawRunHistory);
+    if (stableRunHistoryRef.current.signature === signature) {
+      return stableRunHistoryRef.current.history;
+    }
+
+    stableRunHistoryRef.current = { signature, history: rawRunHistory };
+    return rawRunHistory;
+  }, [rawRunHistory]);
   const currentZoneBonuses = useMemo(
     () => snapshot ? getCurrentZoneCampaignBonuses(snapshot) : [],
     [
@@ -1574,13 +1543,13 @@ export function CompanionPage() {
     setRunConfirmDialog({ type: 'reset' });
   };
 
-  const restoreSavedRun = async (runId: string) => {
+  const restoreSavedRun = useCallback((runId: string) => {
     setRunConfirmDialog({ type: 'restore', runId });
-  };
+  }, []);
 
-  const deleteSavedRun = async (runId: string) => {
+  const deleteSavedRun = useCallback((runId: string) => {
     setRunConfirmDialog({ type: 'delete', runId });
-  };
+  }, []);
 
   const closeRunConfirmDialog = () => setRunConfirmDialog(null);
 
@@ -2135,45 +2104,30 @@ export function CompanionPage() {
               <h3>{title}</h3>
               <div className="bonuses-list">
                 {bonuses.map((bonus) => {
-                  const progress = campaignBonusProgress[bonus.id];
-                  const done = Boolean(progress);
-                  const bonusView = getCampaignBonusView(bonus, language) ?? bonus;
-                  const isBonusFeedback = bonusFeedback?.id === bonus.id;
+                  const progress = campaignBonusProgress[bonus.id], done = Boolean(progress);
+                  const bonusView = getCampaignBonusView(bonus, language) ?? bonus, isBonusFeedback = bonusFeedback?.id === bonus.id;
+                  const provenance = getCampaignBonusProvenanceView(progress, language);
 
                   return (
                     <article
                       key={bonus.id}
                       className={`bonus-row ${done ? 'is-done' : 'is-pending'}${isBonusFeedback ? ` is-bonus-toggle-feedback is-feedback-${bonusFeedback.tone}` : ''}`}
                     >
-                      <div className="bonus-status-marker" aria-hidden="true">
-                        {done ? '✓' : '○'}
-                      </div>
+                      <div className="bonus-status-marker" aria-hidden="true">{done ? '✓' : '○'}</div>
                       <div className="bonus-main">
                         <div className="bonus-title-line">
                           <strong>{'displayTitle' in bonusView ? bonusView.displayTitle : bonus.title}</strong>
                           <span className="bonus-category-pill">{getBonusCategoryLabel(bonus.category, language)}</span>
-                          {bonus.needsVerification && (
-                            <span className="bonus-verify-pill">{t('companion.verify')}</span>
-                          )}
+                          {bonus.needsVerification && <span className="bonus-verify-pill">{t('companion.verify')}</span>}
                         </div>
-                        <p className="bonus-meta">
-                          {('displayZoneName' in bonusView ? bonusView.displayZoneName : bonus.zone_ru)} · {('displaySource' in bonusView ? bonusView.displaySource : bonus.source)}
-                        </p>
+                        <p className="bonus-meta">{('displayZoneName' in bonusView ? bonusView.displayZoneName : bonus.zone_ru)} · {('displaySource' in bonusView ? bonusView.displaySource : bonus.source)}</p>
                         {bonus.details.length > 0 && (
                           <ul className="bonus-details-list">
                             {(('displayDetails' in bonusView ? bonusView.displayDetails : bonus.details) as string[]).slice(0, 2).map((detail) => (
-                              <li key={`${bonus.id}-${detail}`}>{detail}</li>
-                            ))}
+                              <li key={`${bonus.id}-${detail}`}>{detail}</li>))}
                           </ul>
                         )}
-                        {progress && (
-                          <p className={`bonus-detected-line is-${progress.detectedBy}`}>
-                            {t('companion.markedBy', {
-                              method: progress.detectedBy === 'manual' ? t('companion.markedManually') : t('companion.markedByLog'),
-                              time: new Date(progress.timestamp).toLocaleTimeString(language === 'en' ? 'en-US' : 'ru-RU')
-                            })}
-                          </p>
-                        )}
+                        {provenance && <p className={`bonus-detected-line is-${provenance.source}`}>{provenance.line}</p>}
                       </div>
                       <button
                         type="button"
@@ -2239,7 +2193,12 @@ export function CompanionPage() {
       <div className="summary-scroll-body summary-scroll-body--full">
         {summaryContent}
         {renderBestComparison(runHistory, currentRunElapsed, actTimeRows, language)}
-        {renderCompactRunHistory(runHistory, language, restoreSavedRun, deleteSavedRun)}
+        <RunHistoryDetailPanel
+          history={runHistory}
+          language={language}
+          onRestore={restoreSavedRun}
+          onDelete={deleteSavedRun}
+        />
       </div>
     </div>
   ) : null;

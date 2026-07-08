@@ -231,6 +231,10 @@ test('normalizeAppConfig drops corrupted checklist and campaign bonus progress e
         detectedBy: 'log',
         logLine: 'You have gained a permanent bonus'
       },
+      legacy_unknown_source: {
+        state: 'done',
+        timestamp: '2026-01-01T00:01:30.000Z'
+      },
       bad_state: {
         state: 'missed',
         timestamp: '2026-01-01T00:02:00.000Z',
@@ -258,8 +262,9 @@ test('normalizeAppConfig drops corrupted checklist and campaign bonus progress e
   assert.equal(normalized.zoneProgress.a1_clearfell.itemStates.missing_original_text.originalText, '');
   assert.deepEqual(normalized.zoneProgress.a1_clearfell.likelyDoneKeywords, ['reward', 'boss']);
   assert.equal(normalized.zoneProgress.a1_clearfell.lastVisitedAt, null);
-  assert.deepEqual(Object.keys(normalized.campaignBonusProgress), ['valid_manual', 'valid_log']);
+  assert.deepEqual(Object.keys(normalized.campaignBonusProgress), ['valid_manual', 'valid_log', 'legacy_unknown_source']);
   assert.equal(normalized.campaignBonusProgress.valid_log.logLine, 'You have gained a permanent bonus');
+  assert.equal(normalized.campaignBonusProgress.legacy_unknown_source.detectedBy, 'unknown');
 });
 
 test('ConfigStore persists log path and merges settings safely', () => {

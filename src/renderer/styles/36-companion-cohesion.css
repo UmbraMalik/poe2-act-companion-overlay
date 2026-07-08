@@ -115,6 +115,8 @@
 .companion-page .summary-stat,
 .companion-page .summary-compare-act-pill,
 .companion-page .summary-history-row,
+.companion-page .run-history-detail-metrics > div,
+.companion-page .run-history-detail-table-row,
 .companion-page .act-split-row,
 .companion-page .summary-act-breakdown-row,
 .companion-page .reminder-item,
@@ -314,6 +316,18 @@
   color: rgba(148, 231, 168, 0.86) !important;
 }
 
+.companion-page .bonus-detected-line.is-log_reward_line {
+  color: rgba(148, 231, 168, 0.86) !important;
+}
+
+.companion-page .bonus-detected-line.is-context {
+  color: rgba(156, 204, 255, 0.84) !important;
+}
+
+.companion-page .bonus-detected-line.is-unknown {
+  color: rgba(190, 182, 205, 0.78) !important;
+}
+
 .companion-page .helper-text,
 .companion-page .route-empty-note,
 .companion-page .route-more-note,
@@ -322,6 +336,9 @@
 .companion-page .summary-stat small,
 .companion-page .summary-history-main span,
 .companion-page .summary-history-stats span,
+.companion-page .run-history-detail-metrics span,
+.companion-page .run-history-detail-table-head,
+.companion-page .run-history-detail-table-row small,
 .companion-page .act-split-total,
 .companion-page .timer-cockpit-details small {
   color: var(--companion-muted) !important;
@@ -444,6 +461,7 @@
 .theme-dark-fantasy.companion-page .summary-longest-card,
 .theme-dark-fantasy.companion-page .summary-compare-panel,
 .theme-dark-fantasy.companion-page .summary-history-panel,
+.theme-dark-fantasy.companion-page .run-history-detail-card,
 .theme-dark-fantasy.companion-page .summary-act-breakdown-panel,
 .theme-dark-fantasy.companion-page .summary-support-grid > .companion-block,
 .theme-dark-fantasy.companion-page .summary-breakdown-grid > .companion-block {
@@ -459,6 +477,8 @@
 
 .theme-dark-fantasy.companion-page .companion-summary-layout .longest-zone-list li,
 .theme-dark-fantasy.companion-page .summary-history-row,
+.theme-dark-fantasy.companion-page .run-history-detail-metrics > div,
+.theme-dark-fantasy.companion-page .run-history-detail-table-row,
 .theme-dark-fantasy.companion-page .summary-compare-act-pill,
 .theme-dark-fantasy.companion-page .summary-act-breakdown-row {
   border-color: rgba(190, 162, 255, 0.14) !important;

@@ -1,6 +1,7 @@
 import { getCampaignBonusView } from '../i18n/data';
 import { translate } from '../i18n/translations';
-import type { AppLanguage, AppSnapshot, CampaignBonusProgress, GuideEntry } from '../shared/types';
+import { getCampaignBonusProvenanceView } from '../shared/campaign-bonus-provenance';
+import type { AppLanguage, AppSnapshot, GuideEntry } from '../shared/types';
 import { getStructuredRouteBonusIds } from './route-tab-search';
 
 export type RouteCardBonusModel = {
@@ -9,7 +10,7 @@ export type RouteCardBonusModel = {
   source: string;
   categoryLabel: string;
   done: boolean;
-  detectedBy: CampaignBonusProgress['detectedBy'] | null;
+  provenanceLabel: string | null;
 };
 
 type RouteBonusSnapshot = Pick<AppSnapshot, 'campaignBonuses' | 'config'>;
@@ -60,7 +61,7 @@ export function getRouteCampaignBonusModels(
         source: 'displaySource' in bonusView ? bonusView.displaySource : bonus.source,
         categoryLabel: getBonusCategoryLabel(bonus.category, language),
         done: Boolean(progress),
-        detectedBy: progress?.detectedBy ?? null
+        provenanceLabel: getCampaignBonusProvenanceView(progress, language)?.label ?? null
       };
     });
 }
@@ -70,9 +71,7 @@ function getRouteBonusStatusLabel(bonus: RouteCardBonusModel, language: AppLangu
     return translate(language, 'companion.routeBonusNotTaken');
   }
 
-  return bonus.detectedBy === 'manual'
-    ? translate(language, 'companion.routeBonusTakenManual')
-    : translate(language, 'companion.routeBonusTakenLog');
+  return bonus.provenanceLabel ?? translate(language, 'companion.routeBonusTakenUnknown');
 }
 
 export function RouteCardBonusPanel({ bonuses, language }: { bonuses: RouteCardBonusModel[]; language: AppLanguage }) {

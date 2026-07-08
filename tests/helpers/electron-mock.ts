@@ -114,6 +114,7 @@ const mockElectron = {
   },
   dialog: {
     showOpenDialog: async () => ({ canceled: true, filePaths: [] as string[] }),
+    showSaveDialog: async () => ({ canceled: true, filePath: undefined as string | undefined }),
     showMessageBox: async () => ({ response: 0 })
   },
   shell: {
