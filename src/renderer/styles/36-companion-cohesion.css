@@ -1459,3 +1459,391 @@ body.settings-window-resizing .settings-page:not(.companion-page) {
     border-radius: 16px;
   }
 }
+
+/* Companion panel polish pass: denser, calmer cards in both app themes. */
+.companion-page {
+  --companion-panel-radius: 18px;
+  --companion-card-radius: 14px;
+  --companion-card-radius-sm: 11px;
+  --companion-panel-line: rgba(241, 185, 106, 0.20);
+  --companion-panel-line-soft: rgba(205, 220, 237, 0.080);
+  --companion-panel-hover: rgba(255, 255, 255, 0.034);
+  --companion-panel-highlight: rgba(241, 185, 106, 0.12);
+  --companion-panel-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.035),
+    0 16px 32px rgba(0, 0, 0, 0.18);
+}
+
+.theme-dark-fantasy.companion-page {
+  --companion-panel-line: rgba(217, 167, 95, 0.24);
+  --companion-panel-line-soft: rgba(212, 184, 255, 0.12);
+  --companion-panel-hover: rgba(167, 123, 255, 0.055);
+  --companion-panel-highlight: rgba(217, 167, 95, 0.15);
+  --companion-panel-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.040),
+    0 18px 34px rgba(0, 0, 0, 0.24),
+    0 0 26px rgba(117, 75, 202, 0.10);
+}
+
+.companion-page .companion-card {
+  gap: 12px;
+  padding: 14px;
+  border-radius: calc(var(--companion-panel-radius) + 2px) !important;
+}
+
+.companion-page .companion-card > .companion-tab-row {
+  margin-bottom: 0;
+  padding: 4px;
+  border: 1px solid var(--companion-panel-line-soft);
+  border-radius: var(--companion-card-radius);
+  background:
+    radial-gradient(circle at 10% 0%, var(--companion-panel-highlight), transparent 44%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.024), rgba(255, 255, 255, 0.008)),
+    rgba(0, 0, 0, 0.10);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.030);
+}
+
+.theme-dark-fantasy.companion-page .companion-card > .companion-tab-row {
+  background:
+    radial-gradient(circle at 12% 0%, rgba(167, 123, 255, 0.11), transparent 46%),
+    linear-gradient(180deg, rgba(28, 18, 46, 0.74), rgba(11, 7, 19, 0.68));
+}
+
+.companion-page .companion-card > .companion-tab-row button {
+  min-height: 34px;
+  border-radius: var(--companion-card-radius-sm);
+  font-size: 11px;
+  letter-spacing: 0.070em;
+}
+
+.companion-page .companion-tab-body {
+  padding: 12px;
+  border: 1px solid var(--companion-panel-line-soft);
+  border-radius: var(--companion-panel-radius);
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 8% 0%, var(--companion-blue-soft), transparent 34%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.018), rgba(255, 255, 255, 0.004)),
+    rgba(0, 0, 0, 0.080) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.025);
+}
+
+.theme-dark-fantasy.companion-page .companion-tab-body {
+  border-color: rgba(212, 184, 255, 0.12);
+  background:
+    radial-gradient(circle at 10% 0%, rgba(167, 123, 255, 0.085), transparent 36%),
+    radial-gradient(circle at 92% 10%, rgba(217, 167, 95, 0.060), transparent 34%),
+    linear-gradient(180deg, rgba(11, 7, 19, 0.58), rgba(7, 4, 12, 0.28)) !important;
+}
+
+.companion-page .companion-tab-layout,
+.companion-page .companion-zone-polished-layout,
+.companion-page .timer-rework-layout,
+.companion-page .act-times-dashboard,
+.companion-page .reminders-tab-layout,
+.companion-page .bonuses-tab-layout,
+.companion-page .companion-summary-layout .summary-scroll-body--full,
+.companion-page .summary-results-dashboard {
+  gap: 12px;
+}
+
+.companion-page .companion-zone-polished-layout,
+.companion-page .timer-rework-layout,
+.companion-page .summary-scroll-body,
+.companion-page .route-overview-list.route-overview-grid {
+  scrollbar-width: thin;
+  scrollbar-color: var(--companion-gold) rgba(255, 255, 255, 0.045);
+}
+
+.companion-page .companion-zone-polished-layout::-webkit-scrollbar,
+.companion-page .timer-rework-layout::-webkit-scrollbar,
+.companion-page .summary-scroll-body::-webkit-scrollbar,
+.companion-page .route-overview-list.route-overview-grid::-webkit-scrollbar {
+  width: 8px;
+}
+
+.companion-page .companion-zone-polished-layout::-webkit-scrollbar-track,
+.companion-page .timer-rework-layout::-webkit-scrollbar-track,
+.companion-page .summary-scroll-body::-webkit-scrollbar-track,
+.companion-page .route-overview-list.route-overview-grid::-webkit-scrollbar-track {
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.040);
+}
+
+.companion-page .companion-zone-polished-layout::-webkit-scrollbar-thumb,
+.companion-page .timer-rework-layout::-webkit-scrollbar-thumb,
+.companion-page .summary-scroll-body::-webkit-scrollbar-thumb,
+.companion-page .route-overview-list.route-overview-grid::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--companion-gold), rgba(149, 98, 35, 0.74));
+}
+
+.companion-page .companion-block,
+.companion-page .zone-metric-card,
+.companion-page .timer-cockpit-details > div,
+.companion-page .timer-segment-list > div,
+.companion-page .run-metric-card,
+.companion-page .summary-stat,
+.companion-page .summary-compare-act-pill,
+.companion-page .summary-history-row,
+.companion-page .run-history-detail-metrics > div,
+.companion-page .run-history-detail-table-row,
+.companion-page .act-split-row,
+.companion-page .summary-act-breakdown-row,
+.companion-page .reminder-item,
+.companion-page .vendor-checkpoint,
+.companion-page .power-spike-timeline-card,
+.companion-page .info-cell,
+.companion-page .bonus-row,
+.companion-page .zone-bonus-details-list .bonus-line {
+  border-radius: var(--companion-card-radius) !important;
+  border-color: var(--companion-panel-line-soft) !important;
+  box-shadow: var(--companion-panel-shadow) !important;
+}
+
+.companion-page .companion-block {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: 13px;
+}
+
+.companion-page .companion-block::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.040), transparent 34%),
+    linear-gradient(90deg, var(--companion-panel-line), transparent 46%);
+  opacity: 0.22;
+}
+
+.companion-page .companion-block > * {
+  position: relative;
+  z-index: 1;
+}
+
+.companion-page .zone-hero-card,
+.companion-page .timer-cockpit-card,
+.companion-page .act-times-hero-card,
+.companion-page .summary-result-panel,
+.companion-page .bonuses-summary-card {
+  border-radius: calc(var(--companion-panel-radius) - 1px) !important;
+  padding: 15px;
+}
+
+.companion-page .zone-hero-card,
+.companion-page .timer-cockpit-card,
+.companion-page .summary-result-panel {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.045),
+    0 18px 34px rgba(0, 0, 0, 0.20),
+    0 0 24px var(--companion-panel-highlight) !important;
+}
+
+.companion-page .companion-block h3,
+.companion-page .companion-inline-title,
+.companion-page .zone-section-heading h3,
+.companion-page .summary-section-heading h3,
+.companion-page .bonuses-summary-card h3,
+.companion-page .bonuses-act-card h3,
+.companion-page .vendor-roadmap-section h4 {
+  letter-spacing: 0.095em;
+  line-height: 1.18;
+}
+
+.companion-page .zone-section-heading,
+.companion-page .summary-section-heading {
+  min-width: 0;
+  gap: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--companion-panel-line-soft);
+}
+
+.companion-page .zone-section-heading span,
+.companion-page .summary-section-heading span {
+  border-radius: 999px;
+}
+
+.companion-page .helper-text,
+.companion-page .compact-helper-text,
+.companion-page .route-filter-empty,
+.companion-page .route-empty-note {
+  color: var(--companion-muted) !important;
+}
+
+.companion-page .companion-block > .helper-text:only-child,
+.companion-page .route-filter-empty,
+.companion-page .summary-scroll-body > .helper-text:only-child {
+  padding: 10px 11px;
+  border: 1px dashed var(--companion-panel-line-soft);
+  border-radius: var(--companion-card-radius-sm);
+  background: rgba(255, 255, 255, 0.018);
+}
+
+.companion-page .route-polish-layout {
+  gap: 12px;
+}
+
+.companion-page .companion-route-toolbar {
+  padding: 13px;
+  border-radius: var(--companion-panel-radius) !important;
+}
+
+.companion-page .route-toolbar-context {
+  gap: 8px;
+}
+
+.companion-page .route-toolbar-context span,
+.companion-page .route-tab-tools,
+.companion-page .route-search-field input,
+.companion-page .route-filter-row button,
+.companion-page .route-jump-row button {
+  border-radius: var(--companion-card-radius-sm) !important;
+}
+
+.companion-page .companion-route-list-card {
+  padding: 13px;
+  border-radius: var(--companion-panel-radius) !important;
+}
+
+.companion-page .route-overview-list.route-overview-grid {
+  gap: 10px !important;
+  padding-right: 7px !important;
+}
+
+.companion-page .route-overview-list.route-overview-grid > .route-overview-card {
+  min-height: 110px !important;
+  padding: 12px 13px;
+  border-radius: var(--companion-card-radius) !important;
+}
+
+.companion-page .route-polish-layout .route-overview-card.status-current,
+.companion-page .route-polish-layout .route-overview-card.is-route-next {
+  min-height: 114px !important;
+}
+
+.companion-page .timer-cockpit-card,
+.companion-page .act-times-hero-card,
+.companion-page .summary-result-panel {
+  gap: 12px;
+}
+
+.companion-page .timer-main-readout h3,
+.companion-page .timer-main-readout strong,
+.companion-page .summary-result-main strong {
+  letter-spacing: -0.042em;
+}
+
+.companion-page .timer-cockpit-details,
+.companion-page .timer-segment-list,
+.companion-page .summary-result-facts,
+.companion-page .run-history-detail-metrics,
+.companion-page .vendor-checkpoint-grid,
+.companion-page .summary-compare-act-strip {
+  gap: 7px;
+}
+
+.companion-page .timer-cockpit-details > div,
+.companion-page .timer-segment-list > div,
+.companion-page .summary-stat,
+.companion-page .run-history-detail-metrics > div,
+.companion-page .vendor-checkpoint {
+  padding: 9px 10px;
+}
+
+.companion-page .timer-action-bar,
+.companion-page .timer-segment-card,
+.companion-page .act-times-card-list,
+.companion-page .reminders-next-card,
+.companion-page .vendor-roadmap-card,
+.companion-page .reminders-power-roadmap-card,
+.companion-page .summary-support-grid > .companion-block,
+.companion-page .summary-breakdown-grid > .companion-block,
+.companion-page .companion-summary-layout .summary-compare-panel,
+.companion-page .companion-summary-layout .summary-history-panel {
+  border-radius: var(--companion-panel-radius) !important;
+}
+
+.companion-page .reminders-rework-grid,
+.companion-page .summary-breakdown-grid,
+.companion-page .summary-support-grid,
+.companion-page .bonuses-act-grid,
+.companion-page .zone-card-board {
+  gap: 12px;
+}
+
+.companion-page .reminder-item,
+.companion-page .bonus-row,
+.companion-page .act-split-row,
+.companion-page .summary-act-breakdown-row,
+.companion-page .summary-history-row,
+.companion-page .run-history-detail-table-row {
+  transition:
+    transform 140ms ease,
+    opacity 140ms ease,
+    border-color 140ms ease,
+    background 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.companion-page .reminder-item.is-current,
+.companion-page .reminder-item.is-nearest,
+.companion-page .vendor-checkpoint.is-current,
+.companion-page .power-spike-timeline-item.is-nearest .power-spike-timeline-card,
+.companion-page .act-split-row.is-current,
+.companion-page .summary-act-breakdown-row.is-current {
+  transform: translateY(-1px);
+}
+
+.companion-page .bonus-row.is-done,
+.companion-page .zone-bonus-details-list .bonus-line.is-done,
+.companion-page .bonus-line.is-done {
+  color: rgba(205, 248, 215, 0.92) !important;
+}
+
+.companion-page .bonus-row.is-pending,
+.companion-page .route-overview-card.status-missed {
+  color: rgba(255, 225, 219, 0.92);
+}
+
+.theme-dark-fantasy.companion-page .companion-block::after {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.036), transparent 34%),
+    linear-gradient(90deg, rgba(217, 167, 95, 0.24), rgba(167, 123, 255, 0.055), transparent 52%);
+  opacity: 0.24;
+}
+
+.theme-dark-fantasy.companion-page .companion-zone-polished-layout::-webkit-scrollbar-thumb,
+.theme-dark-fantasy.companion-page .timer-rework-layout::-webkit-scrollbar-thumb,
+.theme-dark-fantasy.companion-page .summary-scroll-body::-webkit-scrollbar-thumb,
+.theme-dark-fantasy.companion-page .route-overview-list.route-overview-grid::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(217, 167, 95, 0.90), rgba(126, 84, 214, 0.72));
+}
+
+@media (max-width: 980px) {
+  .companion-page .companion-card > .companion-tab-row {
+    grid-template-columns: repeat(auto-fit, minmax(118px, 1fr));
+  }
+
+  .companion-page .companion-tab-body {
+    padding: 10px;
+  }
+}
+
+@media (max-width: 720px) {
+  .companion-page .companion-card {
+    padding: 12px;
+  }
+
+  .companion-page .companion-card > .companion-tab-row button {
+    min-height: 32px;
+  }
+
+  .companion-page .companion-tab-body {
+    border-radius: 15px;
+  }
+}
