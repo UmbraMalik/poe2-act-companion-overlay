@@ -2152,3 +2152,116 @@ body.settings-window-resizing .settings-page:not(.companion-page) {
 .companion-page .zone-card-board .zone-reward-card::before {
   opacity: 0.78 !important;
 }
+
+
+/* Final stability pass for Companion bonuses: explicit columns avoid CSS grid overlap/masonry regressions. */
+.companion-page .bonuses-tab-layout {
+  display: grid !important;
+  grid-template-rows: auto minmax(0, 1fr) !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+.companion-page .bonuses-act-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  grid-auto-flow: column !important;
+  grid-auto-rows: auto !important;
+  align-items: start !important;
+  align-content: start !important;
+  gap: 12px !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  padding: 0 8px 12px 0 !important;
+  position: relative !important;
+  isolation: isolate !important;
+}
+
+.companion-page .bonuses-act-column {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  align-self: start !important;
+  position: relative !important;
+  z-index: 0 !important;
+}
+
+.companion-page .bonuses-act-card {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 9px !important;
+  position: relative !important;
+  z-index: 0 !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  align-self: stretch !important;
+  contain: none !important;
+  overflow: hidden !important;
+  transform: none !important;
+}
+
+.companion-page .bonuses-act-card:hover,
+.companion-page .bonuses-tab-layout .bonus-row:hover {
+  transform: none !important;
+}
+
+.companion-page .bonuses-list {
+  display: flex !important;
+  flex-direction: column !important;
+  grid-template-columns: none !important;
+  grid-auto-rows: auto !important;
+  gap: 8px !important;
+  min-height: 0 !important;
+  overflow: visible !important;
+  position: static !important;
+  contain: none !important;
+  transform: none !important;
+}
+
+.companion-page .bonuses-list > .bonus-row {
+  flex: 0 0 auto !important;
+  display: grid !important;
+  grid-template-columns: 24px minmax(0, 1fr) auto !important;
+  align-items: start !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  position: relative !important;
+  z-index: 0 !important;
+  overflow: hidden !important;
+  contain: none !important;
+  transform: none !important;
+}
+
+.companion-page .bonuses-list > .bonus-row::before,
+.companion-page .bonuses-list > .bonus-row::after {
+  pointer-events: none !important;
+}
+
+@media (max-width: 1180px) {
+  .companion-page .bonuses-act-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .companion-page .bonuses-act-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .companion-page .bonuses-list > .bonus-row {
+    grid-template-columns: 22px minmax(0, 1fr) !important;
+  }
+
+  .companion-page .bonuses-list > .bonus-row .bonus-toggle-button {
+    grid-column: 2 !important;
+    justify-self: start !important;
+  }
+}
