@@ -129,15 +129,18 @@ test('snapshot broadcast skips destroyed webContents before sending', () => {
   assert.match(flushState, /webContents\.send\('app:state-changed'/);
 });
 
-test('window page routing uses html body markers before URL fallback', () => {
+test('window page routing uses explicit html markers before URL fallback', () => {
   const rendererMain = readText('src/renderer/main.tsx');
   const windowController = readText('src/main/app-window-controller.ts');
 
   assert.match(rendererMain, /new URLSearchParams\(window\.location\.search\)/);
   assert.match(rendererMain, /params\.get\('page'\)/);
   assert.match(rendererMain, /window\.location\.pathname\.split\('\/'\)\.pop\(\)/);
+  assert.match(rendererMain, /__POE2_RENDERER_PAGE__/);
+  assert.match(rendererMain, /const explicitPage = getRendererPageCandidate\(window\.__POE2_RENDERER_PAGE__\)/);
   assert.match(rendererMain, /const bodyPage = getRendererPageCandidate\(document\.body\.dataset\.page\)/);
-  assert.match(rendererMain, /return bodyPage \?\? getRendererPageFromLocation\(\) \?\? 'overlay'/);
+  assert.match(rendererMain, /return explicitPage \?\? bodyPage \?\? getRendererPageFromLocation\(\) \?\? 'overlay'/);
+  assert.match(readText('companion.html'), /window\.__POE2_RENDERER_PAGE__ = 'companion'/);
   assert.match(windowController, /const pageSearch = `\?page=\$\{encodeURIComponent\(pageName\)\}`/);
   assert.match(windowController, /loadURL\(`\$\{devServerUrl\}\/\$\{pageName\}\.html\$\{pageSearch\}`\)/);
   assert.match(

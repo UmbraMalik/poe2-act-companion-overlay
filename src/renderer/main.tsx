@@ -15,6 +15,12 @@ type RendererPage =
 
 type PageLoader = () => Promise<ComponentType>;
 
+declare global {
+  interface Window {
+    __POE2_RENDERER_PAGE__?: string;
+  }
+}
+
 const pageLoaders: Record<RendererPage, PageLoader> = {
   overlay: async () => (await import('./pages/OverlayPage')).OverlayPage,
   settings: async () => (await import('./pages/SettingsPage')).SettingsPage,
@@ -73,9 +79,10 @@ function getRendererPageFromLocation(): RendererPage | null {
 }
 
 function getRendererPage(): RendererPage {
+  const explicitPage = getRendererPageCandidate(window.__POE2_RENDERER_PAGE__);
   const bodyPage = getRendererPageCandidate(document.body.dataset.page);
 
-  return bodyPage ?? getRendererPageFromLocation() ?? 'overlay';
+  return explicitPage ?? bodyPage ?? getRendererPageFromLocation() ?? 'overlay';
 }
 
 function getClickFeedbackTarget(event: PointerEvent): HTMLElement | null {
