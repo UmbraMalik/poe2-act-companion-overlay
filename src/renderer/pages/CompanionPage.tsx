@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useAppSnapshot, useLiveRunTimer } from '../hooks';
 import { useDocumentTitle, useI18n } from '../useI18n';
 import { getAppThemeClassName } from '../theme';
