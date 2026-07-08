@@ -1543,13 +1543,13 @@ export function CompanionPage() {
     setRunConfirmDialog({ type: 'reset' });
   };
 
-  const restoreSavedRun = useCallback((runId: string) => {
+  const restoreSavedRun = (runId: string) => {
     setRunConfirmDialog({ type: 'restore', runId });
-  }, []);
+  };
 
-  const deleteSavedRun = useCallback((runId: string) => {
+  const deleteSavedRun = (runId: string) => {
     setRunConfirmDialog({ type: 'delete', runId });
-  }, []);
+  };
 
   const closeRunConfirmDialog = () => setRunConfirmDialog(null);
 
