@@ -394,7 +394,7 @@ test('overlay renderer memoizes heavy derived view state and throttles layout IP
 test('companion route tab memoizes route card derived labels outside render map', () => {
   const companion = readText('src/renderer/pages/CompanionPage.tsx');
   const helpers = readText('src/renderer/companion-helpers.ts');
-  const routeCardModelsStart = companion.indexOf('{routeCardModels.map');
+  const routeCardModelsStart = companion.indexOf('{visibleRouteCardModels.map');
   const routeCardModelsEnd = companion.indexOf('const latestActRow', routeCardModelsStart);
   const routeCardRender = companion.slice(routeCardModelsStart, routeCardModelsEnd);
   const routeActsMemoStart = companion.indexOf('const routeActs = useMemo');
@@ -405,6 +405,7 @@ test('companion route tab memoizes route card derived labels outside render map'
   assert.notEqual(routeCardModelsEnd, -1);
   assert.match(companion, /function getRouteCardModels/);
   assert.match(companion, /const routeCardModels = useMemo/);
+  assert.match(companion, /const visibleRouteCardModels = useMemo/);
   assert.match(companion, /getRequiredRewardLabelsForZone\(entry\.guide, snapshot, language\)/);
   assert.doesNotMatch(routeCardRender, /getRequiredRewardLabelsForZone/);
   assert.doesNotMatch(routeCardRender, /getRouteFallbackLabels/);
@@ -415,6 +416,17 @@ test('companion route tab memoizes route card derived labels outside render map'
   assert.doesNotMatch(routeActsMemo, /currentGuideEntry\?\.act/);
   assert.match(helpers, /const visitedZoneIds = new Set\(snapshot\.config\.visitedZones\.map/);
   assert.match(helpers, /getRouteZoneStatus\(guide, snapshot, visitedZoneIds\)/);
+});
+
+test('companion route tab keeps search and filters in helper-backed memoized flow', () => {
+  const companion = readText('src/renderer/pages/CompanionPage.tsx');
+  const routeSearch = readText('src/renderer/route-tab-search.ts');
+
+  assert.match(companion, /RouteTabControls/);
+  assert.match(companion, /filterRouteCards\(routeCardModels/);
+  assert.match(companion, /routeText\('empty', language\)/);
+  assert.match(routeSearch, /current_next/);
+  assert.match(routeSearch, /hasBonusRewards/);
 });
 
 test('default motion avoids continuous compositor-heavy ambient animations', () => {

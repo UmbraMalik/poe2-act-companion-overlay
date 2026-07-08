@@ -305,6 +305,51 @@
     0 10px 24px rgba(241, 185, 106, 0.12) !important;
 }
 
+.companion-page .route-tab-tools {
+  min-width: 280px;
+  max-width: 430px;
+  display: grid;
+  gap: 8px;
+}
+
+.companion-page .route-search-field {
+  display: grid;
+  gap: 5px;
+}
+
+.companion-page .route-search-field > span {
+  color: rgba(255, 220, 160, 0.86);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+}
+
+.companion-page .route-search-field input {
+  width: 100%;
+  min-height: 36px;
+  padding: 8px 10px;
+  color: rgba(238, 243, 248, 0.92);
+}
+
+.companion-page .route-filter-row,
+.companion-page .route-jump-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.companion-page .route-filter-row button,
+.companion-page .route-jump-row button {
+  flex: 1 1 112px;
+  min-height: 32px;
+}
+
+.companion-page .route-filter-empty {
+  margin: 10px 0 0;
+  text-align: center;
+}
+
 .companion-page .companion-route-list-card {
   position: relative;
   display: grid;
@@ -1084,6 +1129,10 @@
 @media (max-width: 1180px) {
   .companion-page .companion-route-toolbar {
     grid-template-columns: 1fr;
+  }
+
+  .companion-page .route-tab-tools {
+    max-width: none;
   }
 
   .companion-page .companion-route-toolbar .button-row {

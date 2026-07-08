@@ -23,6 +23,8 @@ import { translate } from '../../i18n/translations';
 import { isEndgameT15Act } from '../../shared/timers';
 import { getGuideUpdateClassName } from '../guide-update-highlights';
 import { getZoneRecognitionView } from '../log-health';
+import { RouteTabControls } from '../RouteTabControls';
+import { filterRouteCards, routeText, type RouteFilterMode } from '../route-tab-search';
 import type { AppLanguage, CampaignBonusDefinition, CampaignBonusProgress, GuideEntry, RunSummary, SavedRunHistoryEntry, ZoneAct } from '../../shared/types';
 
 type CompanionTab = 'zone' | 'route' | 'timer' | 'actTimes' | 'reminders' | 'bonuses' | 'summary';
@@ -54,6 +56,7 @@ type RouteCardModel = {
   recommendedLevelLabel: string;
   missedItemTexts: string[];
   isRouteNext: boolean;
+  hasBonusRewards: boolean; searchText: string;
 };
 
 const ROUTE_OVERVIEW_VISIBLE_ITEMS = 2;
@@ -165,6 +168,18 @@ function getRouteCardModels(
       ? rewardLabels
       : getRouteFallbackLabels(entry.guide, language);
     const routeGuideView = getGuideView(entry.guide, language);
+    const missedItemTexts = entry.missedItems.slice(0, 2).map((item) => translateDataText(item.text, language));
+    const routeCardTitle = formatRouteCardTitle(entry.guide, language);
+    const campaignBonusIds = (entry.guide as { campaign_bonus_ids?: unknown }).campaign_bonus_ids;
+    const recommendedLevelLabel = routeGuideView?.recommendedLevelLabel ?? formatRecommendedLevelLabel(entry.guide, language);
+    const hasBonusRewards = entry.rewardItems.length > 0 ||
+      (Array.isArray(campaignBonusIds) && campaignBonusIds.length > 0) ||
+      (routeGuideView?.rewards?.length ?? 0) > 0;
+    const searchText = [
+      entry.guide.id, entry.guide.zone_ru, entry.guide.zone_en, ...(entry.guide.aliases ?? []),
+      formatActTitle(entry.guide.act, language), routeCardTitle, recommendedLevelLabel,
+      ...routeLabels, ...missedItemTexts
+    ].join(' ');
 
     return {
       entry,
@@ -172,12 +187,12 @@ function getRouteCardModels(
       visibleRouteLabels: routeLabels.slice(0, ROUTE_OVERVIEW_VISIBLE_ITEMS),
       hiddenRouteLabelsCount: Math.max(0, routeLabels.length - ROUTE_OVERVIEW_VISIBLE_ITEMS),
       statusLabel: getRouteStatusLabel(entry.status, language),
-      routeCardTitle: formatRouteCardTitle(entry.guide, language),
-      recommendedLevelLabel: routeGuideView?.recommendedLevelLabel ?? formatRecommendedLevelLabel(entry.guide, language),
-      missedItemTexts: entry.missedItems
-        .slice(0, 2)
-        .map((item) => translateDataText(item.text, language)),
-      isRouteNext: entry.status === 'pending' && routeZones[index - 1]?.status === 'current'
+      routeCardTitle,
+      recommendedLevelLabel,
+      missedItemTexts,
+      isRouteNext: entry.status === 'pending' && routeZones[index - 1]?.status === 'current',
+      hasBonusRewards,
+      searchText
     };
   });
 }
@@ -1174,6 +1189,8 @@ export function CompanionPage() {
   const [runSaveNotice, setRunSaveNotice] = useState<string | null>(null);
   const [runConfirmDialog, setRunConfirmDialog] = useState<RunConfirmDialog>(null);
   const [focusedRouteZoneId, setFocusedRouteZoneId] = useState<string | null>(null);
+  const [routeSearchQuery, setRouteSearchQuery] = useState('');
+  const [routeFilterMode, setRouteFilterMode] = useState<RouteFilterMode>('all');
   const [bonusFeedback, setBonusFeedback] = useState<BonusFeedbackState | null>(null);
   const [timerSplitFeedback, setTimerSplitFeedback] = useState<TimerSplitFeedbackState | null>(null);
   const focusedRouteZoneTimeoutRef = useRef<number | null>(null);
@@ -1219,7 +1236,7 @@ export function CompanionPage() {
       language
     ]
   );
-  const selectedRouteAct = selectedAct ?? nowAct;
+  const selectedRouteAct = routeFilterMode === 'current_act' ? nowAct : selectedAct ?? nowAct;
   const routeZones = useMemo(
     () => getRouteOverviewFromActs(routeActs, selectedRouteAct),
     [routeActs, selectedRouteAct]
@@ -1228,6 +1245,9 @@ export function CompanionPage() {
     () => snapshot ? getRouteCardModels(routeZones, snapshot, language) : [],
     [routeZones, snapshot?.config.zoneProgress, language]
   );
+  const visibleRouteCardModels = useMemo(() => (
+    filterRouteCards(routeCardModels, { filterMode: routeFilterMode, query: routeSearchQuery })
+  ), [routeCardModels, routeFilterMode, routeSearchQuery]);
   const xpStatus = useMemo(
     () => snapshot ? getXpStatus(snapshot, language) : null,
     [snapshot?.config.currentLevel, snapshot?.currentGuideEntry?.id, language]
@@ -1498,6 +1518,7 @@ export function CompanionPage() {
     : currentRouteIndex >= 0
       ? routeZones.find((entry, index) => entry.status === 'pending' && index > currentRouteIndex) ?? null
       : routeZones[0] ?? null;
+  const missedRouteZone = routeCardModels.find((model) => model.entry.missedItems.length > 0)?.entry ?? null;
   const routeProgressLeftLabel = currentRouteZone
     ? t('companion.routeProgressCurrent', { zone: formatRouteCardTitle(currentRouteZone.guide, language) })
     : routeProgressTotal > 0 && routeProgressCurrentCount >= routeProgressTotal
@@ -1590,33 +1611,32 @@ export function CompanionPage() {
     });
   };
 
-  const focusCurrentZone = () => {
-    if (nowAct !== null) {
-      setSelectedAct(nowAct);
+  const focusRouteZone = (zoneId: string | null, act: ZoneAct | null, filterMode: RouteFilterMode) => {
+    if (!zoneId) {
+      setFocusedRouteZoneId(null);
+      return;
     }
-
+    if (act !== null) {
+      setSelectedAct(act);
+    }
+    setRouteFilterMode(filterMode);
+    setRouteSearchQuery('');
     if (focusedRouteZoneTimeoutRef.current !== null) {
       window.clearTimeout(focusedRouteZoneTimeoutRef.current);
     }
 
     window.requestAnimationFrame(() => {
-      const currentZoneId = snapshot.currentGuideEntry?.id;
-      if (!currentZoneId) {
-        setFocusedRouteZoneId(null);
-        return;
-      }
-
-      setFocusedRouteZoneId(currentZoneId);
-      document.getElementById(`route-zone-${currentZoneId}`)?.scrollIntoView({
-        block: 'nearest',
-        behavior: 'smooth'
-      });
+      setFocusedRouteZoneId(zoneId);
+      document.getElementById(`route-zone-${zoneId}`)?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
       focusedRouteZoneTimeoutRef.current = window.setTimeout(() => {
         setFocusedRouteZoneId(null);
         focusedRouteZoneTimeoutRef.current = null;
       }, 1400);
     });
   };
+  const focusCurrentZone = () => focusRouteZone(snapshot.currentGuideEntry?.id ?? null, nowAct, 'current_act');
+  const focusNextRouteZone = () => focusRouteZone(nextRouteZone?.guide.id ?? null, selectedRouteAct, 'current_next');
+  const focusMissedRouteZone = () => focusRouteZone(missedRouteZone?.guide.id ?? null, selectedRouteAct, 'missed');
 
   const zoneTab = activeTab === 'zone' ? (
     <div className="companion-tab-layout companion-zone-polished-layout">
@@ -1719,7 +1739,7 @@ export function CompanionPage() {
       <section className="companion-block companion-route-toolbar">
         <div className="companion-tab-row">
           {routeActs.map((entry) => {
-            const isSelectedAct = selectedAct === entry.act;
+            const isSelectedAct = selectedRouteAct === entry.act;
             const isCurrentAct = nowAct === entry.act;
             const actButtonClassName = [
               isSelectedAct ? 'button-primary' : 'button-secondary',
@@ -1732,18 +1752,20 @@ export function CompanionPage() {
                 type="button"
                 className={actButtonClassName}
                 aria-current={isCurrentAct ? 'location' : undefined}
-                onClick={() => setSelectedAct(entry.act)}
+                onClick={() => {
+                  setRouteFilterMode('all');
+                  setSelectedAct(entry.act);
+                }}
               >
                 {entry.label}
               </button>
             );
           })}
         </div>
-        <div className="button-row">
-          <button type="button" className="button-secondary" onClick={focusCurrentZone}>
-            {t('companion.focusCurrentZone')}
-          </button>
-        </div>
+        <RouteTabControls language={language} filterMode={routeFilterMode} searchQuery={routeSearchQuery}
+          canJumpCurrent={Boolean(snapshot.currentGuideEntry?.id)} canJumpNext={Boolean(nextRouteZone)} canJumpMissed={Boolean(missedRouteZone)}
+          onFilterChange={setRouteFilterMode} onSearchChange={setRouteSearchQuery}
+          onJumpCurrent={focusCurrentZone} onJumpNext={focusNextRouteZone} onJumpMissed={focusMissedRouteZone} />
       </section>
 
       <section className="companion-block route-progress-rail-card" aria-label={t('companion.routeProgressTitle')}>
@@ -1773,7 +1795,7 @@ export function CompanionPage() {
       <section className="companion-block companion-route-list-card">
         <h3>{formatActTitle(selectedRouteAct, language)}</h3>
         <div className="route-overview-list route-overview-grid">
-          {routeCardModels.map((model) => {
+          {visibleRouteCardModels.map((model) => {
             const { entry } = model;
             const isFocusedRouteZone = focusedRouteZoneId === entry.guide.id;
 
@@ -1816,6 +1838,7 @@ export function CompanionPage() {
             );
           })}
         </div>
+        {visibleRouteCardModels.length === 0 && <p className="route-empty-note route-filter-empty">{routeText('empty', language)}</p>}
       </section>
     </div>
   ) : null;
