@@ -13,7 +13,7 @@ import {
   shouldIgnoreOverlayAutoHeight
 } from './overlay-window-bounds';
 import { isTimerDiagnosticsEnabled } from './timer-diagnostics-log';
-import type { OverlayMode, SettingsPatch, TimerDiagnosticsPayload } from '../shared/types';
+import type { OverlayMode, SettingsPatch, SettingsWindowBoundsPatch, TimerDiagnosticsPayload } from '../shared/types';
 import {
   DEV_SAMPLE_ZONE_LINE,
   clampOpacity,
@@ -538,6 +538,38 @@ export function runRegisterIpc(this: any) {
             if (changed) {
                 this.broadcastState();
             }
+            return true;
+        });
+        ipcMain.handle('app:resize-settings-window', async (_event: any, requestedBounds: SettingsWindowBoundsPatch) => {
+            const targetWindow = this.settingsWindow;
+            if (!targetWindow || targetWindow.isDestroyed()) {
+                return false;
+            }
+            const currentBounds = targetWindow.getBounds();
+            const [minimumWidth, minimumHeight] = targetWindow.getMinimumSize();
+            const display = screen.getDisplayMatching(currentBounds);
+            const workArea = display.workArea;
+            const safeMargin = 8;
+            const maxWidth = Math.max(minimumWidth, workArea.width - safeMargin * 2);
+            const maxHeight = Math.max(minimumHeight, workArea.height - safeMargin * 2);
+            const request = requestedBounds && typeof requestedBounds === 'object' ? requestedBounds : {};
+            const nextWidth = Math.min(Math.max(finiteRoundedNumber(request.width, currentBounds.width), minimumWidth), maxWidth);
+            const nextHeight = Math.min(Math.max(finiteRoundedNumber(request.height, currentBounds.height), minimumHeight), maxHeight);
+            const minX = workArea.x + safeMargin;
+            const minY = workArea.y + safeMargin;
+            const maxX = workArea.x + workArea.width - nextWidth - safeMargin;
+            const maxY = workArea.y + workArea.height - nextHeight - safeMargin;
+            const nextX = Math.min(Math.max(finiteRoundedNumber(request.x, currentBounds.x), minX), Math.max(minX, maxX));
+            const nextY = Math.min(Math.max(finiteRoundedNumber(request.y, currentBounds.y), minY), Math.max(minY, maxY));
+            if (
+                nextX === currentBounds.x &&
+                nextY === currentBounds.y &&
+                nextWidth === currentBounds.width &&
+                nextHeight === currentBounds.height
+            ) {
+                return true;
+            }
+            targetWindow.setBounds({ x: nextX, y: nextY, width: nextWidth, height: nextHeight }, false);
             return true;
         });
         ipcMain.handle('app:set-overlay-auto-resize-suspended', async (_event: any, suspended: any) => {

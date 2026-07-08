@@ -64,8 +64,9 @@ export function SettingsSelect<T extends string | number>({
         left,
         maxHeight,
         width,
+        '--settings-select-width': `${width}px`,
         ...verticalPosition
-      });
+      } as CSSProperties);
     };
 
     const handlePointerDown = (event: PointerEvent) => {

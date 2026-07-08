@@ -43,6 +43,7 @@ import {
 } from '../render-scheduler';
 import { reportOverlayRenderDiagnostics } from '../render-diagnostics';
 import { getAppThemeClassName } from '../theme';
+import { buildOverlayContentPlan } from '../overlay-display-intent';
 import leagueMechanicRewardsData from '../../data/league-mechanic-rewards.json';
 import { getCampaignBonusView, getGuideView, getLevelReminderView, getPowerSpikeView } from '../../i18n/data';
 import { translateSystemText } from '../../i18n/runtime';
@@ -1298,7 +1299,11 @@ export function OverlayPage() {
     const zoneBonusItems = getCurrentZoneCampaignBonuses(snapshot);
     const leagueRewardItem = getCurrentZoneLeagueReward(snapshot, sceneName);
     const upcomingOverlayReminders = getOverlayUpcomingReminders(snapshot, language);
-    const visibleSections = config.overlayVisibleSections;
+    const overlayContentPlan = buildOverlayContentPlan({
+      config,
+      runtimeOverlayMode: runtime.overlayMode
+    });
+    const visibleSections = overlayContentPlan.visibleSections;
     const skipLines =
       visibleSections.skip && guide
         ? (guideView?.skip ?? []).slice(0, 3)
@@ -1324,6 +1329,7 @@ export function OverlayPage() {
       leagueRewardItem,
       upcomingOverlayReminders,
       visibleSections,
+      overlayContentPlan,
       skipLines,
       speedrunLines,
       overlayTitle,
@@ -1359,6 +1365,7 @@ export function OverlayPage() {
     leagueRewardItem,
     upcomingOverlayReminders,
     visibleSections,
+    overlayContentPlan,
     skipLines,
     speedrunLines,
     overlayTitle,
@@ -1381,7 +1388,8 @@ export function OverlayPage() {
   const overlayModeTransitionClass = overlayModeTransition
     ? ` is-overlay-mode-transitioning is-overlay-mode-${overlayModeTransition.phase} is-overlay-mode-${overlayModeTransition.phase}-from-${overlayModeTransition.from} is-overlay-mode-${overlayModeTransition.phase}-to-${overlayModeTransition.to}`
     : '';
-  const visibleChecklist = isCompactOverlay ? guideChecklist.slice(0, 3) : guideChecklist;
+  const maxVisibleChecklistItems = isCompactOverlay ? 3 : overlayContentPlan.maxChecklistItems;
+  const visibleChecklist = maxVisibleChecklistItems === null ? guideChecklist : guideChecklist.slice(0, maxVisibleChecklistItems);
   const hiddenChecklistCount = Math.max(0, guideChecklist.length - visibleChecklist.length);
   const hasLogConnection = runtime.logWatcherStatus === 'ready' || Boolean(runtime.watchedLogPath);
   const hasNamedUnknownZone =
@@ -1899,9 +1907,11 @@ export function OverlayPage() {
 
           <div className="timer-only-info-grid">
             <p className={`timer-only-meta level-${levelState.state}`}>{timerOnlyLevelText}</p>
-            <p className="timer-only-next">
-              {t('overlay.nextLabel', { zone: guideView?.nextZoneName ?? t('common.notAvailable') })}
-            </p>
+            {visibleSections.next && (
+              <p className="timer-only-next">
+                {t('overlay.nextLabel', { zone: guideView?.nextZoneName ?? t('common.notAvailable') })}
+              </p>
+            )}
           </div>
           <footer className="timer-only-footer">
             <button className="timer-only-expand-button no-drag" type="button" onClick={handleTimerOnlyExpand}>
@@ -1991,7 +2001,7 @@ export function OverlayPage() {
         )}
 
         {visibleSections.nearby && !isCompactOverlay && upcomingOverlayReminders.length > 0 && (
-          <section className="hud-block reminder-section upcoming-overlay-section">
+          <section className="hud-block reminder-section upcoming-overlay-section" style={{ order: overlayContentPlan.blockOrder.nearby }}>
             <div className="reminder-header-row">
               <h2>{t('overlay.nearby')}</h2>
               <span className="overlay-upcoming-range">{t('overlay.upcomingRange')}</span>
@@ -2019,7 +2029,7 @@ export function OverlayPage() {
         )}
 
         {visibleSections.zoneInfo && (
-          <section className="hud-block checklist-section">
+          <section className="hud-block checklist-section" style={{ order: overlayContentPlan.blockOrder.zoneInfo }}>
           <h2>{t('overlay.inThisZone')}</h2>
           {guide ? (
             guideChecklist.length > 0 ? (
@@ -2047,7 +2057,7 @@ export function OverlayPage() {
         )}
 
         {visibleSections.zoneBonuses && !isCompactOverlay && zoneBonusItems.length > 0 && (
-          <section className="hud-block zone-bonuses-section">
+          <section className="hud-block zone-bonuses-section" style={{ order: overlayContentPlan.blockOrder.zoneBonuses }}>
             <h2>{t('overlay.zoneBonuses')}</h2>
             <ul className="section-list compact-list overlay-bonus-list">
               {zoneBonusItems.map(({ bonus, done }) => {
@@ -2064,7 +2074,7 @@ export function OverlayPage() {
           </section>
         )}
         {visibleSections.league && !isCompactOverlay && leagueRewardItem && (
-          <section className="hud-block league-reward-section">
+          <section className="hud-block league-reward-section" style={{ order: overlayContentPlan.blockOrder.league }}>
             <h2>{t('overlay.league')}</h2>
             <div className="league-reward-line">
               <span>{language === 'en' ? leagueRewardItem.reward_en : leagueRewardItem.reward_ru}</span>
@@ -2076,14 +2086,14 @@ export function OverlayPage() {
         )}
 
         {visibleSections.next && (
-          <section className="hud-block hud-next-block">
+          <section className="hud-block hud-next-block" style={{ order: overlayContentPlan.blockOrder.next }}>
             <h2>{t('overlay.next')}</h2>
             <p className="hud-next-zone">{guideView?.nextZoneName || t('common.notAvailable')}</p>
           </section>
         )}
 
         {visibleSections.skip && !isCompactOverlay && skipLines.length > 0 && (
-          <section className="hud-block skip-section">
+          <section className="hud-block skip-section" style={{ order: overlayContentPlan.blockOrder.skip }}>
             <h2>{t('common.skip')}</h2>
             <ul className="section-list compact-list">
               {skipLines.map((item) => (
@@ -2094,7 +2104,7 @@ export function OverlayPage() {
         )}
 
         {visibleSections.speedrun && !isCompactOverlay && speedrunLines.length > 0 && (
-          <section className="hud-block speedrun-section">
+          <section className="hud-block speedrun-section" style={{ order: overlayContentPlan.blockOrder.speedrun }}>
             <h2>{t('overlay.speedrun')}</h2>
             <ul className="section-list compact-list">
               {speedrunLines.map((item) => (
@@ -2105,7 +2115,7 @@ export function OverlayPage() {
         )}
 
         {visibleSections.important && !isCompactOverlay && importantLines.length > 0 && (
-          <section className="hud-block info-section">
+          <section className="hud-block info-section" style={{ order: overlayContentPlan.blockOrder.important }}>
             <h2>{t('common.important')}</h2>
             <ul className="section-list compact-list">
               {importantLines.map((item) => (
