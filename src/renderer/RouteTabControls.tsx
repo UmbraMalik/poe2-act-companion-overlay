@@ -15,13 +15,9 @@ type RouteTabControlsProps = {
   searchQuery: string;
   resultState: RouteFilterResultState;
   canJumpCurrent: boolean;
-  canJumpNext: boolean;
-  canJumpMissed: boolean;
   onFilterChange: (filterMode: RouteFilterMode) => void;
   onSearchChange: (query: string) => void;
   onJumpCurrent: () => void;
-  onJumpNext: () => void;
-  onJumpMissed: () => void;
 };
 
 export function RouteTabControls({
@@ -30,20 +26,12 @@ export function RouteTabControls({
   searchQuery,
   resultState,
   canJumpCurrent,
-  canJumpNext,
-  canJumpMissed,
   onFilterChange,
   onSearchChange,
-  onJumpCurrent,
-  onJumpNext,
-  onJumpMissed
+  onJumpCurrent
 }: RouteTabControlsProps) {
   const currentLabel = routeText('current', language);
-  const nextLabel = routeText('next', language);
-  const missedLabel = routeText('missed', language);
   const currentReason = getRouteJumpDisabledReason('current', language);
-  const nextReason = getRouteJumpDisabledReason('next', language);
-  const missedReason = getRouteJumpDisabledReason('missed', language);
 
   return (
     <div className="route-tab-tools">
@@ -87,26 +75,6 @@ export function RouteTabControls({
             onClick={onJumpCurrent}
           >
             {currentLabel}
-          </button>
-          <button
-            type="button"
-            className="button-secondary"
-            disabled={!canJumpNext}
-            title={canJumpNext ? nextLabel : nextReason}
-            aria-label={canJumpNext ? nextLabel : `${nextLabel}: ${nextReason}`}
-            onClick={onJumpNext}
-          >
-            {nextLabel}
-          </button>
-          <button
-            type="button"
-            className="button-secondary"
-            disabled={!canJumpMissed}
-            title={canJumpMissed ? missedLabel : missedReason}
-            aria-label={canJumpMissed ? missedLabel : `${missedLabel}: ${missedReason}`}
-            onClick={onJumpMissed}
-          >
-            {missedLabel}
           </button>
         </div>
       </div>

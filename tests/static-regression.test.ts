@@ -426,11 +426,17 @@ test('companion route tab keeps search and filters in helper-backed memoized flo
   assert.match(companion, /RouteTabControls/);
   assert.match(companion, /filterRouteCards\(routeCardModels/);
   assert.match(companion, /getRouteFilterEmptyText/);
+  assert.match(companion, /getStructuredRouteBonusIds\(entry\.guide, snapshot\.campaignBonuses\)\.length > 0/);
+  assert.doesNotMatch(companion, /const hasBonusRewards = entry\.rewardItems\.length > 0/);
   assert.match(routeControls, /getRouteFilterSummary/);
   assert.match(routeControls, /getRouteJumpDisabledReason/);
   assert.match(routeControls, /routeText\('quickJump', language\)/);
-  assert.match(routeSearch, /current_next/);
+  assert.match(routeSearch, /current_zone/);
   assert.match(routeSearch, /hasBonusRewards/);
+  assert.doesNotMatch(routeSearch, /'current_next'/);
+  assert.doesNotMatch(routeSearch, /'missed',/);
+  assert.doesNotMatch(routeControls, /canJumpNext|canJumpMissed|onJumpNext|onJumpMissed/);
+  assert.doesNotMatch(routeControls, /routeText\('next'|routeText\('missed'/);
 });
 
 test('companion bonus manual marks keep visible source-specific feedback', () => {

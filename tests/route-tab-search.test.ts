@@ -6,7 +6,9 @@ import {
   getRouteFilterEmptyText,
   getRouteFilterSummary,
   getRouteJumpDisabledReason,
+  getStructuredRouteBonusIds,
   normalizeRouteSearchQuery,
+  ROUTE_FILTER_MODES,
   routeText,
   type RouteFilterCard
 } from '../src/renderer/route-tab-search';
@@ -17,18 +19,14 @@ function card(
   options: {
     searchText?: string;
     hasBonusRewards?: boolean;
-    missed?: boolean;
-    next?: boolean;
   } = {}
 ): RouteFilterCard {
   return {
     entry: {
       guide: { id },
-      status,
-      missedItems: options.missed ? [{ id: `${id}-missed` }] : []
+      status
     },
     hasBonusRewards: Boolean(options.hasBonusRewards),
-    isRouteNext: Boolean(options.next),
     searchText: options.searchText ?? id
   };
 }
@@ -49,33 +47,36 @@ test('route tab search matches route card text without mutating the source list'
   assert.equal(cards.length, 2);
 });
 
-test('route tab filters bonuses and missed rewards independently', () => {
+test('route tab filter options no longer expose unsupported missed or next modes', () => {
+  assert.deepEqual(ROUTE_FILTER_MODES, ['all', 'current_act', 'bonuses', 'current_zone']);
+  assert.equal(ROUTE_FILTER_MODES.includes('missed' as never), false);
+  assert.equal(ROUTE_FILTER_MODES.includes('current_next' as never), false);
+});
+
+test('route tab bonus filter only keeps cards with structured bonus metadata', () => {
   const cards = [
     card('bonus-zone', 'pending', { hasBonusRewards: true }),
-    card('missed-zone', 'missed', { missed: true }),
+    card('manual-unchecked-bonus-zone', 'pending', { hasBonusRewards: true }),
+    card('ordinary-missed-zone', 'missed'),
     card('ordinary-zone', 'visited')
   ];
 
   assert.deepEqual(
     filterRouteCards(cards, { filterMode: 'bonuses', query: '' }).map((entry) => entry.entry.guide.id),
-    ['bonus-zone']
-  );
-  assert.deepEqual(
-    filterRouteCards(cards, { filterMode: 'missed', query: '' }).map((entry) => entry.entry.guide.id),
-    ['missed-zone']
+    ['bonus-zone', 'manual-unchecked-bonus-zone']
   );
 });
 
-test('route tab current-next filter keeps only current and next cards', () => {
+test('route tab current zone filter keeps only the current card', () => {
   const cards = [
     card('current-zone', 'current'),
-    card('next-zone', 'pending', { next: true }),
+    card('visited-zone', 'visited'),
     card('later-zone', 'pending')
   ];
 
   assert.deepEqual(
-    filterRouteCards(cards, { filterMode: 'current_next', query: '' }).map((entry) => entry.entry.guide.id),
-    ['current-zone', 'next-zone']
+    filterRouteCards(cards, { filterMode: 'current_zone', query: '' }).map((entry) => entry.entry.guide.id),
+    ['current-zone']
   );
 });
 
@@ -89,14 +90,28 @@ test('route tab search combines with active filters and can be empty', () => {
     filterRouteCards(cards, { filterMode: 'bonuses', query: 'spirit' }).map((entry) => entry.entry.guide.id),
     ['bonus-zone']
   );
-  assert.deepEqual(filterRouteCards(cards, { filterMode: 'missed', query: 'spirit' }), []);
+  assert.deepEqual(filterRouteCards(cards, { filterMode: 'current_zone', query: 'spirit' }), []);
+});
+
+test('route tab structured bonus helper uses campaign bonus ids and zone ids only', () => {
+  const campaignBonuses = [
+    { id: 'bonus-by-zone', zoneId: 'structured-zone' },
+    { id: 'bonus-by-explicit-id', zoneId: 'other-zone' }
+  ];
+
+  assert.deepEqual(getStructuredRouteBonusIds({ id: 'structured-zone' }, campaignBonuses), ['bonus-by-zone']);
+  assert.deepEqual(
+    getStructuredRouteBonusIds({ id: 'explicit-zone', campaign_bonus_ids: ['bonus-by-explicit-id', 'missing'] }, campaignBonuses),
+    ['bonus-by-explicit-id']
+  );
+  assert.deepEqual(getStructuredRouteBonusIds({ id: 'ordinary-route-note-zone' }, campaignBonuses), []);
 });
 
 test('route tab helper labels are localized', () => {
   assert.equal(formatRouteFilterLabel('current_act', 'ru'), 'Текущий акт');
   assert.equal(formatRouteFilterLabel('bonuses', 'en'), 'Zones with bonuses');
-  assert.equal(formatRouteFilterLabel('missed', 'ru'), 'Пропущенные награды');
-  assert.equal(routeText('empty', 'ru'), 'По этому запросу в маршруте ничего нет.');
+  assert.equal(formatRouteFilterLabel('current_zone', 'ru'), 'Текущая зона');
+  assert.equal(routeText('empty', 'ru'), 'Поиск ничего не нашёл.');
 });
 
 test('route tab result summary explains active filters and counts', () => {
@@ -107,54 +122,48 @@ test('route tab result summary explains active filters and counts', () => {
       query: '',
       shownCount: 2,
       totalCount: 12,
-      hasCurrentCard: false,
-      hasNextCard: false
+      hasCurrentCard: false
     }),
     'Showing zones with bonuses: 2 of 12.'
   );
   assert.equal(
     getRouteFilterSummary({
       language: 'ru',
-      filterMode: 'current_next',
+      filterMode: 'current_zone',
       query: '',
       shownCount: 1,
       totalCount: 10,
-      hasCurrentCard: true,
-      hasNextCard: false
+      hasCurrentCard: true
     }),
-    'Показана текущая карточка маршрута. Следующий шаг пока не найден.'
+    'Показана текущая зона маршрута.'
   );
 });
 
-test('route tab empty states distinguish search, missed, and missing current route card', () => {
+test('route tab empty states distinguish search, bonus, and missing current route card', () => {
   assert.equal(
     getRouteFilterEmptyText({
       language: 'en',
-      filterMode: 'missed',
+      filterMode: 'bonuses',
       query: '',
       shownCount: 0,
       totalCount: 8,
-      hasCurrentCard: true,
-      hasNextCard: true
+      hasCurrentCard: true
     }),
-    'No missed rewards in this view.'
+    'No zones with bonuses in this view.'
   );
   assert.equal(
     getRouteFilterEmptyText({
       language: 'ru',
-      filterMode: 'current_next',
+      filterMode: 'current_zone',
       query: '',
       shownCount: 0,
       totalCount: 8,
-      hasCurrentCard: false,
-      hasNextCard: false
+      hasCurrentCard: false
     }),
-    'Текущая зона распознана, но карточка маршрута не найдена.'
+    'Текущая зона не найдена в маршруте.'
   );
 });
 
-test('route tab jump disabled reasons are explicit', () => {
-  assert.equal(getRouteJumpDisabledReason('current', 'en'), 'Current zone was not found in the route list.');
-  assert.equal(getRouteJumpDisabledReason('next', 'ru'), 'Следующий шаг пока не найден.');
-  assert.equal(getRouteJumpDisabledReason('missed', 'en'), 'No missed rewards to jump to.');
+test('route tab current jump disabled reason is explicit', () => {
+  assert.equal(getRouteJumpDisabledReason('current', 'en'), 'Current zone was not found in the list.');
 });

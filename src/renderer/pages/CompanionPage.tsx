@@ -23,7 +23,7 @@ import { isEndgameT15Act } from '../../shared/timers';
 import { getGuideUpdateClassName } from '../guide-update-highlights';
 import { getZoneRecognitionView } from '../log-health';
 import { RouteTabControls } from '../RouteTabControls';
-import { filterRouteCards, getRouteFilterEmptyText, type RouteFilterMode } from '../route-tab-search';
+import { filterRouteCards, getRouteFilterEmptyText, getStructuredRouteBonusIds, type RouteFilterMode } from '../route-tab-search';
 import type { AppLanguage, CampaignBonusDefinition, CampaignBonusProgress, GuideEntry, RunSummary, SavedRunHistoryEntry, ZoneAct } from '../../shared/types';
 
 type CompanionTab = 'zone' | 'route' | 'timer' | 'actTimes' | 'reminders' | 'bonuses' | 'summary';
@@ -169,11 +169,8 @@ function getRouteCardModels(
     const routeGuideView = getGuideView(entry.guide, language);
     const missedItemTexts = entry.missedItems.slice(0, 2).map((item) => translateDataText(item.text, language));
     const routeCardTitle = formatRouteCardTitle(entry.guide, language);
-    const campaignBonusIds = (entry.guide as { campaign_bonus_ids?: unknown }).campaign_bonus_ids;
     const recommendedLevelLabel = routeGuideView?.recommendedLevelLabel ?? formatRecommendedLevelLabel(entry.guide, language);
-    const hasBonusRewards = entry.rewardItems.length > 0 ||
-      (Array.isArray(campaignBonusIds) && campaignBonusIds.length > 0) ||
-      (routeGuideView?.rewards?.length ?? 0) > 0;
+    const hasBonusRewards = getStructuredRouteBonusIds(entry.guide, snapshot.campaignBonuses).length > 0;
     const searchText = [
       entry.guide.id, entry.guide.zone_ru, entry.guide.zone_en, ...(entry.guide.aliases ?? []),
       formatActTitle(entry.guide.act, language), routeCardTitle, recommendedLevelLabel,
@@ -1235,7 +1232,7 @@ export function CompanionPage() {
       language
     ]
   );
-  const selectedRouteAct = routeFilterMode === 'current_act' ? nowAct : selectedAct ?? nowAct;
+  const selectedRouteAct = routeFilterMode === 'current_act' || routeFilterMode === 'current_zone' ? nowAct : selectedAct ?? nowAct;
   const routeZones = useMemo(
     () => getRouteOverviewFromActs(routeActs, selectedRouteAct),
     [routeActs, selectedRouteAct]
@@ -1516,7 +1513,6 @@ export function CompanionPage() {
     : currentRouteIndex >= 0
       ? routeZones.find((entry, index) => entry.status === 'pending' && index > currentRouteIndex) ?? null
       : routeZones[0] ?? null;
-  const missedRouteZone = routeCardModels.find((model) => model.entry.missedItems.length > 0)?.entry ?? null;
   const routeProgressLeftLabel = currentRouteZone
     ? t('companion.routeProgressCurrent', { zone: formatRouteCardTitle(currentRouteZone.guide, language) })
     : routeProgressTotal > 0 && routeProgressCurrentCount >= routeProgressTotal
@@ -1632,9 +1628,7 @@ export function CompanionPage() {
       }, 1400);
     });
   };
-  const focusCurrentZone = () => focusRouteZone(snapshot.currentGuideEntry?.id ?? null, nowAct, 'current_act');
-  const focusNextRouteZone = () => focusRouteZone(routeCardModels.find((model) => model.isRouteNext)?.entry.guide.id ?? null, selectedRouteAct, 'current_next');
-  const focusMissedRouteZone = () => focusRouteZone(missedRouteZone?.guide.id ?? null, selectedRouteAct, 'missed');
+  const focusCurrentZone = () => focusRouteZone(snapshot.currentGuideEntry?.id ?? null, nowAct, 'current_zone');
 
   const zoneTab = activeTab === 'zone' ? (
     <div className="companion-tab-layout companion-zone-polished-layout">
@@ -1761,10 +1755,10 @@ export function CompanionPage() {
           })}
         </div>
         <RouteTabControls language={language} filterMode={routeFilterMode} searchQuery={routeSearchQuery}
-          resultState={{ shownCount: visibleRouteCardModels.length, totalCount: routeCardModels.length, hasCurrentCard: routeCardModels.some((model) => model.entry.status === 'current'), hasNextCard: routeCardModels.some((model) => model.isRouteNext) }}
-          canJumpCurrent={Boolean(snapshot.currentGuideEntry?.id && routeActs.some((entry) => entry.zones.some((zone) => zone.guide.id === snapshot.currentGuideEntry?.id)))} canJumpNext={routeCardModels.some((model) => model.isRouteNext)} canJumpMissed={Boolean(missedRouteZone)}
+          resultState={{ shownCount: visibleRouteCardModels.length, totalCount: routeCardModels.length, hasCurrentCard: routeCardModels.some((model) => model.entry.status === 'current') }}
+          canJumpCurrent={Boolean(snapshot.currentGuideEntry?.id && routeActs.some((entry) => entry.zones.some((zone) => zone.guide.id === snapshot.currentGuideEntry?.id)))}
           onFilterChange={setRouteFilterMode} onSearchChange={setRouteSearchQuery}
-          onJumpCurrent={focusCurrentZone} onJumpNext={focusNextRouteZone} onJumpMissed={focusMissedRouteZone} />
+          onJumpCurrent={focusCurrentZone} />
       </section>
 
       <section className="companion-block route-progress-rail-card" aria-label={t('companion.routeProgressTitle')}>
@@ -1837,7 +1831,7 @@ export function CompanionPage() {
             );
           })}
         </div>
-        {visibleRouteCardModels.length === 0 && <p className="route-empty-note route-filter-empty">{getRouteFilterEmptyText({ language, filterMode: routeFilterMode, query: routeSearchQuery, shownCount: visibleRouteCardModels.length, totalCount: routeCardModels.length, hasCurrentCard: routeCardModels.some((model) => model.entry.status === 'current'), hasNextCard: routeCardModels.some((model) => model.isRouteNext) })}</p>}
+        {visibleRouteCardModels.length === 0 && <p className="route-empty-note route-filter-empty">{getRouteFilterEmptyText({ language, filterMode: routeFilterMode, query: routeSearchQuery, shownCount: visibleRouteCardModels.length, totalCount: routeCardModels.length, hasCurrentCard: routeCardModels.some((model) => model.entry.status === 'current') })}</p>}
       </section>
     </div>
   ) : null;
