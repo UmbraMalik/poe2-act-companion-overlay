@@ -135,11 +135,16 @@ export interface GuideZoneProgress {
   lastVisitedAt: string | null;
 }
 
+export type SettingsWindowResizeEdge = 'n' | 'ne' | 'e' | 'se' | 's' | 'sw' | 'w' | 'nw';
+
 export interface SettingsWindowBoundsPatch {
   x?: number;
   y?: number;
   width?: number;
   height?: number;
+  edge?: SettingsWindowResizeEdge;
+  deltaX?: number;
+  deltaY?: number;
 }
 
 export interface OverlayBounds {

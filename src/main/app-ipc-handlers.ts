@@ -553,14 +553,47 @@ export function runRegisterIpc(this: any) {
             const maxWidth = Math.max(minimumWidth, workArea.width - safeMargin * 2);
             const maxHeight = Math.max(minimumHeight, workArea.height - safeMargin * 2);
             const request = requestedBounds && typeof requestedBounds === 'object' ? requestedBounds : {};
-            const nextWidth = Math.min(Math.max(finiteRoundedNumber(request.width, currentBounds.width), minimumWidth), maxWidth);
-            const nextHeight = Math.min(Math.max(finiteRoundedNumber(request.height, currentBounds.height), minimumHeight), maxHeight);
+            const edge = typeof request.edge === 'string' ? request.edge : '';
+            const deltaX = finiteRoundedNumber(request.deltaX, 0);
+            const deltaY = finiteRoundedNumber(request.deltaY, 0);
+            const isDeltaResize = Boolean(edge);
+            let requestedX = finiteRoundedNumber(request.x, currentBounds.x);
+            let requestedY = finiteRoundedNumber(request.y, currentBounds.y);
+            let requestedWidth = finiteRoundedNumber(request.width, currentBounds.width);
+            let requestedHeight = finiteRoundedNumber(request.height, currentBounds.height);
+
+            if (isDeltaResize) {
+                const right = currentBounds.x + currentBounds.width;
+                const bottom = currentBounds.y + currentBounds.height;
+                requestedX = currentBounds.x;
+                requestedY = currentBounds.y;
+                requestedWidth = currentBounds.width;
+                requestedHeight = currentBounds.height;
+
+                if (edge.includes('e')) {
+                    requestedWidth = currentBounds.width + deltaX;
+                }
+                if (edge.includes('s')) {
+                    requestedHeight = currentBounds.height + deltaY;
+                }
+                if (edge.includes('w')) {
+                    requestedWidth = currentBounds.width - deltaX;
+                    requestedX = right - Math.min(Math.max(requestedWidth, minimumWidth), maxWidth);
+                }
+                if (edge.includes('n')) {
+                    requestedHeight = currentBounds.height - deltaY;
+                    requestedY = bottom - Math.min(Math.max(requestedHeight, minimumHeight), maxHeight);
+                }
+            }
+
+            const nextWidth = Math.min(Math.max(requestedWidth, minimumWidth), maxWidth);
+            const nextHeight = Math.min(Math.max(requestedHeight, minimumHeight), maxHeight);
             const minX = workArea.x + safeMargin;
             const minY = workArea.y + safeMargin;
             const maxX = workArea.x + workArea.width - nextWidth - safeMargin;
             const maxY = workArea.y + workArea.height - nextHeight - safeMargin;
-            const nextX = Math.min(Math.max(finiteRoundedNumber(request.x, currentBounds.x), minX), Math.max(minX, maxX));
-            const nextY = Math.min(Math.max(finiteRoundedNumber(request.y, currentBounds.y), minY), Math.max(minY, maxY));
+            const nextX = Math.min(Math.max(requestedX, minX), Math.max(minX, maxX));
+            const nextY = Math.min(Math.max(requestedY, minY), Math.max(minY, maxY));
             if (
                 nextX === currentBounds.x &&
                 nextY === currentBounds.y &&
