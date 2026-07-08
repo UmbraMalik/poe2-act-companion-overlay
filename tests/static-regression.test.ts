@@ -422,17 +422,20 @@ test('companion route tab keeps search and filters in helper-backed memoized flo
   const companion = readText('src/renderer/pages/CompanionPage.tsx');
   const routeControls = readText('src/renderer/RouteTabControls.tsx');
   const routeSearch = readText('src/renderer/route-tab-search.ts');
+  const routeBonuses = readText('src/renderer/RouteCardBonuses.tsx');
 
   assert.match(companion, /RouteTabControls/);
   assert.match(companion, /filterRouteCards\(routeCardModels/);
   assert.match(companion, /getRouteFilterEmptyText/);
-  assert.match(companion, /getStructuredRouteBonusIds\(entry\.guide, snapshot\.campaignBonuses\)\.length > 0/);
+  assert.match(companion, /getRouteCampaignBonusModels\(entry\.guide, snapshot, language\)/);
   assert.doesNotMatch(companion, /const hasBonusRewards = entry\.rewardItems\.length > 0/);
   assert.match(routeControls, /getRouteFilterSummary/);
   assert.match(routeControls, /getRouteJumpDisabledReason/);
   assert.match(routeControls, /routeText\('quickJump', language\)/);
   assert.match(routeSearch, /current_zone/);
   assert.match(routeSearch, /hasBonusRewards/);
+  assert.match(routeBonuses, /route-card-bonus-panel/);
+  assert.match(routeBonuses, /routeBonusNotTaken/);
   assert.doesNotMatch(routeSearch, /'current_next'/);
   assert.doesNotMatch(routeSearch, /'missed',/);
   assert.doesNotMatch(routeControls, /canJumpNext|canJumpMissed|onJumpNext|onJumpMissed/);

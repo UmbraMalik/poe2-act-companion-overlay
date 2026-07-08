@@ -22,8 +22,9 @@ import { translate } from '../../i18n/translations';
 import { isEndgameT15Act } from '../../shared/timers';
 import { getGuideUpdateClassName } from '../guide-update-highlights';
 import { getZoneRecognitionView } from '../log-health';
+import { RouteCardBonusPanel, getRouteCampaignBonusModels, type RouteCardBonusModel } from '../RouteCardBonuses';
 import { RouteTabControls } from '../RouteTabControls';
-import { filterRouteCards, getRouteFilterEmptyText, getStructuredRouteBonusIds, type RouteFilterMode } from '../route-tab-search';
+import { filterRouteCards, getRouteFilterEmptyText, type RouteFilterMode } from '../route-tab-search';
 import type { AppLanguage, CampaignBonusDefinition, CampaignBonusProgress, GuideEntry, RunSummary, SavedRunHistoryEntry, ZoneAct } from '../../shared/types';
 
 type CompanionTab = 'zone' | 'route' | 'timer' | 'actTimes' | 'reminders' | 'bonuses' | 'summary';
@@ -55,7 +56,9 @@ type RouteCardModel = {
   recommendedLevelLabel: string;
   missedItemTexts: string[];
   isRouteNext: boolean;
-  hasBonusRewards: boolean; searchText: string;
+  hasBonusRewards: boolean;
+  bonusRewards: RouteCardBonusModel[];
+  searchText: string;
 };
 
 const ROUTE_OVERVIEW_VISIBLE_ITEMS = 2;
@@ -137,7 +140,6 @@ function formatRouteCardTitle(guide: GuideEntry, language: AppLanguage): string 
   return getGuideView(guide, language)?.zoneName ?? (language === 'en' ? guide.zone_en : guide.zone_ru);
 }
 
-
 function formatActTitle(act: ZoneAct | null, language: AppLanguage) {
   if (act === null) {
     return translate(language, 'companion.routeTitleFallback');
@@ -170,11 +172,13 @@ function getRouteCardModels(
     const missedItemTexts = entry.missedItems.slice(0, 2).map((item) => translateDataText(item.text, language));
     const routeCardTitle = formatRouteCardTitle(entry.guide, language);
     const recommendedLevelLabel = routeGuideView?.recommendedLevelLabel ?? formatRecommendedLevelLabel(entry.guide, language);
-    const hasBonusRewards = getStructuredRouteBonusIds(entry.guide, snapshot.campaignBonuses).length > 0;
+    const bonusRewards = getRouteCampaignBonusModels(entry.guide, snapshot, language);
+    const hasBonusRewards = bonusRewards.length > 0;
     const searchText = [
       entry.guide.id, entry.guide.zone_ru, entry.guide.zone_en, ...(entry.guide.aliases ?? []),
       formatActTitle(entry.guide.act, language), routeCardTitle, recommendedLevelLabel,
-      ...routeLabels, ...missedItemTexts
+      ...routeLabels, ...missedItemTexts,
+      ...bonusRewards.flatMap((bonus) => [bonus.title, bonus.source, bonus.categoryLabel])
     ].join(' ');
 
     return {
@@ -188,6 +192,7 @@ function getRouteCardModels(
       missedItemTexts,
       isRouteNext: entry.status === 'pending' && routeZones[index - 1]?.status === 'current',
       hasBonusRewards,
+      bonusRewards,
       searchText
     };
   });
@@ -264,7 +269,6 @@ function renderActTimeTable(rows: ActTimeRow[], emptyMessage: string, language: 
     </div>
   );
 }
-
 
 function getCompletedActCount(rows: ActTimeRow[]): number {
   return rows.filter((row) => row.status === 'finished' && !isEndgameT15Act(row.act)).length;
@@ -372,7 +376,6 @@ function renderLongestZoneList(
   );
 }
 
-
 function formatSavedRunDate(timestamp: number, language: AppLanguage): string {
   return new Date(timestamp).toLocaleString(language === 'en' ? 'en-US' : 'ru-RU');
 }
@@ -468,7 +471,6 @@ function renderActTimesDashboard(
     </div>
   );
 }
-
 
 function renderActBreakdownTable(
   rows: ActTimeRow[],
@@ -637,7 +639,6 @@ function renderStringSection(
   );
 }
 
-
 function renderCompactReminderList(
   items: { id: string; level: number; title: string; items?: string[] }[],
   language: AppLanguage,
@@ -716,7 +717,6 @@ function renderVendorCheckpointGrid(
     </div>
   );
 }
-
 
 function renderPowerSpikeTimeline(
   items: { id: string; level: number; title: string; items?: string[] }[],
@@ -838,7 +838,6 @@ function renderDetails(
   return null;
 }
 
-
 function formatBonusAct(act: ZoneAct, language: AppLanguage): string {
   return act === 'interlude'
     ? translate(language, 'companion.interludes')
@@ -954,7 +953,6 @@ function normalizeZoneBonusName(value: string | null | undefined): string {
     .replace(/\s+/g, ' ')
     .trim();
 }
-
 
 function getGuideCampaignBonusIds(guide: GuideEntry | null): Set<string> {
   const guideWithBonuses = guide as (GuideEntry & {
@@ -1239,7 +1237,7 @@ export function CompanionPage() {
   );
   const routeCardModels = useMemo(
     () => snapshot ? getRouteCardModels(routeZones, snapshot, language) : [],
-    [routeZones, snapshot?.config.zoneProgress, language]
+    [routeZones, snapshot?.campaignBonuses, snapshot?.config.campaignBonusProgress, snapshot?.config.zoneProgress, language]
   );
   const visibleRouteCardModels = useMemo(() => (
     filterRouteCards(routeCardModels, { filterMode: routeFilterMode, query: routeSearchQuery })
@@ -1729,8 +1727,13 @@ export function CompanionPage() {
   const routeTab = activeTab === 'route' ? (
     <div className="companion-tab-layout route-polish-layout">
       <section className="companion-block companion-route-toolbar">
-        <div className="companion-tab-row">
-          {routeActs.map((entry) => {
+        <div className="route-toolbar-acts">
+          <div className="route-toolbar-heading">
+            <span>{t('companion.routeActPicker')}</span>
+            <small>{formatActTitle(selectedRouteAct, language)}</small>
+          </div>
+          <div className="companion-tab-row">
+            {routeActs.map((entry) => {
             const isSelectedAct = selectedRouteAct === entry.act;
             const isCurrentAct = nowAct === entry.act;
             const actButtonClassName = [
@@ -1745,36 +1748,31 @@ export function CompanionPage() {
                 className={actButtonClassName}
                 aria-current={isCurrentAct ? 'location' : undefined}
                 onClick={() => {
-                  setRouteFilterMode('all');
-                  setSelectedAct(entry.act);
+                  setRouteFilterMode('all'); setSelectedAct(entry.act);
                 }}
               >
                 {entry.label}
               </button>
             );
           })}
+          </div>
         </div>
         <RouteTabControls language={language} filterMode={routeFilterMode} searchQuery={routeSearchQuery}
           resultState={{ shownCount: visibleRouteCardModels.length, totalCount: routeCardModels.length, hasCurrentCard: routeCardModels.some((model) => model.entry.status === 'current') }}
           canJumpCurrent={Boolean(snapshot.currentGuideEntry?.id && routeActs.some((entry) => entry.zones.some((zone) => zone.guide.id === snapshot.currentGuideEntry?.id)))}
-          onFilterChange={setRouteFilterMode} onSearchChange={setRouteSearchQuery}
-          onJumpCurrent={focusCurrentZone} />
+          onFilterChange={setRouteFilterMode} onSearchChange={setRouteSearchQuery} onJumpCurrent={focusCurrentZone} />
       </section>
 
       <section className="companion-block route-progress-rail-card" aria-label={t('companion.routeProgressTitle')}>
         <div className="route-progress-rail-header">
           <div>
             <p className="eyebrow">{t('companion.routeProgressTitle')}</p>
-            <strong>
-              {formatActTitle(selectedRouteAct, language)}
-            </strong>
+            <strong>{formatActTitle(selectedRouteAct, language)}</strong>
           </div>
-          <span>
-            {t('companion.routeProgressComplete', {
-              current: Math.min(routeProgressTotal, routeProgressCurrentCount),
-              total: routeProgressTotal
-            })}
-          </span>
+          <span>{t('companion.routeProgressComplete', {
+            current: Math.min(routeProgressTotal, routeProgressCurrentCount),
+            total: routeProgressTotal
+          })}</span>
         </div>
         <div className="route-progress-track" aria-hidden="true">
           <span style={{ width: `${routeProgressPercent}%` }} />
@@ -1796,7 +1794,7 @@ export function CompanionPage() {
               <article
                 id={`route-zone-${entry.guide.id}`}
                 key={entry.guide.id}
-                className={`route-overview-card status-${entry.status}${model.isRouteNext ? ' is-route-next' : ''}${isFocusedRouteZone ? ' is-focus-flash' : ''}`}
+                className={`route-overview-card status-${entry.status}${model.isRouteNext ? ' is-route-next' : ''}${model.hasBonusRewards ? ' has-route-bonuses' : ''}${isFocusedRouteZone ? ' is-focus-flash' : ''}`}
               >
                 <div className="route-overview-header">
                   <span className="route-step-index">{model.indexLabel}</span>
@@ -1819,6 +1817,8 @@ export function CompanionPage() {
                 ) : (
                   <p className="route-empty-note">{t('companion.routeEmpty')}</p>
                 )}
+
+                <RouteCardBonusPanel bonuses={model.bonusRewards} language={language} />
 
                 {entry.missedItems.length > 0 && (
                   <p className="warning-inline route-warning-inline">
@@ -2225,7 +2225,6 @@ export function CompanionPage() {
       </div>
     </div>
   ) : null;
-
 
   const renderRunConfirmDialog = () => {
     if (!runConfirmDialog) {
