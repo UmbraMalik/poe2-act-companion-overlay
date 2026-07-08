@@ -2040,3 +2040,115 @@ body.settings-window-resizing .settings-page:not(.companion-page) {
 .companion-page .summary-act-breakdown-row {
   box-shadow: none !important;
 }
+
+/* Final stability guard: settings scroll, bonus columns and zone accent rails. */
+.settings-page:not(.companion-page) {
+  -webkit-app-region: no-drag !important;
+  app-region: no-drag !important;
+}
+
+.settings-page:not(.companion-page) .settings-header.window-drag-strip {
+  -webkit-app-region: drag !important;
+  app-region: drag !important;
+}
+
+.settings-page:not(.companion-page) .settings-header.window-drag-strip button,
+.settings-page:not(.companion-page) .settings-shell,
+.settings-page:not(.companion-page) .settings-shell *,
+.settings-page:not(.companion-page) .settings-select-layer,
+.settings-page:not(.companion-page) .settings-window-resize-handle {
+  -webkit-app-region: no-drag !important;
+  app-region: no-drag !important;
+}
+
+.settings-page:not(.companion-page) .settings-shell {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  overscroll-behavior: contain;
+  pointer-events: auto;
+  touch-action: pan-y;
+}
+
+.settings-page:not(.companion-page) .settings-card[id] {
+  scroll-margin-top: calc(var(--settings-quick-nav-offset, 220px) + 24px) !important;
+}
+
+.companion-page .bonuses-tab-layout {
+  display: grid !important;
+  grid-template-rows: auto minmax(0, 1fr) !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+.companion-page .bonuses-act-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  grid-auto-flow: row !important;
+  grid-auto-rows: auto !important;
+  align-items: start !important;
+  align-content: start !important;
+  gap: 12px !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  padding: 0 8px 12px 0 !important;
+  position: relative;
+  isolation: isolate;
+}
+
+.companion-page .bonuses-act-card {
+  position: relative !important;
+  z-index: auto !important;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  align-self: start !important;
+  contain: none !important;
+  overflow: visible !important;
+  transform: none !important;
+}
+
+.companion-page .bonuses-act-card:hover,
+.companion-page .bonuses-tab-layout .bonus-row:hover {
+  transform: none !important;
+}
+
+.companion-page .bonuses-list,
+.companion-page .bonus-row {
+  contain: none !important;
+  transform: none !important;
+}
+
+@media (max-width: 1180px) {
+  .companion-page .bonuses-act-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .companion-page .bonuses-act-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+}
+
+.companion-page .zone-card-board .zone-task-card {
+  position: relative !important;
+  overflow: hidden !important;
+  border-radius: var(--companion-card-radius, 14px) !important;
+}
+
+.companion-page .zone-card-board .zone-task-card::before {
+  inset: 12px auto 12px 0 !important;
+  width: 2px !important;
+  height: auto !important;
+  border-radius: 999px !important;
+  pointer-events: none;
+}
+
+.companion-page .zone-card-board .zone-task-primary::before,
+.companion-page .zone-card-board .zone-reward-card::before {
+  opacity: 0.78 !important;
+}
