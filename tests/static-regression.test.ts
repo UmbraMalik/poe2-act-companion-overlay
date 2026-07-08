@@ -217,6 +217,25 @@ test('real-time priority remains opt-in and is controlled from settings', () => 
   assert.match(performance, /process\.platform !== 'win32'/);
 });
 
+test('settings search keeps performance toggles under advanced grouping', () => {
+  const settingsPage = readText('src/renderer/pages/SettingsPage.tsx');
+  const settingsSearch = readText('src/renderer/settings-search.ts');
+  const overlayStart = settingsPage.indexOf('id="settings-overlay"');
+  const detailPanelStart = settingsPage.indexOf('id="settings-detail-panel"');
+  const advancedStart = settingsPage.indexOf('id="settings-advanced"');
+  const developerStart = settingsPage.indexOf('id="settings-developer"');
+
+  assert.notEqual(overlayStart, -1);
+  assert.notEqual(detailPanelStart, -1);
+  assert.notEqual(advancedStart, -1);
+  assert.notEqual(developerStart, -1);
+  assert.doesNotMatch(settingsPage.slice(overlayStart, detailPanelStart), /realtimePriorityEnabled/);
+  assert.match(settingsPage.slice(advancedStart, developerStart), /realtimePriorityEnabled/);
+  assert.match(settingsPage, /getSettingsSearchResult\(settingsSearchQuery, SHOW_DEVELOPER_SETTINGS\)/);
+  assert.match(settingsSearch, /settings-log-file/);
+  assert.match(settingsSearch, /settings-advanced/);
+});
+
 test('overlay visual effects can be disabled independently from global FX intensity', () => {
   const overlay = readText('src/renderer/pages/OverlayPage.tsx');
   const settingsPage = readText('src/renderer/pages/SettingsPage.tsx');
