@@ -8,6 +8,7 @@ import {
   buildRunHistoryDetailModel,
   formatRunHistoryDelta,
   getRunHistoryDeltaClass,
+  getRunHistorySignature,
   type RunHistoryDetailModel
 } from './run-history-detail';
 
@@ -273,4 +274,19 @@ function RunHistoryDetailPanelInner({
   );
 }
 
-export const RunHistoryDetailPanel = memo(RunHistoryDetailPanelInner);
+function areRunHistoryDetailPanelPropsEqual(
+  previous: RunHistoryDetailPanelProps,
+  next: RunHistoryDetailPanelProps
+): boolean {
+  if (previous.language !== next.language) {
+    return false;
+  }
+
+  if (previous.history === next.history) {
+    return true;
+  }
+
+  return getRunHistorySignature(previous.history) === getRunHistorySignature(next.history);
+}
+
+export const RunHistoryDetailPanel = memo(RunHistoryDetailPanelInner, areRunHistoryDetailPanelPropsEqual);

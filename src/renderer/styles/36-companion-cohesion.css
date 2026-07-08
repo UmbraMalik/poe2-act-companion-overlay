@@ -1957,3 +1957,86 @@ body.settings-window-resizing .settings-page:not(.companion-page) {
     linear-gradient(180deg, rgba(255, 255, 255, 0.020), rgba(255, 255, 255, 0.006)),
     rgba(14, 9, 24, 0.58) !important;
 }
+
+
+/* Stability follow-up: anchor jumps, bonus columns and run details should stay cheap/stable. */
+.settings-page:not(.companion-page) .settings-shell {
+  scroll-padding-top: calc(var(--settings-quick-nav-offset, 220px) + 18px) !important;
+}
+
+.settings-page:not(.companion-page) .settings-card[id] {
+  scroll-margin-top: calc(var(--settings-quick-nav-offset, 220px) + 18px) !important;
+}
+
+.settings-page:not(.companion-page) .settings-quick-nav {
+  --settings-quick-nav-offset: 220px;
+}
+
+.companion-page .bonuses-tab-layout {
+  display: flex !important;
+  flex-direction: column !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+.companion-page .bonuses-act-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
+  grid-auto-flow: row !important;
+  grid-auto-rows: minmax(0, auto) !important;
+  align-items: start !important;
+  gap: 12px !important;
+  min-height: 0 !important;
+  padding: 0 8px 10px 0 !important;
+  overflow: auto !important;
+}
+
+.companion-page .bonuses-act-card {
+  position: relative !important;
+  z-index: 0 !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  width: auto !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  align-self: start !important;
+  contain: layout paint;
+  isolation: isolate;
+}
+
+.companion-page .bonuses-list {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  grid-auto-rows: auto !important;
+  gap: 8px !important;
+  min-height: 0 !important;
+}
+
+.companion-page .bonus-row {
+  position: relative !important;
+  z-index: 0 !important;
+  min-height: 0 !important;
+  transform: none !important;
+}
+
+.companion-page .run-history-detail-layout,
+.companion-page .run-history-detail-card,
+.companion-page .run-history-detail-grid,
+.companion-page .run-history-detail-table {
+  contain: layout paint style;
+}
+
+.companion-page .run-history-detail-card,
+.companion-page .run-history-detail-metrics > div,
+.companion-page .run-history-detail-table-row {
+  filter: none !important;
+  transform: none !important;
+  transition: border-color 100ms ease, background-color 100ms ease !important;
+}
+
+.companion-page .run-history-detail-table-row,
+.companion-page .act-split-row,
+.companion-page .summary-act-breakdown-row {
+  box-shadow: none !important;
+}
