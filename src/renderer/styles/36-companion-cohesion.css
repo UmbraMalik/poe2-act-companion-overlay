@@ -999,3 +999,31 @@
     justify-self: start;
   }
 }
+
+/* Route tab quick jump layout guard: keeps the single jump action readable in compact toolbars. */
+.companion-page .route-polish-layout .route-jump-block {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  align-items: stretch !important;
+  gap: 5px !important;
+  min-width: 0 !important;
+}
+
+.companion-page .route-polish-layout .route-jump-title {
+  display: block !important;
+  white-space: nowrap !important;
+}
+
+.companion-page .route-polish-layout .route-jump-row {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  justify-content: stretch !important;
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+.companion-page .route-polish-layout .route-jump-row button {
+  width: 100% !important;
+  min-width: 0 !important;
+  white-space: nowrap !important;
+}
