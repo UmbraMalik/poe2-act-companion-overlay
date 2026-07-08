@@ -1505,6 +1505,7 @@ export function CompanionPage() {
   const routeProgressTotal = selectedRouteProgress.total;
   const routeProgressCurrentCount = selectedRouteProgress.currentCount;
   const routeProgressPercent = selectedRouteProgress.percent;
+  const routeBonusZoneCount = routeCardModels.filter((model) => model.hasBonusRewards).length;
   const currentRouteZone = currentRouteIndex >= 0 ? routeZones[currentRouteIndex] : null;
   const nextRouteZone = selectedRouteProgress.isSelectedRouteActBeforeCurrent
     ? null
@@ -1755,6 +1756,23 @@ export function CompanionPage() {
               </button>
             );
           })}
+          </div>
+          <div className="route-toolbar-context" aria-label={t('companion.routeToolbarContext')}>
+            <span>
+              <small>{t('companion.routeToolbarNow')}</small>
+              <strong>{currentRouteZone ? formatRouteCardTitle(currentRouteZone.guide, language) : routeProgressLeftLabel}</strong>
+            </span>
+            <span>
+              <small>{t('companion.routeToolbarProgress')}</small>
+              <strong>{t('companion.routeProgressComplete', {
+                current: Math.min(routeProgressTotal, routeProgressCurrentCount),
+                total: routeProgressTotal
+              })}</strong>
+            </span>
+            <span>
+              <small>{t('companion.routeToolbarBonusZones')}</small>
+              <strong>{routeBonusZoneCount}</strong>
+            </span>
           </div>
         </div>
         <RouteTabControls language={language} filterMode={routeFilterMode} searchQuery={routeSearchQuery}

@@ -59,23 +59,25 @@ export function RouteTabControls({
         ))}
       </div>
 
-      <p className="route-filter-summary">
-        {getRouteFilterSummary({ language, filterMode, query: searchQuery, ...resultState })}
-      </p>
+      <div className="route-tools-footer">
+        <p className="route-filter-summary">
+          {getRouteFilterSummary({ language, filterMode, query: searchQuery, ...resultState })}
+        </p>
 
-      <div className="route-jump-block">
-        <span className="route-jump-title">{routeText('quickJump', language)}</span>
-        <div className="button-row route-jump-row" aria-label={routeText('jumps', language)}>
-          <button
-            type="button"
-            className="button-secondary"
-            disabled={!canJumpCurrent}
-            title={canJumpCurrent ? currentLabel : currentReason}
-            aria-label={canJumpCurrent ? currentLabel : `${currentLabel}: ${currentReason}`}
-            onClick={onJumpCurrent}
-          >
-            {currentLabel}
-          </button>
+        <div className="route-jump-block">
+          <span className="route-jump-title">{routeText('quickJump', language)}</span>
+          <div className="button-row route-jump-row" aria-label={routeText('jumps', language)}>
+            <button
+              type="button"
+              className="button-secondary"
+              disabled={!canJumpCurrent}
+              title={canJumpCurrent ? currentLabel : currentReason}
+              aria-label={canJumpCurrent ? currentLabel : `${currentLabel}: ${currentReason}`}
+              onClick={onJumpCurrent}
+            >
+              {currentLabel}
+            </button>
+          </div>
         </div>
       </div>
     </div>
