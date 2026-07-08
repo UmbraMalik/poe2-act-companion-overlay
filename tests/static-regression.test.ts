@@ -420,13 +420,27 @@ test('companion route tab memoizes route card derived labels outside render map'
 
 test('companion route tab keeps search and filters in helper-backed memoized flow', () => {
   const companion = readText('src/renderer/pages/CompanionPage.tsx');
+  const routeControls = readText('src/renderer/RouteTabControls.tsx');
   const routeSearch = readText('src/renderer/route-tab-search.ts');
 
   assert.match(companion, /RouteTabControls/);
   assert.match(companion, /filterRouteCards\(routeCardModels/);
-  assert.match(companion, /routeText\('empty', language\)/);
+  assert.match(companion, /getRouteFilterEmptyText/);
+  assert.match(routeControls, /getRouteFilterSummary/);
+  assert.match(routeControls, /getRouteJumpDisabledReason/);
+  assert.match(routeControls, /routeText\('quickJump', language\)/);
   assert.match(routeSearch, /current_next/);
   assert.match(routeSearch, /hasBonusRewards/);
+});
+
+test('companion bonus manual marks keep visible source-specific feedback', () => {
+  const companion = readText('src/renderer/pages/CompanionPage.tsx');
+  const cohesion = readText('src/renderer/styles/36-companion-cohesion.css');
+
+  assert.match(companion, /className=\{`bonus-detected-line is-\$\{progress\.detectedBy\}`\}/);
+  assert.match(companion, /progress\.detectedBy === 'manual'/);
+  assert.match(cohesion, /\.bonus-detected-line\.is-manual/);
+  assert.match(cohesion, /\.bonus-detected-line\.is-log/);
 });
 
 test('default motion avoids continuous compositor-heavy ambient animations', () => {

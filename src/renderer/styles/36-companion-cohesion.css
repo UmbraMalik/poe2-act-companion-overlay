@@ -306,6 +306,14 @@
     rgba(0, 0, 0, 0.08) !important;
 }
 
+.companion-page .bonus-detected-line.is-manual {
+  color: rgba(255, 220, 150, 0.88) !important;
+}
+
+.companion-page .bonus-detected-line.is-log {
+  color: rgba(148, 231, 168, 0.86) !important;
+}
+
 .companion-page .helper-text,
 .companion-page .route-empty-note,
 .companion-page .route-more-note,

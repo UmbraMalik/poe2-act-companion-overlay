@@ -3,6 +3,9 @@ import assert from 'node:assert/strict';
 import {
   filterRouteCards,
   formatRouteFilterLabel,
+  getRouteFilterEmptyText,
+  getRouteFilterSummary,
+  getRouteJumpDisabledReason,
   normalizeRouteSearchQuery,
   routeText,
   type RouteFilterCard
@@ -91,6 +94,67 @@ test('route tab search combines with active filters and can be empty', () => {
 
 test('route tab helper labels are localized', () => {
   assert.equal(formatRouteFilterLabel('current_act', 'ru'), 'Текущий акт');
-  assert.equal(formatRouteFilterLabel('bonuses', 'en'), 'Bonuses only');
+  assert.equal(formatRouteFilterLabel('bonuses', 'en'), 'Zones with bonuses');
+  assert.equal(formatRouteFilterLabel('missed', 'ru'), 'Пропущенные награды');
   assert.equal(routeText('empty', 'ru'), 'По этому запросу в маршруте ничего нет.');
+});
+
+test('route tab result summary explains active filters and counts', () => {
+  assert.equal(
+    getRouteFilterSummary({
+      language: 'en',
+      filterMode: 'bonuses',
+      query: '',
+      shownCount: 2,
+      totalCount: 12,
+      hasCurrentCard: false,
+      hasNextCard: false
+    }),
+    'Showing zones with bonuses: 2 of 12.'
+  );
+  assert.equal(
+    getRouteFilterSummary({
+      language: 'ru',
+      filterMode: 'current_next',
+      query: '',
+      shownCount: 1,
+      totalCount: 10,
+      hasCurrentCard: true,
+      hasNextCard: false
+    }),
+    'Показана текущая карточка маршрута. Следующий шаг пока не найден.'
+  );
+});
+
+test('route tab empty states distinguish search, missed, and missing current route card', () => {
+  assert.equal(
+    getRouteFilterEmptyText({
+      language: 'en',
+      filterMode: 'missed',
+      query: '',
+      shownCount: 0,
+      totalCount: 8,
+      hasCurrentCard: true,
+      hasNextCard: true
+    }),
+    'No missed rewards in this view.'
+  );
+  assert.equal(
+    getRouteFilterEmptyText({
+      language: 'ru',
+      filterMode: 'current_next',
+      query: '',
+      shownCount: 0,
+      totalCount: 8,
+      hasCurrentCard: false,
+      hasNextCard: false
+    }),
+    'Текущая зона распознана, но карточка маршрута не найдена.'
+  );
+});
+
+test('route tab jump disabled reasons are explicit', () => {
+  assert.equal(getRouteJumpDisabledReason('current', 'en'), 'Current zone was not found in the route list.');
+  assert.equal(getRouteJumpDisabledReason('next', 'ru'), 'Следующий шаг пока не найден.');
+  assert.equal(getRouteJumpDisabledReason('missed', 'en'), 'No missed rewards to jump to.');
 });

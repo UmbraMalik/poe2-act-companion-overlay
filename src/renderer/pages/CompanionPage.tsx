@@ -14,17 +14,16 @@ import {
   getRouteProgressState,
   getSceneDisplayName,
   getUpcomingVendorReminders,
-  getXpStatus
+  getXpStatus, type ActTimeRow
 } from '../companion-helpers';
 import { formatDuration, formatRecommendedLevelLabel } from '../utils';
-import type { ActTimeRow } from '../companion-helpers';
 import { getCampaignBonusView, getGuideView, translateDataText } from '../../i18n/data';
 import { translate } from '../../i18n/translations';
 import { isEndgameT15Act } from '../../shared/timers';
 import { getGuideUpdateClassName } from '../guide-update-highlights';
 import { getZoneRecognitionView } from '../log-health';
 import { RouteTabControls } from '../RouteTabControls';
-import { filterRouteCards, routeText, type RouteFilterMode } from '../route-tab-search';
+import { filterRouteCards, getRouteFilterEmptyText, type RouteFilterMode } from '../route-tab-search';
 import type { AppLanguage, CampaignBonusDefinition, CampaignBonusProgress, GuideEntry, RunSummary, SavedRunHistoryEntry, ZoneAct } from '../../shared/types';
 
 type CompanionTab = 'zone' | 'route' | 'timer' | 'actTimes' | 'reminders' | 'bonuses' | 'summary';
@@ -1489,8 +1488,7 @@ export function CompanionPage() {
     return <div className="settings-shell">{t('companion.loading')}</div>;
   }
 
-  const { config, currentZone } =
-    snapshot;
+  const { config, currentZone } = snapshot;
   const activeDisplayRunTimer = displayRunTimer ?? config.runTimer;
   const activeXpStatus = xpStatus ?? getXpStatus(snapshot, language);
   const countdownMs = liveRunTimer.countdownMs;
@@ -1635,7 +1633,7 @@ export function CompanionPage() {
     });
   };
   const focusCurrentZone = () => focusRouteZone(snapshot.currentGuideEntry?.id ?? null, nowAct, 'current_act');
-  const focusNextRouteZone = () => focusRouteZone(nextRouteZone?.guide.id ?? null, selectedRouteAct, 'current_next');
+  const focusNextRouteZone = () => focusRouteZone(routeCardModels.find((model) => model.isRouteNext)?.entry.guide.id ?? null, selectedRouteAct, 'current_next');
   const focusMissedRouteZone = () => focusRouteZone(missedRouteZone?.guide.id ?? null, selectedRouteAct, 'missed');
 
   const zoneTab = activeTab === 'zone' ? (
@@ -1763,7 +1761,8 @@ export function CompanionPage() {
           })}
         </div>
         <RouteTabControls language={language} filterMode={routeFilterMode} searchQuery={routeSearchQuery}
-          canJumpCurrent={Boolean(snapshot.currentGuideEntry?.id)} canJumpNext={Boolean(nextRouteZone)} canJumpMissed={Boolean(missedRouteZone)}
+          resultState={{ shownCount: visibleRouteCardModels.length, totalCount: routeCardModels.length, hasCurrentCard: routeCardModels.some((model) => model.entry.status === 'current'), hasNextCard: routeCardModels.some((model) => model.isRouteNext) }}
+          canJumpCurrent={Boolean(snapshot.currentGuideEntry?.id && routeActs.some((entry) => entry.zones.some((zone) => zone.guide.id === snapshot.currentGuideEntry?.id)))} canJumpNext={routeCardModels.some((model) => model.isRouteNext)} canJumpMissed={Boolean(missedRouteZone)}
           onFilterChange={setRouteFilterMode} onSearchChange={setRouteSearchQuery}
           onJumpCurrent={focusCurrentZone} onJumpNext={focusNextRouteZone} onJumpMissed={focusMissedRouteZone} />
       </section>
@@ -1838,7 +1837,7 @@ export function CompanionPage() {
             );
           })}
         </div>
-        {visibleRouteCardModels.length === 0 && <p className="route-empty-note route-filter-empty">{routeText('empty', language)}</p>}
+        {visibleRouteCardModels.length === 0 && <p className="route-empty-note route-filter-empty">{getRouteFilterEmptyText({ language, filterMode: routeFilterMode, query: routeSearchQuery, shownCount: visibleRouteCardModels.length, totalCount: routeCardModels.length, hasCurrentCard: routeCardModels.some((model) => model.entry.status === 'current'), hasNextCard: routeCardModels.some((model) => model.isRouteNext) })}</p>}
       </section>
     </div>
   ) : null;
@@ -2156,7 +2155,7 @@ export function CompanionPage() {
                           </ul>
                         )}
                         {progress && (
-                          <p className="bonus-detected-line">
+                          <p className={`bonus-detected-line is-${progress.detectedBy}`}>
                             {t('companion.markedBy', {
                               method: progress.detectedBy === 'manual' ? t('companion.markedManually') : t('companion.markedByLog'),
                               time: new Date(progress.timestamp).toLocaleTimeString(language === 'en' ? 'en-US' : 'ru-RU')
