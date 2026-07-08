@@ -2,12 +2,14 @@ import { contextBridge, ipcRenderer } from 'electron';
 import type {
   AppSnapshot,
   ElectronApi,
+  OverlaySnapshot,
   OverlayMode,
   RunTimerState,
   SettingsPatch,
   AutoUpdateState,
   TimerDiagnosticsPayload,
-  TimerVisualTickPayload
+  TimerVisualTickPayload,
+  UiPreferencesSnapshot
 } from '../shared/types';
 
 const timerDiagnosticsEnabled = process.env.POE2_TIMER_DIAGNOSTICS === '1';
@@ -15,7 +17,11 @@ const timerDiagnosticsEnabled = process.env.POE2_TIMER_DIAGNOSTICS === '1';
 const api: ElectronApi = {
   getSnapshot: () => ipcRenderer.invoke('app:get-snapshot'),
   getOverlaySnapshot: () => ipcRenderer.invoke('app:get-overlay-snapshot'),
+  getUiPreferencesSnapshot: () => ipcRenderer.invoke('app:get-ui-preferences-snapshot'),
   getAppVersion: () => ipcRenderer.invoke('app:get-version'),
+  getDebugBundleLogTail: () => ipcRenderer.invoke('app:get-debug-bundle-log-tail'),
+  exportDebugBundle: (text: string) =>
+    ipcRenderer.invoke('app:export-debug-bundle', text),
   getCachedUpdateCheckResult: () => ipcRenderer.invoke('app:get-cached-update-check-result'),
   getStartupUpdateInfo: () => ipcRenderer.invoke('app:get-startup-update-info'),
   checkForUpdates: () => ipcRenderer.invoke('app:check-for-updates'),
@@ -120,13 +126,22 @@ const api: ElectronApi = {
       ipcRenderer.removeListener('timer:visual-tick', listener);
     };
   },
-  onStateChanged: (callback: (snapshot: AppSnapshot) => void) => {
-    const listener = (_event: Electron.IpcRendererEvent, snapshot: AppSnapshot) => {
+  onStateChanged: (callback: (snapshot: AppSnapshot | OverlaySnapshot) => void) => {
+    const listener = (_event: Electron.IpcRendererEvent, snapshot: AppSnapshot | OverlaySnapshot) => {
       callback(snapshot);
     };
     ipcRenderer.on('app:state-changed', listener);
     return () => {
       ipcRenderer.removeListener('app:state-changed', listener);
+    };
+  },
+  onUiPreferencesChanged: (callback: (snapshot: UiPreferencesSnapshot) => void) => {
+    const listener = (_event: Electron.IpcRendererEvent, snapshot: UiPreferencesSnapshot) => {
+      callback(snapshot);
+    };
+    ipcRenderer.on('app:ui-preferences-changed', listener);
+    return () => {
+      ipcRenderer.removeListener('app:ui-preferences-changed', listener);
     };
   }
 };

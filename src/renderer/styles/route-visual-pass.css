@@ -4,7 +4,7 @@
   height: 100% !important;
   min-height: 0 !important;
   display: grid !important;
-  grid-template-rows: auto minmax(0, 1fr) !important;
+  grid-template-rows: auto auto minmax(0, 1fr) !important;
   align-content: stretch !important;
   grid-auto-rows: initial !important;
   gap: 12px;
@@ -13,7 +13,7 @@
 
 .companion-page .route-polish-layout .companion-route-list-card {
   display: grid !important;
-  grid-template-rows: auto minmax(0, 1fr) !important;
+  grid-template-rows: auto auto minmax(0, 1fr) !important;
   align-content: stretch !important;
   min-height: 0 !important;
   overflow: hidden !important;

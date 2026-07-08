@@ -2,13 +2,13 @@ import supportQrImage from '../assets/support-qr.png';
 import alfaBankLogo from '../assets/support-alfa-bank-logo.png';
 import donationAlertsLogo from '../assets/support-donationalerts-logo.png';
 import { useDocumentTitle, useI18n } from '../useI18n';
-import { useAppSnapshot } from '../hooks';
+import { useUiPreferencesSnapshot } from '../hooks';
 import { getAppThemeClassName } from '../theme';
 
 const DONATION_ALERTS_URL = 'https://www.donationalerts.com/r/umbramalik';
 
 export function SupportPage() {
-  const snapshot = useAppSnapshot();
+  const snapshot = useUiPreferencesSnapshot();
   const { t } = useI18n(snapshot?.config.appLanguage);
 
   useDocumentTitle(t('titles.support'));

@@ -1,4 +1,4 @@
-import { appendFile } from 'node:fs/promises';
+import { appendFile, writeFile } from 'node:fs/promises';
 import {
   app,
   dialog,
@@ -6,7 +6,7 @@ import {
   screen,
   shell
 } from 'electron';
-import type { OpenDialogOptions } from 'electron';
+import type { OpenDialogOptions, SaveDialogOptions } from 'electron';
 
 import {
   areOverlayBoundsEqual,
@@ -20,6 +20,8 @@ import {
   isDev,
   isSafeExternalUrl
 } from './app-environment';
+import { readRedactedDebugLogTail } from './debug-bundle';
+import { normalizeDebugBundleExportText } from '../shared/debug-bundle';
 
 const MAX_DEV_LOG_LINE_LENGTH = 4000;
 const MAX_TIMER_DIAGNOSTICS_SOURCE_LENGTH = 160;
@@ -214,7 +216,41 @@ function normalizeDevLogLine(value: unknown): string | null {
 export function runRegisterIpc(this: any) {
         ipcMain.handle('app:get-snapshot', async () => this.getSnapshot());
         ipcMain.handle('app:get-overlay-snapshot', async () => this.getOverlaySnapshot());
+        ipcMain.handle('app:get-ui-preferences-snapshot', async () => this.getUiPreferencesSnapshot());
         ipcMain.handle('app:get-version', async () => app.getVersion());
+        ipcMain.handle('app:get-debug-bundle-log-tail', async () =>
+            readRedactedDebugLogTail(this.config.logFilePath ?? this.runtime.watchedLogPath)
+        );
+        ipcMain.handle('app:export-debug-bundle', async (_event: any, rawText: any) => {
+            const text = normalizeDebugBundleExportText(rawText);
+            if (!text) {
+                return false;
+            }
+
+            const owner = [
+                this.reportWindow,
+                this.settingsWindow,
+                this.companionWindow,
+                this.overlayWindow
+            ].find((win: any) => Boolean(win && !win.isDestroyed()));
+            const dialogOptions: SaveDialogOptions = {
+                title: 'Export debug bundle',
+                defaultPath: `poe2act-debug-bundle-${new Date().toISOString().replace(/[:.]/g, '-')}.txt`,
+                filters: [
+                    { name: 'Text', extensions: ['txt'] },
+                    { name: this.t('main.allFilesFilter'), extensions: ['*'] }
+                ]
+            };
+            const result = owner
+                ? await dialog.showSaveDialog(owner, dialogOptions)
+                : await dialog.showSaveDialog(dialogOptions);
+            if (result.canceled || !result.filePath) {
+                return false;
+            }
+
+            await writeFile(result.filePath, `${text}\n`, 'utf8');
+            return true;
+        });
         ipcMain.handle('app:get-cached-update-check-result', async () => this.cachedUpdateCheckResult);
         ipcMain.handle('app:get-startup-update-info', async () => this.startupUpdateInfo);
         ipcMain.handle('app:check-for-updates', async () => this.checkForUpdates(true));
@@ -485,7 +521,7 @@ export function runRegisterIpc(this: any) {
         ipcMain.handle('app:resize-overlay', async (_event: any, width: any, height: any) => {
             const targetWindow = this.overlayWindow;
             if (!targetWindow || targetWindow.isDestroyed()) {
-                return this.getSnapshot();
+                return false;
             }
             const currentBounds = targetWindow.getBounds();
             const nextBounds = this.normalizeOverlayBoundsForMode({
@@ -495,14 +531,14 @@ export function runRegisterIpc(this: any) {
                 height: Math.round(Number(height) || currentBounds.height)
             }, this.overlayMode, this.config.overlayDensity);
             if (areOverlayBoundsEqual(currentBounds, nextBounds)) {
-                return this.getSnapshot();
+                return false;
             }
             this.applyOverlayWindowBounds('manualResize', nextBounds);
             const changed = this.persistOverlayBoundsForCurrentState(targetWindow.getBounds());
             if (changed) {
                 this.broadcastState();
             }
-            return this.getSnapshot();
+            return true;
         });
         ipcMain.handle('app:set-overlay-auto-resize-suspended', async (_event: any, suspended: any) => {
             this.overlayAutoResizeSuspendedUntil = suspended
@@ -544,7 +580,7 @@ export function runRegisterIpc(this: any) {
         ipcMain.handle('app:resize-overlay-height', async (_event: any, height: any, options: any = {}) => {
             const targetWindow = this.overlayWindow;
             if (!targetWindow || targetWindow.isDestroyed()) {
-                return this.getSnapshot();
+                return false;
             }
             const forceAutoHeight = Boolean(options?.force);
             const allowBelowMinimum = Boolean(options?.allowBelowMinimum);
@@ -563,7 +599,7 @@ export function runRegisterIpc(this: any) {
                     requestedHeight,
                     bounds: targetWindow.getBounds()
                 });
-                return this.getSnapshot();
+                return false;
             }
             let nextBounds = this.normalizeOverlayBoundsForMode({
                 ...currentBounds,
@@ -591,14 +627,14 @@ export function runRegisterIpc(this: any) {
                 };
             }
             if (areOverlayBoundsEqual(currentBounds, nextBounds)) {
-                return this.getSnapshot();
+                return false;
             }
             this.applyOverlayWindowBounds('autoHeight', nextBounds);
             const changed = this.persistOverlayBoundsForCurrentState(targetWindow.getBounds());
             if (changed) {
                 this.broadcastState();
             }
-            return this.getSnapshot();
+            return true;
         });
         ipcMain.handle('app:set-overlay-position', async (_event: any, x: any, y: any) => {
             this.overlayAutoResizeSuspendedUntil = Math.max(this.overlayAutoResizeSuspendedUntil, Date.now() + 800);

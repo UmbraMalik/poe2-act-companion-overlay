@@ -265,6 +265,7 @@ import {
   runSetLogStatus as runSetLogStatusMethod,
   runGetSnapshot as runGetSnapshotMethod,
   runGetOverlaySnapshot as runGetOverlaySnapshotMethod,
+  runGetUiPreferencesSnapshot as runGetUiPreferencesSnapshotMethod,
   runClearBroadcastTimer as runClearBroadcastTimerMethod,
   runFlushBroadcastState as runFlushBroadcastStateMethod,
   runBroadcastState as runBroadcastStateMethod
@@ -1146,6 +1147,9 @@ export class PoeOverlayApp {
     }
     getOverlaySnapshot() {
         return runGetOverlaySnapshotMethod.apply(this, arguments as any);
+    }
+    getUiPreferencesSnapshot() {
+        return runGetUiPreferencesSnapshotMethod.apply(this, arguments as any);
     }
     clearBroadcastTimer() {
         return runClearBroadcastTimerMethod.apply(this, arguments as any);

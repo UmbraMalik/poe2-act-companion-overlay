@@ -48,6 +48,44 @@
   margin: 0;
 }
 
+.debug-bundle-panel {
+  gap: 14px;
+}
+
+.debug-bundle-preview-field {
+  display: grid;
+  gap: 8px;
+  color: #ffd791;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.debug-bundle-preview {
+  width: 100%;
+  min-height: 280px;
+  resize: vertical;
+  line-height: 1.45;
+  color: #f4ead8;
+  font-family: ui-monospace, "Cascadia Code", "Consolas", monospace;
+  font-size: 12px;
+  white-space: pre-wrap;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(0, 0, 0, 0.16)),
+    rgba(0, 0, 0, 0.22);
+}
+
+.debug-bundle-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.debug-bundle-status {
+  margin: 0;
+}
+
 @media (max-width: 760px) {
   .report-card-header {
     align-items: stretch;
@@ -59,6 +97,10 @@
   }
 
   .report-actions button {
+    width: 100%;
+  }
+
+  .debug-bundle-actions button {
     width: 100%;
   }
 }
@@ -208,4 +250,3 @@
     text-align: left;
   }
 }
-

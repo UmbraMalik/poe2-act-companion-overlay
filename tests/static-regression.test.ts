@@ -116,6 +116,39 @@ test('snapshot updates use the shared render scheduler with a timeout fallback',
   assert.match(main, /BROADCAST_THROTTLE_MS\s*=\s*32/);
 });
 
+test('snapshot broadcast skips destroyed webContents before sending', () => {
+  const stateController = readText('src/main/app-state-controller.ts');
+  const flushState = stateController.slice(
+    stateController.indexOf('export function runFlushBroadcastState'),
+    stateController.indexOf('export function runBroadcastState')
+  );
+
+  assert.match(flushState, /!win\.isDestroyed\(\)/);
+  assert.match(flushState, /!win\.webContents\.isDestroyed\(\)/);
+  assert.match(flushState, /!win\.webContents\.isLoading\(\)/);
+  assert.match(flushState, /webContents\.send\('app:state-changed'/);
+});
+
+test('window page routing uses explicit html markers before URL fallback', () => {
+  const rendererMain = readText('src/renderer/main.tsx');
+  const windowController = readText('src/main/app-window-controller.ts');
+
+  assert.match(rendererMain, /new URLSearchParams\(window\.location\.search\)/);
+  assert.match(rendererMain, /params\.get\('page'\)/);
+  assert.match(rendererMain, /window\.location\.pathname\.split\('\/'\)\.pop\(\)/);
+  assert.match(rendererMain, /__POE2_RENDERER_PAGE__/);
+  assert.match(rendererMain, /const explicitPage = getRendererPageCandidate\(window\.__POE2_RENDERER_PAGE__\)/);
+  assert.match(rendererMain, /const bodyPage = getRendererPageCandidate\(document\.body\.dataset\.page\)/);
+  assert.match(rendererMain, /return explicitPage \?\? bodyPage \?\? getRendererPageFromLocation\(\) \?\? 'overlay'/);
+  assert.match(readText('companion.html'), /window\.__POE2_RENDERER_PAGE__ = 'companion'/);
+  assert.match(windowController, /const pageSearch = `\?page=\$\{encodeURIComponent\(pageName\)\}`/);
+  assert.match(windowController, /loadURL\(`\$\{devServerUrl\}\/\$\{pageName\}\.html\$\{pageSearch\}`\)/);
+  assert.match(
+    windowController,
+    /loadFile\(resolveRuntimePath\('dist', `\$\{pageName\}\.html`\), \{ search: pageSearch \}\)/
+  );
+});
+
 test('run timer snapshot sync tracks act split content changes', () => {
   const hooks = readText('src/renderer/hooks.ts');
   const runTimerHook = hooks.slice(
@@ -126,6 +159,17 @@ test('run timer snapshot sync tracks act split content changes', () => {
   assert.match(hooks, /function getRunTimerActSplitsSignature/);
   assert.match(runTimerHook, /runTimerActSplitsSignature/);
   assert.doesNotMatch(runTimerHook, /runTimer\?\.actSplits\.length/);
+});
+
+test('settings page memoizes repeated snapshot-derived option lists', () => {
+  const settingsPage = readText('src/renderer/pages/SettingsPage.tsx');
+
+  assert.match(settingsPage, /import \{ useEffect, useMemo, useState/);
+  assert.match(settingsPage, /const zoneOptions = useMemo\(/);
+  assert.match(settingsPage, /\[snapshot\?\.guideEntries, language\]/);
+  assert.match(settingsPage, /const settingsQuickLinks = useMemo\(/);
+  assert.doesNotMatch(settingsPage, /const zoneOptions = snapshot\.guideEntries\.map/);
+  assert.doesNotMatch(settingsPage, /const settingsQuickLinks = SETTINGS_QUICK_LINKS\.filter/);
 });
 
 
@@ -191,6 +235,25 @@ test('real-time priority remains opt-in and is controlled from settings', () => 
   assert.match(performance, /RealTime/);
   assert.match(performance, /Normal/);
   assert.match(performance, /process\.platform !== 'win32'/);
+});
+
+test('settings search keeps performance toggles under advanced grouping', () => {
+  const settingsPage = readText('src/renderer/pages/SettingsPage.tsx');
+  const settingsSearch = readText('src/renderer/settings-search.ts');
+  const overlayStart = settingsPage.indexOf('id="settings-overlay"');
+  const detailPanelStart = settingsPage.indexOf('id="settings-detail-panel"');
+  const advancedStart = settingsPage.indexOf('id="settings-advanced"');
+  const developerStart = settingsPage.indexOf('id="settings-developer"');
+
+  assert.notEqual(overlayStart, -1);
+  assert.notEqual(detailPanelStart, -1);
+  assert.notEqual(advancedStart, -1);
+  assert.notEqual(developerStart, -1);
+  assert.doesNotMatch(settingsPage.slice(overlayStart, detailPanelStart), /realtimePriorityEnabled/);
+  assert.match(settingsPage.slice(advancedStart, developerStart), /realtimePriorityEnabled/);
+  assert.match(settingsPage, /getSettingsSearchResult\(settingsSearchQuery, SHOW_DEVELOPER_SETTINGS\)/);
+  assert.match(settingsSearch, /settings-log-file/);
+  assert.match(settingsSearch, /settings-advanced/);
 });
 
 test('overlay visual effects can be disabled independently from global FX intensity', () => {
@@ -268,6 +331,10 @@ test('quality gates keep source reachability and release artifact checks wired',
   assert.match(packageJson.scripts['test:regression'], /check:main-modules/);
   assert.match(packageJson.scripts['test:regression'], /check:renderer-modules/);
   assert.match(packageJson.scripts['dist:checked'], /check:release/);
+  assert.deepEqual(
+    packageJson.scripts['dist:checked'].split('&&').map((step: string) => step.trim()),
+    ['npm run clean:release', 'npm run build:checked', 'electron-builder', 'npm run check:release']
+  );
   assert.match(mainCheck, /collectReachableSources/);
   assert.match(mainCheck, /Unreachable main-process source files/);
   assert.match(mainCheck, /page-model/i);
@@ -276,6 +343,9 @@ test('quality gates keep source reachability and release artifact checks wired',
   assert.match(rendererCheck, /page-model/i);
   assert.match(releaseCheck, /packageJson\.version/);
   assert.match(releaseCheck, /expectedExeName/);
+  assert.match(releaseCheck, /latestFileEntries/);
+  assert.match(releaseCheck, /duplicate installer entries/);
+  assert.match(releaseCheck, /file entry sha512 does not match top-level sha512/);
   assert.match(releaseCheck, /latest\.yml sha512 does not match/);
   assert.match(releaseCheck, /latest\.yml installer size/);
 });
@@ -302,9 +372,13 @@ test('hidden windows and unchanged bounds do not trigger unnecessary smoothness 
   const ipcHandlers = readText('src/main/app-ipc-handlers.ts');
   const configStore = readText('src/main/services/config-store.ts');
   const main = readText('src/main/main.ts');
+  const overlaySnapshotBuilder = stateController.slice(
+    stateController.indexOf('export function runGetOverlaySnapshot'),
+    stateController.indexOf('export function runGetUiPreferencesSnapshot')
+  );
 
   assert.match(stateController, /function runGetOverlaySnapshot/);
-  assert.match(stateController, /guideEntries:\s*currentGuideEntry \? \[currentGuideEntry\] : \[\]/);
+  assert.doesNotMatch(overlaySnapshotBuilder, /guideEntries/);
   assert.match(stateController, /const overlayTargets = targetWindows\.filter/);
   assert.match(stateController, /const appTargets = targetWindows\.filter/);
   assert.match(main, /getOverlaySnapshot\(\)/);
@@ -335,6 +409,91 @@ test('overlay renderer memoizes heavy derived view state and throttles layout IP
   assert.match(overlay, /now - lastAdaptiveOverlaySuspensionSyncAtRef\.current > 500/);
   assert.match(overlay, /event:\s*'overlay-render-frequency'/);
   assert.match(types, /'overlay-render-frequency'/);
+});
+
+test('companion route tab memoizes route card derived labels outside render map', () => {
+  const companion = readText('src/renderer/pages/CompanionPage.tsx');
+  const helpers = readText('src/renderer/companion-helpers.ts');
+  const routeCardModelsStart = companion.indexOf('{visibleRouteCardModels.map');
+  const routeCardModelsEnd = companion.indexOf('const latestActRow', routeCardModelsStart);
+  const routeCardRender = companion.slice(routeCardModelsStart, routeCardModelsEnd);
+  const routeActsMemoStart = companion.indexOf('const routeActs = useMemo');
+  const routeActsMemoEnd = companion.indexOf('const selectedRouteAct', routeActsMemoStart);
+  const routeActsMemo = companion.slice(routeActsMemoStart, routeActsMemoEnd);
+
+  assert.notEqual(routeCardModelsStart, -1);
+  assert.notEqual(routeCardModelsEnd, -1);
+  assert.match(companion, /function getRouteCardModels/);
+  assert.match(companion, /const routeCardModels = useMemo/);
+  assert.match(companion, /const visibleRouteCardModels = useMemo/);
+  assert.match(companion, /getRequiredRewardLabelsForZone\(entry\.guide, snapshot, language\)/);
+  assert.doesNotMatch(routeCardRender, /getRequiredRewardLabelsForZone/);
+  assert.doesNotMatch(routeCardRender, /getRouteFallbackLabels/);
+  assert.doesNotMatch(routeCardRender, /getGuideView\(entry\.guide/);
+  assert.match(routeCardRender, /model\.visibleRouteLabels/);
+  assert.match(routeCardRender, /model\.recommendedLevelLabel/);
+  assert.doesNotMatch(routeActsMemo, /currentZone\.actHint/);
+  assert.doesNotMatch(routeActsMemo, /currentGuideEntry\?\.act/);
+  assert.match(helpers, /const visitedZoneIds = new Set\(snapshot\.config\.visitedZones\.map/);
+  assert.match(helpers, /getRouteZoneStatus\(guide, snapshot, visitedZoneIds\)/);
+});
+
+test('companion route tab keeps search and filters in helper-backed memoized flow', () => {
+  const companion = readText('src/renderer/pages/CompanionPage.tsx');
+  const routeControls = readText('src/renderer/RouteTabControls.tsx');
+  const routeSearch = readText('src/renderer/route-tab-search.ts');
+  const routeBonuses = readText('src/renderer/RouteCardBonuses.tsx');
+
+  assert.match(companion, /RouteTabControls/);
+  assert.match(companion, /filterRouteCards\(routeCardModels/);
+  assert.match(companion, /getRouteFilterEmptyText/);
+  assert.match(companion, /getRouteCampaignBonusModels\(entry\.guide, snapshot, language\)/);
+  assert.doesNotMatch(companion, /const hasBonusRewards = entry\.rewardItems\.length > 0/);
+  assert.match(routeControls, /getRouteFilterSummary/);
+  assert.match(routeControls, /getRouteJumpDisabledReason/);
+  assert.match(routeControls, /routeText\('quickJump', language\)/);
+  assert.match(routeSearch, /current_zone/);
+  assert.match(routeSearch, /hasBonusRewards/);
+  assert.match(routeBonuses, /route-card-bonus-panel/);
+  assert.match(routeBonuses, /routeBonusNotTaken/);
+  assert.doesNotMatch(routeSearch, /'current_next'/);
+  assert.doesNotMatch(routeSearch, /'missed',/);
+  assert.doesNotMatch(routeControls, /canJumpNext|canJumpMissed|onJumpNext|onJumpMissed/);
+  assert.doesNotMatch(routeControls, /routeText\('next'|routeText\('missed'/);
+});
+
+test('companion bonus manual marks keep visible source-specific feedback', () => {
+  const companion = readText('src/renderer/pages/CompanionPage.tsx');
+  const provenance = readText('src/shared/campaign-bonus-provenance.ts');
+  const translations = readText('src/i18n/translations.ts');
+  const cohesion = readText('src/renderer/styles/36-companion-cohesion.css');
+
+  assert.match(companion, /getCampaignBonusProvenanceView\(progress, language\)/);
+  assert.match(companion, /className=\{`bonus-detected-line is-\$\{provenance\.source\}`\}/);
+  assert.match(provenance, /log_reward_line/);
+  assert.match(translations, /Detected from reward line/);
+  assert.match(cohesion, /\.bonus-detected-line\.is-manual/);
+  assert.match(cohesion, /\.bonus-detected-line\.is-log_reward_line/);
+  assert.match(cohesion, /\.bonus-detected-line\.is-context/);
+  assert.match(cohesion, /\.bonus-detected-line\.is-unknown/);
+});
+
+test('companion run history details button opens an inline detail card', () => {
+  const detailPanel = readText('src/renderer/RunHistoryDetailPanel.tsx');
+  const companion = readText('src/renderer/pages/CompanionPage.tsx');
+
+  assert.match(detailPanel, /const \[isDetailOpen,\s*setIsDetailOpen\] = useState\(false\)/);
+  assert.match(detailPanel, /const openRunDetails = \(runId: string\)/);
+  assert.match(detailPanel, /setPendingRunId\(runId\);\s*setSelectedRunId\(null\);\s*setIsDetailOpen\(true\);/);
+  assert.match(detailPanel, /window\.setTimeout\(\(\) => \{\s*setSelectedRunId\(runId\);/);
+  assert.match(detailPanel, /<RunHistoryDetailLoading language=\{language\} \/>/);
+  assert.match(detailPanel, /<RunHistoryDetailCard model=\{model\} language=\{language\} \/>/);
+  assert.match(detailPanel, /export const RunHistoryDetailPanel = memo\(RunHistoryDetailPanelInner\)/);
+  assert.doesNotMatch(detailPanel, /getRunHistorySignature\(previous\.history\)/);
+  assert.match(companion, /stableRunHistoryRef/);
+  assert.match(companion, /getRunHistorySignature\(rawRunHistory\)/);
+  assert.match(companion, /const restoreSavedRun = useCallback/);
+  assert.match(companion, /const deleteSavedRun = useCallback/);
 });
 
 test('default motion avoids continuous compositor-heavy ambient animations', () => {

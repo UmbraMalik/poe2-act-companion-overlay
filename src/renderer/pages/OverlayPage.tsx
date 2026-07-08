@@ -47,6 +47,7 @@ import leagueMechanicRewardsData from '../../data/league-mechanic-rewards.json';
 import { getCampaignBonusView, getGuideView, getLevelReminderView, getPowerSpikeView } from '../../i18n/data';
 import { translateSystemText } from '../../i18n/runtime';
 import { translate } from '../../i18n/translations';
+import { getZoneRecognitionView } from '../log-health';
 import type {
   AppLanguage,
   AppTheme,
@@ -54,10 +55,13 @@ import type {
   GuideEntry,
   LevelReminder,
   PowerSpike,
+  OverlaySnapshot,
   RunTimerSettings,
   RunTimerState,
   ZoneAct
 } from '../../shared/types';
+
+type OverlayPageSnapshot = OverlaySnapshot;
 
 function formatActTitle(act: ZoneAct | null, language: AppLanguage): string {
   if (act === null) {
@@ -133,7 +137,7 @@ const LEAGUE_MECHANIC_REWARDS = (
 ).rewards ?? [];
 
 function getOverlayUpcomingReminders(
-  snapshot: NonNullable<ReturnType<typeof useAppSnapshot>>,
+  snapshot: OverlayPageSnapshot,
   language: AppLanguage,
   maxDelta = 2
 ): OverlayUpcomingReminder[] {
@@ -190,7 +194,7 @@ function getOverlayUpcomingReminders(
 }
 
 function getImportantOverlayLines(
-  snapshot: NonNullable<ReturnType<typeof useAppSnapshot>>,
+  snapshot: OverlayPageSnapshot,
   language: AppLanguage
 ) {
   const guide = snapshot.currentGuideEntry;
@@ -261,7 +265,7 @@ function addLeagueZoneCandidate(candidates: Set<string>, value: string | null | 
 }
 
 function getCurrentZoneLeagueReward(
-  snapshot: NonNullable<ReturnType<typeof useAppSnapshot>>,
+  snapshot: OverlayPageSnapshot,
   sceneName: string
 ): LeagueMechanicRewardEntry | null {
   const guide = snapshot.currentGuideEntry;
@@ -373,7 +377,7 @@ function isKhariCrossingCampaignBonus(bonus: CampaignBonusDefinition): boolean {
   );
 }
 
-function getCurrentZoneCampaignBonuses(snapshot: NonNullable<ReturnType<typeof useAppSnapshot>>) {
+function getCurrentZoneCampaignBonuses(snapshot: OverlayPageSnapshot) {
   const guide = snapshot.currentGuideEntry;
   const rawZoneName = snapshot.currentZone.rawZoneName;
   const guideId = guide?.id ?? null;
@@ -1040,7 +1044,7 @@ export function OverlayPage() {
 
       // Keep width as the main-process source of truth so adaptive height never widens
       // the overlay while the user is only moving it.
-      void api.resizeOverlayHeight(nextHeight, { force, allowBelowMinimum });
+      void api.resizeOverlayHeight(nextHeight, { force, allowBelowMinimum }).catch(() => false);
       }
     });
   }, [autoResizeMinimumHeight, isAdaptiveOverlayHeightSuspended, isOverlayCollapsed]);
@@ -1389,11 +1393,7 @@ export function OverlayPage() {
       currentZone.sceneKind === 'town'
     );
   const shouldShowNoGuideForZone = hasLogConnection && hasNamedUnknownZone;
-  const unknownZoneName =
-    currentZone.rawZoneName ??
-    runtime.lastSceneSource ??
-    runtime.lastRawZoneName ??
-    t('scene.unknownZone');
+  const zoneRecognition = getZoneRecognitionView(snapshot, language, runtime.timerNowMs);
   const openCompanionHotkey = formatHotkeyLabel(config.hotkeys.openCompanion, 'F9');
   const timerOnlyShowsCountdown =
     displayRunTimer.status === 'armed' &&
@@ -1504,11 +1504,13 @@ export function OverlayPage() {
       }
 
       state.frame = requestAnimationFrame(() => {
-        void window.poe2Overlay.resizeOverlay(nextWidth, currentHeight).then(() => {
-          // Manual width resize is expected to reflow text. Let the overlay grow
-          // downward to fit the new wrapped content, but keep this separate from
-          // normal window dragging where size must stay locked.
-          scheduleAdaptiveOverlayHeight({ allowDuringManualResize: true });
+        void window.poe2Overlay.resizeOverlay(nextWidth, currentHeight).then((changed) => {
+          if (changed) {
+            // Manual width resize is expected to reflow text. Let the overlay grow
+            // downward to fit the new wrapped content, but keep this separate from
+            // normal window dragging where size must stay locked.
+            scheduleAdaptiveOverlayHeight({ allowDuringManualResize: true });
+          }
         });
       });
     };
@@ -1756,11 +1758,18 @@ export function OverlayPage() {
   );
   const overlayNoGuideBlock = (
     <div className="overlay-onboarding-card overlay-no-guide-card">
-      <p className="overlay-onboarding-title">{t('overlay.noGuideTitle')}</p>
-      <p className="overlay-onboarding-text">
-        {t('overlay.noGuideText', { zone: unknownZoneName })}
-      </p>
-      <p className="overlay-onboarding-move-hint">{t('overlay.noGuideHint')}</p>
+      <p className="overlay-onboarding-title">{zoneRecognition.noGuideTitle}</p>
+      <p className="overlay-onboarding-text">{zoneRecognition.noGuideText}</p>
+      <p className="overlay-onboarding-move-hint">{zoneRecognition.noGuideHint}</p>
+    </div>
+  );
+  const overlayLogHealthPill = (
+    <div
+      className={`overlay-log-health-pill is-${zoneRecognition.tone}`}
+      title={`${zoneRecognition.label}: ${zoneRecognition.detail}`}
+    >
+      <strong>{zoneRecognition.label}</strong>
+      <span>{zoneRecognition.detail}</span>
     </div>
   );
 
@@ -1948,6 +1957,7 @@ export function OverlayPage() {
                 <span className="hud-zone-act-pill">{overlayActLabel}</span>
               </div>
               <h1 className="hud-zone-name">{overlayZoneName}</h1>
+              {overlayLogHealthPill}
             </div>
             <div className="hud-title-actions no-drag">
               {overlayQuickActions}
@@ -1974,7 +1984,7 @@ export function OverlayPage() {
 
         {endgameT15CompletionBlock}
 
-        {runtime.logWatcherStatus !== 'ready' && (
+        {runtime.logWatcherStatus === 'error' && (
           <section className="hud-banner">
             <strong>{translateSystemText(runtime.logWatcherMessage, language)}</strong>
           </section>

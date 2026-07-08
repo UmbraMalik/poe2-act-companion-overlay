@@ -27,6 +27,10 @@ export interface XpStatus {
   variant: 'ok' | 'low' | 'farm' | 'unknown';
 }
 
+type XpStatusSnapshot = Pick<AppSnapshot, 'config' | 'currentGuideEntry'>;
+
+type SceneDisplaySnapshot = Pick<AppSnapshot, 'currentGuideEntry' | 'currentZone'>;
+
 export interface RouteZoneStatus {
   guide: GuideEntry;
   status: 'current' | 'missed' | 'completed' | 'visited' | 'pending';
@@ -152,7 +156,7 @@ export function getActTimeRowsFromSplits(
 }
 
 export function getXpStatus(
-  snapshot: AppSnapshot,
+  snapshot: XpStatusSnapshot,
   language: AppLanguage = 'ru'
 ): XpStatus {
   const currentLevel = snapshot.config.currentLevel;
@@ -236,7 +240,7 @@ export function getDismissedReminderHistory(
 }
 
 export function getSceneDisplayName(
-  snapshot: AppSnapshot,
+  snapshot: SceneDisplaySnapshot,
   language: AppLanguage = 'ru'
 ): string {
   const currentGuideView = getGuideView(snapshot.currentGuideEntry, language);
@@ -288,11 +292,17 @@ function isRouteRewardItemDone(item: ChecklistViewItem): boolean {
   return item.displayState === 'done' || item.displayState === 'likely_done';
 }
 
-function getRouteZoneStatus(guide: GuideEntry, snapshot: AppSnapshot): RouteZoneStatus {
+function getRouteZoneStatus(
+  guide: GuideEntry,
+  snapshot: AppSnapshot,
+  visitedZoneIds?: ReadonlySet<string>
+): RouteZoneStatus {
   const rewardItems = getRouteRewardItems(guide, snapshot);
   const missedItems = rewardItems.filter((item) => item.displayState === 'missed');
   const completed = rewardItems.length > 0 && rewardItems.every(isRouteRewardItemDone);
-  const visited = snapshot.config.visitedZones.some((entry) => entry.zoneId === guide.id);
+  const visited = visitedZoneIds
+    ? visitedZoneIds.has(guide.id)
+    : snapshot.config.visitedZones.some((entry) => entry.zoneId === guide.id);
 
   const status: RouteZoneStatus['status'] =
     snapshot.currentGuideEntry?.id === guide.id
@@ -319,6 +329,7 @@ export function getRouteActs(
   language: AppLanguage = 'ru'
 ): RouteActGroup[] {
   const grouped = new Map<string, RouteActGroup>();
+  const visitedZoneIds = new Set(snapshot.config.visitedZones.map((entry) => entry.zoneId));
 
   for (const guide of snapshot.guideEntries) {
     const key = guide.act === 'interlude' ? 'interlude' : `act-${guide.act}`;
@@ -335,7 +346,7 @@ export function getRouteActs(
       });
     }
 
-    grouped.get(key)!.zones.push(getRouteZoneStatus(guide, snapshot));
+    grouped.get(key)!.zones.push(getRouteZoneStatus(guide, snapshot, visitedZoneIds));
   }
 
   return [...grouped.values()].sort((left, right) => {

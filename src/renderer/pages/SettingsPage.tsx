@@ -1,4 +1,4 @@
-import { useEffect, useState, type KeyboardEvent, type ReactNode } from 'react';
+import { useEffect, useMemo, useState, type KeyboardEvent, type ReactNode } from 'react';
 import { useAppSnapshot, useLiveRunTimer } from '../hooks';
 import { useDocumentTitle, useI18n } from '../useI18n';
 import {
@@ -18,6 +18,26 @@ import { formatZoneMatcherReason, translateSystemText } from '../../i18n/runtime
 import { translate } from '../../i18n/translations';
 import { getAppThemeClassName } from '../theme';
 import { SettingsSelect } from '../settings/SettingsSelect';
+import {
+  buildOverlayPresetPatch,
+  formatOverlayPresetLabel,
+  formatOverlayPresetState,
+  formatOverlayPresetTitle,
+  getMatchingOverlayPreset,
+  OVERLAY_PRESET_IDS,
+  type OverlayPresetId
+} from '../overlay-presets';
+import {
+  getSettingsGroupLabel,
+  getSettingsSearchEmptyText,
+  getSettingsSearchLabel,
+  getSettingsSearchPlaceholder,
+  getSettingsSearchResult,
+  getSettingsSectionLabel,
+  SETTINGS_QUICK_LINKS,
+  type SettingsGroupId,
+  type SettingsSectionId
+} from '../settings-search';
 import type {
   AppTheme,
   AppLanguage,
@@ -70,20 +90,6 @@ const OVERLAY_SECTION_VISIBILITY_LABELS = [
   ['skip', 'settings.overlayShowSkip'],
   ['speedrun', 'settings.overlayShowSpeedrun'],
   ['important', 'settings.overlayShowImportant']
-] as const;
-
-const SETTINGS_QUICK_LINKS = [
-  { id: 'settings-first-run', labelKey: 'settings.firstRunTitle' },
-  { id: 'settings-language', labelKey: 'settings.languageTitle' },
-  { id: 'settings-updates', labelKey: 'settings.updateTitle' },
-  { id: 'settings-log-file', labelKey: 'settings.logFileTitle' },
-  { id: 'settings-timer', labelKey: 'settings.timerTitle' },
-  { id: 'settings-level-reminders', labelKey: 'settings.levelReminderTitle' },
-  { id: 'settings-overlay', labelKey: 'settings.overlayTitle' },
-  { id: 'settings-detail-panel', labelKey: 'settings.detailPanelTitle' },
-  { id: 'settings-local-progress', labelKey: 'settings.localProgressTitle' },
-  { id: 'settings-simulate', labelKey: 'settings.simulateTitle', devOnly: true },
-  { id: 'settings-developer', labelKey: 'settings.developerTitle', devOnly: true }
 ] as const;
 
 function hotkeyFromKeyboardEvent(event: KeyboardEvent<HTMLInputElement>): string | null {
@@ -259,6 +265,7 @@ export function SettingsPage() {
   const [autoUpdateState, setAutoUpdateState] = useState<AutoUpdateState | null>(null);
   const [isCheckingUpdates, setIsCheckingUpdates] = useState(false);
   const [updateActionBusy, setUpdateActionBusy] = useState<'download' | 'install' | 'release' | null>(null);
+  const [settingsSearchQuery, setSettingsSearchQuery] = useState('');
 
   useDocumentTitle(t('titles.settings'));
 
@@ -326,12 +333,32 @@ export function SettingsPage() {
     snapshot?.config.runTimerSettings.leagueStartTimeLabel
   ]);
 
+  const zoneOptions = useMemo(
+    () => (snapshot?.guideEntries ?? []).map((entry) => ({
+      value: entry.id,
+      label: formatZoneOption(entry, language)
+    })),
+    [snapshot?.guideEntries, language]
+  );
+  const settingsSearch = useMemo(
+    () => getSettingsSearchResult(settingsSearchQuery, SHOW_DEVELOPER_SETTINGS),
+    [settingsSearchQuery]
+  );
+  const settingsQuickLinks = useMemo(
+    () => SETTINGS_QUICK_LINKS.filter((entry) => settingsSearch.visibleSectionIds.has(entry.id)),
+    [settingsSearch.visibleSectionIds]
+  );
+
   if (!snapshot) {
     return <div className="settings-shell">{t('settings.loading')}</div>;
   }
 
   const { config, currentGuideEntry, currentZone, runtime, activeLevelReminder } = snapshot;
   const appLanguage = language;
+  const isSettingsSectionVisible = (id: SettingsSectionId) => settingsSearch.visibleSectionIds.has(id);
+  const groupTitle = (groupId: SettingsGroupId) => settingsSearch.visibleGroupIds.has(groupId)
+    ? <h2 className="settings-task-group-title">{getSettingsGroupLabel(groupId, appLanguage)}</h2>
+    : null;
   const displayRunTimer = liveRunTimer.runTimer ?? config.runTimer;
   const currentGuide = currentGuideEntry;
   const activeLevelReminderView = getLevelReminderView(activeLevelReminder, appLanguage);
@@ -343,10 +370,8 @@ export function SettingsPage() {
   );
   const currentCountdownMs = liveRunTimer.countdownMs;
   const sceneName = getSceneDisplayName(snapshot, appLanguage);
-  const zoneOptions = snapshot.guideEntries.map((entry) => ({
-    value: entry.id,
-    label: formatZoneOption(entry, appLanguage)
-  }));
+  const activeOverlayPreset = getMatchingOverlayPreset(config);
+  const overlayPresetTitle = formatOverlayPresetTitle(appLanguage);
   const hasSelectedLogFile = Boolean(runtime.watchedLogPath ?? config.logFilePath);
   const logFileStatusText = !hasSelectedLogFile
     ? t('settings.logStatusPending')
@@ -391,8 +416,6 @@ export function SettingsPage() {
         : autoUpdateStatus === 'error'
         ? 'is-warning'
           : 'is-pending';
-  const settingsQuickLinks = SETTINGS_QUICK_LINKS.filter((entry) => !entry.devOnly || SHOW_DEVELOPER_SETTINGS);
-
   const runTask = async (name: string, action: () => Promise<unknown>) => {
     try {
       setBusy(name);
@@ -400,6 +423,12 @@ export function SettingsPage() {
     } finally {
       setBusy(null);
     }
+  };
+
+  const applyOverlayPreset = async (presetId: OverlayPresetId) => {
+    await runTask(`overlay-preset-${presetId}`, async () => {
+      await window.poe2Overlay.updateSettings(buildOverlayPresetPatch(presetId));
+    });
   };
 
 
@@ -677,13 +706,29 @@ export function SettingsPage() {
           <div className="settings-quick-link-grid">
             {settingsQuickLinks.map((entry) => (
               <a key={entry.id} className="settings-quick-link" href={`#${entry.id}`}>
-                {t(entry.labelKey)}
+                {getSettingsSectionLabel(entry.id, appLanguage)}
               </a>
             ))}
           </div>
+          <label className="settings-search-field">
+            <span>{getSettingsSearchLabel(appLanguage)}</span>
+            <input
+              type="search"
+              value={settingsSearchQuery}
+              placeholder={getSettingsSearchPlaceholder(appLanguage)}
+              onChange={(event) => setSettingsSearchQuery(event.target.value)}
+            />
+          </label>
         </nav>
 
-        <section id="settings-first-run" className="settings-card first-run-card">
+        {settingsSearch.isFiltering && settingsSearch.visibleSectionIds.size === 0 && (
+          <section className="settings-card settings-search-empty">
+            <p className="helper-text">{getSettingsSearchEmptyText(appLanguage)}</p>
+          </section>
+        )}
+
+        {groupTitle('first_run')}
+        <section id="settings-first-run" className="settings-card first-run-card" hidden={!isSettingsSectionVisible('settings-first-run')}>
           <div className="settings-card-header">
             <h2 className="settings-section-title">{t('settings.firstRunTitle')}</h2>
             <span className={`settings-status-pill ${logFileStatusTone}`}>{logFileStatusText}</span>
@@ -711,7 +756,7 @@ export function SettingsPage() {
           </div>
         </section>
 
-        <section id="settings-language" className="settings-card i18n-language-card" data-i18n-language-card="true">
+        <section id="settings-language" className="settings-card i18n-language-card" data-i18n-language-card="true" hidden={!isSettingsSectionVisible('settings-language')}>
           <h2 className="settings-section-title">{t('settings.languageTitle')}</h2>
           <p className="helper-text">{t('settings.languageDescription')}</p>
           <div className="settings-grid">
@@ -734,7 +779,7 @@ export function SettingsPage() {
           </div>
         </section>
 
-        <section id="settings-updates" className="settings-card">
+        <section id="settings-updates" className="settings-card" hidden={!isSettingsSectionVisible('settings-updates')}>
           <div className="settings-card-header">
             <div>
               <h2 className="settings-section-title">{t('settings.updateTitle')}</h2>
@@ -890,7 +935,8 @@ export function SettingsPage() {
             </section>
           )}
         </section>
-        <section id="settings-log-file" className="settings-card">
+        {groupTitle('log_detection')}
+        <section id="settings-log-file" className="settings-card" hidden={!isSettingsSectionVisible('settings-log-file')}>
           <h2 className="settings-section-title">{t('settings.logFileTitle')}</h2>
           <p className="helper-text">{t('settings.logFileDescription')}</p>
           <div className="value-box">{config.logFilePath ?? t('settings.logFileNotSelected')}</div>
@@ -919,7 +965,7 @@ export function SettingsPage() {
         </section>
 
         {SHOW_DEVELOPER_SETTINGS && (
-        <section className="settings-card">
+        <section id="settings-live-update" className="settings-card" hidden={!isSettingsSectionVisible('settings-live-update')}>
           <h2 className="settings-section-title">{t('settings.liveUpdateTitle')}</h2>
           <p className="helper-text">{t('settings.liveUpdateDescription')}</p>
           <textarea
@@ -963,7 +1009,8 @@ export function SettingsPage() {
 
         )}
 
-        <section id="settings-timer" className="settings-card">
+        {groupTitle('timer')}
+        <section id="settings-timer" className="settings-card" hidden={!isSettingsSectionVisible('settings-timer')}>
           <h2 className="settings-section-title">{t('settings.timerTitle')}</h2>
           <InfoGrid
             items={[
@@ -1068,7 +1115,7 @@ export function SettingsPage() {
           </div>
         </section>
 
-        <section id="settings-level-reminders" className="settings-card">
+        <section id="settings-level-reminders" className="settings-card" hidden={!isSettingsSectionVisible('settings-level-reminders')}>
           <h2 className="settings-section-title">{t('settings.levelReminderTitle')}</h2>
           <InfoGrid
             items={[
@@ -1106,9 +1153,39 @@ export function SettingsPage() {
           </div>
         </section>
 
-        <section id="settings-overlay" className="settings-card">
+        {groupTitle('overlay')}
+        <section id="settings-overlay" className="settings-card" hidden={!isSettingsSectionVisible('settings-overlay')}>
           <h2 className="settings-section-title">{t('settings.overlayTitle')}</h2>
           <p className="helper-text">{t('settings.overlayDescription')}</p>
+
+          <div className="settings-subsection overlay-presets-subsection">
+            <div className="settings-card-header settings-card-header-compact">
+              <div>
+                <h3>{overlayPresetTitle}</h3>
+                <p className="helper-text">{formatOverlayPresetState(activeOverlayPreset, appLanguage)}</p>
+              </div>
+            </div>
+            <div className="button-row overlay-preset-row" role="group" aria-label={overlayPresetTitle}>
+              {OVERLAY_PRESET_IDS.map((presetId) => {
+                const isActivePreset = activeOverlayPreset === presetId;
+
+                return (
+                  <button
+                    key={presetId}
+                    type="button"
+                    className={isActivePreset ? 'button-primary' : 'button-secondary'}
+                    aria-pressed={isActivePreset}
+                    disabled={busy !== null}
+                    onClick={() => {
+                      void applyOverlayPreset(presetId);
+                    }}
+                  >
+                    {formatOverlayPresetLabel(presetId, appLanguage)}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
 
           <div className="settings-grid">
             <label className="settings-field settings-field-full">
@@ -1241,23 +1318,6 @@ export function SettingsPage() {
           </div>
 
           <div className="settings-subsection">
-            <label className="toggle-card">
-              <input
-                type="checkbox"
-                checked={config.realtimePriorityEnabled}
-                onChange={(event) => {
-                  void window.poe2Overlay.updateSettings({
-                    realtimePriorityEnabled: event.target.checked
-                  });
-                }}
-              />
-              <span>{t('settings.realtimePriorityTitle')}</span>
-            </label>
-            <p className="helper-text">{t('settings.realtimePriorityDescription')}</p>
-            <p className="helper-text">{t('settings.realtimePriorityWarning')}</p>
-          </div>
-
-          <div className="settings-subsection">
             <h3 className="settings-subtitle">{t('settings.overlayShowTitle')}</h3>
             <div className="checkbox-grid">
               {OVERLAY_SECTION_VISIBILITY_LABELS.map(([key, labelKey]) => (
@@ -1357,7 +1417,7 @@ export function SettingsPage() {
           </div>
         </section>
 
-        <section id="settings-detail-panel" className="settings-card">
+        <section id="settings-detail-panel" className="settings-card" hidden={!isSettingsSectionVisible('settings-detail-panel')}>
           <h2 className="settings-section-title">{t('settings.detailPanelTitle')}</h2>
           <p className="helper-text">{t('settings.detailPanelDescription')}</p>
 
@@ -1392,8 +1452,9 @@ export function SettingsPage() {
           </div>
         </section>
 
+        {groupTitle('troubleshooting')}
         {SHOW_DEVELOPER_SETTINGS && (
-        <section id="settings-simulate" className="settings-card">
+        <section id="settings-simulate" className="settings-card" hidden={!isSettingsSectionVisible('settings-simulate')}>
           <h2 className="settings-section-title">{t('settings.simulateTitle')}</h2>
           <p className="helper-text">{t('settings.simulateDescription')}</p>
           <div className="settings-grid settings-grid-actions">
@@ -1428,7 +1489,7 @@ export function SettingsPage() {
 
         )}
 
-        <section id="settings-local-progress" className="settings-card danger-card">
+        <section id="settings-local-progress" className="settings-card danger-card" hidden={!isSettingsSectionVisible('settings-local-progress')}>
           <h2 className="settings-section-title">{t('settings.localProgressTitle')}</h2>
           <InfoGrid
             items={[
@@ -1453,8 +1514,29 @@ export function SettingsPage() {
           </div>
         </section>
 
+        {groupTitle('advanced')}
+        <section id="settings-advanced" className="settings-card" hidden={!isSettingsSectionVisible('settings-advanced')}>
+          <h2 className="settings-section-title">{getSettingsSectionLabel('settings-advanced', appLanguage)}</h2>
+          <p className="helper-text">{t('settings.realtimePriorityDescription')}</p>
+          <div className="settings-subsection">
+            <label className="toggle-card">
+              <input
+                type="checkbox"
+                checked={config.realtimePriorityEnabled}
+                onChange={(event) => {
+                  void window.poe2Overlay.updateSettings({
+                    realtimePriorityEnabled: event.target.checked
+                  });
+                }}
+              />
+              <span>{t('settings.realtimePriorityTitle')}</span>
+            </label>
+            <p className="helper-text">{t('settings.realtimePriorityWarning')}</p>
+          </div>
+        </section>
+
         {SHOW_DEVELOPER_SETTINGS && (
-          <section id="settings-developer" className="settings-card">
+          <section id="settings-developer" className="settings-card" hidden={!isSettingsSectionVisible('settings-developer')}>
             <h2 className="settings-section-title">{t('settings.developerTitle')}</h2>
             <p className="helper-text">{t('settings.developerDescription')}</p>
             <div className="checkbox-grid">

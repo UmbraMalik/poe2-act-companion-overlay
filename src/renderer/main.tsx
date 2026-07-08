@@ -15,6 +15,12 @@ type RendererPage =
 
 type PageLoader = () => Promise<ComponentType>;
 
+declare global {
+  interface Window {
+    __POE2_RENDERER_PAGE__?: string;
+  }
+}
+
 const pageLoaders: Record<RendererPage, PageLoader> = {
   overlay: async () => (await import('./pages/OverlayPage')).OverlayPage,
   settings: async () => (await import('./pages/SettingsPage')).SettingsPage,
@@ -47,9 +53,36 @@ const CLICK_FEEDBACK_BURST_CLASS = 'click-feedback-burst';
 const CLICK_FEEDBACK_ACTIVE_CLASS = 'is-click-feedback-active';
 const clickFeedbackTimers = new WeakMap<HTMLElement, number>();
 
+function getRendererPageCandidate(value: string | null | undefined): RendererPage | null {
+  const normalized = String(value ?? '').trim().toLowerCase().replace(/\.html$/, '');
+
+  return normalized && normalized in pageLoaders ? (normalized as RendererPage) : null;
+}
+
+function getRendererPageFromLocation(): RendererPage | null {
+  const params = new URLSearchParams(window.location.search);
+  const searchPage = getRendererPageCandidate(params.get('page'));
+
+  if (searchPage) {
+    return searchPage;
+  }
+
+  const hashPage = getRendererPageCandidate(window.location.hash.replace(/^#\/?/, ''));
+
+  if (hashPage) {
+    return hashPage;
+  }
+
+  const pathPage = getRendererPageCandidate(window.location.pathname.split('/').pop());
+
+  return pathPage;
+}
+
 function getRendererPage(): RendererPage {
-  const page = document.body.dataset.page;
-  return page && page in pageLoaders ? (page as RendererPage) : 'overlay';
+  const explicitPage = getRendererPageCandidate(window.__POE2_RENDERER_PAGE__);
+  const bodyPage = getRendererPageCandidate(document.body.dataset.page);
+
+  return explicitPage ?? bodyPage ?? getRendererPageFromLocation() ?? 'overlay';
 }
 
 function getClickFeedbackTarget(event: PointerEvent): HTMLElement | null {

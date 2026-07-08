@@ -115,6 +115,8 @@
 .companion-page .summary-stat,
 .companion-page .summary-compare-act-pill,
 .companion-page .summary-history-row,
+.companion-page .run-history-detail-metrics > div,
+.companion-page .run-history-detail-table-row,
 .companion-page .act-split-row,
 .companion-page .summary-act-breakdown-row,
 .companion-page .reminder-item,
@@ -306,6 +308,26 @@
     rgba(0, 0, 0, 0.08) !important;
 }
 
+.companion-page .bonus-detected-line.is-manual {
+  color: rgba(255, 220, 150, 0.88) !important;
+}
+
+.companion-page .bonus-detected-line.is-log {
+  color: rgba(148, 231, 168, 0.86) !important;
+}
+
+.companion-page .bonus-detected-line.is-log_reward_line {
+  color: rgba(148, 231, 168, 0.86) !important;
+}
+
+.companion-page .bonus-detected-line.is-context {
+  color: rgba(156, 204, 255, 0.84) !important;
+}
+
+.companion-page .bonus-detected-line.is-unknown {
+  color: rgba(190, 182, 205, 0.78) !important;
+}
+
 .companion-page .helper-text,
 .companion-page .route-empty-note,
 .companion-page .route-more-note,
@@ -314,6 +336,9 @@
 .companion-page .summary-stat small,
 .companion-page .summary-history-main span,
 .companion-page .summary-history-stats span,
+.companion-page .run-history-detail-metrics span,
+.companion-page .run-history-detail-table-head,
+.companion-page .run-history-detail-table-row small,
 .companion-page .act-split-total,
 .companion-page .timer-cockpit-details small {
   color: var(--companion-muted) !important;
@@ -436,6 +461,7 @@
 .theme-dark-fantasy.companion-page .summary-longest-card,
 .theme-dark-fantasy.companion-page .summary-compare-panel,
 .theme-dark-fantasy.companion-page .summary-history-panel,
+.theme-dark-fantasy.companion-page .run-history-detail-card,
 .theme-dark-fantasy.companion-page .summary-act-breakdown-panel,
 .theme-dark-fantasy.companion-page .summary-support-grid > .companion-block,
 .theme-dark-fantasy.companion-page .summary-breakdown-grid > .companion-block {
@@ -451,6 +477,8 @@
 
 .theme-dark-fantasy.companion-page .companion-summary-layout .longest-zone-list li,
 .theme-dark-fantasy.companion-page .summary-history-row,
+.theme-dark-fantasy.companion-page .run-history-detail-metrics > div,
+.theme-dark-fantasy.companion-page .run-history-detail-table-row,
 .theme-dark-fantasy.companion-page .summary-compare-act-pill,
 .theme-dark-fantasy.companion-page .summary-act-breakdown-row {
   border-color: rgba(190, 162, 255, 0.14) !important;
@@ -653,4 +681,369 @@
 
 .companion-page.fx-subtle .route-overview-card.status-current::after {
   animation: none !important;
+}
+
+/* Route tab polish: compact controls, readable reward context, and honest bonus state. */
+.companion-page .route-polish-layout {
+  grid-template-rows: auto auto minmax(0, 1fr) !important;
+  gap: 10px !important;
+}
+
+.companion-page .route-polish-layout .companion-route-toolbar {
+  grid-template-columns: minmax(0, 1fr) minmax(330px, 420px) !important;
+  align-items: start !important;
+  gap: 12px !important;
+  min-height: 0 !important;
+  padding: 12px 14px !important;
+}
+
+.companion-page .route-toolbar-acts {
+  display: grid;
+  grid-template-rows: auto auto auto;
+  gap: 9px;
+  min-width: 0;
+  align-content: start;
+  padding: 0;
+}
+
+.companion-page .route-toolbar-heading,
+.companion-page .route-card-bonus-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-width: 0;
+}
+
+.companion-page .route-toolbar-heading span,
+.companion-page .route-card-bonus-heading span {
+  color: var(--companion-title);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.companion-page .route-toolbar-heading small,
+.companion-page .route-card-bonus-heading strong {
+  min-width: 0;
+  color: var(--companion-muted);
+  font-size: 11px;
+  font-weight: 900;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.companion-page .route-polish-layout .companion-route-toolbar .companion-tab-row {
+  align-self: start;
+  grid-template-columns: repeat(5, minmax(86px, 1fr)) !important;
+  gap: 7px !important;
+}
+
+.companion-page .route-toolbar-context {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  min-width: 0;
+}
+
+.companion-page .route-toolbar-context span {
+  min-width: 0;
+  padding: 9px 10px;
+  border: 1px solid rgba(205, 220, 237, 0.08);
+  border-radius: 12px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.012)),
+    rgba(0, 0, 0, 0.10);
+}
+
+.companion-page .route-toolbar-context small,
+.companion-page .route-toolbar-context strong {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.companion-page .route-toolbar-context small {
+  margin-bottom: 4px;
+  color: var(--companion-muted);
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+}
+
+.companion-page .route-toolbar-context strong {
+  color: var(--companion-text);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.companion-page .route-polish-layout .companion-route-toolbar button {
+  min-height: 34px !important;
+  padding-inline: 10px !important;
+}
+
+.companion-page .route-polish-layout .route-tab-tools {
+  min-width: 0 !important;
+  max-width: none !important;
+  align-content: start;
+  gap: 6px !important;
+  padding: 8px;
+  border: 1px solid var(--companion-border);
+  border-radius: 13px;
+  background:
+    radial-gradient(circle at 100% 0, var(--companion-blue-soft), transparent 38%),
+    rgba(0, 0, 0, 0.10);
+}
+
+.companion-page .route-polish-layout .route-search-field {
+  gap: 4px !important;
+}
+
+.companion-page .route-polish-layout .route-search-field input {
+  min-height: 32px !important;
+}
+
+.companion-page .route-polish-layout .route-filter-row {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px !important;
+}
+
+.companion-page .route-polish-layout .route-filter-row button,
+.companion-page .route-polish-layout .route-jump-row button {
+  flex: initial !important;
+  min-height: 30px !important;
+}
+
+.companion-page .route-polish-layout .route-filter-summary {
+  width: fit-content;
+  max-width: 100%;
+  padding: 4px 8px;
+  border: 1px solid rgba(205, 220, 237, 0.08);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.025);
+  color: var(--companion-muted) !important;
+}
+
+.companion-page .route-polish-layout .route-tools-footer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(140px, 170px);
+  gap: 8px;
+  align-items: center;
+}
+
+.companion-page .route-polish-layout .route-jump-block {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 7px !important;
+}
+
+.companion-page .route-polish-layout .route-jump-title {
+  white-space: nowrap;
+}
+
+.companion-page .route-polish-layout .route-jump-row {
+  display: grid !important;
+  grid-template-columns: 1fr;
+}
+
+.companion-page .route-polish-layout .route-progress-rail-card {
+  gap: 8px !important;
+  padding: 12px 14px !important;
+}
+
+.companion-page .route-polish-layout .route-progress-rail-header strong {
+  color: var(--companion-text);
+  font-size: 15px;
+}
+
+.companion-page .route-polish-layout .route-progress-endpoints {
+  color: var(--companion-muted);
+  font-size: 11px;
+}
+
+.companion-page .route-polish-layout .companion-route-list-card {
+  gap: 10px !important;
+  padding: 14px !important;
+}
+
+.companion-page .route-polish-layout .route-overview-list.route-overview-grid {
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)) !important;
+  gap: 12px !important;
+}
+
+.companion-page .route-polish-layout .route-overview-list.route-overview-grid > .route-overview-card {
+  min-height: 0 !important;
+  padding: 12px 13px !important;
+}
+
+.companion-page .route-polish-layout .route-overview-card.has-route-bonuses {
+  border-color: rgba(241, 185, 106, 0.22) !important;
+  background:
+    radial-gradient(circle at 0 0, var(--companion-gold-soft), transparent 42%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.026), rgba(255, 255, 255, 0.008)),
+    rgba(0, 0, 0, 0.10) !important;
+}
+
+.companion-page .route-card-bonus-panel {
+  display: grid;
+  gap: 7px;
+  margin-top: 1px;
+  padding: 8px;
+  border: 1px solid rgba(241, 185, 106, 0.13);
+  border-radius: 12px;
+  background:
+    radial-gradient(circle at 0 0, rgba(241, 185, 106, 0.10), transparent 44%),
+    rgba(0, 0, 0, 0.12);
+}
+
+.companion-page .route-card-bonus-list {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.companion-page .route-card-bonus-list li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding: 6px 7px;
+  border: 1px solid rgba(205, 220, 237, 0.075);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.018);
+}
+
+.companion-page .route-card-bonus-list li.is-done {
+  border-color: rgba(122, 214, 144, 0.18);
+  background:
+    radial-gradient(circle at 0 0, var(--companion-green-soft), transparent 42%),
+    rgba(0, 0, 0, 0.08);
+}
+
+.companion-page .route-card-bonus-list li.is-pending {
+  border-color: rgba(241, 185, 106, 0.16);
+}
+
+.companion-page .route-card-bonus-marker {
+  width: 22px;
+  height: 22px;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid rgba(241, 185, 106, 0.28);
+  border-radius: 999px;
+  color: var(--companion-gold);
+  background: rgba(241, 185, 106, 0.10);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.companion-page .route-card-bonus-list li.is-done .route-card-bonus-marker {
+  border-color: rgba(122, 214, 144, 0.34);
+  color: rgba(156, 238, 176, 0.96);
+  background: var(--companion-green-soft);
+}
+
+.companion-page .route-card-bonus-copy {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.companion-page .route-card-bonus-copy strong {
+  color: var(--companion-text);
+  font-size: 12px;
+  line-height: 1.18;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.companion-page .route-card-bonus-copy small {
+  color: var(--companion-muted);
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.companion-page .route-card-bonus-state {
+  padding: 4px 7px;
+  border: 1px solid rgba(205, 220, 237, 0.08);
+  border-radius: 999px;
+  color: var(--companion-muted);
+  background: rgba(255, 255, 255, 0.020);
+  font-size: 10px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.companion-page .route-card-bonus-list li.is-done .route-card-bonus-state {
+  border-color: rgba(122, 214, 144, 0.18);
+  color: rgba(156, 238, 176, 0.88);
+  background: var(--companion-green-soft);
+}
+
+@media (max-width: 1180px) {
+  .companion-page .route-polish-layout .companion-route-toolbar {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .companion-page .route-toolbar-context,
+  .companion-page .route-polish-layout .route-filter-row,
+  .companion-page .route-polish-layout .route-tools-footer,
+  .companion-page .route-polish-layout .route-jump-row,
+  .companion-page .route-card-bonus-list li {
+    grid-template-columns: 1fr !important;
+  }
+
+  .companion-page .route-polish-layout .route-jump-block {
+    grid-template-columns: 1fr !important;
+  }
+
+  .companion-page .route-card-bonus-marker,
+  .companion-page .route-card-bonus-state {
+    justify-self: start;
+  }
+}
+
+/* Route tab quick jump layout guard: keeps the single jump action readable in compact toolbars. */
+.companion-page .route-polish-layout .route-jump-block {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  align-items: stretch !important;
+  gap: 5px !important;
+  min-width: 0 !important;
+}
+
+.companion-page .route-polish-layout .route-jump-title {
+  display: block !important;
+  white-space: nowrap !important;
+}
+
+.companion-page .route-polish-layout .route-jump-row {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  justify-content: stretch !important;
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+.companion-page .route-polish-layout .route-jump-row button {
+  width: 100% !important;
+  min-width: 0 !important;
+  white-space: nowrap !important;
 }

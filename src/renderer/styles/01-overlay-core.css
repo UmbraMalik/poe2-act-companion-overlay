@@ -427,6 +427,55 @@ textarea,
   box-shadow: none;
 }
 
+.overlay-log-health-pill {
+  width: fit-content;
+  max-width: 100%;
+  min-height: 22px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  border: 1px solid rgba(205, 220, 237, 0.18);
+  border-radius: 999px;
+  background: rgba(8, 10, 13, 0.28);
+  color: rgba(238, 243, 248, 0.78);
+  font-family: var(--font-ui);
+  font-size: 10px;
+  line-height: 1.25;
+}
+
+.overlay-log-health-pill strong {
+  flex: 0 0 auto;
+  color: #f4ead8;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.overlay-log-health-pill span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.overlay-log-health-pill.is-ok {
+  border-color: rgba(116, 206, 139, 0.32);
+  background: rgba(54, 132, 82, 0.14);
+  color: rgba(221, 248, 228, 0.86);
+}
+
+.overlay-log-health-pill.is-neutral {
+  border-color: rgba(127, 184, 237, 0.24);
+  background: rgba(66, 110, 160, 0.13);
+  color: rgba(221, 238, 255, 0.84);
+}
+
+.overlay-log-health-pill.is-warning {
+  border-color: rgba(255, 185, 106, 0.38);
+  background: rgba(170, 92, 42, 0.16);
+  color: rgba(255, 227, 179, 0.88);
+}
+
 .overlay-movement-hint {
   margin: 5px 0 0;
   color: rgba(255, 231, 191, 0.74);

@@ -14,14 +14,20 @@ import {
   getRouteProgressState,
   getSceneDisplayName,
   getUpcomingVendorReminders,
-  getXpStatus
+  getXpStatus, type ActTimeRow
 } from '../companion-helpers';
 import { formatDuration, formatRecommendedLevelLabel } from '../utils';
-import type { ActTimeRow } from '../companion-helpers';
 import { getCampaignBonusView, getGuideView, translateDataText } from '../../i18n/data';
+import { getCampaignBonusProvenanceView } from '../../shared/campaign-bonus-provenance';
 import { translate } from '../../i18n/translations';
 import { isEndgameT15Act } from '../../shared/timers';
 import { getGuideUpdateClassName } from '../guide-update-highlights';
+import { getZoneRecognitionView } from '../log-health';
+import { RunHistoryDetailPanel } from '../RunHistoryDetailPanel';
+import { getRunHistorySignature } from '../run-history-detail';
+import { RouteCardBonusPanel, getRouteCampaignBonusModels, type RouteCardBonusModel } from '../RouteCardBonuses';
+import { RouteTabControls } from '../RouteTabControls';
+import { filterRouteCards, getRouteFilterEmptyText, type RouteFilterMode } from '../route-tab-search';
 import type { AppLanguage, CampaignBonusDefinition, CampaignBonusProgress, GuideEntry, RunSummary, SavedRunHistoryEntry, ZoneAct } from '../../shared/types';
 
 type CompanionTab = 'zone' | 'route' | 'timer' | 'actTimes' | 'reminders' | 'bonuses' | 'summary';
@@ -42,9 +48,25 @@ type TimerSplitFeedbackState = {
 };
 
 type RouteActOverview = ReturnType<typeof getRouteActs>;
+type RouteZoneOverview = RouteActOverview[number]['zones'][number];
+type RouteCardModel = {
+  entry: RouteZoneOverview;
+  indexLabel: string;
+  visibleRouteLabels: string[];
+  hiddenRouteLabelsCount: number;
+  statusLabel: string | null;
+  routeCardTitle: string;
+  recommendedLevelLabel: string;
+  missedItemTexts: string[];
+  isRouteNext: boolean;
+  hasBonusRewards: boolean;
+  bonusRewards: RouteCardBonusModel[];
+  searchText: string;
+};
 
 const ROUTE_OVERVIEW_VISIBLE_ITEMS = 2;
 const TOTAL_CAMPAIGN_ACTS = 5;
+const EMPTY_CAMPAIGN_BONUS_PROGRESS: Record<string, CampaignBonusProgress> = {};
 
 function getRouteStatusLabel(
   status: 'current' | 'missed' | 'completed' | 'visited' | 'pending',
@@ -121,7 +143,6 @@ function formatRouteCardTitle(guide: GuideEntry, language: AppLanguage): string 
   return getGuideView(guide, language)?.zoneName ?? (language === 'en' ? guide.zone_en : guide.zone_ru);
 }
 
-
 function formatActTitle(act: ZoneAct | null, language: AppLanguage) {
   if (act === null) {
     return translate(language, 'companion.routeTitleFallback');
@@ -138,6 +159,46 @@ function formatActTitle(act: ZoneAct | null, language: AppLanguage) {
 
 function getRouteOverviewFromActs(routeActs: RouteActOverview, act: ZoneAct | null) {
   return routeActs.find((entry) => entry.act === act)?.zones ?? [];
+}
+
+function getRouteCardModels(
+  routeZones: RouteZoneOverview[],
+  snapshot: NonNullable<ReturnType<typeof useAppSnapshot>>,
+  language: AppLanguage
+): RouteCardModel[] {
+  return routeZones.map((entry, index) => {
+    const rewardLabels = getRequiredRewardLabelsForZone(entry.guide, snapshot, language);
+    const routeLabels = rewardLabels.length > 0
+      ? rewardLabels
+      : getRouteFallbackLabels(entry.guide, language);
+    const routeGuideView = getGuideView(entry.guide, language);
+    const missedItemTexts = entry.missedItems.slice(0, 2).map((item) => translateDataText(item.text, language));
+    const routeCardTitle = formatRouteCardTitle(entry.guide, language);
+    const recommendedLevelLabel = routeGuideView?.recommendedLevelLabel ?? formatRecommendedLevelLabel(entry.guide, language);
+    const bonusRewards = getRouteCampaignBonusModels(entry.guide, snapshot, language);
+    const hasBonusRewards = bonusRewards.length > 0;
+    const searchText = [
+      entry.guide.id, entry.guide.zone_ru, entry.guide.zone_en, ...(entry.guide.aliases ?? []),
+      formatActTitle(entry.guide.act, language), routeCardTitle, recommendedLevelLabel,
+      ...routeLabels, ...missedItemTexts,
+      ...bonusRewards.flatMap((bonus) => [bonus.title, bonus.source, bonus.categoryLabel])
+    ].join(' ');
+
+    return {
+      entry,
+      indexLabel: String(index + 1).padStart(2, '0'),
+      visibleRouteLabels: routeLabels.slice(0, ROUTE_OVERVIEW_VISIBLE_ITEMS),
+      hiddenRouteLabelsCount: Math.max(0, routeLabels.length - ROUTE_OVERVIEW_VISIBLE_ITEMS),
+      statusLabel: getRouteStatusLabel(entry.status, language),
+      routeCardTitle,
+      recommendedLevelLabel,
+      missedItemTexts,
+      isRouteNext: entry.status === 'pending' && routeZones[index - 1]?.status === 'current',
+      hasBonusRewards,
+      bonusRewards,
+      searchText
+    };
+  });
 }
 
 function formatRunStatus(status: string, language: AppLanguage) {
@@ -211,7 +272,6 @@ function renderActTimeTable(rows: ActTimeRow[], emptyMessage: string, language: 
     </div>
   );
 }
-
 
 function getCompletedActCount(rows: ActTimeRow[]): number {
   return rows.filter((row) => row.status === 'finished' && !isEndgameT15Act(row.act)).length;
@@ -319,7 +379,6 @@ function renderLongestZoneList(
   );
 }
 
-
 function formatSavedRunDate(timestamp: number, language: AppLanguage): string {
   return new Date(timestamp).toLocaleString(language === 'en' ? 'en-US' : 'ru-RU');
 }
@@ -415,7 +474,6 @@ function renderActTimesDashboard(
     </div>
   );
 }
-
 
 function renderActBreakdownTable(
   rows: ActTimeRow[],
@@ -516,53 +574,6 @@ function renderBestComparison(
   );
 }
 
-function renderCompactRunHistory(
-  history: SavedRunHistoryEntry[],
-  language: AppLanguage,
-  onRestore: (runId: string) => void,
-  onDelete: (runId: string) => void
-) {
-  return (
-    <section className="companion-block summary-history-panel">
-      <div className="summary-section-heading">
-        <h3>{translate(language, 'companion.runHistoryTitle')}</h3>
-        <span>{translate(language, 'companion.runHistoryCount', { count: history.length })}</span>
-      </div>
-      {history.length === 0 ? (
-        <p className="helper-text">{translate(language, 'companion.runHistoryEmpty')}</p>
-      ) : (
-        <div className="summary-history-list">
-          {history.slice(0, 8).map((entry) => {
-            const rows = getSavedRunActRows(entry);
-            const longestZone = entry.longestZones[0] ?? null;
-            return (
-              <article key={entry.id} className="summary-history-row">
-                <div className="summary-history-main">
-                  <strong>{entry.label || translate(language, 'companion.savedRunFallback')}</strong>
-                  <span>{formatSavedRunDate(entry.savedAt, language)}</span>
-                </div>
-                <div className="summary-history-stats">
-                  <span><b>{formatDuration(entry.totalElapsedMs)}</b></span>
-                  <span>{getCompletedActCount(rows)} / {TOTAL_CAMPAIGN_ACTS}</span>
-                  <span>{longestZone ? `${translateDataText(longestZone.zone_ru, language)} · ${formatDuration(longestZone.elapsedMs)}` : '—'}</span>
-                </div>
-                <div className="button-row summary-history-actions">
-                  <button type="button" className="button-secondary" onClick={() => onRestore(entry.id)}>
-                    {translate(language, 'companion.continueSavedRun')}
-                  </button>
-                  <button type="button" className="button-danger" onClick={() => onDelete(entry.id)}>
-                    {translate(language, 'companion.deleteSavedRun')}
-                  </button>
-                </div>
-              </article>
-            );
-          })}
-        </div>
-      )}
-    </section>
-  );
-}
-
 function renderStringSection(
   title: string,
   items: string[],
@@ -583,7 +594,6 @@ function renderStringSection(
     </section>
   );
 }
-
 
 function renderCompactReminderList(
   items: { id: string; level: number; title: string; items?: string[] }[],
@@ -663,7 +673,6 @@ function renderVendorCheckpointGrid(
     </div>
   );
 }
-
 
 function renderPowerSpikeTimeline(
   items: { id: string; level: number; title: string; items?: string[] }[],
@@ -785,7 +794,6 @@ function renderDetails(
   return null;
 }
 
-
 function formatBonusAct(act: ZoneAct, language: AppLanguage): string {
   return act === 'interlude'
     ? translate(language, 'companion.interludes')
@@ -901,7 +909,6 @@ function normalizeZoneBonusName(value: string | null | undefined): string {
     .replace(/\s+/g, ' ')
     .trim();
 }
-
 
 function getGuideCampaignBonusIds(guide: GuideEntry | null): Set<string> {
   const guideWithBonuses = guide as (GuideEntry & {
@@ -1132,6 +1139,8 @@ export function CompanionPage() {
   const [runSaveNotice, setRunSaveNotice] = useState<string | null>(null);
   const [runConfirmDialog, setRunConfirmDialog] = useState<RunConfirmDialog>(null);
   const [focusedRouteZoneId, setFocusedRouteZoneId] = useState<string | null>(null);
+  const [routeSearchQuery, setRouteSearchQuery] = useState('');
+  const [routeFilterMode, setRouteFilterMode] = useState<RouteFilterMode>('all');
   const [bonusFeedback, setBonusFeedback] = useState<BonusFeedbackState | null>(null);
   const [timerSplitFeedback, setTimerSplitFeedback] = useState<TimerSplitFeedbackState | null>(null);
   const focusedRouteZoneTimeoutRef = useRef<number | null>(null);
@@ -1139,6 +1148,10 @@ export function CompanionPage() {
   const runSaveNoticeTimeoutRef = useRef<number | null>(null);
   const timerSplitFeedbackTimeoutRef = useRef<number | null>(null);
   const previousActSplitRef = useRef<{ act: ZoneAct | null; elapsedMs: number | null } | null>(null);
+  const stableRunHistoryRef = useRef<{ signature: string; history: SavedRunHistoryEntry[] }>({
+    signature: '',
+    history: []
+  });
 
   useDocumentTitle(t('titles.companion'));
 
@@ -1174,16 +1187,21 @@ export function CompanionPage() {
       snapshot?.config.zoneProgress,
       snapshot?.config.visitedZones,
       snapshot?.currentGuideEntry?.id,
-      snapshot?.currentGuideEntry?.act,
-      snapshot?.currentZone.actHint,
       language
     ]
   );
-  const selectedRouteAct = selectedAct ?? nowAct;
+  const selectedRouteAct = routeFilterMode === 'current_act' || routeFilterMode === 'current_zone' ? nowAct : selectedAct ?? nowAct;
   const routeZones = useMemo(
     () => getRouteOverviewFromActs(routeActs, selectedRouteAct),
     [routeActs, selectedRouteAct]
   );
+  const routeCardModels = useMemo(
+    () => snapshot ? getRouteCardModels(routeZones, snapshot, language) : [],
+    [routeZones, snapshot?.campaignBonuses, snapshot?.config.campaignBonusProgress, snapshot?.config.zoneProgress, language]
+  );
+  const visibleRouteCardModels = useMemo(() => (
+    filterRouteCards(routeCardModels, { filterMode: routeFilterMode, query: routeSearchQuery })
+  ), [routeCardModels, routeFilterMode, routeSearchQuery]);
   const xpStatus = useMemo(
     () => snapshot ? getXpStatus(snapshot, language) : null,
     [snapshot?.config.currentLevel, snapshot?.currentGuideEntry?.id, language]
@@ -1225,12 +1243,22 @@ export function CompanionPage() {
     () => getLongestZones(snapshot?.config.zoneTimeHistory ?? []),
     [snapshot?.config.zoneTimeHistory]
   );
-  const campaignBonusProgress: Record<string, CampaignBonusProgress> = snapshot?.config.campaignBonusProgress ?? {};
+  const campaignBonusProgress: Record<string, CampaignBonusProgress> =
+    snapshot?.config.campaignBonusProgress ?? EMPTY_CAMPAIGN_BONUS_PROGRESS;
   const campaignBonusTotals = useMemo(
     () => getCampaignBonusTotals(snapshot?.campaignBonuses ?? [], campaignBonusProgress),
     [snapshot?.campaignBonuses, campaignBonusProgress]
   );
-  const runHistory = snapshot?.config.runHistory ?? [];
+  const rawRunHistory = snapshot?.config.runHistory ?? [];
+  const runHistory = useMemo(() => {
+    const signature = getRunHistorySignature(rawRunHistory);
+    if (stableRunHistoryRef.current.signature === signature) {
+      return stableRunHistoryRef.current.history;
+    }
+
+    stableRunHistoryRef.current = { signature, history: rawRunHistory };
+    return rawRunHistory;
+  }, [rawRunHistory]);
   const currentZoneBonuses = useMemo(
     () => snapshot ? getCurrentZoneCampaignBonuses(snapshot) : [],
     [
@@ -1326,9 +1354,10 @@ export function CompanionPage() {
     () => getBestSavedRun(runHistory),
     [runHistory]
   );
+  const hasSnapshot = snapshot !== null;
 
   useEffect(() => {
-    if (!snapshot) {
+    if (!hasSnapshot) {
       return;
     }
 
@@ -1336,7 +1365,7 @@ export function CompanionPage() {
     if (selectedAct === null || !availableActs.has(selectedAct)) {
       setSelectedAct(nowAct);
     }
-  }, [snapshot, selectedAct, routeActs, nowAct]);
+  }, [hasSnapshot, selectedAct, routeActs, nowAct]);
 
   const splitSnapshotAct = snapshot ? getCurrentRouteAct(snapshot) : null;
   const splitNumericAct = typeof splitSnapshotAct === 'number' ? splitSnapshotAct : null;
@@ -1423,8 +1452,7 @@ export function CompanionPage() {
     return <div className="settings-shell">{t('companion.loading')}</div>;
   }
 
-  const { config, currentZone } =
-    snapshot;
+  const { config, currentZone } = snapshot;
   const activeDisplayRunTimer = displayRunTimer ?? config.runTimer;
   const activeXpStatus = xpStatus ?? getXpStatus(snapshot, language);
   const countdownMs = liveRunTimer.countdownMs;
@@ -1441,10 +1469,12 @@ export function CompanionPage() {
       currentZone.sceneKind === 'gameplay' ||
       currentZone.sceneKind === 'town'
     );
+  const zoneRecognition = getZoneRecognitionView(snapshot, language, snapshot.runtime.timerNowMs);
   const currentRouteIndex = selectedRouteProgress.currentIndex;
   const routeProgressTotal = selectedRouteProgress.total;
   const routeProgressCurrentCount = selectedRouteProgress.currentCount;
   const routeProgressPercent = selectedRouteProgress.percent;
+  const routeBonusZoneCount = routeCardModels.filter((model) => model.hasBonusRewards).length;
   const currentRouteZone = currentRouteIndex >= 0 ? routeZones[currentRouteIndex] : null;
   const nextRouteZone = selectedRouteProgress.isSelectedRouteActBeforeCurrent
     ? null
@@ -1513,11 +1543,11 @@ export function CompanionPage() {
     setRunConfirmDialog({ type: 'reset' });
   };
 
-  const restoreSavedRun = async (runId: string) => {
+  const restoreSavedRun = (runId: string) => {
     setRunConfirmDialog({ type: 'restore', runId });
   };
 
-  const deleteSavedRun = async (runId: string) => {
+  const deleteSavedRun = (runId: string) => {
     setRunConfirmDialog({ type: 'delete', runId });
   };
 
@@ -1543,33 +1573,30 @@ export function CompanionPage() {
     });
   };
 
-  const focusCurrentZone = () => {
-    if (nowAct !== null) {
-      setSelectedAct(nowAct);
+  const focusRouteZone = (zoneId: string | null, act: ZoneAct | null, filterMode: RouteFilterMode) => {
+    if (!zoneId) {
+      setFocusedRouteZoneId(null);
+      return;
     }
-
+    if (act !== null) {
+      setSelectedAct(act);
+    }
+    setRouteFilterMode(filterMode);
+    setRouteSearchQuery('');
     if (focusedRouteZoneTimeoutRef.current !== null) {
       window.clearTimeout(focusedRouteZoneTimeoutRef.current);
     }
 
     window.requestAnimationFrame(() => {
-      const currentZoneId = snapshot.currentGuideEntry?.id;
-      if (!currentZoneId) {
-        setFocusedRouteZoneId(null);
-        return;
-      }
-
-      setFocusedRouteZoneId(currentZoneId);
-      document.getElementById(`route-zone-${currentZoneId}`)?.scrollIntoView({
-        block: 'nearest',
-        behavior: 'smooth'
-      });
+      setFocusedRouteZoneId(zoneId);
+      document.getElementById(`route-zone-${zoneId}`)?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
       focusedRouteZoneTimeoutRef.current = window.setTimeout(() => {
         setFocusedRouteZoneId(null);
         focusedRouteZoneTimeoutRef.current = null;
       }, 1400);
     });
   };
+  const focusCurrentZone = () => focusRouteZone(snapshot.currentGuideEntry?.id ?? null, nowAct, 'current_zone');
 
   const zoneTab = activeTab === 'zone' ? (
     <div className="companion-tab-layout companion-zone-polished-layout">
@@ -1580,10 +1607,12 @@ export function CompanionPage() {
           <p className="helper-text">
             {guideView?.nextZoneName
               ? t('companion.routeNextPrefix', { text: guideView.nextZoneName })
-              : currentZone.sceneKind === 'town'
-                ? t('companion.sceneTownHub')
-                : t('companion.sceneGameplay')}
+              : zoneRecognition.companionSummary}
           </p>
+          <div className={`zone-health-row is-${zoneRecognition.tone}`}>
+            <strong>{zoneRecognition.label}</strong>
+            <span>{zoneRecognition.detail}</span>
+          </div>
         </div>
         <dl className="zone-hero-metrics">
           <div className="zone-metric-card is-accent">
@@ -1600,7 +1629,7 @@ export function CompanionPage() {
           </div>
           <div className="zone-metric-card">
             <dt>{t('companion.sceneLabel')}</dt>
-            <dd>{currentZone.sceneKind === 'town' ? t('companion.sceneTownHub') : t('companion.sceneGameplay')}</dd>
+            <dd>{zoneRecognition.sceneLabel}</dd>
           </div>
         </dl>
       </section>
@@ -1622,7 +1651,7 @@ export function CompanionPage() {
               </ul>
             ) : (
               <p className="helper-text">
-                {hasNoGuideForKnownZone ? t('companion.noGuideKnown') : t('overlay.emptyZoneNotes')}
+                {hasNoGuideForKnownZone ? zoneRecognition.noGuideText : t('overlay.emptyZoneNotes')}
               </p>
             )}
           </section>
@@ -1668,9 +1697,14 @@ export function CompanionPage() {
   const routeTab = activeTab === 'route' ? (
     <div className="companion-tab-layout route-polish-layout">
       <section className="companion-block companion-route-toolbar">
-        <div className="companion-tab-row">
-          {routeActs.map((entry) => {
-            const isSelectedAct = selectedAct === entry.act;
+        <div className="route-toolbar-acts">
+          <div className="route-toolbar-heading">
+            <span>{t('companion.routeActPicker')}</span>
+            <small>{formatActTitle(selectedRouteAct, language)}</small>
+          </div>
+          <div className="companion-tab-row">
+            {routeActs.map((entry) => {
+            const isSelectedAct = selectedRouteAct === entry.act;
             const isCurrentAct = nowAct === entry.act;
             const actButtonClassName = [
               isSelectedAct ? 'button-primary' : 'button-secondary',
@@ -1683,34 +1717,49 @@ export function CompanionPage() {
                 type="button"
                 className={actButtonClassName}
                 aria-current={isCurrentAct ? 'location' : undefined}
-                onClick={() => setSelectedAct(entry.act)}
+                onClick={() => {
+                  setRouteFilterMode('all'); setSelectedAct(entry.act);
+                }}
               >
                 {entry.label}
               </button>
             );
           })}
+          </div>
+          <div className="route-toolbar-context" aria-label={t('companion.routeToolbarContext')}>
+            <span>
+              <small>{t('companion.routeToolbarNow')}</small>
+              <strong>{currentRouteZone ? formatRouteCardTitle(currentRouteZone.guide, language) : routeProgressLeftLabel}</strong>
+            </span>
+            <span>
+              <small>{t('companion.routeToolbarProgress')}</small>
+              <strong>{t('companion.routeProgressComplete', {
+                current: Math.min(routeProgressTotal, routeProgressCurrentCount),
+                total: routeProgressTotal
+              })}</strong>
+            </span>
+            <span>
+              <small>{t('companion.routeToolbarBonusZones')}</small>
+              <strong>{routeBonusZoneCount}</strong>
+            </span>
+          </div>
         </div>
-        <div className="button-row">
-          <button type="button" className="button-secondary" onClick={focusCurrentZone}>
-            {t('companion.focusCurrentZone')}
-          </button>
-        </div>
+        <RouteTabControls language={language} filterMode={routeFilterMode} searchQuery={routeSearchQuery}
+          resultState={{ shownCount: visibleRouteCardModels.length, totalCount: routeCardModels.length, hasCurrentCard: routeCardModels.some((model) => model.entry.status === 'current') }}
+          canJumpCurrent={Boolean(snapshot.currentGuideEntry?.id && routeActs.some((entry) => entry.zones.some((zone) => zone.guide.id === snapshot.currentGuideEntry?.id)))}
+          onFilterChange={setRouteFilterMode} onSearchChange={setRouteSearchQuery} onJumpCurrent={focusCurrentZone} />
       </section>
 
       <section className="companion-block route-progress-rail-card" aria-label={t('companion.routeProgressTitle')}>
         <div className="route-progress-rail-header">
           <div>
             <p className="eyebrow">{t('companion.routeProgressTitle')}</p>
-            <strong>
-              {formatActTitle(selectedRouteAct, language)}
-            </strong>
+            <strong>{formatActTitle(selectedRouteAct, language)}</strong>
           </div>
-          <span>
-            {t('companion.routeProgressComplete', {
-              current: Math.min(routeProgressTotal, routeProgressCurrentCount),
-              total: routeProgressTotal
-            })}
-          </span>
+          <span>{t('companion.routeProgressComplete', {
+            current: Math.min(routeProgressTotal, routeProgressCurrentCount),
+            total: routeProgressTotal
+          })}</span>
         </div>
         <div className="route-progress-track" aria-hidden="true">
           <span style={{ width: `${routeProgressPercent}%` }} />
@@ -1724,53 +1773,44 @@ export function CompanionPage() {
       <section className="companion-block companion-route-list-card">
         <h3>{formatActTitle(selectedRouteAct, language)}</h3>
         <div className="route-overview-list route-overview-grid">
-          {routeZones.map((entry, index) => {
-            const rewardLabels = getRequiredRewardLabelsForZone(entry.guide, snapshot, language);
-            const fallbackLabels = rewardLabels.length > 0 ? [] : getRouteFallbackLabels(entry.guide, language);
-            const routeLabels = rewardLabels.length > 0 ? rewardLabels : fallbackLabels;
-            const visibleRouteLabels = routeLabels.slice(0, ROUTE_OVERVIEW_VISIBLE_ITEMS);
-            const hiddenRouteLabelsCount = Math.max(0, routeLabels.length - visibleRouteLabels.length);
-            const statusLabel = getRouteStatusLabel(entry.status, language);
-            const routeCardTitle = formatRouteCardTitle(entry.guide, language);
-            const routeGuideView = getGuideView(entry.guide, language);
+          {visibleRouteCardModels.map((model) => {
+            const { entry } = model;
             const isFocusedRouteZone = focusedRouteZoneId === entry.guide.id;
-            const isRouteNext = entry.status === 'pending' && routeZones[index - 1]?.status === 'current';
 
             return (
               <article
                 id={`route-zone-${entry.guide.id}`}
                 key={entry.guide.id}
-                className={`route-overview-card status-${entry.status}${isRouteNext ? ' is-route-next' : ''}${isFocusedRouteZone ? ' is-focus-flash' : ''}`}
+                className={`route-overview-card status-${entry.status}${model.isRouteNext ? ' is-route-next' : ''}${model.hasBonusRewards ? ' has-route-bonuses' : ''}${isFocusedRouteZone ? ' is-focus-flash' : ''}`}
               >
                 <div className="route-overview-header">
-                  <span className="route-step-index">{String(index + 1).padStart(2, '0')}</span>
-                  <strong className="route-zone-name">{routeCardTitle}</strong>
-                  <span className="route-rec-badge">{t('companion.routeCardLevel', { level: routeGuideView?.recommendedLevelLabel ?? formatRecommendedLevelLabel(entry.guide, language) })}</span>
-                  {statusLabel && <span className="route-state-pill">{statusLabel}</span>}
+                  <span className="route-step-index">{model.indexLabel}</span>
+                  <strong className="route-zone-name">{model.routeCardTitle}</strong>
+                  <span className="route-rec-badge">{t('companion.routeCardLevel', { level: model.recommendedLevelLabel })}</span>
+                  {model.statusLabel && <span className="route-state-pill">{model.statusLabel}</span>}
                 </div>
 
-                {visibleRouteLabels.length > 0 ? (
+                {model.visibleRouteLabels.length > 0 ? (
                   <>
                     <ul className="details-list compact-reward-list">
-                      {visibleRouteLabels.map((item) => (
+                      {model.visibleRouteLabels.map((item) => (
                         <li key={`${entry.guide.id}-${item}`}>{item}</li>
                       ))}
                     </ul>
-                    {hiddenRouteLabelsCount > 0 && (
-                      <p className="route-more-note">{t('companion.routeMore', { count: hiddenRouteLabelsCount })}</p>
+                    {model.hiddenRouteLabelsCount > 0 && (
+                      <p className="route-more-note">{t('companion.routeMore', { count: model.hiddenRouteLabelsCount })}</p>
                     )}
                   </>
                 ) : (
                   <p className="route-empty-note">{t('companion.routeEmpty')}</p>
                 )}
 
+                <RouteCardBonusPanel bonuses={model.bonusRewards} language={language} />
+
                 {entry.missedItems.length > 0 && (
                   <p className="warning-inline route-warning-inline">
                     {t('companion.missedInline', {
-                      items: entry.missedItems
-                        .slice(0, 2)
-                        .map((item) => translateDataText(item.text, language))
-                        .join(', ')
+                      items: model.missedItemTexts.join(', ')
                     })}
                   </p>
                 )}
@@ -1778,6 +1818,7 @@ export function CompanionPage() {
             );
           })}
         </div>
+        {visibleRouteCardModels.length === 0 && <p className="route-empty-note route-filter-empty">{getRouteFilterEmptyText({ language, filterMode: routeFilterMode, query: routeSearchQuery, shownCount: visibleRouteCardModels.length, totalCount: routeCardModels.length, hasCurrentCard: routeCardModels.some((model) => model.entry.status === 'current') })}</p>}
       </section>
     </div>
   ) : null;
@@ -1804,7 +1845,7 @@ export function CompanionPage() {
           <div>
             <span>{t('common.currentZone')}</span>
             <strong>{activeZoneLabel || '—'}</strong>
-            <small>{currentZone.sceneKind === 'town' ? t('companion.sceneTownHub') : t('companion.sceneGameplay')}</small>
+            <small>{zoneRecognition.sceneLabel}</small>
           </div>
           <div>
             <span>{t('companion.pauses')}</span>
@@ -2063,45 +2104,30 @@ export function CompanionPage() {
               <h3>{title}</h3>
               <div className="bonuses-list">
                 {bonuses.map((bonus) => {
-                  const progress = campaignBonusProgress[bonus.id];
-                  const done = Boolean(progress);
-                  const bonusView = getCampaignBonusView(bonus, language) ?? bonus;
-                  const isBonusFeedback = bonusFeedback?.id === bonus.id;
+                  const progress = campaignBonusProgress[bonus.id], done = Boolean(progress);
+                  const bonusView = getCampaignBonusView(bonus, language) ?? bonus, isBonusFeedback = bonusFeedback?.id === bonus.id;
+                  const provenance = getCampaignBonusProvenanceView(progress, language);
 
                   return (
                     <article
                       key={bonus.id}
                       className={`bonus-row ${done ? 'is-done' : 'is-pending'}${isBonusFeedback ? ` is-bonus-toggle-feedback is-feedback-${bonusFeedback.tone}` : ''}`}
                     >
-                      <div className="bonus-status-marker" aria-hidden="true">
-                        {done ? '✓' : '○'}
-                      </div>
+                      <div className="bonus-status-marker" aria-hidden="true">{done ? '✓' : '○'}</div>
                       <div className="bonus-main">
                         <div className="bonus-title-line">
                           <strong>{'displayTitle' in bonusView ? bonusView.displayTitle : bonus.title}</strong>
                           <span className="bonus-category-pill">{getBonusCategoryLabel(bonus.category, language)}</span>
-                          {bonus.needsVerification && (
-                            <span className="bonus-verify-pill">{t('companion.verify')}</span>
-                          )}
+                          {bonus.needsVerification && <span className="bonus-verify-pill">{t('companion.verify')}</span>}
                         </div>
-                        <p className="bonus-meta">
-                          {('displayZoneName' in bonusView ? bonusView.displayZoneName : bonus.zone_ru)} · {('displaySource' in bonusView ? bonusView.displaySource : bonus.source)}
-                        </p>
+                        <p className="bonus-meta">{('displayZoneName' in bonusView ? bonusView.displayZoneName : bonus.zone_ru)} · {('displaySource' in bonusView ? bonusView.displaySource : bonus.source)}</p>
                         {bonus.details.length > 0 && (
                           <ul className="bonus-details-list">
                             {(('displayDetails' in bonusView ? bonusView.displayDetails : bonus.details) as string[]).slice(0, 2).map((detail) => (
-                              <li key={`${bonus.id}-${detail}`}>{detail}</li>
-                            ))}
+                              <li key={`${bonus.id}-${detail}`}>{detail}</li>))}
                           </ul>
                         )}
-                        {progress && (
-                          <p className="bonus-detected-line">
-                            {t('companion.markedBy', {
-                              method: progress.detectedBy === 'manual' ? t('companion.markedManually') : t('companion.markedByLog'),
-                              time: new Date(progress.timestamp).toLocaleTimeString(language === 'en' ? 'en-US' : 'ru-RU')
-                            })}
-                          </p>
-                        )}
+                        {provenance && <p className={`bonus-detected-line is-${provenance.source}`}>{provenance.line}</p>}
                       </div>
                       <button
                         type="button"
@@ -2167,11 +2193,15 @@ export function CompanionPage() {
       <div className="summary-scroll-body summary-scroll-body--full">
         {summaryContent}
         {renderBestComparison(runHistory, currentRunElapsed, actTimeRows, language)}
-        {renderCompactRunHistory(runHistory, language, restoreSavedRun, deleteSavedRun)}
+        <RunHistoryDetailPanel
+          history={runHistory}
+          language={language}
+          onRestore={restoreSavedRun}
+          onDelete={deleteSavedRun}
+        />
       </div>
     </div>
   ) : null;
-
 
   const renderRunConfirmDialog = () => {
     if (!runConfirmDialog) {

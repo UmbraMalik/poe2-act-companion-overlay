@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useAppSnapshot } from '../hooks';
 import { useDocumentTitle, useI18n } from '../useI18n';
 import { getAppThemeClassName } from '../theme';
+import { DiagnosticsBundlePanel } from '../DiagnosticsBundlePanel';
 import {
   buildReportDiagnostics,
   buildReportTemplateBody,
@@ -93,6 +94,13 @@ export function ReportIssuePage() {
             </button>
           </div>
         </header>
+
+        <DiagnosticsBundlePanel
+          snapshot={snapshot}
+          appVersion={appVersion}
+          language={language}
+          diagnosticsText={diagnostics}
+        />
 
         <section className="settings-card report-card">
           <div className="settings-card-header report-card-header">

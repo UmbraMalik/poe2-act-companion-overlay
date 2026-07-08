@@ -106,23 +106,26 @@ export function runGetSnapshot(this: any) {
 
 export function runGetOverlaySnapshot(this: any) {
         const currentGuideEntry = this.currentZone.guide;
-        const currentZoneProgress = currentGuideEntry
-            ? this.getZoneProgress(currentGuideEntry.id)
-            : null;
         return {
             config: this.config,
             currentZone: this.currentZone,
             currentGuideEntry,
-            currentZoneProgress,
-            currentChecklist: buildChecklistViewItems(currentGuideEntry, currentZoneProgress ?? undefined),
-            guideEntries: currentGuideEntry ? [currentGuideEntry] : [],
             vendorCheckpoints: this.guideService.getVendorCheckpoints(),
             powerSpikes: this.guideService.getPowerSpikes(),
             campaignBonuses: this.campaignBonuses,
-            activeLevelReminder: this.getActiveLevelReminder(),
             runtime: {
                 ...this.runtime,
                 timerNowMs: Date.now()
+            }
+        };
+    }
+
+export function runGetUiPreferencesSnapshot(this: any) {
+        return {
+            config: {
+                appLanguage: this.config.appLanguage,
+                theme: this.config.theme,
+                visualFxIntensity: this.config.visualFxIntensity
             }
         };
     }
@@ -147,6 +150,7 @@ export function runFlushBroadcastState(this: any) {
             win &&
             !win.isDestroyed() &&
             win.isVisible() &&
+            !win.webContents.isDestroyed() &&
             !win.webContents.isLoading()
         ));
         if (targetWindows.length === 0) {
@@ -154,13 +158,29 @@ export function runFlushBroadcastState(this: any) {
             return;
         }
         const overlayTargets = targetWindows.filter((win) => win === this.overlayWindow);
-        const appTargets = targetWindows.filter((win) => win !== this.overlayWindow);
+        const uiPreferencesTargets = targetWindows.filter((win) => (
+            win === this.infoWindow ||
+            win === this.communityWindow ||
+            win === this.supportWindow
+        ));
+        const appTargets = targetWindows.filter((win) => (
+            win !== this.overlayWindow &&
+            win !== this.infoWindow &&
+            win !== this.communityWindow &&
+            win !== this.supportWindow
+        ));
         const pendingSnapshot = this.pendingSnapshot;
         this.pendingSnapshot = null;
         if (overlayTargets.length > 0) {
             const overlaySnapshot = this.getOverlaySnapshot();
             for (const win of overlayTargets) {
                 win.webContents.send('app:state-changed', overlaySnapshot);
+            }
+        }
+        if (uiPreferencesTargets.length > 0) {
+            const uiPreferencesSnapshot = this.getUiPreferencesSnapshot();
+            for (const win of uiPreferencesTargets) {
+                win.webContents.send('app:ui-preferences-changed', uiPreferencesSnapshot);
             }
         }
         if (appTargets.length > 0) {

@@ -297,9 +297,15 @@ function normalizeCampaignBonusProgressEntry(value: unknown): CampaignBonusProgr
     return null;
   }
 
-  const detectedBy = value.detectedBy === 'log' || value.detectedBy === 'manual'
-    ? value.detectedBy
-    : null;
+  const detectedBy =
+    value.detectedBy === 'log' ||
+    value.detectedBy === 'manual' ||
+    value.detectedBy === 'context' ||
+    value.detectedBy === 'unknown'
+      ? value.detectedBy
+      : value.detectedBy === undefined
+        ? 'unknown'
+        : null;
   const timestamp = safeString(value.timestamp, null);
 
   if (!detectedBy || !timestamp) {

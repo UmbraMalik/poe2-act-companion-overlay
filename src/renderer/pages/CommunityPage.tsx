@@ -1,11 +1,11 @@
 import { COMMUNITY_LINKS } from '../../shared/community-links';
 import { getCommunityLinkView } from '../../i18n/data';
 import { useDocumentTitle, useI18n } from '../useI18n';
-import { useAppSnapshot } from '../hooks';
+import { useUiPreferencesSnapshot } from '../hooks';
 import { getAppThemeClassName } from '../theme';
 
 export function CommunityPage() {
-  const snapshot = useAppSnapshot();
+  const snapshot = useUiPreferencesSnapshot();
   const { t, language } = useI18n(snapshot?.config.appLanguage);
 
   useDocumentTitle(t('titles.community'));

@@ -222,7 +222,7 @@ export interface CampaignBonusDefinition {
 export interface CampaignBonusProgress {
   state: 'done';
   timestamp: string;
-  detectedBy: 'log' | 'manual';
+  detectedBy: 'log' | 'manual' | 'context' | 'unknown';
   logLine?: string;
 }
 
@@ -493,6 +493,15 @@ export interface AppSnapshot {
   runtime: RuntimeState;
 }
 
+export type OverlaySnapshot = Omit<
+  AppSnapshot,
+  'currentZoneProgress' | 'currentChecklist' | 'guideEntries' | 'activeLevelReminder'
+>;
+
+export interface UiPreferencesSnapshot {
+  config: Pick<AppConfig, 'appLanguage' | 'theme' | 'visualFxIntensity'>;
+}
+
 export interface GitHubReleaseAsset {
   name: string;
   browser_download_url: string;
@@ -638,8 +647,11 @@ export interface TimerDiagnosticsPayload {
 
 export interface ElectronApi {
   getSnapshot: () => Promise<AppSnapshot>;
-  getOverlaySnapshot: () => Promise<AppSnapshot>;
+  getOverlaySnapshot: () => Promise<OverlaySnapshot>;
+  getUiPreferencesSnapshot: () => Promise<UiPreferencesSnapshot>;
   getAppVersion: () => Promise<string>;
+  getDebugBundleLogTail: () => Promise<string[]>;
+  exportDebugBundle: (text: string) => Promise<boolean>;
   getCachedUpdateCheckResult: () => Promise<UpdateCheckResult | null>;
   getStartupUpdateInfo: () => Promise<UpdateInfo | null>;
   checkForUpdates: () => Promise<UpdateCheckResult>;
@@ -672,8 +684,8 @@ export interface ElectronApi {
   isTimerDiagnosticsEnabled: () => Promise<boolean>;
   sendTimerDiagnostics: (payload: TimerDiagnosticsPayload) => Promise<boolean>;
   getOverlayBounds: () => Promise<OverlayBounds | null>;
-  resizeOverlay: (width: number, height: number) => Promise<AppSnapshot>;
-  resizeOverlayHeight: (height: number, options?: { force?: boolean; allowBelowMinimum?: boolean }) => Promise<AppSnapshot>;
+  resizeOverlay: (width: number, height: number) => Promise<boolean>;
+  resizeOverlayHeight: (height: number, options?: { force?: boolean; allowBelowMinimum?: boolean }) => Promise<boolean>;
   setOverlayAutoResizeSuspended: (suspended: boolean) => Promise<boolean>;
   setOverlayDragActive: (active: boolean) => Promise<boolean>;
   setOverlayPosition: (x: number, y: number) => Promise<boolean>;
@@ -698,5 +710,6 @@ export interface ElectronApi {
   onRunTimerChanged: (callback: (runTimer: RunTimerState) => void) => () => void;
   onRunResetConfirmationRequested: (callback: () => void) => () => void;
   onTimerVisualTick: (callback: (payload: TimerVisualTickPayload) => void) => () => void;
-  onStateChanged: (callback: (snapshot: AppSnapshot) => void) => () => void;
+  onStateChanged: (callback: (snapshot: AppSnapshot | OverlaySnapshot) => void) => () => void;
+  onUiPreferencesChanged: (callback: (snapshot: UiPreferencesSnapshot) => void) => () => void;
 }

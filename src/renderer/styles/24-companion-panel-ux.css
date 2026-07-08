@@ -41,6 +41,51 @@
   font-size: 13px;
 }
 
+.companion-page .zone-health-row {
+  width: fit-content;
+  max-width: 100%;
+  min-height: 24px;
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 3px 8px;
+  border: 1px solid rgba(205, 220, 237, 0.14);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.025);
+  color: rgba(205, 220, 237, 0.78);
+  font-size: 11px;
+  line-height: 1.25;
+}
+
+.companion-page .zone-health-row strong {
+  color: #fff3d6;
+  font-weight: 900;
+}
+
+.companion-page .zone-health-row span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.companion-page .zone-health-row.is-ok {
+  border-color: rgba(116, 206, 139, 0.28);
+  background: rgba(54, 132, 82, 0.12);
+  color: rgba(221, 248, 228, 0.86);
+}
+
+.companion-page .zone-health-row.is-neutral {
+  border-color: rgba(127, 184, 237, 0.22);
+  background: rgba(66, 110, 160, 0.11);
+  color: rgba(221, 238, 255, 0.84);
+}
+
+.companion-page .zone-health-row.is-warning {
+  border-color: rgba(255, 185, 106, 0.34);
+  background: rgba(170, 92, 42, 0.14);
+  color: rgba(255, 227, 179, 0.88);
+}
+
 .companion-page .zone-hero-metrics {
   grid-template-columns: minmax(180px, 1.15fr) repeat(3, minmax(128px, 0.95fr));
   gap: 8px;
@@ -258,6 +303,70 @@
   box-shadow:
     inset 0 0 0 1px rgba(255, 232, 176, 0.12),
     0 10px 24px rgba(241, 185, 106, 0.12) !important;
+}
+
+.companion-page .route-tab-tools {
+  min-width: 280px;
+  max-width: 430px;
+  display: grid;
+  gap: 8px;
+}
+
+.companion-page .route-search-field {
+  display: grid;
+  gap: 5px;
+}
+
+.companion-page .route-search-field > span {
+  color: rgba(255, 220, 160, 0.86);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+}
+
+.companion-page .route-search-field input {
+  width: 100%;
+  min-height: 36px;
+  padding: 8px 10px;
+  color: rgba(238, 243, 248, 0.92);
+}
+
+.companion-page .route-filter-row,
+.companion-page .route-jump-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.companion-page .route-filter-summary,
+.companion-page .route-jump-title {
+  margin: 0;
+  color: rgba(207, 217, 226, 0.72);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.companion-page .route-jump-block {
+  display: grid;
+  gap: 5px;
+}
+
+.companion-page .route-jump-title {
+  color: rgba(255, 220, 160, 0.82);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.companion-page .route-filter-row button,
+.companion-page .route-jump-row button {
+  flex: 1 1 112px;
+  min-height: 32px;
+}
+
+.companion-page .route-filter-empty {
+  margin: 10px 0 0;
+  text-align: center;
 }
 
 .companion-page .companion-route-list-card {
@@ -988,6 +1097,11 @@
   gap: 8px;
 }
 
+.companion-page .run-history-detail-layout {
+  display: grid;
+  gap: 12px;
+}
+
 .companion-page .summary-history-row {
   display: grid;
   grid-template-columns: minmax(190px, 0.9fr) minmax(0, 1.6fr) auto;
@@ -997,6 +1111,13 @@
   border: 1px solid rgba(205, 220, 237, 0.070);
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.018);
+}
+
+.companion-page .summary-history-row.is-selected {
+  border-color: rgba(239, 196, 117, 0.34);
+  background:
+    linear-gradient(180deg, rgba(239, 196, 117, 0.070), rgba(255, 255, 255, 0.014)),
+    rgba(255, 255, 255, 0.020);
 }
 
 .companion-page .summary-history-main {
@@ -1036,9 +1157,102 @@
   justify-content: flex-end;
 }
 
+.companion-page .run-history-detail-card {
+  display: grid;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid rgba(205, 220, 237, 0.070);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.018);
+}
+
+.companion-page .run-history-detail-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+  gap: 8px;
+}
+
+.companion-page .run-history-detail-metrics > div {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+  padding: 9px 10px;
+  border: 1px solid rgba(205, 220, 237, 0.060);
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.016);
+}
+
+.companion-page .run-history-detail-metrics span,
+.companion-page .run-history-detail-table-head,
+.companion-page .run-history-detail-table-row small {
+  color: rgba(210, 224, 238, 0.70);
+  font-size: 12px;
+}
+
+.companion-page .run-history-detail-metrics strong {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #fff4d8;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+.companion-page .run-history-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.companion-page .run-history-detail-table {
+  min-width: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.companion-page .run-history-detail-table-head,
+.companion-page .run-history-detail-table-row {
+  display: grid;
+  grid-template-columns: minmax(96px, 1fr) 82px 64px 64px;
+  gap: 8px;
+  align-items: center;
+}
+
+.companion-page .run-history-detail-table-head {
+  padding: 0 2px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.companion-page .run-history-detail-table-row {
+  padding: 8px 9px;
+  border: 1px solid rgba(205, 220, 237, 0.060);
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.014);
+}
+
+.companion-page .run-history-detail-table-row strong,
+.companion-page .run-history-detail-table-row span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.companion-page .run-history-detail-table-row span,
+.companion-page .run-history-detail-table-row small {
+  font-variant-numeric: tabular-nums;
+}
+
 @media (max-width: 1180px) {
   .companion-page .companion-route-toolbar {
     grid-template-columns: 1fr;
+  }
+
+  .companion-page .route-tab-tools {
+    max-width: none;
   }
 
   .companion-page .companion-route-toolbar .button-row {
@@ -1107,10 +1321,13 @@
   .companion-page .timer-cockpit-details,
   .companion-page .timer-segment-list,
   .companion-page .summary-result-facts,
+  .companion-page .run-history-detail-grid,
   .companion-page .summary-act-breakdown-head,
   .companion-page .summary-act-breakdown-row,
   .companion-page .summary-history-row,
-  .companion-page .summary-history-stats {
+  .companion-page .summary-history-stats,
+  .companion-page .run-history-detail-table-head,
+  .companion-page .run-history-detail-table-row {
     grid-template-columns: 1fr;
   }
 

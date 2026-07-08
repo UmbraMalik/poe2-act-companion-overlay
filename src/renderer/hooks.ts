@@ -5,9 +5,11 @@ import {
 } from '../shared/timers';
 import type {
   AppSnapshot,
+  OverlaySnapshot,
   RunTimerSettings,
   RunTimerState,
   TimerDiagnosticsPayload,
+  UiPreferencesSnapshot,
   ZoneAct
 } from '../shared/types';
 import { getPreviewSnapshot } from './preview-snapshot';
@@ -26,10 +28,12 @@ export interface UseAppSnapshotOptions {
   initialSnapshot?: 'full' | 'overlay';
 }
 
+export function useAppSnapshot(options: UseAppSnapshotOptions & { initialSnapshot: 'overlay' }): OverlaySnapshot | null;
+export function useAppSnapshot(options?: UseAppSnapshotOptions): AppSnapshot | null;
 export function useAppSnapshot(options: UseAppSnapshotOptions = {}) {
   const enabled = options.enabled ?? true;
   const initialSnapshot = options.initialSnapshot ?? 'full';
-  const [snapshot, setSnapshot] = useState<AppSnapshot | null>(null);
+  const [snapshot, setSnapshot] = useState<AppSnapshot | OverlaySnapshot | null>(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -64,7 +68,7 @@ export function useAppSnapshot(options: UseAppSnapshotOptions = {}) {
       }
     });
 
-    let pendingSnapshot: AppSnapshot | null = null;
+    let pendingSnapshot: AppSnapshot | OverlaySnapshot | null = null;
     let pendingRenderTask: OverlayRenderTask | null = null;
     let snapshotReceivedCount = 0;
     let snapshotCommitCount = 0;
@@ -147,6 +151,52 @@ export function useAppSnapshot(options: UseAppSnapshotOptions = {}) {
       unsubscribe();
     };
   }, [enabled, initialSnapshot]);
+
+  return snapshot;
+}
+
+export function useUiPreferencesSnapshot() {
+  const [snapshot, setSnapshot] = useState<UiPreferencesSnapshot | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    const previewMode =
+      new URLSearchParams(window.location.search).get('preview') === '1';
+    const hasElectronApi =
+      typeof window !== 'undefined' &&
+      typeof window.poe2Overlay !== 'undefined';
+
+    if (previewMode || !hasElectronApi) {
+      const previewSnapshot = getPreviewSnapshot();
+      setSnapshot({
+        config: {
+          appLanguage: previewSnapshot.config.appLanguage,
+          theme: previewSnapshot.config.theme,
+          visualFxIntensity: previewSnapshot.config.visualFxIntensity
+        }
+      });
+      return () => {
+        isMounted = false;
+      };
+    }
+
+    void window.poe2Overlay.getUiPreferencesSnapshot().then((nextSnapshot) => {
+      if (isMounted) {
+        setSnapshot(nextSnapshot);
+      }
+    });
+
+    const unsubscribe = window.poe2Overlay.onUiPreferencesChanged((nextSnapshot) => {
+      if (isMounted) {
+        setSnapshot(nextSnapshot);
+      }
+    });
+
+    return () => {
+      isMounted = false;
+      unsubscribe();
+    };
+  }, []);
 
   return snapshot;
 }
