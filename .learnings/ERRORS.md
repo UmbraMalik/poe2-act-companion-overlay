@@ -63,3 +63,35 @@ When the same command is required for verification, rerun it with approved exter
 - **Notes**: `npm run test:regression` and `npm run build` passed with external execution.
 
 ---
+
+## [ERR-20260709-003] direct-tsc-not-in-path
+
+**Logged**: 2026-07-09T23:59:40+03:00
+**Priority**: low
+**Status**: resolved
+**Area**: tests
+
+### Summary
+Calling `tsc` directly from PowerShell can fail because the local binary is not on PATH.
+
+### Error
+```text
+tsc : The term 'tsc' is not recognized as the name of a cmdlet, function, script file, or operable program.
+```
+
+### Context
+- Command attempted: `tsc -p tsconfig.electron.json --noEmit`
+- The project build script still runs TypeScript successfully through npm.
+
+### Suggested Fix
+Prefer project scripts such as `npm run build`, or invoke the local binary through `npx tsc` / `node_modules/.bin/tsc` when a direct TypeScript check is needed.
+
+### Metadata
+- Reproducible: yes
+- Related Files: package.json, tsconfig.electron.json
+
+### Resolution
+- **Resolved**: 2026-07-09T23:59:40+03:00
+- **Notes**: `npm run build` passed and already includes `tsc -p tsconfig.electron.json`.
+
+---

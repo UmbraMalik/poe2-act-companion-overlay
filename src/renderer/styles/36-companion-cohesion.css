@@ -2088,6 +2088,96 @@ body.settings-window-resizing .settings-page:not(.companion-page) {
   scroll-margin-top: calc(var(--settings-quick-nav-offset, 220px) + 24px) !important;
 }
 
+@media (max-width: 640px) {
+  .settings-page:not(.companion-page) {
+    padding: 10px;
+    border-radius: 20px;
+    clip-path: inset(0 round 20px);
+  }
+
+  .settings-page:not(.companion-page)::after {
+    border-radius: 19px;
+  }
+
+  .settings-page:not(.companion-page) .settings-header.window-drag-strip {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 16px;
+  }
+
+  .settings-page:not(.companion-page) .settings-header-copy {
+    min-width: 0;
+  }
+
+  .settings-page:not(.companion-page) .settings-header-copy h1 {
+    font-size: 22px;
+    line-height: 1.1;
+  }
+
+  .settings-page:not(.companion-page) .settings-header > .button-secondary {
+    align-self: flex-start;
+    min-width: 112px;
+    min-height: 36px;
+    padding: 0 14px;
+  }
+
+  .settings-page:not(.companion-page) .settings-shell {
+    gap: 8px;
+    padding: 0 4px 12px 0;
+  }
+
+  .settings-page:not(.companion-page) .settings-card {
+    padding: 12px;
+    border-radius: 14px;
+  }
+
+  .settings-page:not(.companion-page) .settings-quick-nav {
+    --settings-quick-nav-offset: 170px;
+    top: 4px;
+    gap: 6px;
+    padding-block: 8px;
+  }
+
+  .settings-page:not(.companion-page) .settings-quick-link-grid {
+    grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+    gap: 6px;
+  }
+
+  .settings-page:not(.companion-page) .settings-quick-link {
+    min-height: 30px;
+    padding: 6px 8px;
+    font-size: 10px;
+  }
+}
+
+@media (max-height: 560px) {
+  .settings-page:not(.companion-page) {
+    gap: 8px;
+    padding: 10px 12px 12px;
+  }
+
+  .settings-page:not(.companion-page) .settings-header.window-drag-strip {
+    min-height: 0;
+    padding: 9px 14px;
+  }
+
+  .settings-page:not(.companion-page) .settings-shell {
+    gap: 8px;
+  }
+
+  .settings-page:not(.companion-page) .settings-card {
+    padding-block: 12px;
+  }
+
+  .settings-page:not(.companion-page) .settings-quick-nav {
+    --settings-quick-nav-offset: 170px;
+    top: 4px;
+    padding-block: 8px;
+  }
+}
+
 .companion-page .bonuses-tab-layout {
   display: grid !important;
   grid-template-rows: auto minmax(0, 1fr) !important;
