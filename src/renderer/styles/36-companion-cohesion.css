@@ -2281,11 +2281,11 @@ body.settings-window-resizing .settings-page:not(.companion-page) {
   }
 }
 
-/* Summary performance hotfix: keep run details out of the history grid so Details does not relayout every saved row. */
+/* Summary performance hotfix: keep run details detached from each row without squeezing the content. */
 .companion-page .summary-history-panel .run-history-detail-layout {
   display: grid !important;
-  grid-template-columns: minmax(0, 0.95fr) minmax(360px, 1.05fr) !important;
-  align-items: start !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  align-items: stretch !important;
   gap: 12px !important;
   contain: layout paint style;
 }
@@ -2296,16 +2296,23 @@ body.settings-window-resizing .settings-page:not(.companion-page) {
   contain: layout paint style;
 }
 
+.companion-page .summary-history-panel .summary-history-row {
+  grid-template-columns: minmax(180px, 0.75fr) minmax(260px, 1fr) max-content !important;
+  gap: 14px !important;
+}
+
+.companion-page .summary-history-panel .summary-history-actions {
+  min-width: max-content;
+}
+
 .companion-page .summary-history-panel .run-history-detail-dock {
-  position: sticky;
-  top: 0;
-  align-self: start;
-  min-height: 332px;
+  position: static;
+  min-height: 0;
   overflow-anchor: none;
 }
 
 .companion-page .summary-history-panel .run-history-detail-placeholder {
-  min-height: 332px;
+  min-height: 220px;
   display: grid;
   place-content: center;
   gap: 6px;
@@ -2324,7 +2331,7 @@ body.settings-window-resizing .settings-page:not(.companion-page) {
 }
 
 .companion-page .summary-history-panel .run-history-detail-placeholder span {
-  max-width: 36ch;
+  max-width: 48ch;
   font-size: 12px;
   line-height: 1.45;
 }
@@ -2351,14 +2358,29 @@ body.settings-window-resizing .settings-page:not(.companion-page) {
   box-shadow: none !important;
 }
 
-@media (max-width: 1120px) {
-  .companion-page .summary-history-panel .run-history-detail-layout {
+@media (max-width: 980px) {
+  .companion-page .summary-history-panel .summary-history-row {
     grid-template-columns: minmax(0, 1fr) !important;
   }
 
-  .companion-page .summary-history-panel .run-history-detail-dock {
-    position: static;
-    min-height: 0;
+  .companion-page .summary-history-panel .summary-history-stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+
+  .companion-page .summary-history-panel .summary-history-actions {
+    min-width: 0;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .companion-page .summary-history-panel .run-history-detail-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+}
+
+@media (max-width: 720px) {
+  .companion-page .summary-history-panel .summary-history-stats {
+    grid-template-columns: minmax(0, 1fr) !important;
   }
 
   .companion-page .summary-history-panel .run-history-detail-placeholder {

@@ -501,7 +501,7 @@ test('companion bonus manual marks keep visible source-specific feedback', () =>
   assert.match(cohesion, /\.bonus-detected-line\.is-unknown/);
 });
 
-test('companion run history details button opens a stable side detail card', () => {
+test('companion run history details button opens a stable detached detail card', () => {
   const detailPanel = readText('src/renderer/RunHistoryDetailPanel.tsx');
   const companion = readText('src/renderer/pages/CompanionPage.tsx');
   const translations = readText('src/i18n/translations.ts');
@@ -521,8 +521,9 @@ test('companion run history details button opens a stable side detail card', () 
   assert.match(translations, /runHistoryDetailEmptyTitle/);
   assert.match(translations, /runHistoryDetailEmptyText/);
   assert.match(cohesion, /summary-history-panel \.run-history-detail-layout/);
-  assert.match(cohesion, /grid-template-columns: minmax\(0, 0\.95fr\) minmax\(360px, 1\.05fr\)/);
+  assert.match(cohesion, /grid-template-columns: minmax\(0, 1fr\)/);
   assert.match(cohesion, /summary-history-panel \*,/);
+  assert.doesNotMatch(cohesion, /run-history-detail-dock \{\s*position: sticky/);
   assert.match(detailPanel, /detailModelCacheRef/);
   assert.match(detailPanel, /getDetailModelCacheKey\(historySignature, selectedRunId\)/);
   assert.match(detailPanel, /previous\.historySignature === next\.historySignature/);
