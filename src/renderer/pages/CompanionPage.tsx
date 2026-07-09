@@ -1457,6 +1457,14 @@ export function CompanionPage() {
     }, 2800);
   };
 
+  const restoreSavedRun = useCallback((runId: string) => {
+    setRunConfirmDialog({ type: 'restore', runId });
+  }, []);
+
+  const deleteSavedRun = useCallback((runId: string) => {
+    setRunConfirmDialog({ type: 'delete', runId });
+  }, []);
+
   if (!snapshot) {
     return <div className="settings-shell">{t('companion.loading')}</div>;
   }
@@ -1551,14 +1559,6 @@ export function CompanionPage() {
 
     setRunConfirmDialog({ type: 'reset' });
   };
-
-  const restoreSavedRun = useCallback((runId: string) => {
-    setRunConfirmDialog({ type: 'restore', runId });
-  }, []);
-
-  const deleteSavedRun = useCallback((runId: string) => {
-    setRunConfirmDialog({ type: 'delete', runId });
-  }, []);
 
   const closeRunConfirmDialog = () => setRunConfirmDialog(null);
 

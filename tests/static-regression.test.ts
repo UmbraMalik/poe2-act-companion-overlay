@@ -149,6 +149,29 @@ test('window page routing uses explicit html markers before URL fallback', () =>
   );
 });
 
+test('electron renderer html entrypoints define CSP without unsafe-eval', () => {
+  const rendererHtmlFiles = [
+    'overlay.html',
+    'settings.html',
+    'companion.html',
+    'info.html',
+    'community.html',
+    'support.html',
+    'report.html',
+    'close-confirm.html',
+    'update.html'
+  ];
+
+  for (const file of rendererHtmlFiles) {
+    const html = readText(file);
+
+    assert.match(html, /http-equiv="Content-Security-Policy"/, `${file} must define a CSP`);
+    assert.match(html, /script-src 'self' 'unsafe-inline'/, `${file} CSP must avoid unsafe-eval`);
+    assert.match(html, /connect-src 'self' http:\/\/127\.0\.0\.1:5173 ws:\/\/127\.0\.0\.1:5173/, `${file} CSP must allow Vite dev websocket`);
+    assert.doesNotMatch(html, /unsafe-eval/, `${file} CSP must not allow unsafe-eval`);
+  }
+});
+
 test('run timer snapshot sync tracks act split content changes', () => {
   const hooks = readText('src/renderer/hooks.ts');
   const runTimerHook = hooks.slice(
@@ -494,6 +517,15 @@ test('companion run history details button opens an inline detail card', () => {
   assert.match(companion, /getRunHistorySignature\(rawRunHistory\)/);
   assert.match(companion, /const restoreSavedRun = useCallback/);
   assert.match(companion, /const deleteSavedRun = useCallback/);
+
+  const snapshotLoadingGuardIndex = companion.indexOf('if (!snapshot) {');
+  assert.notEqual(snapshotLoadingGuardIndex, -1);
+  const afterSnapshotLoadingGuard = companion.slice(snapshotLoadingGuardIndex);
+  assert.doesNotMatch(
+    afterSnapshotLoadingGuard,
+    /\buse(?:State|Effect|Memo|Ref|Callback|Reducer|LayoutEffect)\s*\(/,
+    'CompanionPage hooks must stay before the snapshot loading guard to preserve hook order'
+  );
 });
 
 test('default motion avoids continuous compositor-heavy ambient animations', () => {
