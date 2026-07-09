@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useAppSnapshot, useLiveRunTimer } from '../hooks';
 import { useDocumentTitle, useI18n } from '../useI18n';
 import { getAppThemeClassName } from '../theme';
@@ -1350,6 +1350,15 @@ export function CompanionPage() {
     }),
     [bonusGroups]
   );
+  const bonusColumnGroups = useMemo(() => {
+    const columns: string[][] = [[], [], []];
+
+    bonusGroupOrder.forEach((groupKey, index) => {
+      columns[index % columns.length].push(groupKey);
+    });
+
+    return columns.filter((column) => column.length > 0);
+  }, [bonusGroupOrder]);
   const bestSavedRun = useMemo(
     () => getBestSavedRun(runHistory),
     [runHistory]
@@ -1543,13 +1552,13 @@ export function CompanionPage() {
     setRunConfirmDialog({ type: 'reset' });
   };
 
-  const restoreSavedRun = useCallback((runId: string) => {
+  const restoreSavedRun = (runId: string) => {
     setRunConfirmDialog({ type: 'restore', runId });
-  }, []);
+  };
 
-  const deleteSavedRun = useCallback((runId: string) => {
+  const deleteSavedRun = (runId: string) => {
     setRunConfirmDialog({ type: 'delete', runId });
-  }, []);
+  };
 
   const closeRunConfirmDialog = () => setRunConfirmDialog(null);
 
@@ -2095,71 +2104,75 @@ export function CompanionPage() {
       </section>
 
       <div className="bonuses-act-grid">
-        {bonusGroupOrder.map((groupKey) => {
-          const bonuses = bonusGroups[groupKey] ?? [];
-          const title = groupKey === 'interlude' ? t('companion.interludes') : t('route.act', { act: groupKey });
+        {bonusColumnGroups.map((column, columnIndex) => (
+          <div key={`bonus-column-${columnIndex}`} className="bonuses-act-column">
+            {column.map((groupKey) => {
+              const bonuses = bonusGroups[groupKey] ?? [];
+              const title = groupKey === 'interlude' ? t('companion.interludes') : t('route.act', { act: groupKey });
 
-          return (
-            <section key={groupKey} className="companion-block bonuses-act-card">
-              <h3>{title}</h3>
-              <div className="bonuses-list">
-                {bonuses.map((bonus) => {
-                  const progress = campaignBonusProgress[bonus.id], done = Boolean(progress);
-                  const bonusView = getCampaignBonusView(bonus, language) ?? bonus, isBonusFeedback = bonusFeedback?.id === bonus.id;
-                  const provenance = getCampaignBonusProvenanceView(progress, language);
+              return (
+                <section key={groupKey} className="companion-block bonuses-act-card">
+                  <h3>{title}</h3>
+                  <div className="bonuses-list">
+                    {bonuses.map((bonus) => {
+                      const progress = campaignBonusProgress[bonus.id], done = Boolean(progress);
+                      const bonusView = getCampaignBonusView(bonus, language) ?? bonus, isBonusFeedback = bonusFeedback?.id === bonus.id;
+                      const provenance = getCampaignBonusProvenanceView(progress, language);
 
-                  return (
-                    <article
-                      key={bonus.id}
-                      className={`bonus-row ${done ? 'is-done' : 'is-pending'}${isBonusFeedback ? ` is-bonus-toggle-feedback is-feedback-${bonusFeedback.tone}` : ''}`}
-                    >
-                      <div className="bonus-status-marker" aria-hidden="true">{done ? '✓' : '○'}</div>
-                      <div className="bonus-main">
-                        <div className="bonus-title-line">
-                          <strong>{'displayTitle' in bonusView ? bonusView.displayTitle : bonus.title}</strong>
-                          <span className="bonus-category-pill">{getBonusCategoryLabel(bonus.category, language)}</span>
-                          {bonus.needsVerification && <span className="bonus-verify-pill">{t('companion.verify')}</span>}
-                        </div>
-                        <p className="bonus-meta">{('displayZoneName' in bonusView ? bonusView.displayZoneName : bonus.zone_ru)} · {('displaySource' in bonusView ? bonusView.displaySource : bonus.source)}</p>
-                        {bonus.details.length > 0 && (
-                          <ul className="bonus-details-list">
-                            {(('displayDetails' in bonusView ? bonusView.displayDetails : bonus.details) as string[]).slice(0, 2).map((detail) => (
-                              <li key={`${bonus.id}-${detail}`}>{detail}</li>))}
-                          </ul>
-                        )}
-                        {provenance && <p className={`bonus-detected-line is-${provenance.source}`}>{provenance.line}</p>}
-                      </div>
-                      <button
-                        type="button"
-                        className={done ? 'button-secondary bonus-toggle-button' : 'button-primary bonus-toggle-button'}
-                        disabled={busy !== null}
-                        onClick={() =>
-                          runTask(`campaign-bonus-${bonus.id}`, async () => {
-                            if (bonusFeedbackTimeoutRef.current !== null) {
-                              window.clearTimeout(bonusFeedbackTimeoutRef.current);
+                      return (
+                        <article
+                          key={bonus.id}
+                          className={`bonus-row ${done ? 'is-done' : 'is-pending'}${isBonusFeedback ? ` is-bonus-toggle-feedback is-feedback-${bonusFeedback.tone}` : ''}`}
+                        >
+                          <div className="bonus-status-marker" aria-hidden="true">{done ? '✓' : '○'}</div>
+                          <div className="bonus-main">
+                            <div className="bonus-title-line">
+                              <strong>{'displayTitle' in bonusView ? bonusView.displayTitle : bonus.title}</strong>
+                              <span className="bonus-category-pill">{getBonusCategoryLabel(bonus.category, language)}</span>
+                              {bonus.needsVerification && <span className="bonus-verify-pill">{t('companion.verify')}</span>}
+                            </div>
+                            <p className="bonus-meta">{('displayZoneName' in bonusView ? bonusView.displayZoneName : bonus.zone_ru)} · {('displaySource' in bonusView ? bonusView.displaySource : bonus.source)}</p>
+                            {bonus.details.length > 0 && (
+                              <ul className="bonus-details-list">
+                                {(('displayDetails' in bonusView ? bonusView.displayDetails : bonus.details) as string[]).slice(0, 2).map((detail) => (
+                                  <li key={`${bonus.id}-${detail}`}>{detail}</li>))}
+                              </ul>
+                            )}
+                            {provenance && <p className={`bonus-detected-line is-${provenance.source}`}>{provenance.line}</p>}
+                          </div>
+                          <button
+                            type="button"
+                            className={done ? 'button-secondary bonus-toggle-button' : 'button-primary bonus-toggle-button'}
+                            disabled={busy !== null}
+                            onClick={() =>
+                              runTask(`campaign-bonus-${bonus.id}`, async () => {
+                                if (bonusFeedbackTimeoutRef.current !== null) {
+                                  window.clearTimeout(bonusFeedbackTimeoutRef.current);
+                                }
+
+                                setBonusFeedback({
+                                  id: bonus.id,
+                                  tone: done ? 'pending' : 'done'
+                                });
+                                bonusFeedbackTimeoutRef.current = window.setTimeout(() => {
+                                  setBonusFeedback(null);
+                                  bonusFeedbackTimeoutRef.current = null;
+                                }, 1200);
+                                await window.poe2Overlay.setCampaignBonusDone(bonus.id, !done);
+                              })
                             }
-
-                            setBonusFeedback({
-                              id: bonus.id,
-                              tone: done ? 'pending' : 'done'
-                            });
-                            bonusFeedbackTimeoutRef.current = window.setTimeout(() => {
-                              setBonusFeedback(null);
-                              bonusFeedbackTimeoutRef.current = null;
-                            }, 1200);
-                            await window.poe2Overlay.setCampaignBonusDone(bonus.id, !done);
-                          })
-                        }
-                      >
-                        {done ? t('companion.clearMark') : t('companion.markDone')}
-                      </button>
-                    </article>
-                  );
-                })}
-              </div>
-            </section>
-          );
-        })}
+                          >
+                            {done ? t('companion.clearMark') : t('companion.markDone')}
+                          </button>
+                        </article>
+                      );
+                    })}
+                  </div>
+                </section>
+              );
+            })}
+          </div>
+        ))}
       </div>
     </div>
   ) : null;

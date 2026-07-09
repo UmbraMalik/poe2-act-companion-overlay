@@ -1957,3 +1957,311 @@ body.settings-window-resizing .settings-page:not(.companion-page) {
     linear-gradient(180deg, rgba(255, 255, 255, 0.020), rgba(255, 255, 255, 0.006)),
     rgba(14, 9, 24, 0.58) !important;
 }
+
+
+/* Stability follow-up: anchor jumps, bonus columns and run details should stay cheap/stable. */
+.settings-page:not(.companion-page) .settings-shell {
+  scroll-padding-top: calc(var(--settings-quick-nav-offset, 220px) + 18px) !important;
+}
+
+.settings-page:not(.companion-page) .settings-card[id] {
+  scroll-margin-top: calc(var(--settings-quick-nav-offset, 220px) + 18px) !important;
+}
+
+.settings-page:not(.companion-page) .settings-quick-nav {
+  --settings-quick-nav-offset: 220px;
+}
+
+.companion-page .bonuses-tab-layout {
+  display: flex !important;
+  flex-direction: column !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+.companion-page .bonuses-act-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
+  grid-auto-flow: row !important;
+  grid-auto-rows: minmax(0, auto) !important;
+  align-items: start !important;
+  gap: 12px !important;
+  min-height: 0 !important;
+  padding: 0 8px 10px 0 !important;
+  overflow: auto !important;
+}
+
+.companion-page .bonuses-act-card {
+  position: relative !important;
+  z-index: 0 !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  width: auto !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  align-self: start !important;
+  contain: layout paint;
+  isolation: isolate;
+}
+
+.companion-page .bonuses-list {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  grid-auto-rows: auto !important;
+  gap: 8px !important;
+  min-height: 0 !important;
+}
+
+.companion-page .bonus-row {
+  position: relative !important;
+  z-index: 0 !important;
+  min-height: 0 !important;
+  transform: none !important;
+}
+
+.companion-page .run-history-detail-layout,
+.companion-page .run-history-detail-card,
+.companion-page .run-history-detail-grid,
+.companion-page .run-history-detail-table {
+  contain: layout paint style;
+}
+
+.companion-page .run-history-detail-card,
+.companion-page .run-history-detail-metrics > div,
+.companion-page .run-history-detail-table-row {
+  filter: none !important;
+  transform: none !important;
+  transition: border-color 100ms ease, background-color 100ms ease !important;
+}
+
+.companion-page .run-history-detail-table-row,
+.companion-page .act-split-row,
+.companion-page .summary-act-breakdown-row {
+  box-shadow: none !important;
+}
+
+/* Final stability guard: settings scroll, bonus columns and zone accent rails. */
+.settings-page:not(.companion-page) {
+  -webkit-app-region: no-drag !important;
+  app-region: no-drag !important;
+}
+
+.settings-page:not(.companion-page) .settings-header.window-drag-strip {
+  -webkit-app-region: drag !important;
+  app-region: drag !important;
+}
+
+.settings-page:not(.companion-page) .settings-header.window-drag-strip button,
+.settings-page:not(.companion-page) .settings-shell,
+.settings-page:not(.companion-page) .settings-shell *,
+.settings-page:not(.companion-page) .settings-select-layer,
+.settings-page:not(.companion-page) .settings-window-resize-handle {
+  -webkit-app-region: no-drag !important;
+  app-region: no-drag !important;
+}
+
+.settings-page:not(.companion-page) .settings-shell {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  overscroll-behavior: contain;
+  pointer-events: auto;
+  touch-action: pan-y;
+}
+
+.settings-page:not(.companion-page) .settings-card[id] {
+  scroll-margin-top: calc(var(--settings-quick-nav-offset, 220px) + 24px) !important;
+}
+
+.companion-page .bonuses-tab-layout {
+  display: grid !important;
+  grid-template-rows: auto minmax(0, 1fr) !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+.companion-page .bonuses-act-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  grid-auto-flow: row !important;
+  grid-auto-rows: auto !important;
+  align-items: start !important;
+  align-content: start !important;
+  gap: 12px !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  padding: 0 8px 12px 0 !important;
+  position: relative;
+  isolation: isolate;
+}
+
+.companion-page .bonuses-act-card {
+  position: relative !important;
+  z-index: auto !important;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  align-self: start !important;
+  contain: none !important;
+  overflow: visible !important;
+  transform: none !important;
+}
+
+.companion-page .bonuses-act-card:hover,
+.companion-page .bonuses-tab-layout .bonus-row:hover {
+  transform: none !important;
+}
+
+.companion-page .bonuses-list,
+.companion-page .bonus-row {
+  contain: none !important;
+  transform: none !important;
+}
+
+@media (max-width: 1180px) {
+  .companion-page .bonuses-act-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .companion-page .bonuses-act-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+}
+
+.companion-page .zone-card-board .zone-task-card {
+  position: relative !important;
+  overflow: hidden !important;
+  border-radius: var(--companion-card-radius, 14px) !important;
+}
+
+.companion-page .zone-card-board .zone-task-card::before {
+  inset: 12px auto 12px 0 !important;
+  width: 2px !important;
+  height: auto !important;
+  border-radius: 999px !important;
+  pointer-events: none;
+}
+
+.companion-page .zone-card-board .zone-task-primary::before,
+.companion-page .zone-card-board .zone-reward-card::before {
+  opacity: 0.78 !important;
+}
+
+
+/* Final stability pass for Companion bonuses: explicit columns avoid CSS grid overlap/masonry regressions. */
+.companion-page .bonuses-tab-layout {
+  display: grid !important;
+  grid-template-rows: auto minmax(0, 1fr) !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+.companion-page .bonuses-act-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  grid-auto-flow: column !important;
+  grid-auto-rows: auto !important;
+  align-items: start !important;
+  align-content: start !important;
+  gap: 12px !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  padding: 0 8px 12px 0 !important;
+  position: relative !important;
+  isolation: isolate !important;
+}
+
+.companion-page .bonuses-act-column {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  align-self: start !important;
+  position: relative !important;
+  z-index: 0 !important;
+}
+
+.companion-page .bonuses-act-card {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 9px !important;
+  position: relative !important;
+  z-index: 0 !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  align-self: stretch !important;
+  contain: none !important;
+  overflow: hidden !important;
+  transform: none !important;
+}
+
+.companion-page .bonuses-act-card:hover,
+.companion-page .bonuses-tab-layout .bonus-row:hover {
+  transform: none !important;
+}
+
+.companion-page .bonuses-list {
+  display: flex !important;
+  flex-direction: column !important;
+  grid-template-columns: none !important;
+  grid-auto-rows: auto !important;
+  gap: 8px !important;
+  min-height: 0 !important;
+  overflow: visible !important;
+  position: static !important;
+  contain: none !important;
+  transform: none !important;
+}
+
+.companion-page .bonuses-list > .bonus-row {
+  flex: 0 0 auto !important;
+  display: grid !important;
+  grid-template-columns: 24px minmax(0, 1fr) auto !important;
+  align-items: start !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  position: relative !important;
+  z-index: 0 !important;
+  overflow: hidden !important;
+  contain: none !important;
+  transform: none !important;
+}
+
+.companion-page .bonuses-list > .bonus-row::before,
+.companion-page .bonuses-list > .bonus-row::after {
+  pointer-events: none !important;
+}
+
+@media (max-width: 1180px) {
+  .companion-page .bonuses-act-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .companion-page .bonuses-act-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .companion-page .bonuses-list > .bonus-row {
+    grid-template-columns: 22px minmax(0, 1fr) !important;
+  }
+
+  .companion-page .bonuses-list > .bonus-row .bonus-toggle-button {
+    grid-column: 2 !important;
+    justify-self: start !important;
+  }
+}

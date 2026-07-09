@@ -20,6 +20,7 @@ import { getAppThemeClassName } from '../theme';
 import { SettingsSelect } from '../settings/SettingsSelect';
 import { SettingsWindowResizeGrip } from '../settings/SettingsWindowResizeGrip';
 import { SettingsWindowShellEffects } from '../settings/SettingsWindowShellEffects';
+import { SettingsQuickNav } from '../settings/SettingsQuickNav';
 import {
   buildOverlayPresetPatch,
   formatOverlayPresetLabel,
@@ -703,25 +704,15 @@ export function SettingsPage() {
       </header>
 
       <section className="settings-shell">
-        <nav className="settings-card settings-quick-nav" aria-label={t('settings.quickLinksTitle')}>
-          <h2 className="settings-section-title">{t('settings.quickLinksTitle')}</h2>
-          <div className="settings-quick-link-grid">
-            {settingsQuickLinks.map((entry) => (
-              <a key={entry.id} className="settings-quick-link" href={`#${entry.id}`}>
-                {getSettingsSectionLabel(entry.id, appLanguage)}
-              </a>
-            ))}
-          </div>
-          <label className="settings-search-field">
-            <span>{getSettingsSearchLabel(appLanguage)}</span>
-            <input
-              type="search"
-              value={settingsSearchQuery}
-              placeholder={getSettingsSearchPlaceholder(appLanguage)}
-              onChange={(event) => setSettingsSearchQuery(event.target.value)}
-            />
-          </label>
-        </nav>
+        <SettingsQuickNav
+          entries={settingsQuickLinks}
+          language={appLanguage}
+          title={t('settings.quickLinksTitle')}
+          searchLabel={getSettingsSearchLabel(appLanguage)}
+          searchPlaceholder={getSettingsSearchPlaceholder(appLanguage)}
+          searchQuery={settingsSearchQuery}
+          onSearchQueryChange={setSettingsSearchQuery}
+        />
 
         {settingsSearch.isFiltering && settingsSearch.visibleSectionIds.size === 0 && (
           <section className="settings-card settings-search-empty">
