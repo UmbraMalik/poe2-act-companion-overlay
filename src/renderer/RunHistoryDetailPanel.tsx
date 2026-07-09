@@ -166,14 +166,6 @@ function RunHistoryDetailCard({
   );
 }
 
-function RunHistoryDetailLoading({ language }: { language: AppLanguage }) {
-  return (
-    <div className="run-history-detail-card">
-      <p className="helper-text">{translate(language, 'companion.loading')}</p>
-    </div>
-  );
-}
-
 function RunHistoryDetailPanelInner({
   history,
   historySignature,
@@ -182,9 +174,7 @@ function RunHistoryDetailPanelInner({
   onDelete
 }: RunHistoryDetailPanelProps) {
   const [selectedRunId, setSelectedRunId] = useState<string | null>(null);
-  const [pendingRunId, setPendingRunId] = useState<string | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
-  const detailOpenTimeoutRef = useRef<number | null>(null);
   const detailModelCacheRef = useRef<Map<string, RunHistoryDetailModel>>(new Map());
   const sortedHistory = useMemo(
     () => [...history].sort((left, right) => right.savedAt - left.savedAt),
@@ -217,32 +207,12 @@ function RunHistoryDetailPanelInner({
     },
     [history, historySignature, selectedRunId, isDetailOpen]
   );
-  const openRunId = selectedRunId ?? pendingRunId;
-  const selectedRunIdFromModel = model?.selectedRun?.id ?? openRunId;
+  const selectedRunIdFromModel = model?.selectedRun?.id ?? (isDetailOpen ? selectedRunId : null);
 
   const openRunDetails = useCallback((runId: string) => {
-    if (detailOpenTimeoutRef.current !== null) {
-      window.clearTimeout(detailOpenTimeoutRef.current);
-    }
-
-    const cacheKey = getDetailModelCacheKey(historySignature, runId);
-    if (detailModelCacheRef.current.has(cacheKey)) {
-      setPendingRunId(null);
-      setSelectedRunId(runId);
-      setIsDetailOpen(true);
-      return;
-    }
-
-    setPendingRunId(runId);
-    setSelectedRunId(null);
+    setSelectedRunId(runId);
     setIsDetailOpen(true);
-
-    detailOpenTimeoutRef.current = window.setTimeout(() => {
-      setSelectedRunId(runId);
-      setPendingRunId(null);
-      detailOpenTimeoutRef.current = null;
-    }, 0);
-  }, [historySignature]);
+  }, []);
 
   useEffect(() => {
     for (const cacheKey of detailModelCacheRef.current.keys()) {
@@ -253,18 +223,11 @@ function RunHistoryDetailPanelInner({
   }, [historySignature]);
 
   useEffect(() => {
-    if (openRunId !== null && !history.some((entry) => entry.id === openRunId)) {
+    if (selectedRunId !== null && !history.some((entry) => entry.id === selectedRunId)) {
       setSelectedRunId(null);
-      setPendingRunId(null);
       setIsDetailOpen(false);
     }
-  }, [history, openRunId]);
-
-  useEffect(() => () => {
-    if (detailOpenTimeoutRef.current !== null) {
-      window.clearTimeout(detailOpenTimeoutRef.current);
-    }
-  }, []);
+  }, [history, selectedRunId]);
 
   return (
     <section className="companion-block summary-history-panel">
@@ -308,11 +271,7 @@ function RunHistoryDetailPanelInner({
                       </button>
                     </div>
                   </article>
-                  {isSelected && (model ? (
-                    <RunHistoryDetailCard model={model} language={language} />
-                  ) : (
-                    <RunHistoryDetailLoading language={language} />
-                  ))}
+                  {isSelected && model && <RunHistoryDetailCard model={model} language={language} />}
                 </Fragment>
               );
             })}

@@ -1958,6 +1958,21 @@ body.settings-window-resizing .settings-page:not(.companion-page) {
     rgba(14, 9, 24, 0.58) !important;
 }
 
+.companion-page .companion-summary-layout .summary-scroll-body > .companion-block {
+  content-visibility: auto;
+  contain-intrinsic-size: 180px;
+}
+
+.companion-page .summary-history-panel,
+.companion-page .run-history-detail-card {
+  overflow-anchor: none;
+}
+
+.companion-page .run-history-detail-card,
+.companion-page .run-history-detail-card * {
+  animation: none !important;
+}
+
 
 /* Stability follow-up: anchor jumps, bonus columns and run details should stay cheap/stable. */
 .settings-page:not(.companion-page) .settings-shell {

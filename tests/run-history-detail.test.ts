@@ -127,6 +127,25 @@ test('run history detail tolerates legacy records without zone arrays or timer t
   assert.deepEqual(model.zoneRows, []);
 });
 
+
+test('run history detail bounds oversized zone history but keeps saved longest zones', () => {
+  const oldLongest = zone('ancient-longest', 999_000);
+  const largeHistory = Array.from({ length: 320 }, (_, index) => zone(`recent-${index}`, index + 1));
+  const selected = run({
+    id: 'selected-large',
+    savedAt: 1_000,
+    totalElapsedMs: 1_000_000,
+    longestZones: [oldLongest],
+    zoneTimeHistory: largeHistory
+  });
+
+  const model = buildRunHistoryDetailModel([selected], 'selected-large');
+
+  assert.equal(model.zoneRows[0]?.zoneId, 'ancient-longest');
+  assert.equal(model.zoneRows.length, 8);
+  assert.equal(model.zoneRows.some((row) => row.zoneId === 'recent-0'), false);
+});
+
 test('run history delta formatting uses timer duration formatting', () => {
   assert.equal(formatRunHistoryDelta(null), '—');
   assert.equal(formatRunHistoryDelta(0), '±00:00');

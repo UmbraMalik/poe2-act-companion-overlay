@@ -40,6 +40,7 @@ const OVERLAY_DENSITIES: OverlayDensity[] = ['compact', 'normal', 'detailed'];
 const VISUAL_FX_INTENSITIES: VisualFxIntensity[] = ['off', 'subtle', 'normal', 'rich'];
 const APP_THEMES: AppTheme[] = ['classic', 'dark_fantasy'];
 const RUN_TIMER_STATUSES: RunTimerStatus[] = ['not_started', 'armed', 'running', 'paused', 'finished'];
+const MAX_SAVED_RUN_ZONE_TIME_HISTORY_ROWS = 240;
 const CHECKLIST_ITEM_STATES: ChecklistItemState[] = ['pending', 'current', 'likely_done', 'done', 'missed'];
 const CHECKLIST_DETECTED_BY: ChecklistDetectedBy[] = ['log', 'manual', 'zone_leave', 'linked_reward', 'inferred_zone_leave'];
 const HOTKEY_KEYS: Array<keyof HotkeySettings> = [
@@ -488,6 +489,10 @@ function normalizeZoneTimeHistory(value: unknown): ZoneTimeEntry[] {
   });
 }
 
+function normalizeSavedRunZoneTimeHistory(value: unknown): ZoneTimeEntry[] {
+  return normalizeZoneTimeHistory(value).slice(-MAX_SAVED_RUN_ZONE_TIME_HISTORY_ROWS);
+}
+
 export 
 function normalizeSavedRunHistoryEntry(value: unknown): SavedRunHistoryEntry | null {
   if (!isRecord(value)) {
@@ -517,7 +522,7 @@ function normalizeSavedRunHistoryEntry(value: unknown): SavedRunHistoryEntry | n
       ? value.actSplits.map(normalizeRunTimerActSplit).filter((split): split is RunTimerActSplit => split !== null)
       : [...runTimer.actSplits],
     longestZones: normalizeZoneTimeHistory(value.longestZones),
-    zoneTimeHistory: normalizeZoneTimeHistory(value.zoneTimeHistory),
+    zoneTimeHistory: normalizeSavedRunZoneTimeHistory(value.zoneTimeHistory),
     runTimer: {
       ...runTimer,
       elapsedMs: runTimer.elapsedMs > 0 ? runTimer.elapsedMs : totalElapsedMs

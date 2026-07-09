@@ -507,9 +507,10 @@ test('companion run history details button opens an inline detail card', () => {
 
   assert.match(detailPanel, /const \[isDetailOpen,\s*setIsDetailOpen\] = useState\(false\)/);
   assert.match(detailPanel, /const openRunDetails = useCallback\(\(runId: string\)/);
-  assert.match(detailPanel, /setPendingRunId\(runId\);\s*setSelectedRunId\(null\);\s*setIsDetailOpen\(true\);/);
-  assert.match(detailPanel, /window\.setTimeout\(\(\) => \{\s*setSelectedRunId\(runId\);/);
-  assert.match(detailPanel, /<RunHistoryDetailLoading language=\{language\} \/>/);
+  assert.match(detailPanel, /setSelectedRunId\(runId\);\s*setIsDetailOpen\(true\);/);
+  assert.doesNotMatch(detailPanel, /setPendingRunId/);
+  assert.doesNotMatch(detailPanel, /window\.setTimeout/);
+  assert.doesNotMatch(detailPanel, /RunHistoryDetailLoading/);
   assert.match(detailPanel, /<RunHistoryDetailCard model=\{model\} language=\{language\} \/>/);
   assert.match(detailPanel, /detailModelCacheRef/);
   assert.match(detailPanel, /getDetailModelCacheKey\(historySignature, selectedRunId\)/);

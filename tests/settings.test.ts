@@ -41,7 +41,6 @@ test('normalizeAppConfig keeps defaults, custom settings and strips legacy unkno
   assert.equal('oldSupportBlock' in (normalized as unknown as Record<string, unknown>), false);
 });
 
-
 test('normalizeAppConfig hardens corrupted user config values', () => {
   const normalized = normalizeAppConfig({
     currentLevel: -42,
@@ -171,6 +170,37 @@ test('normalizeAppConfig hardens corrupted user config values', () => {
   assert.equal(normalized.runTimerSettings.leagueStartTimeLabel, null);
   assert.equal(normalized.runTimerSettings.autoStart, DEFAULT_CONFIG.runTimerSettings.autoStart);
   assert.equal(normalized.runTimerSettings.showZoneTimer, false);
+});
+
+
+test('normalizeAppConfig trims saved run zone history payloads', () => {
+  const zoneTimeHistory = Array.from({ length: 300 }, (_, index) => ({
+    zoneId: `zone-${index}`,
+    zone_ru: `Зона ${index}`,
+    act: 1,
+    elapsedMs: index + 1,
+    enteredAt: 1_700_000_000_000 + index,
+    leftAt: 1_700_000_001_000 + index
+  }));
+
+  const normalized = normalizeAppConfig({
+    runHistory: [{
+      id: 'run-large-history',
+      label: 'Large history',
+      savedAt: 1_700_000_000_000,
+      totalElapsedMs: 100_000,
+      currentAct: 1,
+      status: 'finished',
+      actSplits: [],
+      longestZones: [zoneTimeHistory[0]],
+      zoneTimeHistory,
+      runTimer: DEFAULT_CONFIG.runTimer
+    }]
+  } as never);
+
+  assert.equal(normalized.runHistory[0]?.zoneTimeHistory.length, 240);
+  assert.equal(normalized.runHistory[0]?.zoneTimeHistory[0]?.zoneId, 'zone-60');
+  assert.equal(normalized.runHistory[0]?.longestZones[0]?.zoneId, 'zone-0');
 });
 
 test('normalizeAppConfig drops corrupted checklist and campaign bonus progress entries', () => {
