@@ -2492,3 +2492,133 @@ body.settings-window-resizing .settings-page:not(.companion-page) {
     justify-self: start !important;
   }
 }
+
+/* Companion typography alignment guard: themes may change color, not type metrics. */
+.theme-classic.companion-page,
+.theme-dark-fantasy.companion-page {
+  font-family: var(--font-ui) !important;
+}
+
+.theme-classic.companion-page button,
+.theme-dark-fantasy.companion-page button,
+.theme-classic.companion-page .companion-card > .companion-tab-row button,
+.theme-dark-fantasy.companion-page .companion-card > .companion-tab-row button,
+.theme-classic.companion-page .companion-route-toolbar .companion-tab-row button,
+.theme-dark-fantasy.companion-page .companion-route-toolbar .companion-tab-row button,
+.theme-classic.companion-page .helper-text,
+.theme-dark-fantasy.companion-page .helper-text,
+.theme-classic.companion-page .bonus-meta,
+.theme-dark-fantasy.companion-page .bonus-meta,
+.theme-classic.companion-page .bonus-details-list,
+.theme-dark-fantasy.companion-page .bonus-details-list,
+.theme-classic.companion-page .bonus-detected-line,
+.theme-dark-fantasy.companion-page .bonus-detected-line,
+.theme-classic.companion-page .reminder-title,
+.theme-dark-fantasy.companion-page .reminder-title,
+.theme-classic.companion-page .route-zone-name,
+.theme-dark-fantasy.companion-page .route-zone-name,
+.theme-classic.companion-page .summary-history-main,
+.theme-dark-fantasy.companion-page .summary-history-main,
+.theme-classic.companion-page .run-history-detail-card,
+.theme-dark-fantasy.companion-page .run-history-detail-card {
+  font-family: var(--font-ui) !important;
+  letter-spacing: 0 !important;
+}
+
+.theme-classic.companion-page .companion-block h3,
+.theme-dark-fantasy.companion-page .companion-block h3,
+.theme-classic.companion-page .companion-inline-title,
+.theme-dark-fantasy.companion-page .companion-inline-title,
+.theme-classic.companion-page .summary-section-heading h3,
+.theme-dark-fantasy.companion-page .summary-section-heading h3,
+.theme-classic.companion-page .bonuses-summary-card h3,
+.theme-dark-fantasy.companion-page .bonuses-summary-card h3,
+.theme-classic.companion-page .bonuses-act-card h3,
+.theme-dark-fantasy.companion-page .bonuses-act-card h3,
+.theme-classic.companion-page .act-split-table-head,
+.theme-dark-fantasy.companion-page .act-split-table-head,
+.theme-classic.companion-page .route-card-bonus-heading,
+.theme-dark-fantasy.companion-page .route-card-bonus-heading {
+  font-family: var(--font-caps) !important;
+  font-weight: var(--fw-heading) !important;
+  letter-spacing: 0.085em !important;
+  line-height: 1.18 !important;
+}
+
+.theme-classic.companion-page .timer-main-readout h3,
+.theme-dark-fantasy.companion-page .timer-main-readout h3,
+.theme-classic.companion-page .timer-main-readout strong,
+.theme-dark-fantasy.companion-page .timer-main-readout strong,
+.theme-classic.companion-page .summary-result-main strong,
+.theme-dark-fantasy.companion-page .summary-result-main strong,
+.theme-classic.companion-page .timer-cockpit-details strong,
+.theme-dark-fantasy.companion-page .timer-cockpit-details strong,
+.theme-classic.companion-page .timer-segment-list strong,
+.theme-dark-fantasy.companion-page .timer-segment-list strong,
+.theme-classic.companion-page .act-split-time,
+.theme-dark-fantasy.companion-page .act-split-time,
+.theme-classic.companion-page .act-split-total,
+.theme-dark-fantasy.companion-page .act-split-total,
+.theme-classic.companion-page .summary-stat strong,
+.theme-dark-fantasy.companion-page .summary-stat strong,
+.theme-classic.companion-page .summary-history-stats b,
+.theme-dark-fantasy.companion-page .summary-history-stats b,
+.theme-classic.companion-page .summary-compare-act-pill strong,
+.theme-dark-fantasy.companion-page .summary-compare-act-pill strong,
+.theme-classic.companion-page .summary-act-breakdown-row span,
+.theme-dark-fantasy.companion-page .summary-act-breakdown-row span,
+.theme-classic.companion-page .summary-act-breakdown-row small,
+.theme-dark-fantasy.companion-page .summary-act-breakdown-row small {
+  font-family: var(--font-caps) !important;
+  font-weight: var(--fw-heavy) !important;
+  letter-spacing: 0 !important;
+  line-height: 1.08 !important;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+.theme-classic.companion-page .route-step-index,
+.theme-dark-fantasy.companion-page .route-step-index,
+.theme-classic.companion-page .route-rec-badge,
+.theme-dark-fantasy.companion-page .route-rec-badge,
+.theme-classic.companion-page .route-state-pill,
+.theme-dark-fantasy.companion-page .route-state-pill,
+.theme-classic.companion-page .act-time-status-pill,
+.theme-dark-fantasy.companion-page .act-time-status-pill,
+.theme-classic.companion-page .bonus-category-pill,
+.theme-dark-fantasy.companion-page .bonus-category-pill,
+.theme-classic.companion-page .bonus-verify-pill,
+.theme-dark-fantasy.companion-page .bonus-verify-pill,
+.theme-classic.companion-page .reminder-level,
+.theme-dark-fantasy.companion-page .reminder-level,
+.theme-classic.companion-page .reminder-badge,
+.theme-dark-fantasy.companion-page .reminder-badge,
+.theme-classic.companion-page .summary-section-heading span,
+.theme-dark-fantasy.companion-page .summary-section-heading span,
+.theme-classic.companion-page .summary-history-stats span,
+.theme-dark-fantasy.companion-page .summary-history-stats span {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 22px;
+  font-family: var(--font-caps) !important;
+  font-weight: var(--fw-heading) !important;
+  line-height: 1 !important;
+  text-align: center !important;
+  white-space: nowrap;
+}
+
+.theme-classic.companion-page .act-split-table-head span:last-child,
+.theme-dark-fantasy.companion-page .act-split-table-head span:last-child,
+.theme-classic.companion-page .act-time-status-pill,
+.theme-dark-fantasy.companion-page .act-time-status-pill {
+  width: 92px !important;
+  justify-self: center !important;
+}
+
+.theme-classic.companion-page .act-time-status-pill,
+.theme-dark-fantasy.companion-page .act-time-status-pill {
+  min-height: 24px;
+  padding: 0 12px !important;
+  letter-spacing: 0.055em !important;
+}

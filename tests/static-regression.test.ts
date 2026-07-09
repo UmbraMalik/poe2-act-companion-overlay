@@ -333,6 +333,28 @@ test('app theme is persisted and available in overlay and settings', () => {
   assert.match(translations, /Dark fantasy/);
 });
 
+test('companion app themes share typography metrics and centered act status pills', () => {
+  const cohesion = readText('src/renderer/styles/36-companion-cohesion.css');
+
+  assert.match(cohesion, /Companion typography alignment guard/);
+  assert.match(
+    cohesion,
+    /\.theme-classic\.companion-page,\s*[\r\n]+\.theme-dark-fantasy\.companion-page \{[\s\S]*font-family: var\(--font-ui\) !important;/
+  );
+  assert.match(
+    cohesion,
+    /\.theme-classic\.companion-page \.timer-main-readout h3,[\s\S]*\.theme-dark-fantasy\.companion-page \.summary-act-breakdown-row small \{[\s\S]*font-family: var\(--font-caps\) !important;[\s\S]*letter-spacing: 0 !important;[\s\S]*line-height: 1\.08 !important;/
+  );
+  assert.match(
+    cohesion,
+    /\.theme-classic\.companion-page \.act-split-table-head span:last-child,[\s\S]*\.theme-dark-fantasy\.companion-page \.act-time-status-pill \{[\s\S]*width: 92px !important;[\s\S]*justify-self: center !important;/
+  );
+  assert.match(
+    cohesion,
+    /\.theme-classic\.companion-page \.route-step-index,[\s\S]*\.theme-classic\.companion-page \.act-time-status-pill,[\s\S]*\.theme-dark-fantasy\.companion-page \.act-time-status-pill,[\s\S]*\.theme-dark-fantasy\.companion-page \.summary-history-stats span \{[\s\S]*align-items: center !important;[\s\S]*justify-content: center !important;[\s\S]*text-align: center !important;/
+  );
+});
+
 test('no forbidden performance hacks are reintroduced', () => {
   const source = [
     readMainProcessSource(),
