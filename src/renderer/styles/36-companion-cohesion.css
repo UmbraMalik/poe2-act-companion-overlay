@@ -2493,7 +2493,52 @@ body.settings-window-resizing .settings-page:not(.companion-page) {
   }
 }
 
-/* Companion typography alignment guard: themes may change color, not type metrics. */
+/* App typography guard: themes may change color, not type metrics. */
+.overlay-page,
+.settings-page,
+.close-confirm-page,
+.info-page,
+.report-page,
+.community-page,
+.support-page,
+.update-page,
+.companion-page,
+.settings-select-layer,
+button,
+input,
+select,
+textarea {
+  font-family: var(--font-ui) !important;
+}
+
+.overlay-page .hud-timer,
+.overlay-page .timer-only-time,
+.overlay-page .timer-only-run-time-text,
+.overlay-page .timer-only-act-time-text,
+.overlay-page .timer-only-countdown-text,
+.overlay-page .overlay-run-time-text,
+.overlay-page .overlay-act-time-text,
+.companion-page .timer-main-readout h3,
+.companion-page .timer-main-readout strong,
+.companion-page .timer-cockpit-details strong,
+.companion-page .timer-segment-list strong,
+.companion-page .act-split-time,
+.companion-page .act-split-total,
+.companion-page .summary-result-main strong,
+.companion-page .summary-stat strong,
+.companion-page .summary-best-time,
+.companion-page .summary-history-stats b,
+.companion-page .summary-compare-act-pill strong,
+.companion-page .summary-act-breakdown-row span,
+.companion-page .summary-act-breakdown-row small,
+.settings-page .settings-dev-grid dd,
+.settings-page .value-box,
+.settings-page .info-cell dd {
+  font-family: var(--font-mono) !important;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
 .theme-classic.companion-page,
 .theme-dark-fantasy.companion-page {
   font-family: var(--font-ui) !important;
@@ -2569,7 +2614,7 @@ body.settings-window-resizing .settings-page:not(.companion-page) {
 .theme-dark-fantasy.companion-page .summary-act-breakdown-row span,
 .theme-classic.companion-page .summary-act-breakdown-row small,
 .theme-dark-fantasy.companion-page .summary-act-breakdown-row small {
-  font-family: var(--font-caps) !important;
+  font-family: var(--font-mono) !important;
   font-weight: var(--fw-heavy) !important;
   letter-spacing: 0 !important;
   line-height: 1.08 !important;

@@ -30,7 +30,7 @@
   resize: vertical;
   line-height: 1.45;
   color: #f4ead8;
-  font-family: ui-monospace, "Cascadia Code", "Consolas", monospace;
+  font-family: var(--font-mono);
   font-size: 12px;
   white-space: pre-wrap;
   background:
@@ -68,7 +68,7 @@
   resize: vertical;
   line-height: 1.45;
   color: #f4ead8;
-  font-family: ui-monospace, "Cascadia Code", "Consolas", monospace;
+  font-family: var(--font-mono);
   font-size: 12px;
   white-space: pre-wrap;
   background:

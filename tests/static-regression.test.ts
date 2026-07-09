@@ -333,17 +333,27 @@ test('app theme is persisted and available in overlay and settings', () => {
   assert.match(translations, /Dark fantasy/);
 });
 
-test('companion app themes share typography metrics and centered act status pills', () => {
+test('renderer uses bundled app fonts with shared theme metrics and centered act status pills', () => {
+  const packageJson = readJson('package.json') as any;
+  const stylesIndex = readText('src/renderer/styles.css');
+  const typography = readText('src/renderer/styles/10-typography-refresh.css');
   const cohesion = readText('src/renderer/styles/36-companion-cohesion.css');
 
-  assert.match(cohesion, /Companion typography alignment guard/);
+  assert.equal(packageJson.devDependencies['@fontsource-variable/geist'], '^5.2.9');
+  assert.equal(packageJson.devDependencies['@fontsource-variable/jetbrains-mono'], '^5.2.8');
+  assert.match(stylesIndex, /@import '@fontsource-variable\/geist';/);
+  assert.match(stylesIndex, /@import '@fontsource-variable\/jetbrains-mono';/);
+  assert.match(typography, /--font-ui:[\s\S]*"Geist Variable"/);
+  assert.match(typography, /--font-mono:[\s\S]*"JetBrains Mono Variable"/);
+  assert.match(typography, /\.timer-only-time \{[\s\S]*font-family: var\(--font-mono\) !important;/);
+  assert.match(cohesion, /App typography guard/);
   assert.match(
     cohesion,
     /\.theme-classic\.companion-page,\s*[\r\n]+\.theme-dark-fantasy\.companion-page \{[\s\S]*font-family: var\(--font-ui\) !important;/
   );
   assert.match(
     cohesion,
-    /\.theme-classic\.companion-page \.timer-main-readout h3,[\s\S]*\.theme-dark-fantasy\.companion-page \.summary-act-breakdown-row small \{[\s\S]*font-family: var\(--font-caps\) !important;[\s\S]*letter-spacing: 0 !important;[\s\S]*line-height: 1\.08 !important;/
+    /\.theme-classic\.companion-page \.timer-main-readout h3,[\s\S]*\.theme-dark-fantasy\.companion-page \.summary-act-breakdown-row small \{[\s\S]*font-family: var\(--font-mono\) !important;[\s\S]*letter-spacing: 0 !important;[\s\S]*line-height: 1\.08 !important;/
   );
   assert.match(
     cohesion,

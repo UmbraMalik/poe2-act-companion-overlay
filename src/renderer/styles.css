@@ -5,6 +5,8 @@
  * cascade readable without changing selector order or runtime behavior.
  * Keep imports in this order unless you intentionally change override priority.
  */
+@import '@fontsource-variable/geist';
+@import '@fontsource-variable/jetbrains-mono';
 @import './styles/01-overlay-core.css'; /* Base overlay, shared HUD, timer-only early rules */
 @import './styles/02-settings-shell.css'; /* Settings and app shell layout */
 @import './styles/03-route-reminders-bonuses.css'; /* Route density, reminders dashboard, bonus tabs */
