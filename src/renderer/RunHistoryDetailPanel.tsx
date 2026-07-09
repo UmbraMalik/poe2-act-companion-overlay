@@ -1,4 +1,4 @@
-import { Fragment, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { translateDataText } from '../i18n/data';
 import { translate } from '../i18n/translations';
 import { isEndgameT15Act } from '../shared/timers';
@@ -75,6 +75,15 @@ function renderDeltaCell(deltaMs: number | null) {
     <small className={getRunHistoryDeltaClass(deltaMs)}>
       {formatRunHistoryDelta(deltaMs)}
     </small>
+  );
+}
+
+function RunHistoryDetailPlaceholder({ language }: { language: AppLanguage }) {
+  return (
+    <div className="run-history-detail-placeholder">
+      <strong>{translate(language, 'companion.runHistoryDetailEmptyTitle')}</strong>
+      <span>{translate(language, 'companion.runHistoryDetailEmptyText')}</span>
+    </div>
   );
 }
 
@@ -230,7 +239,7 @@ function RunHistoryDetailPanelInner({
   }, [history, selectedRunId]);
 
   return (
-    <section className="companion-block summary-history-panel">
+    <section className={`companion-block summary-history-panel ${isDetailOpen ? 'is-detail-open' : ''}`}>
       <div className="summary-section-heading">
         <h3>{translate(language, 'companion.runHistoryTitle')}</h3>
         <span>{translate(language, 'companion.runHistoryCount', { count: history.length })}</span>
@@ -244,38 +253,38 @@ function RunHistoryDetailPanelInner({
             {visibleHistoryRows.map(({ entry, completedActCount, longestZoneLabel }) => {
               const isSelected = isDetailOpen && entry.id === selectedRunIdFromModel;
               return (
-                <Fragment key={entry.id}>
-                  <article className={`summary-history-row ${isSelected ? 'is-selected' : ''}`}>
-                    <div className="summary-history-main">
-                      <strong>{entry.label || translate(language, 'companion.savedRunFallback')}</strong>
-                      <span>{formatSavedRunDate(entry.savedAt, language)}</span>
-                    </div>
-                    <div className="summary-history-stats">
-                      <span><b>{formatDuration(entry.totalElapsedMs)}</b></span>
-                      <span>{completedActCount} / {TOTAL_CAMPAIGN_ACTS}</span>
-                      <span>{longestZoneLabel}</span>
-                    </div>
-                    <div className="button-row summary-history-actions">
-                      <button
-                        type="button"
-                        className="button-secondary"
-                        onClick={() => openRunDetails(entry.id)}
-                      >
-                        {translate(language, 'companion.runHistoryDetails')}
-                      </button>
-                      <button type="button" className="button-secondary" onClick={() => onRestore(entry.id)}>
-                        {translate(language, 'companion.continueSavedRun')}
-                      </button>
-                      <button type="button" className="button-danger" onClick={() => onDelete(entry.id)}>
-                        {translate(language, 'companion.deleteSavedRun')}
-                      </button>
-                    </div>
-                  </article>
-                  {isSelected && model && <RunHistoryDetailCard model={model} language={language} />}
-                </Fragment>
+                <article key={entry.id} className={`summary-history-row ${isSelected ? 'is-selected' : ''}`}>
+                  <div className="summary-history-main">
+                    <strong>{entry.label || translate(language, 'companion.savedRunFallback')}</strong>
+                    <span>{formatSavedRunDate(entry.savedAt, language)}</span>
+                  </div>
+                  <div className="summary-history-stats">
+                    <span><b>{formatDuration(entry.totalElapsedMs)}</b></span>
+                    <span>{completedActCount} / {TOTAL_CAMPAIGN_ACTS}</span>
+                    <span>{longestZoneLabel}</span>
+                  </div>
+                  <div className="button-row summary-history-actions">
+                    <button
+                      type="button"
+                      className="button-secondary"
+                      onClick={() => openRunDetails(entry.id)}
+                    >
+                      {translate(language, 'companion.runHistoryDetails')}
+                    </button>
+                    <button type="button" className="button-secondary" onClick={() => onRestore(entry.id)}>
+                      {translate(language, 'companion.continueSavedRun')}
+                    </button>
+                    <button type="button" className="button-danger" onClick={() => onDelete(entry.id)}>
+                      {translate(language, 'companion.deleteSavedRun')}
+                    </button>
+                  </div>
+                </article>
               );
             })}
           </div>
+          <aside className="run-history-detail-dock" aria-live="polite">
+            {model ? <RunHistoryDetailCard model={model} language={language} /> : <RunHistoryDetailPlaceholder language={language} />}
+          </aside>
         </div>
       )}
     </section>

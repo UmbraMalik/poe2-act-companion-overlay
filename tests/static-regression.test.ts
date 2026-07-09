@@ -501,9 +501,11 @@ test('companion bonus manual marks keep visible source-specific feedback', () =>
   assert.match(cohesion, /\.bonus-detected-line\.is-unknown/);
 });
 
-test('companion run history details button opens an inline detail card', () => {
+test('companion run history details button opens a stable side detail card', () => {
   const detailPanel = readText('src/renderer/RunHistoryDetailPanel.tsx');
   const companion = readText('src/renderer/pages/CompanionPage.tsx');
+  const translations = readText('src/i18n/translations.ts');
+  const cohesion = readText('src/renderer/styles/36-companion-cohesion.css');
 
   assert.match(detailPanel, /const \[isDetailOpen,\s*setIsDetailOpen\] = useState\(false\)/);
   assert.match(detailPanel, /const openRunDetails = useCallback\(\(runId: string\)/);
@@ -511,7 +513,16 @@ test('companion run history details button opens an inline detail card', () => {
   assert.doesNotMatch(detailPanel, /setPendingRunId/);
   assert.doesNotMatch(detailPanel, /window\.setTimeout/);
   assert.doesNotMatch(detailPanel, /RunHistoryDetailLoading/);
+  assert.match(detailPanel, /run-history-detail-dock/);
+  assert.match(detailPanel, /RunHistoryDetailPlaceholder/);
   assert.match(detailPanel, /<RunHistoryDetailCard model=\{model\} language=\{language\} \/>/);
+  assert.match(detailPanel, /<RunHistoryDetailPlaceholder language=\{language\} \/>/);
+  assert.doesNotMatch(detailPanel, /<Fragment/);
+  assert.match(translations, /runHistoryDetailEmptyTitle/);
+  assert.match(translations, /runHistoryDetailEmptyText/);
+  assert.match(cohesion, /summary-history-panel \.run-history-detail-layout/);
+  assert.match(cohesion, /grid-template-columns: minmax\(0, 0\.95fr\) minmax\(360px, 1\.05fr\)/);
+  assert.match(cohesion, /summary-history-panel \*,/);
   assert.match(detailPanel, /detailModelCacheRef/);
   assert.match(detailPanel, /getDetailModelCacheKey\(historySignature, selectedRunId\)/);
   assert.match(detailPanel, /previous\.historySignature === next\.historySignature/);
