@@ -2387,3 +2387,101 @@ body.settings-window-resizing .settings-page:not(.companion-page) {
     min-height: 180px;
   }
 }
+
+/* Bonus tab readability guard: one scroll surface, no clipped cards inside act frames. */
+.companion-page .bonuses-tab-layout {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  gap: 12px !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  padding-right: 6px !important;
+  scroll-padding-bottom: 18px;
+}
+
+.companion-page .bonuses-act-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  grid-auto-flow: row !important;
+  grid-auto-rows: auto !important;
+  align-items: start !important;
+  align-content: start !important;
+  gap: 12px !important;
+  min-height: auto !important;
+  overflow: visible !important;
+  padding: 0 2px 18px 0 !important;
+}
+
+.companion-page .bonuses-act-column {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  min-width: 0 !important;
+  min-height: auto !important;
+  overflow: visible !important;
+}
+
+.companion-page .bonuses-act-card,
+.companion-page .bonuses-list,
+.companion-page .bonuses-list > .bonus-row {
+  min-height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+.companion-page .bonuses-list {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+}
+
+.companion-page .bonuses-list > .bonus-row {
+  display: grid !important;
+  grid-template-columns: 24px minmax(0, 1fr) auto !important;
+  align-items: start !important;
+  gap: 8px !important;
+}
+
+.companion-page .bonuses-tab-layout .bonus-main,
+.companion-page .bonuses-tab-layout .bonus-title-line,
+.companion-page .bonuses-tab-layout .bonus-meta,
+.companion-page .bonuses-tab-layout .bonus-details-list,
+.companion-page .bonuses-tab-layout .bonus-detected-line {
+  min-width: 0;
+  max-width: 100%;
+  overflow: visible !important;
+}
+
+.companion-page .bonuses-tab-layout .bonus-title-line {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.companion-page .bonuses-tab-layout .bonus-meta,
+.companion-page .bonuses-tab-layout .bonus-details-list,
+.companion-page .bonuses-tab-layout .bonus-detected-line {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 1180px) {
+  .companion-page .bonuses-act-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .companion-page .bonuses-act-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .companion-page .bonuses-list > .bonus-row {
+    grid-template-columns: 22px minmax(0, 1fr) !important;
+  }
+
+  .companion-page .bonuses-list > .bonus-row .bonus-toggle-button {
+    grid-column: 2 !important;
+    justify-self: start !important;
+  }
+}
