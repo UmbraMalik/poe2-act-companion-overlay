@@ -4,7 +4,7 @@
   "description": "Safe desktop overlay helper for Path of Exile 2 campaign routing.",
   "main": "dist-electron/main/main.js",
   "scripts": {
-    "dev": "concurrently -k \"tsc -p tsconfig.electron.json --watch --preserveWatchOutput\" \"vite --host 127.0.0.1\" \"wait-on http://127.0.0.1:5173/overlay.html dist-electron/main/main.js && electron .\"",
+    "dev": "node scripts/clean-dev-electron.cjs && concurrently -k \"tsc -p tsconfig.electron.json --watch --preserveWatchOutput\" \"vite --host 127.0.0.1\" \"wait-on http://127.0.0.1:5173/overlay.html dist-electron/main/main.js dist-electron/i18n/translations.js dist-electron/i18n/translation-overrides.js && electron .\"",
     "build": "tsc -p tsconfig.electron.json && vite build",
     "dist": "tsc -p tsconfig.electron.json && vite build && electron-builder",
     "start": "npm run build && set ELECTRON_RENDERER_MODE=production&& electron .",

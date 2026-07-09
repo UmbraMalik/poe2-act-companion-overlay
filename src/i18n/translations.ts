@@ -1484,9 +1484,16 @@ const baseTranslations = {
   }
 } satisfies Record<AppLanguage, TranslationTree>;
 
+const emptyTranslationOverrides = {
+  ru: {},
+  en: {}
+} satisfies Record<AppLanguage, TranslationTree>;
+
+const activeTranslationOverrides = translationOverrides ?? emptyTranslationOverrides;
+
 const translations = {
-  ru: mergeTranslationTrees(baseTranslations.ru, translationOverrides.ru),
-  en: mergeTranslationTrees(baseTranslations.en, translationOverrides.en)
+  ru: mergeTranslationTrees(baseTranslations.ru, activeTranslationOverrides.ru ?? emptyTranslationOverrides.ru),
+  en: mergeTranslationTrees(baseTranslations.en, activeTranslationOverrides.en ?? emptyTranslationOverrides.en)
 } satisfies Record<AppLanguage, TranslationTree>;
 
 function interpolate(template: string, params?: TranslationParams): string {
