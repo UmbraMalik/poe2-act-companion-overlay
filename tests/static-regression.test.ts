@@ -500,8 +500,9 @@ test('companion bonus manual marks keep visible source-specific feedback', () =>
   assert.match(cohesion, /\.bonus-detected-line\.is-context/);
   assert.match(cohesion, /\.bonus-detected-line\.is-unknown/);
   assert.match(cohesion, /Bonus tab readability guard/);
-  assert.match(cohesion, /\.companion-page \.bonuses-tab-layout \{[\s\S]*overflow-y: auto !important;/);
-  assert.match(cohesion, /\.companion-page \.bonuses-act-grid \{[\s\S]*overflow: visible !important;/);
+  assert.match(cohesion, /\.companion-page \.bonuses-tab-layout \{[\s\S]*grid-template-rows: auto minmax\(0, 1fr\) !important;[\s\S]*overflow-y: hidden !important;/);
+  assert.match(cohesion, /\.companion-page \.bonuses-summary-card \{[\s\S]*overflow: visible !important;/);
+  assert.match(cohesion, /\.companion-page \.bonuses-act-grid \{[\s\S]*overflow-y: auto !important;/);
   assert.match(cohesion, /\.companion-page \.bonuses-act-card,[\s\S]*\.companion-page \.bonuses-list,[\s\S]*\.companion-page \.bonuses-list > \.bonus-row \{[\s\S]*overflow: visible !important;/);
 });
 

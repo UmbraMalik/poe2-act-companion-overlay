@@ -2388,17 +2388,22 @@ body.settings-window-resizing .settings-page:not(.companion-page) {
   }
 }
 
-/* Bonus tab readability guard: one scroll surface, no clipped cards inside act frames. */
+/* Bonus tab readability guard: keep the summary anchored, scroll only act cards. */
 .companion-page .bonuses-tab-layout {
-  display: flex !important;
-  flex-direction: column !important;
+  display: grid !important;
+  grid-template-rows: auto minmax(0, 1fr) !important;
   height: 100% !important;
   min-height: 0 !important;
   gap: 12px !important;
-  overflow-y: auto !important;
+  overflow-y: hidden !important;
   overflow-x: hidden !important;
-  padding-right: 6px !important;
-  scroll-padding-bottom: 18px;
+  padding: 1px 0 0 0 !important;
+}
+
+.companion-page .bonuses-summary-card {
+  min-height: auto !important;
+  overflow: visible !important;
+  align-self: start !important;
 }
 
 .companion-page .bonuses-act-grid {
@@ -2409,9 +2414,11 @@ body.settings-window-resizing .settings-page:not(.companion-page) {
   align-items: start !important;
   align-content: start !important;
   gap: 12px !important;
-  min-height: auto !important;
-  overflow: visible !important;
-  padding: 0 2px 18px 0 !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  padding: 0 8px 18px 0 !important;
+  scroll-padding-bottom: 18px;
 }
 
 .companion-page .bonuses-act-column {
