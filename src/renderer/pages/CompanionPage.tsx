@@ -1250,15 +1250,18 @@ export function CompanionPage() {
     [snapshot?.campaignBonuses, campaignBonusProgress]
   );
   const rawRunHistory = snapshot?.config.runHistory ?? [];
+  const runHistorySignature = useMemo(
+    () => getRunHistorySignature(rawRunHistory),
+    [rawRunHistory]
+  );
   const runHistory = useMemo(() => {
-    const signature = getRunHistorySignature(rawRunHistory);
-    if (stableRunHistoryRef.current.signature === signature) {
+    if (stableRunHistoryRef.current.signature === runHistorySignature) {
       return stableRunHistoryRef.current.history;
     }
 
-    stableRunHistoryRef.current = { signature, history: rawRunHistory };
+    stableRunHistoryRef.current = { signature: runHistorySignature, history: rawRunHistory };
     return rawRunHistory;
-  }, [rawRunHistory]);
+  }, [rawRunHistory, runHistorySignature]);
   const currentZoneBonuses = useMemo(
     () => snapshot ? getCurrentZoneCampaignBonuses(snapshot) : [],
     [
@@ -2208,6 +2211,7 @@ export function CompanionPage() {
         {renderBestComparison(runHistory, currentRunElapsed, actTimeRows, language)}
         <RunHistoryDetailPanel
           history={runHistory}
+          historySignature={runHistorySignature}
           language={language}
           onRestore={restoreSavedRun}
           onDelete={deleteSavedRun}

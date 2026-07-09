@@ -1,4 +1,4 @@
-import { Fragment, memo, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { translateDataText } from '../i18n/data';
 import { translate } from '../i18n/translations';
 import { isEndgameT15Act } from '../shared/timers';
@@ -13,12 +13,29 @@ import {
 
 type RunHistoryDetailPanelProps = {
   history: SavedRunHistoryEntry[];
+  historySignature: string;
   language: AppLanguage;
   onRestore: (runId: string) => void;
   onDelete: (runId: string) => void;
 };
 
 const TOTAL_CAMPAIGN_ACTS = 5;
+const DETAIL_MODEL_CACHE_LIMIT = 8;
+
+function getDetailModelCacheKey(historySignature: string, runId: string): string {
+  return `${historySignature}\u0000${runId}`;
+}
+
+function trimDetailModelCache(cache: Map<string, RunHistoryDetailModel>): void {
+  while (cache.size > DETAIL_MODEL_CACHE_LIMIT) {
+    const firstKey = cache.keys().next().value;
+    if (typeof firstKey !== 'string') {
+      return;
+    }
+
+    cache.delete(firstKey);
+  }
+}
 
 function formatSavedRunDate(timestamp: number, language: AppLanguage): string {
   return new Date(timestamp).toLocaleString(language === 'en' ? 'en-US' : 'ru-RU');
@@ -159,6 +176,7 @@ function RunHistoryDetailLoading({ language }: { language: AppLanguage }) {
 
 function RunHistoryDetailPanelInner({
   history,
+  historySignature,
   language,
   onRestore,
   onDelete
@@ -167,6 +185,7 @@ function RunHistoryDetailPanelInner({
   const [pendingRunId, setPendingRunId] = useState<string | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const detailOpenTimeoutRef = useRef<number | null>(null);
+  const detailModelCacheRef = useRef<Map<string, RunHistoryDetailModel>>(new Map());
   const sortedHistory = useMemo(
     () => [...history].sort((left, right) => right.savedAt - left.savedAt),
     [history]
@@ -180,15 +199,38 @@ function RunHistoryDetailPanelInner({
     [sortedHistory, language]
   );
   const model = useMemo(
-    () => isDetailOpen && selectedRunId ? buildRunHistoryDetailModel(history, selectedRunId) : null,
-    [history, selectedRunId, isDetailOpen]
+    () => {
+      if (!isDetailOpen || !selectedRunId) {
+        return null;
+      }
+
+      const cacheKey = getDetailModelCacheKey(historySignature, selectedRunId);
+      const cachedModel = detailModelCacheRef.current.get(cacheKey);
+      if (cachedModel) {
+        return cachedModel;
+      }
+
+      const nextModel = buildRunHistoryDetailModel(history, selectedRunId);
+      detailModelCacheRef.current.set(cacheKey, nextModel);
+      trimDetailModelCache(detailModelCacheRef.current);
+      return nextModel;
+    },
+    [history, historySignature, selectedRunId, isDetailOpen]
   );
   const openRunId = selectedRunId ?? pendingRunId;
   const selectedRunIdFromModel = model?.selectedRun?.id ?? openRunId;
 
-  const openRunDetails = (runId: string) => {
+  const openRunDetails = useCallback((runId: string) => {
     if (detailOpenTimeoutRef.current !== null) {
       window.clearTimeout(detailOpenTimeoutRef.current);
+    }
+
+    const cacheKey = getDetailModelCacheKey(historySignature, runId);
+    if (detailModelCacheRef.current.has(cacheKey)) {
+      setPendingRunId(null);
+      setSelectedRunId(runId);
+      setIsDetailOpen(true);
+      return;
     }
 
     setPendingRunId(runId);
@@ -200,7 +242,15 @@ function RunHistoryDetailPanelInner({
       setPendingRunId(null);
       detailOpenTimeoutRef.current = null;
     }, 0);
-  };
+  }, [historySignature]);
+
+  useEffect(() => {
+    for (const cacheKey of detailModelCacheRef.current.keys()) {
+      if (!cacheKey.startsWith(`${historySignature}\u0000`)) {
+        detailModelCacheRef.current.delete(cacheKey);
+      }
+    }
+  }, [historySignature]);
 
   useEffect(() => {
     if (openRunId !== null && !history.some((entry) => entry.id === openRunId)) {
@@ -273,4 +323,14 @@ function RunHistoryDetailPanelInner({
   );
 }
 
-export const RunHistoryDetailPanel = memo(RunHistoryDetailPanelInner);
+function areRunHistoryDetailPanelPropsEqual(
+  previous: RunHistoryDetailPanelProps,
+  next: RunHistoryDetailPanelProps
+): boolean {
+  return previous.historySignature === next.historySignature &&
+    previous.language === next.language &&
+    previous.onRestore === next.onRestore &&
+    previous.onDelete === next.onDelete;
+}
+
+export const RunHistoryDetailPanel = memo(RunHistoryDetailPanelInner, areRunHistoryDetailPanelPropsEqual);

@@ -506,15 +506,21 @@ test('companion run history details button opens an inline detail card', () => {
   const companion = readText('src/renderer/pages/CompanionPage.tsx');
 
   assert.match(detailPanel, /const \[isDetailOpen,\s*setIsDetailOpen\] = useState\(false\)/);
-  assert.match(detailPanel, /const openRunDetails = \(runId: string\)/);
+  assert.match(detailPanel, /const openRunDetails = useCallback\(\(runId: string\)/);
   assert.match(detailPanel, /setPendingRunId\(runId\);\s*setSelectedRunId\(null\);\s*setIsDetailOpen\(true\);/);
   assert.match(detailPanel, /window\.setTimeout\(\(\) => \{\s*setSelectedRunId\(runId\);/);
   assert.match(detailPanel, /<RunHistoryDetailLoading language=\{language\} \/>/);
   assert.match(detailPanel, /<RunHistoryDetailCard model=\{model\} language=\{language\} \/>/);
-  assert.match(detailPanel, /export const RunHistoryDetailPanel = memo\(RunHistoryDetailPanelInner\)/);
+  assert.match(detailPanel, /detailModelCacheRef/);
+  assert.match(detailPanel, /getDetailModelCacheKey\(historySignature, selectedRunId\)/);
+  assert.match(detailPanel, /previous\.historySignature === next\.historySignature/);
+  assert.match(detailPanel, /previous\.onRestore === next\.onRestore/);
+  assert.match(detailPanel, /previous\.onDelete === next\.onDelete/);
+  assert.match(detailPanel, /export const RunHistoryDetailPanel = memo\(RunHistoryDetailPanelInner, areRunHistoryDetailPanelPropsEqual\)/);
   assert.doesNotMatch(detailPanel, /getRunHistorySignature\(previous\.history\)/);
   assert.match(companion, /stableRunHistoryRef/);
-  assert.match(companion, /getRunHistorySignature\(rawRunHistory\)/);
+  assert.match(companion, /const runHistorySignature = useMemo\(\s*\(\) => getRunHistorySignature\(rawRunHistory\),/);
+  assert.match(companion, /historySignature=\{runHistorySignature\}/);
   assert.match(companion, /const restoreSavedRun = useCallback/);
   assert.match(companion, /const deleteSavedRun = useCallback/);
 
