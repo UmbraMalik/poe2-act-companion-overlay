@@ -2757,3 +2757,48 @@ textarea {
   padding: 0 12px !important;
   letter-spacing: 0.055em !important;
 }
+
+
+/* Utility windows header alignment: keep Info, Community and Support headers in the same row as Settings at normal window widths. */
+.info-page .settings-header.window-drag-strip {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center !important;
+  gap: 16px;
+}
+
+.info-page .settings-header-copy {
+  justify-self: start;
+  min-width: 0;
+  max-width: 720px;
+}
+
+.info-page .settings-header .button-row {
+  justify-self: end;
+  width: auto;
+  max-width: none;
+  justify-content: flex-end;
+}
+
+.info-page .settings-header .button-row .button-secondary {
+  min-width: 132px;
+  min-height: 42px;
+  padding: 0 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+@media (max-width: 560px) {
+  .info-page .settings-header.window-drag-strip {
+    grid-template-columns: 1fr;
+    align-items: stretch !important;
+    gap: 10px;
+  }
+
+  .info-page .settings-header .button-row {
+    justify-self: start;
+    justify-content: flex-start;
+  }
+}
