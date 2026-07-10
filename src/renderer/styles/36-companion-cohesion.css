@@ -3307,6 +3307,41 @@ textarea {
 .companion-page .zone-detail-drawer-body > .companion-block {
   min-width: 0;
   margin: 0;
+  align-content: start;
+  grid-auto-rows: max-content;
+}
+
+.companion-page .zone-detail-drawer-body .details-list,
+.companion-page .zone-detail-drawer-body .companion-stack {
+  align-content: start;
+  grid-auto-rows: max-content;
+}
+
+.companion-page .zone-detail-drawer-body .skip-section .details-list {
+  gap: 7px;
+}
+
+.companion-page .zone-detail-drawer-body .skip-section .details-list li {
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+  padding: 8px 10px 8px 30px;
+  border: 1px solid color-mix(in srgb, var(--companion-red) 24%, transparent);
+  border-radius: var(--companion-card-radius-sm, 10px);
+  background:
+    linear-gradient(90deg, var(--companion-red-soft), transparent 72%),
+    rgba(255, 255, 255, 0.014);
+}
+
+.companion-page .zone-detail-drawer-body .skip-section .details-list li::before {
+  content: "×";
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--companion-red);
+  font-size: 15px;
+  font-weight: 850;
+  line-height: 1;
 }
 
 @media (max-width: 1180px) {
