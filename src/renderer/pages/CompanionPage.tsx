@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useAppSnapshot, useLiveRunTimer } from '../hooks';
 import { useDocumentTitle, useI18n } from '../useI18n';
 import { getAppThemeClassName } from '../theme';
@@ -17,7 +17,12 @@ import {
   getXpStatus, type ActTimeRow
 } from '../companion-helpers';
 import { formatDuration, formatRecommendedLevelLabel } from '../utils';
-import { getCampaignBonusView, getGuideView, translateDataText } from '../../i18n/data';
+import {
+  getCampaignBonusView,
+  getGuideView,
+  translateDataText,
+  type LocalizedGuideEntryView
+} from '../../i18n/data';
 import { getCampaignBonusProvenanceView } from '../../shared/campaign-bonus-provenance';
 import { translate } from '../../i18n/translations';
 import { isEndgameT15Act } from '../../shared/timers';
@@ -31,6 +36,7 @@ import { filterRouteCards, getRouteFilterEmptyText, type RouteFilterMode } from 
 import type { AppLanguage, CampaignBonusDefinition, CampaignBonusProgress, GuideEntry, RunSummary, SavedRunHistoryEntry, ZoneAct } from '../../shared/types';
 
 type CompanionTab = 'zone' | 'route' | 'timer' | 'actTimes' | 'reminders' | 'bonuses' | 'summary';
+type RenderableGuideDetails = GuideEntry['details'] | LocalizedGuideEntryView['details'];
 type RunConfirmDialog =
   | { type: 'reset' }
   | { type: 'restore'; runId: string }
@@ -730,7 +736,7 @@ function renderPowerSpikeTimeline(
 }
 
 function renderDetails(
-  details: GuideEntry['details'] | ReturnType<typeof getGuideView>['details'],
+  details: RenderableGuideDetails,
   language: AppLanguage
 ) {
   if (!details) {
@@ -1273,7 +1279,8 @@ export function CompanionPage() {
   );
   const localizedCurrentZoneBonuses = useMemo(
     () => currentZoneBonuses.map(({ bonus, done }) => ({
-      bonus: getCampaignBonusView(bonus, language) ?? bonus,
+      bonus,
+      bonusView: getCampaignBonusView(bonus, language),
       done
     })),
     [currentZoneBonuses, language]
@@ -1675,10 +1682,10 @@ export function CompanionPage() {
                 <span>{localizedCurrentZoneBonuses.filter(({ done }) => done).length}/{localizedCurrentZoneBonuses.length}</span>
               </div>
               <ul className="details-list zone-bonus-details-list">
-                {localizedCurrentZoneBonuses.map(({ bonus, done }) => (
+                {localizedCurrentZoneBonuses.map(({ bonus, bonusView, done }) => (
                   <li key={bonus.id} className={done ? 'bonus-line is-done' : 'bonus-line'}>
                     <span className="bonus-state-marker">{done ? '✓' : '○'}</span>
-                    <span>{'displayTitle' in bonus ? bonus.displayTitle : bonus.title}</span>
+                    <span>{bonusView?.displayTitle ?? bonus.title}</span>
                   </li>
                 ))}
               </ul>
@@ -2119,7 +2126,11 @@ export function CompanionPage() {
                   <div className="bonuses-list">
                     {bonuses.map((bonus) => {
                       const progress = campaignBonusProgress[bonus.id], done = Boolean(progress);
-                      const bonusView = getCampaignBonusView(bonus, language) ?? bonus, isBonusFeedback = bonusFeedback?.id === bonus.id;
+                      const bonusView = getCampaignBonusView(bonus, language), isBonusFeedback = bonusFeedback?.id === bonus.id;
+                      const bonusTitle = bonusView?.displayTitle ?? bonus.title;
+                      const bonusZoneName = bonusView?.displayZoneName ?? bonus.zone_ru;
+                      const bonusSource = bonusView?.displaySource ?? bonus.source;
+                      const bonusDetails = bonusView?.displayDetails ?? bonus.details;
                       const provenance = getCampaignBonusProvenanceView(progress, language);
 
                       return (
@@ -2130,14 +2141,14 @@ export function CompanionPage() {
                           <div className="bonus-status-marker" aria-hidden="true">{done ? '✓' : '○'}</div>
                           <div className="bonus-main">
                             <div className="bonus-title-line">
-                              <strong>{'displayTitle' in bonusView ? bonusView.displayTitle : bonus.title}</strong>
+                              <strong>{bonusTitle}</strong>
                               <span className="bonus-category-pill">{getBonusCategoryLabel(bonus.category, language)}</span>
                               {bonus.needsVerification && <span className="bonus-verify-pill">{t('companion.verify')}</span>}
                             </div>
-                            <p className="bonus-meta">{('displayZoneName' in bonusView ? bonusView.displayZoneName : bonus.zone_ru)} · {('displaySource' in bonusView ? bonusView.displaySource : bonus.source)}</p>
-                            {bonus.details.length > 0 && (
+                            <p className="bonus-meta">{bonusZoneName} · {bonusSource}</p>
+                            {bonusDetails.length > 0 && (
                               <ul className="bonus-details-list">
-                                {(('displayDetails' in bonusView ? bonusView.displayDetails : bonus.details) as string[]).slice(0, 2).map((detail) => (
+                                {bonusDetails.slice(0, 2).map((detail) => (
                                   <li key={`${bonus.id}-${detail}`}>{detail}</li>))}
                               </ul>
                             )}
@@ -2328,7 +2339,7 @@ export function CompanionPage() {
     reminders: remindersTab,
     bonuses: bonusesTab,
     summary: summaryTab
-  } satisfies Record<CompanionTab, JSX.Element | null>;
+  } satisfies Record<CompanionTab, ReactNode>;
 
   return (
     <main className={`settings-page companion-page fx-${config.visualFxIntensity} ${getAppThemeClassName(config.theme)}`}>

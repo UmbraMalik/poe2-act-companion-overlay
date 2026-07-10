@@ -13,6 +13,10 @@ interface SettingsSelectProps<T extends string | number> {
   onChange: (value: T) => void;
 }
 
+type SettingsSelectMenuStyle = CSSProperties & {
+  '--settings-select-width'?: string;
+};
+
 export function SettingsSelect<T extends string | number>({
   ariaLabel,
   value,
@@ -20,7 +24,7 @@ export function SettingsSelect<T extends string | number>({
   onChange
 }: SettingsSelectProps<T>) {
   const [isOpen, setIsOpen] = useState(false);
-  const [menuStyle, setMenuStyle] = useState<CSSProperties>({});
+  const [menuStyle, setMenuStyle] = useState<SettingsSelectMenuStyle>({});
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
   const selectedIndex = Math.max(0, options.findIndex((option) => option.value === value));
@@ -66,7 +70,7 @@ export function SettingsSelect<T extends string | number>({
         width,
         '--settings-select-width': `${width}px`,
         ...verticalPosition
-      } as CSSProperties);
+      });
     };
 
     const handlePointerDown = (event: PointerEvent) => {

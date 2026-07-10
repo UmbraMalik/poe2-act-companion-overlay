@@ -467,7 +467,7 @@ function getOverlaySpeedrunLines(
 
 
 function getChecklistItemTone(
-  item: GuideEntry['checklist'][number]
+  item: NonNullable<GuideEntry['checklist']>[number]
 ): string {
   if (
     item.type === 'reward' ||
@@ -1094,14 +1094,14 @@ export function OverlayPage() {
       scheduleAdaptiveOverlayHeight();
     });
 
-    observer.observe(shell);
-    observer.observe(page);
+    observer.observe(shell); observer.observe(page);
     scheduleAdaptiveOverlayHeight();
-    window.addEventListener('resize', scheduleAdaptiveOverlayHeight);
+    const handleWindowResize = () => scheduleAdaptiveOverlayHeight();
+    window.addEventListener('resize', handleWindowResize);
 
     return () => {
       observer.disconnect();
-      window.removeEventListener('resize', scheduleAdaptiveOverlayHeight);
+      window.removeEventListener('resize', handleWindowResize);
 
       if (autoResizeFrameRef.current !== null) {
         autoResizeFrameRef.current.cancel();
@@ -1224,7 +1224,7 @@ export function OverlayPage() {
     const stopOverlayDrag = () => {
       const state = overlayDragStateRef.current;
 
-      if (state?.frame !== null) {
+      if (state && state.frame !== null) {
         window.cancelAnimationFrame(state.frame);
         flushAbsoluteMove();
       }
@@ -1525,7 +1525,7 @@ export function OverlayPage() {
 
     const stopResize = () => {
       const state = resizeStateRef.current;
-      if (state?.frame !== null) {
+      if (state && state.frame !== null) {
         cancelAnimationFrame(state.frame);
       }
 
@@ -2061,12 +2061,12 @@ export function OverlayPage() {
             <h2>{t('overlay.zoneBonuses')}</h2>
             <ul className="section-list compact-list overlay-bonus-list">
               {zoneBonusItems.map(({ bonus, done }) => {
-                const bonusView = getCampaignBonusView(bonus, language) ?? bonus;
+                const bonusTitle = getCampaignBonusView(bonus, language)?.displayTitle ?? bonus.title;
 
                 return (
                   <li key={bonus.id} className={done ? 'bonus-line is-done' : 'bonus-line'}>
                     <span className="bonus-state-marker">{done ? '✓' : '○'}</span>
-                    <span>{'displayTitle' in bonusView ? bonusView.displayTitle : bonus.title}</span>
+                    <span>{bonusTitle}</span>
                   </li>
                 );
               })}

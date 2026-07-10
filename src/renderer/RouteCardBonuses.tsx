@@ -52,13 +52,13 @@ export function getRouteCampaignBonusModels(
   return snapshot.campaignBonuses
     .filter((bonus) => bonusIds.has(bonus.id))
     .map((bonus) => {
-      const bonusView = getCampaignBonusView(bonus, language) ?? bonus;
+      const bonusView = getCampaignBonusView(bonus, language);
       const progress = snapshot.config.campaignBonusProgress?.[bonus.id] ?? null;
 
       return {
         id: bonus.id,
-        title: 'displayTitle' in bonusView ? bonusView.displayTitle : bonus.title,
-        source: 'displaySource' in bonusView ? bonusView.displaySource : bonus.source,
+        title: bonusView?.displayTitle ?? bonus.title,
+        source: bonusView?.displaySource ?? bonus.source,
         categoryLabel: getBonusCategoryLabel(bonus.category, language),
         done: Boolean(progress),
         provenanceLabel: getCampaignBonusProvenanceView(progress, language)?.label ?? null

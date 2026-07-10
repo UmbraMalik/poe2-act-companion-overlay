@@ -488,9 +488,13 @@ export function SettingsPage() {
 
   const saveHotkeys = async () => {
     await runTask('save-hotkeys', async () => {
-      const normalizedHotkeys = Object.fromEntries(
-        Object.entries(hotkeyDrafts).map(([key, value]) => [key, String(value ?? '').trim()])
-      ) as HotkeySettings;
+      const normalizedHotkeys: HotkeySettings = {
+        markChecklistDone: String(hotkeyDrafts.markChecklistDone ?? '').trim(),
+        undoChecklistMark: String(hotkeyDrafts.undoChecklistMark ?? '').trim(),
+        toggleTimerPause: String(hotkeyDrafts.toggleTimerPause ?? '').trim(),
+        openCompanion: String(hotkeyDrafts.openCompanion ?? '').trim(),
+        toggleOverlayMode: String(hotkeyDrafts.toggleOverlayMode ?? '').trim()
+      };
       setHotkeyDrafts(normalizedHotkeys);
       await window.poe2Overlay.updateSettings({
         hotkeys: normalizedHotkeys

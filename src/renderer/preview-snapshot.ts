@@ -47,6 +47,8 @@ function normalizeEntry(entry: GuideEntry, index: number): GuideEntry {
 }
 
 function getGuideSource(): GuideDataFile {
+  const typedGuideData = guideData as unknown as Partial<GuideDataFile>;
+
   return Array.isArray(guideData)
     ? {
         zones: guideData.map((entry, index) => normalizeEntry(entry, index)),
@@ -55,8 +57,8 @@ function getGuideSource(): GuideDataFile {
         }
       }
     : {
-        ...(guideData as GuideDataFile),
-        zones: ((guideData as GuideDataFile).zones ?? []).map((entry, index) =>
+        ...typedGuideData,
+        zones: (typedGuideData.zones ?? []).map((entry, index) =>
           normalizeEntry(entry, index)
         )
       };
@@ -245,7 +247,7 @@ export function getPreviewSnapshot(): AppSnapshot {
       lastValidGameplayZoneAt: '2026-05-12T12:00:00.000Z',
       lastGameplayGuideId: selectedGuide?.id ?? null,
       lastGameplayZoneRu: selectedGuide?.zone_ru ?? null,
-      lastGameplayAct: selectedGuide?.act ?? null,
+      lastGameplayAct: typeof selectedGuide?.act === 'number' ? selectedGuide.act : null,
       lastSceneSource: selectedGuide?.zone_ru ?? null,
       lastSceneSourceAt: '2026-05-12T12:00:00.000Z',
       overlayMode: params.get('overlayMode') === 'timer_only' ? 'timer_only' : 'full',
