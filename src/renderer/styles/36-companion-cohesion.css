@@ -3580,50 +3580,102 @@ textarea {
   opacity: 0.68;
 }
 
-.companion-page .zone-command-primary {
+.companion-page .zone-command-bonuses {
   min-height: 132px;
-  align-content: center;
-  padding: 17px 18px;
   background:
-    radial-gradient(circle at 0 0, var(--companion-gold-soft), transparent 52%),
+    radial-gradient(circle at 0 0, var(--companion-green-soft), transparent 58%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.030), rgba(255, 255, 255, 0.010)),
     rgba(0, 0, 0, 0.09);
 }
 
-.companion-page .zone-command-primary::before {
-  background: var(--companion-gold);
-}
-
-.companion-page .zone-command-primary > strong {
-  max-width: 760px;
-  color: var(--companion-title);
-  font-size: clamp(19px, 2vw, 27px);
-  font-weight: 790;
-  letter-spacing: -0.025em;
-  line-height: 1.18;
-  overflow-wrap: anywhere;
-}
-
-.companion-page .zone-command-primary > small,
-.companion-page .zone-command-route > small,
-.companion-page .zone-command-upcoming > small {
-  color: var(--companion-muted);
-  font-size: 11px;
-  line-height: 1.35;
-}
-
-.companion-page .zone-command-primary.is-bonus::before {
+.companion-page .zone-command-bonuses::before {
   background: var(--companion-green);
 }
 
-.companion-page .zone-command-primary.is-league::before,
-.companion-page .zone-command-primary.is-important::before,
-.companion-page .zone-command-primary.is-required::before {
-  background: var(--companion-gold);
+.companion-page .zone-command-bonus-list {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.companion-page .zone-command-primary.is-route::before {
-  background: var(--companion-blue);
+.companion-page .zone-command-bonus-list li {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  padding: 10px 11px;
+  border: 1px solid var(--companion-panel-line-soft, var(--companion-border));
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.018);
+}
+
+.companion-page .zone-command-bonus-list li.is-pending {
+  border-color: color-mix(in srgb, var(--companion-green) 31%, transparent);
+  background: var(--companion-green-soft);
+}
+
+.companion-page .zone-command-bonus-list li.is-done {
+  opacity: 0.72;
+}
+
+.companion-page .zone-command-bonus-state {
+  width: 27px;
+  height: 27px;
+  display: grid;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--companion-green) 42%, transparent);
+  border-radius: 999px;
+  color: var(--companion-green);
+  background: color-mix(in srgb, var(--companion-green-soft) 78%, rgba(0, 0, 0, 0.12));
+  font-size: 14px;
+  font-weight: 850;
+  line-height: 1;
+}
+
+.companion-page .zone-command-bonus-list li > div {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.companion-page .zone-command-bonus-list strong {
+  min-width: 0;
+  color: var(--companion-title);
+  font-size: 15px;
+  line-height: 1.28;
+  overflow-wrap: anywhere;
+}
+
+.companion-page .zone-command-bonus-list small,
+.companion-page .zone-command-route > small,
+.companion-page .zone-command-upcoming > small {
+  color: var(--companion-muted);
+  font-size: 10px;
+  line-height: 1.35;
+}
+
+.companion-page .zone-command-bonus-empty {
+  min-height: 84px;
+  display: grid;
+  place-content: center;
+  gap: 4px;
+  padding: 10px;
+  text-align: center;
+}
+
+.companion-page .zone-command-bonus-empty strong {
+  color: var(--companion-text);
+  font-size: 15px;
+  line-height: 1.3;
+}
+
+.companion-page .zone-command-bonus-empty small {
+  color: var(--companion-muted);
+  font-size: 10px;
+  line-height: 1.35;
 }
 
 .companion-page .zone-command-attention {
@@ -3636,19 +3688,6 @@ textarea {
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-}
-
-.companion-page .zone-command-panel-heading b {
-  flex: 0 0 auto;
-  min-width: 23px;
-  height: 23px;
-  display: grid;
-  place-items: center;
-  border: 1px solid color-mix(in srgb, var(--companion-gold) 34%, transparent);
-  border-radius: 999px;
-  color: var(--companion-gold);
-  background: var(--companion-gold-soft);
-  font-size: 10px;
 }
 
 .companion-page .zone-command-attention ul {

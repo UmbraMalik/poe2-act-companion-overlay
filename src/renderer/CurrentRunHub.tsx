@@ -37,13 +37,6 @@ type AttentionItem = {
   tone: 'danger' | 'required' | 'bonus' | 'league' | 'important' | 'xp';
 };
 
-type PrimaryAction = {
-  id: string;
-  text: string;
-  meta: string;
-  tone: 'required' | 'bonus' | 'league' | 'important' | 'route' | 'neutral';
-};
-
 type PaceView = {
   label: string;
   detail: string;
@@ -522,77 +515,7 @@ export function CurrentRunHub({
     () => localizedCurrentZoneBonuses.filter(({ done }) => !done),
     [localizedCurrentZoneBonuses]
   );
-  const primaryAction = useMemo<PrimaryAction>(() => {
-    if (currentZoneRequiredItems[0]) {
-      return {
-        id: `required:${currentZoneRequiredItems[0].id}`,
-        text: currentZoneRequiredItems[0].text,
-        meta: translate(language, 'companion.zoneHubRequiredMeta'),
-        tone: 'required'
-      };
-    }
-
-    if (guideChecklist[0]) {
-      return {
-        id: `checklist:${guideChecklist[0].id}`,
-        text: guideChecklist[0].text,
-        meta: translate(language, 'companion.zoneHubPrimaryChecklistMeta'),
-        tone: 'neutral'
-      };
-    }
-
-    if (currentZoneLeagueReward) {
-      return {
-        id: `league:${currentZoneLeagueReward.id}`,
-        text: language === 'en' ? currentZoneLeagueReward.reward_en : currentZoneLeagueReward.reward_ru,
-        meta: translate(language, 'companion.zoneHubLeagueMeta'),
-        tone: 'league'
-      };
-    }
-
-    if (pendingBonuses[0]) {
-      return {
-        id: `bonus:${pendingBonuses[0].bonus.id}`,
-        text: pendingBonuses[0].bonusView?.displayTitle ?? pendingBonuses[0].bonus.title,
-        meta: translate(language, 'companion.zoneHubBonusMeta'),
-        tone: 'bonus'
-      };
-    }
-
-    if (guideView?.important[0]) {
-      return {
-        id: `important:${guideView.important[0]}`,
-        text: guideView.important[0],
-        meta: translate(language, 'companion.zoneHubImportantMeta'),
-        tone: 'important'
-      };
-    }
-
-    if (nextZoneName) {
-      return {
-        id: `route:${nextZoneName}`,
-        text: translate(language, 'companion.zoneHubMoveTo', { zone: nextZoneName }),
-        meta: translate(language, 'companion.zoneHubRouteMeta'),
-        tone: 'route'
-      };
-    }
-
-    return {
-      id: 'neutral',
-      text: translate(language, 'companion.zoneHubNoPrimaryTask'),
-      meta: translate(language, 'companion.zoneHubNoPrimaryTaskHint'),
-      tone: 'neutral'
-    };
-  }, [
-    currentZoneRequiredItems,
-    guideChecklist,
-    currentZoneLeagueReward,
-    pendingBonuses,
-    guideView?.important,
-    language,
-    nextZoneName
-  ]);
-  const attentionResult = useMemo(() => {
+  const attentionItems = useMemo<AttentionItem[]>(() => {
     const candidates: AttentionItem[] = [
       ...(currentZoneLeagueReward ? [{
         id: `league:${currentZoneLeagueReward.id}`,
@@ -629,10 +552,10 @@ export function CurrentRunHub({
         meta: translate(language, 'companion.zoneHubRequiredMeta'),
         tone: 'required' as const
       })),
-      ...guideChecklist.slice(1, 3).map((item) => ({
+      ...guideChecklist.slice(0, 2).map((item) => ({
         id: `checklist:${item.id}`,
         text: item.text,
-        meta: translate(language, 'companion.zoneHubPrimaryChecklistMeta'),
+        meta: translate(language, 'companion.zoneHubGuideTaskMeta'),
         tone: 'required' as const
       })),
       ...(guideView?.important ?? []).map((text, index) => ({
@@ -642,8 +565,9 @@ export function CurrentRunHub({
         tone: 'important' as const
       }))
     ];
-    const seen = new Set([normalizeCommandText(primaryAction.text)]);
-    const unique = candidates.filter((item) => {
+    const seen = new Set<string>();
+
+    return candidates.filter((item) => {
       const key = normalizeCommandText(item.text);
       if (!key || seen.has(key)) {
         return false;
@@ -651,12 +575,7 @@ export function CurrentRunHub({
 
       seen.add(key);
       return true;
-    });
-
-    return {
-      total: unique.length,
-      items: unique.slice(0, 3)
-    };
+    }).slice(0, 3);
   }, [
     activeXpStatus.longLabel,
     activeXpStatus.variant,
@@ -668,7 +587,6 @@ export function CurrentRunHub({
     guideView?.important,
     language,
     pendingBonuses,
-    primaryAction.text,
     snapshot.config.currentLevel
   ]);
   const paceView = useMemo(
@@ -736,22 +654,41 @@ export function CurrentRunHub({
         </div>
 
         <div className="zone-command-grid">
-          <article className={`zone-command-panel zone-command-primary is-${primaryAction.tone}`}>
-            <span>{translate(language, 'companion.zoneHubPrimaryTask')}</span>
-            <strong>{primaryAction.text}</strong>
-            <small>{primaryAction.meta}</small>
+          <article className={`zone-command-panel zone-command-bonuses${localizedCurrentZoneBonuses.length > 0 ? ' has-bonuses' : ' is-empty'}`}>
+            <span>{translate(language, 'companion.zoneHubBonusesTitle')}</span>
+            {localizedCurrentZoneBonuses.length > 0 ? (
+              <ul className="zone-command-bonus-list">
+                {localizedCurrentZoneBonuses.map(({ bonus, bonusView, done }) => (
+                  <li key={bonus.id} className={done ? 'is-done' : 'is-pending'}>
+                    <span className="zone-command-bonus-state" aria-hidden="true">{done ? '✓' : '○'}</span>
+                    <div>
+                      <strong>{bonusView?.displayTitle ?? bonus.title}</strong>
+                      <small>
+                        {done
+                          ? translate(language, 'companion.zoneHubBonusDone')
+                          : translate(language, 'companion.zoneHubBonusPending')}
+                        {' · '}
+                        {bonusView?.displaySource ?? bonus.source}
+                      </small>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className="zone-command-bonus-empty">
+                <strong>{translate(language, 'companion.zoneHubBonusesEmpty')}</strong>
+                <small>{translate(language, 'companion.zoneHubBonusesEmptyHint')}</small>
+              </div>
+            )}
           </article>
 
           <article className="zone-command-panel zone-command-attention">
             <div className="zone-command-panel-heading">
               <span>{translate(language, 'companion.zoneHubAttentionTitle')}</span>
-              {attentionResult.total > 0 && (
-                <b>{attentionResult.items.length}{attentionResult.total > attentionResult.items.length ? ` / ${attentionResult.total}` : ''}</b>
-              )}
             </div>
-            {attentionResult.items.length > 0 ? (
+            {attentionItems.length > 0 ? (
               <ul>
-                {attentionResult.items.map((item) => (
+                {attentionItems.map((item) => (
                   <li key={item.id} className={`is-${item.tone}`}>
                     <span aria-hidden="true" />
                     <div>
