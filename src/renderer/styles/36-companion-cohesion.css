@@ -2804,19 +2804,43 @@ textarea {
 }
 
 /* Current zone becomes a run hub instead of a full duplicate of the overlay. */
-.companion-page .zone-run-hub-layout {
-  flex: 1 1 auto;
-  width: 100%;
-  height: 100% !important;
-  max-height: 100%;
-  min-height: 0;
-  gap: 12px;
-  padding-right: 6px;
-  padding-bottom: 10px;
+.companion-page .companion-tab-body.is-zone-run-hub {
   overflow-y: auto !important;
   overflow-x: hidden !important;
   overscroll-behavior: contain;
   scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: var(--companion-gold) rgba(255, 255, 255, 0.045);
+}
+
+.companion-page .companion-tab-body.is-zone-run-hub::-webkit-scrollbar {
+  width: 8px;
+}
+
+.companion-page .companion-tab-body.is-zone-run-hub::-webkit-scrollbar-track {
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.040);
+}
+
+.companion-page .companion-tab-body.is-zone-run-hub::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--companion-gold), rgba(149, 98, 35, 0.74));
+}
+
+.theme-dark-fantasy.companion-page .companion-tab-body.is-zone-run-hub::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(217, 167, 95, 0.90), rgba(126, 84, 214, 0.72));
+}
+
+.companion-page .zone-run-hub-layout {
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto !important;
+  max-height: none;
+  min-height: 100%;
+  gap: 12px;
+  padding-right: 6px;
+  padding-bottom: 10px;
+  overflow: visible !important;
 }
 
 .companion-page .zone-run-hero-card {

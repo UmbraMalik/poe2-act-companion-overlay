@@ -2130,7 +2130,12 @@ export function CompanionPage() {
               </button>
             ))}
           </div>
-          <div className="companion-tab-body" key={activeTab}>{tabContent[activeTab]}</div>
+          <div
+            className={`companion-tab-body${activeTab === 'zone' ? ' is-zone-run-hub' : ''}`}
+            key={activeTab}
+          >
+            {tabContent[activeTab]}
+          </div>
         </section>
       </section>
       {renderRunConfirmDialog()}
