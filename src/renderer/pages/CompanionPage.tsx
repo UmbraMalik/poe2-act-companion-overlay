@@ -24,7 +24,7 @@ import {
 } from '../../i18n/data';
 import { getCampaignBonusProvenanceView } from '../../shared/campaign-bonus-provenance';
 import { translate } from '../../i18n/translations';
-import { isEndgameT15Act } from '../../shared/timers';
+import { getZoneTimerDisplayElapsed, isEndgameT15Act } from '../../shared/timers';
 import { getZoneRecognitionView } from '../log-health';
 import { RunHistoryDetailPanel } from '../RunHistoryDetailPanel';
 import { getRunHistorySignature } from '../run-history-detail';
@@ -1254,6 +1254,7 @@ export function CompanionPage() {
     currentNumericAct,
     liveRunTimer.nowMs
   );
+  const currentZoneElapsed = getZoneTimerDisplayElapsed(activeDisplayRunTimer, liveRunTimer.nowMs);
   const hasNoGuideForKnownZone =
     !guide &&
     Boolean(currentZone.rawZoneName) &&
@@ -1396,7 +1397,9 @@ export function CompanionPage() {
       sceneName={sceneName}
       nowAct={nowAct}
       currentRunElapsed={currentRunElapsed}
+      currentZoneElapsed={currentZoneElapsed}
       currentActElapsed={currentActElapsed}
+      runHistory={runHistory}
       timerStatus={activeDisplayRunTimer.status}
       nearestReminder={nearestReminderItems[0] ?? null}
       zoneRecognition={zoneRecognition}

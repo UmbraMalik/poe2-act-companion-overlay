@@ -9,6 +9,7 @@ import type {
   CampaignBonusDefinition,
   GuideEntry,
   RunTimerStatus,
+  SavedRunHistoryEntry,
   ZoneAct
 } from '../shared/types';
 import {
@@ -33,7 +34,20 @@ type AttentionItem = {
   id: string;
   text: string;
   meta: string;
-  tone: 'danger' | 'required' | 'bonus' | 'league' | 'important';
+  tone: 'danger' | 'required' | 'bonus' | 'league' | 'important' | 'xp';
+};
+
+type PrimaryAction = {
+  id: string;
+  text: string;
+  meta: string;
+  tone: 'required' | 'bonus' | 'league' | 'important' | 'route' | 'neutral';
+};
+
+type PaceView = {
+  label: string;
+  detail: string;
+  tone: 'ahead' | 'behind' | 'even' | 'empty';
 };
 
 interface LeagueMechanicRewardEntry {
@@ -61,7 +75,9 @@ interface CurrentRunHubProps {
   sceneName: string;
   nowAct: ZoneAct | null;
   currentRunElapsed: number;
+  currentZoneElapsed: number;
   currentActElapsed: number | null;
+  runHistory: SavedRunHistoryEntry[];
   timerStatus: RunTimerStatus;
   nearestReminder: ReminderItem | null;
   zoneRecognition: ReturnType<typeof getZoneRecognitionView>;
@@ -242,6 +258,86 @@ function getCurrentZoneLeagueReward(
   }) ?? null;
 }
 
+function normalizeCommandText(value: string): string {
+  return value.trim().toLocaleLowerCase('ru').replace(/ё/g, 'е').replace(/\s+/g, ' ');
+}
+
+function getBestZoneEntryCheckpoint(
+  runHistory: SavedRunHistoryEntry[],
+  zoneId: string | null
+): number | null {
+  if (!zoneId) {
+    return null;
+  }
+
+  const checkpoints = runHistory.flatMap((entry) => {
+    const history = Array.isArray(entry.zoneTimeHistory) ? entry.zoneTimeHistory : [];
+    const currentZoneIndex = history.findIndex((zone) => zone.zoneId === zoneId);
+
+    if (currentZoneIndex <= 0) {
+      return [];
+    }
+
+    const elapsedMs = history
+      .slice(0, currentZoneIndex)
+      .reduce((total, zone) => total + Math.max(0, zone.elapsedMs), 0);
+
+    return elapsedMs > 0 ? [elapsedMs] : [];
+  });
+
+  return checkpoints.length > 0 ? Math.min(...checkpoints) : null;
+}
+
+function getPaceView(
+  runHistory: SavedRunHistoryEntry[],
+  guide: GuideEntry | null,
+  currentRunElapsed: number,
+  currentZoneElapsed: number,
+  timerStatus: RunTimerStatus,
+  language: AppLanguage
+): PaceView {
+  if (timerStatus === 'not_started' || timerStatus === 'armed' || currentRunElapsed <= 0) {
+    return {
+      label: translate(language, 'companion.zoneHubPaceWaiting'),
+      detail: translate(language, 'companion.zoneHubPaceWaitingHint'),
+      tone: 'empty'
+    };
+  }
+
+  const bestCheckpoint = getBestZoneEntryCheckpoint(runHistory, guide?.id ?? null);
+  if (bestCheckpoint === null) {
+    return {
+      label: translate(language, 'companion.zoneHubPaceNoHistory'),
+      detail: translate(language, 'companion.zoneHubPaceNoHistoryHint'),
+      tone: 'empty'
+    };
+  }
+
+  const currentCheckpoint = Math.max(0, currentRunElapsed - currentZoneElapsed);
+  const deltaMs = currentCheckpoint - bestCheckpoint;
+  const absoluteDelta = formatDuration(Math.abs(deltaMs));
+
+  if (Math.abs(deltaMs) < 1000) {
+    return {
+      label: translate(language, 'companion.zoneHubPaceEven'),
+      detail: translate(language, 'companion.zoneHubPaceCheckpoint'),
+      tone: 'even'
+    };
+  }
+
+  return deltaMs < 0
+    ? {
+      label: translate(language, 'companion.zoneHubPaceAhead', { time: absoluteDelta }),
+      detail: translate(language, 'companion.zoneHubPaceCheckpoint'),
+      tone: 'ahead'
+    }
+    : {
+      label: translate(language, 'companion.zoneHubPaceBehind', { time: absoluteDelta }),
+      detail: translate(language, 'companion.zoneHubPaceCheckpoint'),
+      tone: 'behind'
+    };
+}
+
 function getGuideCampaignBonusIds(guide: GuideEntry | null): Set<string> {
   const guideWithBonuses = guide as (GuideEntry & {
     campaign_bonus_ids?: string[];
@@ -347,7 +443,9 @@ export function CurrentRunHub({
   sceneName,
   nowAct,
   currentRunElapsed,
+  currentZoneElapsed,
   currentActElapsed,
+  runHistory,
   timerStatus,
   nearestReminder,
   zoneRecognition,
@@ -414,7 +512,87 @@ export function CurrentRunHub({
         text: localizedChecklist.get(item.id) ?? translateDataText(item.text, language)
       }));
   }, [currentActRouteZone, guideChecklist, language]);
-  const zoneAttentionItems = useMemo<AttentionItem[]>(() => {
+  const progressTotal = currentActRouteProgress.total;
+  const progressCurrent = currentActRouteProgress.currentCount;
+  const progressPercent = currentActRouteProgress.percent;
+  const progressRemaining = Math.max(0, progressTotal - progressCurrent);
+  const nextZoneName = guideView?.nextZoneName
+    ?? (currentActNextRouteZone ? getCampaignZoneTitle(currentActNextRouteZone.guide, language) : null);
+  const pendingBonuses = useMemo(
+    () => localizedCurrentZoneBonuses.filter(({ done }) => !done),
+    [localizedCurrentZoneBonuses]
+  );
+  const primaryAction = useMemo<PrimaryAction>(() => {
+    if (currentZoneRequiredItems[0]) {
+      return {
+        id: `required:${currentZoneRequiredItems[0].id}`,
+        text: currentZoneRequiredItems[0].text,
+        meta: translate(language, 'companion.zoneHubRequiredMeta'),
+        tone: 'required'
+      };
+    }
+
+    if (guideChecklist[0]) {
+      return {
+        id: `checklist:${guideChecklist[0].id}`,
+        text: guideChecklist[0].text,
+        meta: translate(language, 'companion.zoneHubPrimaryChecklistMeta'),
+        tone: 'neutral'
+      };
+    }
+
+    if (currentZoneLeagueReward) {
+      return {
+        id: `league:${currentZoneLeagueReward.id}`,
+        text: language === 'en' ? currentZoneLeagueReward.reward_en : currentZoneLeagueReward.reward_ru,
+        meta: translate(language, 'companion.zoneHubLeagueMeta'),
+        tone: 'league'
+      };
+    }
+
+    if (pendingBonuses[0]) {
+      return {
+        id: `bonus:${pendingBonuses[0].bonus.id}`,
+        text: pendingBonuses[0].bonusView?.displayTitle ?? pendingBonuses[0].bonus.title,
+        meta: translate(language, 'companion.zoneHubBonusMeta'),
+        tone: 'bonus'
+      };
+    }
+
+    if (guideView?.important[0]) {
+      return {
+        id: `important:${guideView.important[0]}`,
+        text: guideView.important[0],
+        meta: translate(language, 'companion.zoneHubImportantMeta'),
+        tone: 'important'
+      };
+    }
+
+    if (nextZoneName) {
+      return {
+        id: `route:${nextZoneName}`,
+        text: translate(language, 'companion.zoneHubMoveTo', { zone: nextZoneName }),
+        meta: translate(language, 'companion.zoneHubRouteMeta'),
+        tone: 'route'
+      };
+    }
+
+    return {
+      id: 'neutral',
+      text: translate(language, 'companion.zoneHubNoPrimaryTask'),
+      meta: translate(language, 'companion.zoneHubNoPrimaryTaskHint'),
+      tone: 'neutral'
+    };
+  }, [
+    currentZoneRequiredItems,
+    guideChecklist,
+    currentZoneLeagueReward,
+    pendingBonuses,
+    guideView?.important,
+    language,
+    nextZoneName
+  ]);
+  const attentionResult = useMemo(() => {
     const candidates: AttentionItem[] = [
       ...(currentZoneLeagueReward ? [{
         id: `league:${currentZoneLeagueReward.id}`,
@@ -424,88 +602,118 @@ export function CurrentRunHub({
         meta: translate(language, 'companion.zoneHubLeagueMeta'),
         tone: 'league' as const
       }] : []),
-      ...localizedCurrentZoneBonuses
-        .filter(({ done }) => !done)
-        .slice(0, 2)
-        .map(({ bonus, bonusView }) => ({
-          id: `bonus:${bonus.id}`,
-          text: bonusView?.displayTitle ?? bonus.title,
-          meta: translate(language, 'companion.zoneHubBonusMeta'),
-          tone: 'bonus' as const
-        })),
-      ...currentActMissedItems.slice(0, 2).map((item) => ({
+      ...pendingBonuses.map(({ bonus, bonusView }) => ({
+        id: `bonus:${bonus.id}`,
+        text: bonusView?.displayTitle ?? bonus.title,
+        meta: translate(language, 'companion.zoneHubBonusMeta'),
+        tone: 'bonus' as const
+      })),
+      ...currentActMissedItems.map((item) => ({
         id: `missed:${item.id}`,
         text: item.text,
         meta: translate(language, 'companion.zoneHubMissedMeta', { zone: item.zone }),
         tone: 'danger' as const
       })),
-      ...currentZoneRequiredItems.slice(0, 2).map((item) => ({
+      ...(activeXpStatus.variant === 'low' ? [{
+        id: 'xp-low',
+        text: activeXpStatus.longLabel,
+        meta: translate(language, 'companion.zoneHubXpMeta', {
+          current: snapshot.config.currentLevel ?? '?',
+          recommended: guide?.recommended_level ?? '?'
+        }),
+        tone: 'xp' as const
+      }] : []),
+      ...currentZoneRequiredItems.map((item) => ({
         id: `required:${item.id}`,
         text: item.text,
         meta: translate(language, 'companion.zoneHubRequiredMeta'),
         tone: 'required' as const
       })),
-      ...(guideView?.important ?? []).slice(0, 2).map((text, index) => ({
+      ...guideChecklist.slice(1, 3).map((item) => ({
+        id: `checklist:${item.id}`,
+        text: item.text,
+        meta: translate(language, 'companion.zoneHubPrimaryChecklistMeta'),
+        tone: 'required' as const
+      })),
+      ...(guideView?.important ?? []).map((text, index) => ({
         id: `important:${index}:${text}`,
         text,
         meta: translate(language, 'companion.zoneHubImportantMeta'),
         tone: 'important' as const
       }))
     ];
-    const seen = new Set<string>();
-
-    return candidates.filter((item) => {
-      const key = item.text.trim().toLocaleLowerCase(language === 'en' ? 'en' : 'ru');
+    const seen = new Set([normalizeCommandText(primaryAction.text)]);
+    const unique = candidates.filter((item) => {
+      const key = normalizeCommandText(item.text);
       if (!key || seen.has(key)) {
         return false;
       }
 
       seen.add(key);
       return true;
-    }).slice(0, 7);
+    });
+
+    return {
+      total: unique.length,
+      items: unique.slice(0, 3)
+    };
   }, [
+    activeXpStatus.longLabel,
+    activeXpStatus.variant,
     currentActMissedItems,
-    currentZoneRequiredItems,
     currentZoneLeagueReward,
+    currentZoneRequiredItems,
+    guide?.recommended_level,
+    guideChecklist,
     guideView?.important,
     language,
-    localizedCurrentZoneBonuses
+    pendingBonuses,
+    primaryAction.text,
+    snapshot.config.currentLevel
   ]);
-
-  const progressTotal = currentActRouteProgress.total;
-  const progressCurrent = currentActRouteProgress.currentCount;
-  const progressPercent = currentActRouteProgress.percent;
-  const progressRemaining = Math.max(0, progressTotal - progressCurrent);
-  const nextZoneName = guideView?.nextZoneName
-    ?? (currentActNextRouteZone ? getCampaignZoneTitle(currentActNextRouteZone.guide, language) : null);
-  const pendingBonusCount = localizedCurrentZoneBonuses.filter(({ done }) => !done).length;
-  const attentionBreakdown = translate(language, 'companion.zoneHubAttentionBreakdown', {
-    missed: currentActMissedItems.length,
-    required: currentZoneRequiredItems.length,
-    bonuses: pendingBonusCount,
-    league: currentZoneLeagueReward ? 1 : 0
-  });
+  const paceView = useMemo(
+    () => getPaceView(
+      runHistory,
+      guide,
+      currentRunElapsed,
+      currentZoneElapsed,
+      timerStatus,
+      language
+    ),
+    [runHistory, guide, currentRunElapsed, currentZoneElapsed, timerStatus, language]
+  );
+  const routePositionLabel = progressTotal > 0
+    ? translate(language, 'companion.zoneHubPosition', { current: progressCurrent, total: progressTotal })
+    : translate(language, 'companion.zoneHubProgressUnknown');
+  const runStatusLabel = formatRunStatus(timerStatus, language);
 
   return (
     <div className="companion-tab-layout companion-zone-polished-layout zone-run-hub-layout">
-      <section className="companion-block companion-overview-card zone-hero-card zone-run-hero-card">
-        <div className="zone-hero-copy">
-          <p className="eyebrow">{guide ? formatActTitle(guide.act, language) : translate(language, 'companion.currentScene')}</p>
-          <h3>{sceneName}</h3>
-          <p className="helper-text">{translate(language, 'companion.zoneHubIntro')}</p>
-          <div className={`zone-health-row is-${zoneRecognition.tone}`}>
-            <strong>{zoneRecognition.label}</strong>
-            <span>{zoneRecognition.detail}</span>
+      <section className="companion-block zone-command-center" aria-label={translate(language, 'companion.zoneHubCommandCenter')}>
+        <div className="zone-command-header">
+          <div className="zone-command-location">
+            <p className="eyebrow">{formatActTitle(nowAct, language)}</p>
+            <h2>{sceneName}</h2>
+            <div className={`zone-health-row is-${zoneRecognition.tone}`}>
+              <strong>{zoneRecognition.label}</strong>
+              <span>{zoneRecognition.detail}</span>
+            </div>
+          </div>
+
+          <div className="zone-command-clock">
+            <span>{translate(language, 'companion.zoneHubRunTime')}</span>
+            <strong>{formatDuration(currentRunElapsed)}</strong>
+            <div className={`zone-command-pace is-${paceView.tone}`}>
+              <b>{paceView.label}</b>
+              <small>{paceView.detail}</small>
+            </div>
           </div>
         </div>
 
-        <div className="zone-run-progress-panel">
-          <div className="zone-run-progress-heading">
-            <div>
-              <span>{translate(language, 'companion.zoneHubActProgress')}</span>
-              <strong>{formatActTitle(nowAct, language)}</strong>
-            </div>
-            <b>{progressTotal > 0 ? `${Math.round(progressPercent)}%` : '—'}</b>
+        <div className="zone-command-progress">
+          <div className="zone-command-progress-copy">
+            <span>{translate(language, 'companion.zoneHubActProgress')}</span>
+            <strong>{routePositionLabel}</strong>
           </div>
           <div
             className={`zone-run-progress-track${progressTotal === 0 ? ' is-unknown' : ''}`}
@@ -517,136 +725,93 @@ export function CurrentRunHub({
           >
             <span style={{ width: `${progressPercent}%` }} />
           </div>
-          <div className="zone-run-progress-meta">
-            <span>
-              {progressTotal > 0
-                ? translate(language, 'companion.zoneHubPosition', { current: progressCurrent, total: progressTotal })
-                : translate(language, 'companion.zoneHubProgressUnknown')}
-            </span>
-            <span>
+          <div className="zone-command-progress-copy is-right">
+            <span>{progressTotal > 0 ? `${Math.round(progressPercent)}%` : '—'}</span>
+            <strong>
               {progressTotal > 0
                 ? translate(language, 'companion.zoneHubRemaining', { count: progressRemaining })
                 : zoneRecognition.sceneLabel}
-            </span>
-          </div>
-          <div className="zone-run-progress-next">
-            <span>{translate(language, 'common.next')}</span>
-            <strong>{nextZoneName ?? translate(language, 'common.notAvailable')}</strong>
+            </strong>
           </div>
         </div>
-      </section>
 
-      <section className="zone-run-status-grid" aria-label={translate(language, 'companion.zoneHubStatusTitle')}>
-        <article className={`zone-run-status-card is-xp-${activeXpStatus.variant}`}>
-          <span>{translate(language, 'companion.experience')}</span>
-          <strong>{activeXpStatus.longLabel}</strong>
-          <small>
-            {translate(language, 'common.level')} {snapshot.config.currentLevel ?? '?'} · {guideView?.recommendedLevelLabel ?? translate(language, 'common.notAvailable')}
-          </small>
-        </article>
+        <div className="zone-command-grid">
+          <article className={`zone-command-panel zone-command-primary is-${primaryAction.tone}`}>
+            <span>{translate(language, 'companion.zoneHubPrimaryTask')}</span>
+            <strong>{primaryAction.text}</strong>
+            <small>{primaryAction.meta}</small>
+          </article>
 
-        <article className={`zone-run-status-card is-timer-${timerStatus}`}>
-          <span>{translate(language, 'companion.zoneHubActTime')}</span>
-          <strong>{currentActElapsed === null ? '—' : formatDuration(currentActElapsed)}</strong>
-          <small>
-            {translate(language, 'companion.zoneHubRunTime')}: {formatDuration(currentRunElapsed)} · {formatRunStatus(timerStatus, language)}
-          </small>
-        </article>
-
-        <article className="zone-run-status-card is-reminder">
-          <span>{translate(language, 'companion.zoneHubUpcomingTitle')}</span>
-          <strong>
-            {nearestReminder
-              ? translateDataText(nearestReminder.title, language)
-              : translate(language, 'companion.zoneHubNoReminderTitle')}
-          </strong>
-          <small>
-            {nearestReminder
-              ? `${translate(language, 'common.level')} ${nearestReminder.level}`
-              : translate(language, 'companion.zoneHubNoReminder')}
-          </small>
-        </article>
-
-        <article className={`zone-run-status-card is-attention${zoneAttentionItems.length > 0 ? ' has-items' : ''}`}>
-          <span>{translate(language, 'companion.zoneHubAttentionTitle')}</span>
-          <strong>
-            {zoneAttentionItems.length > 0
-              ? translate(language, 'companion.zoneHubAttentionCount', { count: zoneAttentionItems.length })
-              : translate(language, 'companion.zoneHubAllClear')}
-          </strong>
-          <small>{attentionBreakdown}</small>
-        </article>
-      </section>
-
-      <div className="zone-run-command-grid">
-        <section className="companion-block zone-attention-card">
-          <div className="zone-section-heading">
-            <h3>{translate(language, 'companion.zoneHubAttentionTitle')}</h3>
-            {zoneAttentionItems.length > 0 && <span>{zoneAttentionItems.length}</span>}
-          </div>
-          {zoneAttentionItems.length > 0 ? (
-            <ul className="zone-attention-list">
-              {zoneAttentionItems.map((item) => (
-                <li key={item.id} className={`zone-attention-item is-${item.tone}`}>
-                  <span className="zone-attention-marker" aria-hidden="true" />
-                  <div>
-                    <strong>{item.text}</strong>
-                    <small>{item.meta}</small>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <div className="zone-attention-clear">
-              <strong>{translate(language, 'companion.zoneHubAllClear')}</strong>
-              <span>{translate(language, 'companion.zoneHubAttentionClear')}</span>
-            </div>
-          )}
-        </section>
-
-        <section className="companion-block zone-next-step-card">
-          <div className="zone-section-heading">
-            <h3>{translate(language, 'companion.zoneHubNextTitle')}</h3>
-            <span>{formatActTitle(nowAct, language)}</span>
-          </div>
-          <div className="zone-next-destination">
-            <span>{translate(language, 'companion.nextZone')}</span>
-            <strong>{nextZoneName ?? translate(language, 'common.notAvailable')}</strong>
-          </div>
-
-          {guideChecklist[0] && (
-            <div className="zone-current-focus">
-              <span>{translate(language, 'companion.zoneHubCurrentFocus')}</span>
-              <strong>{guideChecklist[0].text}</strong>
-              {guideChecklist.length > 1 && (
-                <small>{translate(language, 'companion.routeMore', { count: guideChecklist.length - 1 })}</small>
+          <article className="zone-command-panel zone-command-attention">
+            <div className="zone-command-panel-heading">
+              <span>{translate(language, 'companion.zoneHubAttentionTitle')}</span>
+              {attentionResult.total > 0 && (
+                <b>{attentionResult.items.length}{attentionResult.total > attentionResult.items.length ? ` / ${attentionResult.total}` : ''}</b>
               )}
             </div>
-          )}
-
-          {(guideView?.after?.length ?? 0) > 0 && (
-            <div className="zone-next-notes">
-              <span>{translate(language, 'common.after')}</span>
+            {attentionResult.items.length > 0 ? (
               <ul>
-                {guideView?.after.slice(0, 2).map((item) => (
-                  <li key={`zone-next-after-${item}`}>{item}</li>
+                {attentionResult.items.map((item) => (
+                  <li key={item.id} className={`is-${item.tone}`}>
+                    <span aria-hidden="true" />
+                    <div>
+                      <strong>{item.text}</strong>
+                      <small>{item.meta}</small>
+                    </div>
+                  </li>
                 ))}
               </ul>
-            </div>
-          )}
+            ) : (
+              <div className="zone-command-empty">
+                <strong>{translate(language, 'companion.zoneHubAllClear')}</strong>
+                <small>{translate(language, 'companion.zoneHubAttentionClear')}</small>
+              </div>
+            )}
+          </article>
 
-          {(guideView?.skip?.length ?? 0) > 0 && (
-            <div className="zone-next-skip">
-              <span>{translate(language, 'common.skip')}</span>
-              <strong>{guideView?.skip[0]}</strong>
+          <article className="zone-command-panel zone-command-route">
+            <span>{translate(language, 'companion.zoneHubRouteTitle')}</span>
+            <div className="zone-command-route-flow">
+              <strong>{sceneName}</strong>
+              <b aria-hidden="true">→</b>
+              <strong>{nextZoneName ?? translate(language, 'common.notAvailable')}</strong>
             </div>
-          )}
+            <small>{routePositionLabel}</small>
+            <button type="button" className="button-secondary" onClick={onOpenCurrentActRoute}>
+              {translate(language, 'companion.zoneHubOpenRoute')}
+            </button>
+          </article>
 
-          <button type="button" className="button-secondary zone-open-route-button" onClick={onOpenCurrentActRoute}>
-            {translate(language, 'companion.zoneHubOpenRoute')}
-          </button>
-        </section>
-      </div>
+          <article className="zone-command-panel zone-command-upcoming">
+            <span>{translate(language, 'companion.zoneHubUpcomingTitle')}</span>
+            <strong>
+              {nearestReminder
+                ? translateDataText(nearestReminder.title, language)
+                : translate(language, 'companion.zoneHubNoReminderTitle')}
+            </strong>
+            <small>
+              {nearestReminder
+                ? translate(language, 'companion.zoneHubReminderAtLevel', { level: nearestReminder.level })
+                : translate(language, 'companion.zoneHubNoReminder')}
+            </small>
+          </article>
+        </div>
+
+        <div className="zone-command-quick-status" aria-label={translate(language, 'companion.zoneHubStatusTitle')}>
+          <span className={`is-xp-${activeXpStatus.variant}`}>
+            <b>{translate(language, 'companion.experience')}</b>
+            {activeXpStatus.longLabel}
+          </span>
+          <span>
+            <b>{translate(language, 'companion.zoneHubActTime')}</b>
+            {currentActElapsed === null ? '—' : formatDuration(currentActElapsed)}
+          </span>
+          <span>
+            <b>{translate(language, 'common.status')}</b>
+            {runStatusLabel}
+          </span>
+        </div>
+      </section>
 
       <details className="companion-block zone-detail-drawer">
         <summary>
