@@ -2805,8 +2805,18 @@ textarea {
 
 /* Current zone becomes a run hub instead of a full duplicate of the overlay. */
 .companion-page .zone-run-hub-layout {
+  flex: 1 1 auto;
+  width: 100%;
+  height: 100% !important;
+  max-height: 100%;
+  min-height: 0;
   gap: 12px;
   padding-right: 6px;
+  padding-bottom: 10px;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
 }
 
 .companion-page .zone-run-hero-card {
@@ -3098,6 +3108,18 @@ textarea {
 .companion-page .zone-attention-item.is-bonus .zone-attention-marker {
   background: var(--companion-green);
   box-shadow: 0 0 10px var(--companion-green-soft);
+}
+
+.companion-page .zone-attention-item.is-league {
+  border-color: color-mix(in srgb, var(--companion-gold) 30%, var(--companion-panel-line-soft, var(--companion-border)));
+  background:
+    radial-gradient(circle at 0 0, var(--companion-gold-soft), transparent 48%),
+    rgba(255, 255, 255, 0.014);
+}
+
+.companion-page .zone-attention-item.is-league .zone-attention-marker {
+  background: var(--companion-gold);
+  box-shadow: 0 0 12px var(--companion-gold-soft);
 }
 
 .companion-page .zone-attention-clear {

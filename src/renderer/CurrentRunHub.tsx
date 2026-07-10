@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import leagueMechanicRewardsData from '../data/league-mechanic-rewards.json';
 import { getCampaignBonusView, getGuideView, translateDataText, type LocalizedGuideEntryView } from '../i18n/data';
 import { translate } from '../i18n/translations';
 import { isEndgameT15Act } from '../shared/timers';
@@ -32,8 +33,26 @@ type AttentionItem = {
   id: string;
   text: string;
   meta: string;
-  tone: 'danger' | 'required' | 'bonus' | 'important';
+  tone: 'danger' | 'required' | 'bonus' | 'league' | 'important';
 };
+
+interface LeagueMechanicRewardEntry {
+  id: string;
+  zone_en: string;
+  zone_ru: string;
+  guideZoneId: string | null;
+  guideZoneRu: string | null;
+  aliases_ru?: string[];
+  reward_en: string;
+  reward_ru: string;
+  hasReward: boolean;
+  displayInOverlay: boolean;
+  oneTimeGuaranteed: boolean;
+}
+
+const LEAGUE_MECHANIC_REWARDS = (
+  leagueMechanicRewardsData as { rewards?: LeagueMechanicRewardEntry[] }
+).rewards ?? [];
 
 interface CurrentRunHubProps {
   snapshot: AppSnapshot;
@@ -168,6 +187,59 @@ function normalizeZoneBonusName(value: string | null | undefined): string {
     .replace(/ё/g, 'е')
     .replace(/[’'`]/g, '')
     .replace(/\s+/g, ' ');
+}
+
+function normalizeLeagueZoneName(value: string | null | undefined): string {
+  return (value ?? '')
+    .toLocaleLowerCase('ru')
+    .replace(/ё/g, 'е')
+    .replace(/[’'`".,:;!?()[\]{}\/\u2014\u2013-]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .replace(/^the\s+/, '');
+}
+
+function addLeagueZoneCandidate(candidates: Set<string>, value: string | null | undefined): void {
+  const normalized = normalizeLeagueZoneName(value);
+  if (normalized) {
+    candidates.add(normalized);
+  }
+}
+
+function getCurrentZoneLeagueReward(
+  snapshot: AppSnapshot,
+  sceneName: string
+): LeagueMechanicRewardEntry | null {
+  const guide = snapshot.currentGuideEntry;
+  const guideId = guide?.id ?? null;
+  const candidates = new Set<string>();
+
+  addLeagueZoneCandidate(candidates, guide?.zone_ru);
+  addLeagueZoneCandidate(candidates, guide?.zone_en);
+  addLeagueZoneCandidate(candidates, snapshot.currentZone.rawZoneName);
+  addLeagueZoneCandidate(candidates, snapshot.runtime.lastRawZoneName);
+  addLeagueZoneCandidate(candidates, snapshot.runtime.lastMatchedZoneRu);
+  addLeagueZoneCandidate(candidates, snapshot.runtime.lastMatchedZoneEn);
+  addLeagueZoneCandidate(candidates, sceneName);
+
+  return LEAGUE_MECHANIC_REWARDS.find((reward) => {
+    if (!reward.displayInOverlay || !reward.hasReward) {
+      return false;
+    }
+
+    if (guideId && reward.guideZoneId === guideId) {
+      return true;
+    }
+
+    const rewardNames = [
+      reward.zone_ru,
+      reward.zone_en,
+      reward.guideZoneRu,
+      ...(reward.aliases_ru ?? [])
+    ];
+
+    return rewardNames.some((name) => candidates.has(normalizeLeagueZoneName(name)));
+  }) ?? null;
 }
 
 function getGuideCampaignBonusIds(guide: GuideEntry | null): Set<string> {
@@ -320,6 +392,10 @@ export function CurrentRunHub({
       language
     ]
   );
+  const currentZoneLeagueReward = useMemo(
+    () => getCurrentZoneLeagueReward(snapshot, sceneName),
+    [snapshot, sceneName]
+  );
   const currentActMissedItems = useMemo(
     () => currentActRouteZones.flatMap((entry) => entry.missedItems.map((item) => ({
       id: `${entry.guide.id}:${item.id}`,
@@ -340,18 +416,14 @@ export function CurrentRunHub({
   }, [currentActRouteZone, guideChecklist, language]);
   const zoneAttentionItems = useMemo<AttentionItem[]>(() => {
     const candidates: AttentionItem[] = [
-      ...currentActMissedItems.slice(0, 3).map((item) => ({
-        id: `missed:${item.id}`,
-        text: item.text,
-        meta: translate(language, 'companion.zoneHubMissedMeta', { zone: item.zone }),
-        tone: 'danger' as const
-      })),
-      ...currentZoneRequiredItems.slice(0, 3).map((item) => ({
-        id: `required:${item.id}`,
-        text: item.text,
-        meta: translate(language, 'companion.zoneHubRequiredMeta'),
-        tone: 'required' as const
-      })),
+      ...(currentZoneLeagueReward ? [{
+        id: `league:${currentZoneLeagueReward.id}`,
+        text: language === 'en'
+          ? currentZoneLeagueReward.reward_en
+          : currentZoneLeagueReward.reward_ru,
+        meta: translate(language, 'companion.zoneHubLeagueMeta'),
+        tone: 'league' as const
+      }] : []),
       ...localizedCurrentZoneBonuses
         .filter(({ done }) => !done)
         .slice(0, 2)
@@ -361,6 +433,18 @@ export function CurrentRunHub({
           meta: translate(language, 'companion.zoneHubBonusMeta'),
           tone: 'bonus' as const
         })),
+      ...currentActMissedItems.slice(0, 2).map((item) => ({
+        id: `missed:${item.id}`,
+        text: item.text,
+        meta: translate(language, 'companion.zoneHubMissedMeta', { zone: item.zone }),
+        tone: 'danger' as const
+      })),
+      ...currentZoneRequiredItems.slice(0, 2).map((item) => ({
+        id: `required:${item.id}`,
+        text: item.text,
+        meta: translate(language, 'companion.zoneHubRequiredMeta'),
+        tone: 'required' as const
+      })),
       ...(guideView?.important ?? []).slice(0, 2).map((text, index) => ({
         id: `important:${index}:${text}`,
         text,
@@ -378,8 +462,15 @@ export function CurrentRunHub({
 
       seen.add(key);
       return true;
-    }).slice(0, 6);
-  }, [currentActMissedItems, currentZoneRequiredItems, guideView?.important, language, localizedCurrentZoneBonuses]);
+    }).slice(0, 7);
+  }, [
+    currentActMissedItems,
+    currentZoneRequiredItems,
+    currentZoneLeagueReward,
+    guideView?.important,
+    language,
+    localizedCurrentZoneBonuses
+  ]);
 
   const progressTotal = currentActRouteProgress.total;
   const progressCurrent = currentActRouteProgress.currentCount;
@@ -391,7 +482,8 @@ export function CurrentRunHub({
   const attentionBreakdown = translate(language, 'companion.zoneHubAttentionBreakdown', {
     missed: currentActMissedItems.length,
     required: currentZoneRequiredItems.length,
-    bonuses: pendingBonusCount
+    bonuses: pendingBonusCount,
+    league: currentZoneLeagueReward ? 1 : 0
   });
 
   return (
