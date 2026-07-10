@@ -14,29 +14,27 @@ import {
   getRouteProgressState,
   getSceneDisplayName,
   getUpcomingVendorReminders,
-  getXpStatus, type ActTimeRow
+  type ActTimeRow
 } from '../companion-helpers';
 import { formatDuration, formatRecommendedLevelLabel } from '../utils';
 import {
   getCampaignBonusView,
   getGuideView,
-  translateDataText,
-  type LocalizedGuideEntryView
+  translateDataText
 } from '../../i18n/data';
 import { getCampaignBonusProvenanceView } from '../../shared/campaign-bonus-provenance';
 import { translate } from '../../i18n/translations';
 import { isEndgameT15Act } from '../../shared/timers';
-import { getGuideUpdateClassName } from '../guide-update-highlights';
 import { getZoneRecognitionView } from '../log-health';
 import { RunHistoryDetailPanel } from '../RunHistoryDetailPanel';
 import { getRunHistorySignature } from '../run-history-detail';
 import { RouteCardBonusPanel, getRouteCampaignBonusModels, type RouteCardBonusModel } from '../RouteCardBonuses';
 import { RouteTabControls } from '../RouteTabControls';
 import { filterRouteCards, getRouteFilterEmptyText, type RouteFilterMode } from '../route-tab-search';
+import { CurrentRunHub } from '../CurrentRunHub';
 import type { AppLanguage, CampaignBonusDefinition, CampaignBonusProgress, GuideEntry, RunSummary, SavedRunHistoryEntry, ZoneAct } from '../../shared/types';
 
 type CompanionTab = 'zone' | 'route' | 'timer' | 'actTimes' | 'reminders' | 'bonuses' | 'summary';
-type RenderableGuideDetails = GuideEntry['details'] | LocalizedGuideEntryView['details'];
 type RunConfirmDialog =
   | { type: 'reset' }
   | { type: 'restore'; runId: string }
@@ -580,27 +578,6 @@ function renderBestComparison(
   );
 }
 
-function renderStringSection(
-  title: string,
-  items: string[],
-  className?: string
-) {
-  if (items.length === 0) {
-    return null;
-  }
-
-  return (
-    <section className={`companion-block ${className ?? ''}`.trim()}>
-      <h3>{title}</h3>
-      <ul className="details-list">
-        {items.map((item) => (
-          <li key={`${title}-${item}`} className={getGuideUpdateClassName(item).trim()}>{item}</li>
-        ))}
-      </ul>
-    </section>
-  );
-}
-
 function renderCompactReminderList(
   items: { id: string; level: number; title: string; items?: string[] }[],
   language: AppLanguage,
@@ -735,71 +712,6 @@ function renderPowerSpikeTimeline(
   );
 }
 
-function renderDetails(
-  details: RenderableGuideDetails,
-  language: AppLanguage
-) {
-  if (!details) {
-    return null;
-  }
-
-  if (Array.isArray(details)) {
-    return renderStringSection(
-      translate(language, 'companion.detailsTitle'),
-      details.filter(Boolean).map((item) => translateDataText(item, language))
-    );
-  }
-
-  if (typeof details === 'object') {
-    const duplicatedSectionKeys = new Set([
-      'route',
-      'rewards',
-      'skip',
-      'important',
-      'after',
-      'boss_tips',
-      'xp_notes',
-      'crafting_tips',
-      'overlay_speedrun'
-    ]);
-
-    const groups = Object.entries(details).filter(
-      ([key, value]) =>
-        !duplicatedSectionKeys.has(key) &&
-        Array.isArray(value) &&
-        value.length > 0
-    );
-
-    if (groups.length === 0) {
-      return null;
-    }
-
-    return (
-      <section className="companion-block companion-details-block">
-        <h3>{translate(language, 'companion.detailsTitle')}</h3>
-        <div className="companion-stack">
-          {groups.map(([key, value]) => (
-            <div key={key}>
-              <p className="companion-inline-title">
-                {translate(language, `companion.detailsGroup.${key}`)}
-              </p>
-              <ul className="details-list">
-                {(value as string[]).map((item) => (
-                  <li key={`${key}-${item}`} className={getGuideUpdateClassName(translateDataText(item, language)).trim()}>
-                    {translateDataText(item, language)}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      </section>
-    );
-  }
-
-  return null;
-}
-
 function formatBonusAct(act: ZoneAct, language: AppLanguage): string {
   return act === 'interlude'
     ? translate(language, 'companion.interludes')
@@ -905,129 +817,6 @@ function getCampaignBonusTotals(
   }
 
   return totals;
-}
-
-function normalizeZoneBonusName(value: string | null | undefined): string {
-  return (value ?? '')
-    .toLowerCase()
-    .replace(/ё/g, 'е')
-    .replace(/[’']/g, '')
-    .replace(/\s+/g, ' ')
-    .trim();
-}
-
-function getGuideCampaignBonusIds(guide: GuideEntry | null): Set<string> {
-  const guideWithBonuses = guide as (GuideEntry & {
-    campaign_bonus_ids?: string[];
-    campaignBonusIds?: string[];
-  }) | null;
-
-  const ids = [
-    ...(Array.isArray(guideWithBonuses?.campaign_bonus_ids) ? guideWithBonuses.campaign_bonus_ids : []),
-    ...(Array.isArray(guideWithBonuses?.campaignBonusIds) ? guideWithBonuses.campaignBonusIds : [])
-  ];
-
-  return new Set(ids.map((id) => String(id ?? '').trim()).filter(Boolean));
-}
-function isKhariCrossingGuide(guide: GuideEntry | null, rawZoneName: string | null | undefined): boolean {
-  const guideId = normalizeZoneBonusName(guide?.id);
-  const zoneRu = normalizeZoneBonusName(guide?.zone_ru);
-  const zoneEn = normalizeZoneBonusName(guide?.zone_en);
-  const raw = normalizeZoneBonusName(rawZoneName);
-
-  return (
-    guideId === 'interlude_khari_crossing' ||
-    zoneRu === 'кхарийский перевал' ||
-    zoneEn === 'the khari crossing' ||
-    raw === 'кхарийский перевал' ||
-    raw === 'the khari crossing'
-  );
-}
-
-function isGalaiGatesGuide(guide: GuideEntry | null, rawZoneName: string | null | undefined): boolean {
-  const guideId = normalizeZoneBonusName(guide?.id);
-  const zoneRu = normalizeZoneBonusName(guide?.zone_ru);
-  const zoneEn = normalizeZoneBonusName(guide?.zone_en);
-  const raw = normalizeZoneBonusName(rawZoneName);
-
-  return (
-    guideId === 'interlude_galai_gates' ||
-    zoneRu === 'ворота галаи' ||
-    zoneRu === 'врата голай' ||
-    zoneEn === 'the galai gates' ||
-    zoneEn === 'galai gates' ||
-    raw === 'ворота галаи' ||
-    raw === 'врата голай' ||
-    raw === 'the galai gates' ||
-    raw === 'galai gates'
-  );
-}
-
-function isKhariCrossingCampaignBonus(bonus: CampaignBonusDefinition): boolean {
-  const id = normalizeZoneBonusName(bonus.id);
-  const zoneId = normalizeZoneBonusName(bonus.zoneId);
-  const zoneRu = normalizeZoneBonusName(bonus.zone_ru);
-  const title = normalizeZoneBonusName(bonus.title);
-  const source = normalizeZoneBonusName(bonus.source);
-  const details = normalizeZoneBonusName((bonus.details ?? []).join(' '));
-
-  if (zoneId === 'interlude_khari_crossing' || zoneRu === 'кхарийский перевал') {
-    return true;
-  }
-
-  const isLifeBonus = title.includes('+5') && title.includes('здоров');
-  const isWeaponBonus = title.includes('+2') && title.includes('пассив') && title.includes('оруж');
-  const mentionsKhariSource =
-    source.includes('кхарийский перевал') ||
-    details.includes('расплавленн') ||
-    details.includes('актхи') ||
-    details.includes('анундр') ||
-    details.includes('рису');
-
-  return (
-    id.includes('khari_crossing') ||
-    (id.includes('galai_gates') && (isLifeBonus || isWeaponBonus) && mentionsKhariSource) ||
-    ((isLifeBonus || isWeaponBonus) && mentionsKhariSource)
-  );
-}
-
-function getCurrentZoneCampaignBonuses(snapshot: NonNullable<ReturnType<typeof useAppSnapshot>>) {
-  const guide = snapshot.currentGuideEntry;
-  const rawZoneName = snapshot.currentZone.rawZoneName;
-  const guideId = guide?.id ?? null;
-  const explicitBonusIds = getGuideCampaignBonusIds(guide);
-  const progress = snapshot.config.campaignBonusProgress ?? {};
-  const isKhariCrossing = isKhariCrossingGuide(guide, rawZoneName);
-  const isGalaiGates = isGalaiGatesGuide(guide, rawZoneName);
-  const zoneNames = guideId
-    ? new Set<string>()
-    : new Set([normalizeZoneBonusName(guide?.zone_ru), normalizeZoneBonusName(rawZoneName)].filter(Boolean));
-
-  const matchedBonuses = snapshot.campaignBonuses.filter((bonus) => {
-    const isKhariBonus = isKhariCrossingCampaignBonus(bonus);
-
-    // The Galai Gates / Ворота Галаи do not own the Khari Crossing campaign bonuses.
-    if (isGalaiGates && isKhariBonus) {
-      return false;
-    }
-
-    // Khari Crossing owns both +5% life and +2 weapon set passive points.
-    if (isKhariCrossing && isKhariBonus) {
-      return true;
-    }
-
-    if (guideId) {
-      return bonus.zoneId === guideId || explicitBonusIds.has(bonus.id);
-    }
-
-    return explicitBonusIds.has(bonus.id) || zoneNames.has(normalizeZoneBonusName(bonus.zone_ru));
-  });
-
-  const uniqueBonuses = Array.from(new Map(matchedBonuses.map((bonus) => [bonus.id, bonus])).values());
-
-  return uniqueBonuses
-    .map((bonus) => ({ bonus, done: Boolean(progress[bonus.id]) }))
-    .sort((left, right) => Number(left.done) - Number(right.done));
 }
 
 function renderSummaryStat(label: string, value: string, hint?: string, className?: string) {
@@ -1175,7 +964,6 @@ export function CompanionPage() {
     () => getGuideView(guide, language),
     [guide, language]
   );
-  const guideChecklist = guideView?.checklist ?? [];
   const sceneName = useMemo(
     () => snapshot ? getSceneDisplayName(snapshot, language) : '',
     [
@@ -1208,10 +996,6 @@ export function CompanionPage() {
   const visibleRouteCardModels = useMemo(() => (
     filterRouteCards(routeCardModels, { filterMode: routeFilterMode, query: routeSearchQuery })
   ), [routeCardModels, routeFilterMode, routeSearchQuery]);
-  const xpStatus = useMemo(
-    () => snapshot ? getXpStatus(snapshot, language) : null,
-    [snapshot?.config.currentLevel, snapshot?.currentGuideEntry?.id, language]
-  );
   const nearestPowerSpike = useMemo(
     () => snapshot
       ? getNearestPowerSpike(
@@ -1268,23 +1052,6 @@ export function CompanionPage() {
     stableRunHistoryRef.current = { signature: runHistorySignature, history: rawRunHistory };
     return rawRunHistory;
   }, [rawRunHistory, runHistorySignature]);
-  const currentZoneBonuses = useMemo(
-    () => snapshot ? getCurrentZoneCampaignBonuses(snapshot) : [],
-    [
-      snapshot?.currentGuideEntry,
-      snapshot?.currentZone.rawZoneName,
-      snapshot?.campaignBonuses,
-      snapshot?.config.campaignBonusProgress
-    ]
-  );
-  const localizedCurrentZoneBonuses = useMemo(
-    () => currentZoneBonuses.map(({ bonus, done }) => ({
-      bonus,
-      bonusView: getCampaignBonusView(bonus, language),
-      done
-    })),
-    [currentZoneBonuses, language]
-  );
   const currentRunElapsed = liveRunTimer.runElapsedMs;
   const currentNumericAct = typeof nowAct === 'number' ? nowAct : null;
   const needsActTimeRows = activeTab === 'timer' || activeTab === 'actTimes' || activeTab === 'summary';
@@ -1481,7 +1248,6 @@ export function CompanionPage() {
 
   const { config, currentZone } = snapshot;
   const activeDisplayRunTimer = displayRunTimer ?? config.runTimer;
-  const activeXpStatus = xpStatus ?? getXpStatus(snapshot, language);
   const countdownMs = liveRunTimer.countdownMs;
   const currentActElapsed = getCurrentActElapsedMsForAct(
     activeDisplayRunTimer,
@@ -1616,101 +1382,28 @@ export function CompanionPage() {
     });
   };
   const focusCurrentZone = () => focusRouteZone(snapshot.currentGuideEntry?.id ?? null, nowAct, 'current_zone');
-
+  const openCurrentActRoute = () => {
+    setSelectedAct(nowAct);
+    setRouteFilterMode('current_act');
+    setRouteSearchQuery('');
+    setActiveTab('route');
+  };
   const zoneTab = activeTab === 'zone' ? (
-    <div className="companion-tab-layout companion-zone-polished-layout">
-      <section className="companion-block companion-overview-card zone-hero-card">
-        <div className="zone-hero-copy">
-          <p className="eyebrow">{guide ? formatActTitle(guide.act, language) : t('companion.currentScene')}</p>
-          <h3>{sceneName}</h3>
-          <p className="helper-text">
-            {guideView?.nextZoneName
-              ? t('companion.routeNextPrefix', { text: guideView.nextZoneName })
-              : zoneRecognition.companionSummary}
-          </p>
-          <div className={`zone-health-row is-${zoneRecognition.tone}`}>
-            <strong>{zoneRecognition.label}</strong>
-            <span>{zoneRecognition.detail}</span>
-          </div>
-        </div>
-        <dl className="zone-hero-metrics">
-          <div className="zone-metric-card is-accent">
-            <dt>{t('companion.nextZone')}</dt>
-            <dd>{guideView?.nextZoneName ?? t('common.notAvailable')}</dd>
-          </div>
-          <div className="zone-metric-card">
-            <dt>{t('companion.levelRec')}</dt>
-            <dd>{t('common.level')} {config.currentLevel ?? '?'} · {guideView?.recommendedLevelLabel ?? t('common.notAvailable')}</dd>
-          </div>
-          <div className="zone-metric-card">
-            <dt>{t('companion.experience')}</dt>
-            <dd>{activeXpStatus.longLabel}</dd>
-          </div>
-          <div className="zone-metric-card">
-            <dt>{t('companion.sceneLabel')}</dt>
-            <dd>{zoneRecognition.sceneLabel}</dd>
-          </div>
-        </dl>
-      </section>
-
-      <div className="companion-zone-dashboard zone-card-board">
-        <div className="companion-column zone-main-column">
-          <section className="companion-block zone-task-card zone-task-primary">
-            <div className="zone-section-heading">
-              <h3>{t('overlay.inThisZone')}</h3>
-              {guideChecklist.length > 0 && <span>{guideChecklist.length}</span>}
-            </div>
-            {guideChecklist.length > 0 ? (
-              <ul className="checklist-list companion-checklist-list zone-checklist-list">
-                {guideChecklist.map((item) => (
-                  <li key={item.id} className={`checklist-item${getGuideUpdateClassName(item.text)}`}>
-                    {item.text}
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="helper-text">
-                {hasNoGuideForKnownZone ? zoneRecognition.noGuideText : t('overlay.emptyZoneNotes')}
-              </p>
-            )}
-          </section>
-
-          {localizedCurrentZoneBonuses.length > 0 && (
-            <section className="companion-block zone-bonuses-card zone-task-card">
-              <div className="zone-section-heading">
-                <h3>{t('overlay.zoneBonuses')}</h3>
-                <span>{localizedCurrentZoneBonuses.filter(({ done }) => done).length}/{localizedCurrentZoneBonuses.length}</span>
-              </div>
-              <ul className="details-list zone-bonus-details-list">
-                {localizedCurrentZoneBonuses.map(({ bonus, bonusView, done }) => (
-                  <li key={bonus.id} className={done ? 'bonus-line is-done' : 'bonus-line'}>
-                    <span className="bonus-state-marker">{done ? '✓' : '○'}</span>
-                    <span>{bonusView?.displayTitle ?? bonus.title}</span>
-                  </li>
-                ))}
-              </ul>
-              <p className="helper-text compact-helper-text">{t('companion.zoneBonusesHint')}</p>
-            </section>
-          )}
-
-          {renderStringSection(t('common.next'), guideView?.nextZoneName ? [guideView.nextZoneName] : [], 'zone-task-card zone-next-card')}
-          {renderStringSection(t('common.skip'), guideView?.skip ?? [], 'skip-section zone-task-card')}
-        </div>
-
-        <div className="companion-column">
-          {renderStringSection(t('companion.take'), guideView?.rewards ?? [], 'zone-task-card zone-reward-card')}
-          {renderStringSection(t('common.important'), guideView?.important ?? [], 'zone-task-card zone-important-card')}
-          {renderStringSection(t('common.bossTips'), guideView?.bossTips ?? [], 'zone-task-card')}
-        </div>
-
-        <div className="companion-column">
-          {renderStringSection(t('common.xpNotes'), guideView?.xpNotes ?? [], 'zone-task-card')}
-          {renderStringSection(t('common.craftingTips'), guideView?.craftingTips ?? [], 'zone-task-card')}
-          {renderStringSection(t('common.after'), guideView?.after ?? [], 'zone-task-card')}
-          {renderDetails(guideView?.details ?? guide?.details, language)}
-        </div>
-      </div>
-    </div>
+    <CurrentRunHub
+      snapshot={snapshot}
+      routeActs={routeActs}
+      guideView={guideView}
+      sceneName={sceneName}
+      nowAct={nowAct}
+      currentRunElapsed={currentRunElapsed}
+      currentActElapsed={currentActElapsed}
+      timerStatus={activeDisplayRunTimer.status}
+      nearestReminder={nearestReminderItems[0] ?? null}
+      zoneRecognition={zoneRecognition}
+      hasNoGuideForKnownZone={hasNoGuideForKnownZone}
+      language={language}
+      onOpenCurrentActRoute={openCurrentActRoute}
+    />
   ) : null;
 
   const routeTab = activeTab === 'route' ? (
