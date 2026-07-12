@@ -92,6 +92,7 @@ const expected = [
   '36-companion-cohesion.css',
   '37-icon-system.css',
   '38-close-confirm-polish.css',
+  '39-overlay-mode-stability.css',
 ];
 const expectedCssFiles = [...expected, ...trackedNonNumberedPartials].sort();
 const expectedImports = [

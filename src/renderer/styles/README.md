@@ -20,6 +20,7 @@ The app uses the numbered CSS partials in this folder as the single source of tr
 14. `36-companion-cohesion.css` — final companion panel pass that aligns tab surfaces, current states and theme-specific accents.
 15. `37-icon-system.css` — shared vector icon sizing, alignment, state motion and theme-aware accents.
 16. `38-close-confirm-polish.css` — unclipped fixed-window layout for the running-timer close confirmation.
+17. `39-overlay-mode-stability.css` — compositor-stable overlay mode swaps without root-surface animation.
 
 Keep imports in `src/renderer/styles.css` in numeric order unless you intentionally change cascade priority.
 

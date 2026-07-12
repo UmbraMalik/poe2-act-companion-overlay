@@ -1,0 +1,17 @@
+/*
+ * Transparent Electron windows flash when their root surface is animated while
+ * native bounds change. Keep mode swaps compositor-stable; local controls and
+ * feedback elements retain their own motion.
+ */
+.overlay-page .overlay-shell,
+.overlay-page .overlay-timer-only-card,
+.overlay-page .overlay-collapsed-shell,
+.overlay-page .overlay-main-compact {
+  animation: none !important;
+}
+
+.overlay-page .overlay-shell::after,
+.overlay-page .overlay-timer-only-card::after,
+.overlay-page .overlay-collapsed-shell::after {
+  animation: none !important;
+}

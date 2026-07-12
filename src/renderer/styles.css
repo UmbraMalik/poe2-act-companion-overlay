@@ -46,3 +46,4 @@
 @import './styles/36-companion-cohesion.css'; /* Final companion panel cohesion across tabs and themes */
 @import './styles/37-icon-system.css'; /* Unified SVG icons for controls, navigation and status markers */
 @import './styles/38-close-confirm-polish.css'; /* Fixed-window close confirmation geometry and clipping guard */
+@import './styles/39-overlay-mode-stability.css'; /* Flicker-free transparent-window mode changes */

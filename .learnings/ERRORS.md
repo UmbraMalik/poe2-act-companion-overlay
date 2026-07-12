@@ -31,6 +31,60 @@ Use the same external context for cleanup when a temporary workspace npm cache i
 
 ---
 
+## [ERR-20260713-015] stale-mode-motion-regression
+
+**Logged**: 2026-07-13T03:54:00+03:00
+**Priority**: low
+**Status**: resolved
+**Area**: tests
+
+### Summary
+A static test still expected the removed mode-transition `shouldSkipMotion` branch after compositor animation was deleted.
+
+### Error
+```text
+Assertion did not match /!\s*config\.overlayEffectsEnabled/
+```
+
+### Suggested Fix
+Keep the persisted FX toggle assertion and remove only the obsolete transition-implementation assertion.
+
+### Resolution
+- **Resolved**: 2026-07-13T03:54:00+03:00
+- **Notes**: Updated the regression to validate the current `fx-off` contract.
+
+---
+
+## [ERR-20260713-014] local-video-decoder-probes
+
+**Logged**: 2026-07-13T03:48:00+03:00
+**Priority**: low
+**Status**: resolved
+**Area**: tooling
+
+### Summary
+Local frame extraction probes failed because optional video libraries were absent and the WinRT thumbnail API was queried on `MediaClip` instead of a composition.
+
+### Error
+```text
+ModuleNotFoundError: No module named 'cv2'
+MediaClip does not contain a method named 'GetThumbnailAsync'
+```
+
+### Context
+- The supplied Bandicam recording is readable and its duration was resolved as 14.817 seconds.
+- No packages were installed and no source data was transmitted.
+- Code inspection independently exposed repeated stale mode-resize requests and root compositor animations.
+
+### Suggested Fix
+Prefer an existing ffmpeg runtime for future frame extraction; otherwise stop after metadata and use application diagnostics.
+
+### Resolution
+- **Resolved**: 2026-07-13T03:48:00+03:00
+- **Notes**: Diagnosed the flicker through the renderer/main resize path and removed both causes.
+
+---
+
 ## [ERR-20260713-013] powershell-rg-wildcard-path
 
 **Logged**: 2026-07-13T03:24:00+03:00

@@ -292,7 +292,6 @@ test('overlay visual effects can be disabled independently from global FX intens
   assert.match(settingsPage, /checked=\{config\.overlayEffectsEnabled\}/);
   assert.match(settingsPage, /overlayEffectsEnabled:\s*event\.target\.checked/);
   assert.match(overlay, /config\.overlayEffectsEnabled\s*\?\s*`fx-\$\{config\.visualFxIntensity\}`\s*:\s*'fx-off'/);
-  assert.match(overlay, /!\s*config\.overlayEffectsEnabled/);
   assert.match(translations, /Эффекты оверлея/);
   assert.match(translations, /Overlay effects/);
 });
@@ -753,25 +752,25 @@ test('companion run history details button opens a stable detached detail card',
 test('default motion avoids continuous compositor-heavy ambient animations', () => {
   const fxControls = readText('src/renderer/styles/28-fx-controls-debug.css');
   const modeTransitions = readText('src/renderer/styles/32-overlay-mode-transitions.css');
+  const modeStability = readText('src/renderer/styles/39-overlay-mode-stability.css');
 
   assert.match(fxControls, /\.overlay-page\.fx-normal:not\(\.overlay-page-timer-only\):not\(\.is-overlay-collapsed\) \.overlay-shell/);
   assert.match(fxControls, /poe2-panel-enter var\(--motion-medium, 180ms\)/);
   assert.match(fxControls, /\.companion-page\.fx-normal \.route-overview-card\.status-current:not\(\.is-focus-flash\)/);
   assert.match(fxControls, /\.companion-page\.fx-subtle \.bonuses-tab-layout \.bonus-row\.is-pending/);
-  assert.doesNotMatch(modeTransitions, /will-change:\s*opacity,\s*transform,\s*filter/);
+  assert.doesNotMatch(modeTransitions, /@keyframes|will-change:|is-overlay-mode-transitioning/);
+  assert.match(modeStability, /\.overlay-page \.overlay-shell,[\s\S]*\.overlay-page \.overlay-main-compact \{[\s\S]*animation: none !important;/);
+  assert.match(modeStability, /\.overlay-page \.overlay-shell::after,[\s\S]*animation: none !important;/);
+});
 
-  for (const keyframeName of [
-    'poe2-overlay-mode-enter-full',
-    'poe2-overlay-mode-enter-compact',
-    'poe2-overlay-mode-enter-collapsed'
-  ]) {
-    const keyframeStart = modeTransitions.indexOf(`@keyframes ${keyframeName}`);
-    const nextKeyframe = modeTransitions.indexOf('@keyframes', keyframeStart + 1);
-    const shellRule = modeTransitions.indexOf('.overlay-page.is-overlay-mode-transitioning .overlay-shell', keyframeStart);
-    const keyframeEnd = nextKeyframe === -1 ? shellRule : Math.min(nextKeyframe, shellRule);
-    const keyframeSource = modeTransitions.slice(keyframeStart, keyframeEnd);
-    assert.doesNotMatch(keyframeSource, /filter:/);
-  }
+test('overlay mode changes use one latest-layout resize without transition-shell flashes', () => {
+  const overlay = readText('src/renderer/pages/OverlayPage.tsx');
+
+  assert.match(overlay, /scheduleAdaptiveOverlayHeightRef\.current = scheduleAdaptiveOverlayHeight/);
+  assert.match(overlay, /window\.setTimeout\(\(\) => \{[\s\S]*scheduleAdaptiveOverlayHeightRef\.current\?\.\(\{ force: true, allowBelowMinimum \}\);[\s\S]*\}, 48\)/);
+  assert.match(overlay, /void Promise\.resolve\(commit\(\)\)[\s\S]*\.then\(\(\) => scheduleOverlayModeSettledResize\(allowBelowMinimum\)\)/);
+  assert.doesNotMatch(overlay, /setOverlayModeTransition|OVERLAY_MODE_ENTER_MS|overlayModeTransitionClass/);
+  assert.doesNotMatch(overlay, /setTimeout\(forceResize, (?:90|240)\)/);
 });
 
 test('overlay supports full left-click drag with an icon-only lock toggle', () => {
