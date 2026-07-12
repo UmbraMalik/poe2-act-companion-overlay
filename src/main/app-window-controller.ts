@@ -25,27 +25,10 @@ import {
   attachWindowNavigationGuards,
   getSecureWebPreferences
 } from './window-security';
-
-const SETTINGS_WINDOW_MINIMUM_SIZE = { width: 560, height: 420 } as const;
-const SETTINGS_WINDOW_PREFERRED_SIZE = { width: 880, height: 720 } as const;
-const SETTINGS_WINDOW_WORK_AREA_MARGIN = 24;
-
-function getSettingsWindowInitialSize() {
-        const workArea = screen.getPrimaryDisplay().workArea;
-        const availableWidth = Math.max(
-            SETTINGS_WINDOW_MINIMUM_SIZE.width,
-            workArea.width - SETTINGS_WINDOW_WORK_AREA_MARGIN * 2
-        );
-        const availableHeight = Math.max(
-            SETTINGS_WINDOW_MINIMUM_SIZE.height,
-            workArea.height - SETTINGS_WINDOW_WORK_AREA_MARGIN * 2
-        );
-
-        return {
-            width: Math.min(SETTINGS_WINDOW_PREFERRED_SIZE.width, availableWidth),
-            height: Math.min(SETTINGS_WINDOW_PREFERRED_SIZE.height, availableHeight)
-        };
-}
+import {
+  getSettingsWindowInitialSize,
+  SETTINGS_WINDOW_MINIMUM_SIZE
+} from '../shared/settings-window-resize';
 
 function showWindowWhenReady(
         window: BrowserWindow | null | undefined,
@@ -283,7 +266,7 @@ export function runOpenSettingsWindow(this: any) {
             showWindowWhenReady(this.settingsWindow, { afterShow: () => this.broadcastState() });
             return;
         }
-        const settingsWindowInitialSize = getSettingsWindowInitialSize();
+        const settingsWindowInitialSize = getSettingsWindowInitialSize(screen.getPrimaryDisplay().workArea);
         this.settingsWindow = new BrowserWindow({
             icon: createAppIcon(),
             ...settingsWindowInitialSize,

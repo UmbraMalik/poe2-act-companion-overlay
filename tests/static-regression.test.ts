@@ -430,21 +430,27 @@ test('secondary app windows share smooth show/focus handling', () => {
 
 test('settings window opens compactly and remains shrinkable', () => {
   const controller = readText('src/main/app-window-controller.ts');
+  const resizeModel = readText('src/shared/settings-window-resize.ts');
+  const resizeGrip = readText('src/renderer/settings/SettingsWindowResizeGrip.tsx');
   const settingsWindowBlock = controller.slice(
     controller.indexOf('this.settingsWindow = new BrowserWindow({'),
     controller.indexOf('attachWindowNavigationGuards(this.settingsWindow);')
   );
   const styles = readRendererStyles();
 
-  assert.match(controller, /SETTINGS_WINDOW_MINIMUM_SIZE\s*=\s*\{\s*width:\s*560,\s*height:\s*420\s*\}\s*as const/);
-  assert.match(controller, /SETTINGS_WINDOW_PREFERRED_SIZE\s*=\s*\{\s*width:\s*880,\s*height:\s*720\s*\}\s*as const/);
-  assert.match(controller, /screen\.getPrimaryDisplay\(\)\.workArea/);
+  assert.match(resizeModel, /SETTINGS_WINDOW_MINIMUM_SIZE\s*=\s*\{\s*width:\s*560,\s*height:\s*420\s*\}\s*as const/);
+  assert.match(resizeModel, /SETTINGS_WINDOW_PREFERRED_SIZE\s*=\s*\{\s*width:\s*880,\s*height:\s*720\s*\}\s*as const/);
+  assert.match(controller, /getSettingsWindowInitialSize\(screen\.getPrimaryDisplay\(\)\.workArea\)/);
   assert.match(settingsWindowBlock, /\.\.\.settingsWindowInitialSize/);
   assert.match(settingsWindowBlock, /minWidth:\s*SETTINGS_WINDOW_MINIMUM_SIZE\.width/);
   assert.match(settingsWindowBlock, /minHeight:\s*SETTINGS_WINDOW_MINIMUM_SIZE\.height/);
   assert.match(settingsWindowBlock, /resizable:\s*true/);
   assert.doesNotMatch(settingsWindowBlock, /minHeight:\s*600/);
   assert.doesNotMatch(settingsWindowBlock, /height:\s*840/);
+  assert.match(resizeGrip, /startBounds:\s*SettingsWindowBounds/);
+  assert.match(resizeGrip, /buildSettingsWindowResizeRequest/);
+  assert.match(resizeGrip, /resizeRequestInFlight/);
+  assert.doesNotMatch(resizeGrip, /queuedDeltaX|queuedDeltaY/);
   assert.match(styles, /@media \(max-width:\s*640px\)[\s\S]*?\.settings-page:not\(\.companion-page\) \.settings-header\.window-drag-strip[\s\S]*?flex-direction:\s*column/);
   assert.match(styles, /@media \(max-height:\s*560px\)[\s\S]*?--settings-quick-nav-offset:\s*170px/);
 });
