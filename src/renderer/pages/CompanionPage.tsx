@@ -67,6 +67,7 @@ type RouteActOverview = ReturnType<typeof getRouteActs>;
 type RouteZoneOverview = RouteActOverview[number]['zones'][number];
 type RouteCardModel = {
   entry: RouteZoneOverview;
+  allRouteLabels: string[];
   indexLabel: string;
   visibleRouteLabels: string[];
   hiddenRouteLabelsCount: number;
@@ -202,6 +203,7 @@ function getRouteCardModels(
 
     return {
       entry,
+      allRouteLabels: routeLabels,
       indexLabel: String(index + 1).padStart(2, '0'),
       visibleRouteLabels: routeLabels.slice(0, ROUTE_OVERVIEW_VISIBLE_ITEMS),
       hiddenRouteLabelsCount: Math.max(0, routeLabels.length - ROUTE_OVERVIEW_VISIBLE_ITEMS),
@@ -961,6 +963,7 @@ export function CompanionPage() {
   const [routeFilterMode, setRouteFilterMode] = useState<RouteFilterMode>('all');
   const [bonusFeedback, setBonusFeedback] = useState<BonusFeedbackState | null>(null);
   const [timerSplitFeedback, setTimerSplitFeedback] = useState<TimerSplitFeedbackState | null>(null);
+  const [expandedRouteCards, setExpandedRouteCards] = useState<Record<string, boolean>>({});
   const focusedRouteZoneTimeoutRef = useRef<number | null>(null);
   const bonusFeedbackTimeoutRef = useRef<number | null>(null);
   const runSaveNoticeTimeoutRef = useRef<number | null>(null);
@@ -1038,6 +1041,12 @@ export function CompanionPage() {
   const visibleRouteCardModels = useMemo(() => (
     filterRouteCards(routeCardModels, { filterMode: routeFilterMode, query: routeSearchQuery })
   ), [routeCardModels, routeFilterMode, routeSearchQuery]);
+  const toggleRouteCardExpanded = useCallback((guideId: string) => {
+    setExpandedRouteCards((current) => ({
+      ...current,
+      [guideId]: !current[guideId]
+    }));
+  }, []);
   const nearestPowerSpike = useMemo(
     () => snapshot
       ? getNearestPowerSpike(
@@ -1531,6 +1540,8 @@ export function CompanionPage() {
           {visibleRouteCardModels.map((model) => {
             const { entry } = model;
             const isFocusedRouteZone = focusedRouteZoneId === entry.guide.id;
+            const isRouteCardExpanded = expandedRouteCards[entry.guide.id] === true;
+            const routeLabels = isRouteCardExpanded ? model.allRouteLabels : model.visibleRouteLabels;
 
             return (
               <article
@@ -1548,12 +1559,21 @@ export function CompanionPage() {
                 {model.visibleRouteLabels.length > 0 ? (
                   <>
                     <ul className="details-list compact-reward-list">
-                      {model.visibleRouteLabels.map((item) => (
+                      {routeLabels.map((item) => (
                         <li key={`${entry.guide.id}-${item}`}>{item}</li>
                       ))}
                     </ul>
                     {model.hiddenRouteLabelsCount > 0 && (
-                      <p className="route-more-note">{t('companion.routeMore', { count: model.hiddenRouteLabelsCount })}</p>
+                      <button
+                        className={`route-more-note route-more-toggle${isRouteCardExpanded ? ' is-expanded' : ''}`}
+                        type="button"
+                        onClick={() => toggleRouteCardExpanded(entry.guide.id)}
+                        aria-expanded={isRouteCardExpanded}
+                      >
+                        {isRouteCardExpanded
+                          ? t('companion.routeHideExtra')
+                          : t('companion.routeMore', { count: model.hiddenRouteLabelsCount })}
+                      </button>
                     )}
                   </>
                 ) : (
