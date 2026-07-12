@@ -111,6 +111,7 @@ export function CompanionHeader({
           disabled={busy}
           onClick={onToggleTheme}
         >
+          <span className="companion-theme-toggle-indicator" aria-hidden="true" />
           <span className="companion-theme-option is-classic" aria-hidden="true">
             <span className="companion-theme-sun" />
           </span>

@@ -4,6 +4,7 @@ import { useDocumentTitle, useI18n } from '../useI18n';
 import { getAppThemeClassName } from '../theme';
 import { DiagnosticsBundlePanel } from '../DiagnosticsBundlePanel';
 import { UtilityWindowFrame } from '../UtilityWindowFrame';
+import { SettingsSelect } from '../settings/SettingsSelect';
 import {
   buildReportDiagnostics,
   buildReportTemplateBody,
@@ -104,16 +105,18 @@ export function ReportIssuePage() {
             <h2 className="settings-section-title">{t('report.templateTitle')}</h2>
             <p className="helper-text">{t('report.templateDescription')}</p>
           </div>
-          <label className="select-field report-template-field no-drag">
+          <div className="settings-field report-template-field no-drag">
             <span>{t('report.requestType')}</span>
-            <select value={template} onChange={(event) => setTemplate(event.target.value as ReportTemplate)}>
-              {(Object.keys(templateLabels) as ReportTemplate[]).map((key) => (
-                <option key={key} value={key}>
-                  {templateLabels[key]}
-                </option>
-              ))}
-            </select>
-          </label>
+            <SettingsSelect
+              ariaLabel={t('report.requestType')}
+              value={template}
+              options={(Object.keys(templateLabels) as ReportTemplate[]).map((key) => ({
+                value: key,
+                label: templateLabels[key]
+              }))}
+              onChange={(nextValue) => setTemplate(nextValue)}
+            />
+          </div>
         </div>
 
         <textarea

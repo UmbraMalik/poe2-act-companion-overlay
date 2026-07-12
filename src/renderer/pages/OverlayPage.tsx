@@ -1765,16 +1765,6 @@ export function OverlayPage() {
       <p className="overlay-onboarding-move-hint">{zoneRecognition.noGuideHint}</p>
     </div>
   );
-  const overlayLogHealthPill = (
-    <div
-      className={`overlay-log-health-pill is-${zoneRecognition.tone}`}
-      title={`${zoneRecognition.label}: ${zoneRecognition.detail}`}
-    >
-      <strong>{zoneRecognition.label}</strong>
-      <span>{zoneRecognition.detail}</span>
-    </div>
-  );
-
   const overlayOnboardingBlock = (
     <div className="overlay-onboarding-card">
       <p className="overlay-onboarding-title">{t('overlay.onboardingTitle')}</p>
@@ -1967,7 +1957,6 @@ export function OverlayPage() {
                 <span className="hud-zone-act-pill">{overlayActLabel}</span>
               </div>
               <h1 className="hud-zone-name">{overlayZoneName}</h1>
-              {overlayLogHealthPill}
             </div>
             <div className="hud-title-actions no-drag">
               {overlayQuickActions}
