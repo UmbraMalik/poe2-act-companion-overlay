@@ -8,6 +8,7 @@ import {
 } from '../src/shared/settings-window-resize';
 import {
   invokeIpcHandler,
+  invokeIpcHandlerWithEvent,
   resetElectronMockState
 } from './helpers/electron-mock';
 import { createTestAppInstance } from './helpers/zoneTestUtils';
@@ -98,5 +99,53 @@ test('settings resize IPC accepts an absolute shrink request', async () => {
     y: 80,
     width: 700,
     height: 560
+  });
+});
+
+
+test('standalone utility windows use the same resize IPC without targeting settings', async () => {
+  resetElectronMockState();
+  const app = createTestAppInstance() as any;
+  const { BrowserWindow } = require('electron') as typeof import('electron');
+
+  app.settingsWindow = new BrowserWindow({
+    width: 880,
+    height: 720,
+    minWidth: SETTINGS_WINDOW_MINIMUM_SIZE.width,
+    minHeight: SETTINGS_WINDOW_MINIMUM_SIZE.height
+  });
+  app.infoWindow = new BrowserWindow({
+    width: 760,
+    height: 760,
+    minWidth: 680,
+    minHeight: 620
+  });
+  app.infoWindow.setPosition(120, 90);
+  app.registerIpc();
+
+  const changed = await invokeIpcHandlerWithEvent<boolean>(
+    'app:resize-settings-window',
+    { sender: app.infoWindow.webContents },
+    {
+      edge: 'se',
+      x: 120,
+      y: 90,
+      width: 720,
+      height: 680
+    }
+  );
+
+  assert.equal(changed, true);
+  assert.deepEqual(app.infoWindow.getBounds(), {
+    x: 120,
+    y: 90,
+    width: 720,
+    height: 680
+  });
+  assert.deepEqual(app.settingsWindow.getBounds(), {
+    x: 0,
+    y: 0,
+    width: 880,
+    height: 720
   });
 });

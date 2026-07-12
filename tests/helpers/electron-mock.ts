@@ -224,3 +224,15 @@ export async function invokeIpcHandler<T = unknown>(
   }
   return await handler({}, ...args) as T;
 }
+
+export async function invokeIpcHandlerWithEvent<T = unknown>(
+  channel: string,
+  event: unknown,
+  ...args: unknown[]
+): Promise<T> {
+  const handler = ipcHandlers.get(channel);
+  if (!handler) {
+    throw new Error(`Missing IPC handler for ${channel}`);
+  }
+  return await handler(event, ...args) as T;
+}

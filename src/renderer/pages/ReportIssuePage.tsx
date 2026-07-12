@@ -3,6 +3,7 @@ import { useAppSnapshot } from '../hooks';
 import { useDocumentTitle, useI18n } from '../useI18n';
 import { getAppThemeClassName } from '../theme';
 import { DiagnosticsBundlePanel } from '../DiagnosticsBundlePanel';
+import { UtilityWindowFrame } from '../UtilityWindowFrame';
 import {
   buildReportDiagnostics,
   buildReportTemplateBody,
@@ -80,72 +81,66 @@ export function ReportIssuePage() {
   };
 
   return (
-    <main className={`settings-page report-page fx-${snapshot?.config.visualFxIntensity ?? 'normal'} ${getAppThemeClassName(snapshot?.config.theme)}`}>
-      <section className="settings-shell report-shell">
-        <header className="settings-header window-drag-strip">
-          <div className="settings-header-copy">
-            <p className="eyebrow">{t('common.appName')}</p>
-            <h1>{t('report.title')}</h1>
-            <p className="helper-text settings-intro">{t('report.intro')}</p>
-          </div>
-          <div className="button-row no-drag report-header-actions">
-            <button className="button-secondary" type="button" onClick={() => window.close()}>
-              {t('common.close')}
-            </button>
-          </div>
-        </header>
+    <UtilityWindowFrame
+      appName={t('common.appName')}
+      title={t('report.title')}
+      intro={t('report.intro')}
+      closeLabel={t('common.close')}
+      visualFxIntensity={snapshot?.config.visualFxIntensity ?? 'normal'}
+      themeClassName={getAppThemeClassName(snapshot?.config.theme)}
+      pageClassName="report-page"
+      shellClassName="report-shell"
+    >
+      <DiagnosticsBundlePanel
+        snapshot={snapshot}
+        appVersion={appVersion}
+        language={language}
+        diagnosticsText={diagnostics}
+      />
 
-        <DiagnosticsBundlePanel
-          snapshot={snapshot}
-          appVersion={appVersion}
-          language={language}
-          diagnosticsText={diagnostics}
+      <section className="settings-card report-card">
+        <div className="settings-card-header report-card-header">
+          <div>
+            <h2 className="settings-section-title">{t('report.templateTitle')}</h2>
+            <p className="helper-text">{t('report.templateDescription')}</p>
+          </div>
+          <label className="select-field report-template-field no-drag">
+            <span>{t('report.requestType')}</span>
+            <select value={template} onChange={(event) => setTemplate(event.target.value as ReportTemplate)}>
+              {(Object.keys(templateLabels) as ReportTemplate[]).map((key) => (
+                <option key={key} value={key}>
+                  {templateLabels[key]}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
+
+        <textarea
+          className="report-message-textarea no-drag"
+          value={message}
+          onChange={(event) => {
+            setMessage(event.target.value);
+            setCopied(false);
+          }}
+          spellCheck={false}
         />
 
-        <section className="settings-card report-card">
-          <div className="settings-card-header report-card-header">
-            <div>
-              <h2 className="settings-section-title">{t('report.templateTitle')}</h2>
-              <p className="helper-text">{t('report.templateDescription')}</p>
-            </div>
-            <label className="select-field report-template-field no-drag">
-              <span>{t('report.requestType')}</span>
-              <select value={template} onChange={(event) => setTemplate(event.target.value as ReportTemplate)}>
-                {(Object.keys(templateLabels) as ReportTemplate[]).map((key) => (
-                  <option key={key} value={key}>
-                    {templateLabels[key]}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
+        <div className="report-actions no-drag">
+          <button
+            className={`button-primary report-copy-button${copied ? ' is-copied' : ''}`}
+            type="button"
+            onClick={() => void handleCopy()}
+          >
+            {copied ? t('report.copied') : t('report.copy')}
+          </button>
+          <button className="button-secondary" type="button" onClick={() => void openTelegram()}>
+            {t('report.messageTelegram')}
+          </button>
+        </div>
 
-          <textarea
-            className="report-message-textarea no-drag"
-            value={message}
-            onChange={(event) => {
-              setMessage(event.target.value);
-              setCopied(false);
-            }}
-            spellCheck={false}
-          />
-
-          <div className="report-actions no-drag">
-            <button
-              className={`button-primary report-copy-button${copied ? ' is-copied' : ''}`}
-              type="button"
-              onClick={() => void handleCopy()}
-            >
-              {copied ? t('report.copied') : t('report.copy')}
-            </button>
-            <button className="button-secondary" type="button" onClick={() => void openTelegram()}>
-              {t('report.messageTelegram')}
-            </button>
-          </div>
-
-          <p className="helper-text report-action-note">{t('report.actionHint')}</p>
-        </section>
+        <p className="helper-text report-action-note">{t('report.actionHint')}</p>
       </section>
-    </main>
+    </UtilityWindowFrame>
   );
 }

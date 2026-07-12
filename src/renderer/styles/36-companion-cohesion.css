@@ -2759,48 +2759,26 @@ textarea {
 }
 
 
-/* Utility windows header alignment: keep Info, Community and Support headers in the same row as Settings at normal window widths. */
-.info-page .settings-header.window-drag-strip {
-  display: grid !important;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center !important;
-  gap: 16px;
+/* Standalone utility pages use the exact Settings window frame and content flow. */
+.utility-window-page .utility-window-header,
+.utility-window-page .utility-window-shell {
+  width: min(100%, 1080px) !important;
+  max-width: 1080px !important;
 }
 
-.info-page .settings-header-copy {
-  justify-self: start;
-  min-width: 0;
-  max-width: 720px;
+.utility-window-page .utility-window-shell {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 0 6px 14px 0 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
 }
 
-.info-page .settings-header .button-row {
-  justify-self: end;
-  width: auto;
-  max-width: none;
-  justify-content: flex-end;
-}
-
-.info-page .settings-header .button-row .button-secondary {
-  min-width: 132px;
-  min-height: 42px;
-  padding: 0 18px;
+.utility-window-page .utility-window-close {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  line-height: 1;
-}
-
-@media (max-width: 560px) {
-  .info-page .settings-header.window-drag-strip {
-    grid-template-columns: 1fr;
-    align-items: stretch !important;
-    gap: 10px;
-  }
-
-  .info-page .settings-header .button-row {
-    justify-self: start;
-    justify-content: flex-start;
-  }
+  text-align: center;
 }
 
 /* Current zone becomes a run hub instead of a full duplicate of the overlay. */
@@ -3951,11 +3929,17 @@ textarea {
 }
 
 .companion-page .companion-header-icon {
-  width: 36px;
-  height: 36px;
-  display: inline-grid;
-  place-items: center;
+  flex: 0 0 38px;
+  width: 38px;
+  min-width: 38px !important;
+  max-width: 38px;
+  height: 38px;
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 0;
+  text-align: center;
   border: 1px solid var(--companion-panel-line-soft, var(--companion-border));
   border-radius: 10px;
   color: var(--companion-text);
@@ -3964,6 +3948,31 @@ textarea {
   line-height: 1;
   list-style: none;
   cursor: pointer;
+}
+
+.companion-page .companion-header-icon > span {
+  width: 100%;
+  height: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.companion-page .companion-header-icon.is-settings > span {
+  font-size: 16px;
+  transform: translateY(-0.5px);
+}
+
+.companion-page .companion-utility-menu > summary > span {
+  font-size: 22px;
+  transform: translateY(-2px);
+}
+
+.companion-page .companion-header-icon.is-close > span {
+  font-size: 20px;
+  transform: translateY(-1px);
 }
 
 .companion-page .companion-header-icon::-webkit-details-marker {
@@ -3987,11 +3996,11 @@ textarea {
 .companion-page .companion-utility-menu[open] {
   position: relative;
   z-index: 1;
-  flex: 0 0 36px;
-  width: 36px;
-  height: 36px;
-  min-width: 36px;
-  min-height: 36px;
+  flex: 0 0 38px;
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  min-height: 38px;
   margin: 0;
   padding: 0;
   border: 0;
@@ -4037,10 +4046,14 @@ textarea {
   padding: 7px 9px;
   border: 0;
   border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: var(--companion-text);
-  text-align: left;
+  text-align: center;
   background: transparent;
-  font-size: 10px;
+  font-size: 11px;
+  font-weight: 750;
 }
 
 .companion-page .companion-utility-popover button:hover {
@@ -4050,6 +4063,16 @@ textarea {
 
 .companion-page .companion-card > .companion-primary-nav {
   grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+}
+
+.companion-page .companion-card > .companion-primary-nav button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 12px !important;
+  font-weight: 800;
+  line-height: 1.15;
 }
 
 .companion-page .companion-subtab-row {
@@ -4089,7 +4112,11 @@ textarea {
     linear-gradient(180deg, rgba(255, 255, 255, 0.024), rgba(255, 255, 255, 0.008)),
     rgba(255, 255, 255, 0.012);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.025);
-  font-size: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.055em;
   transition:

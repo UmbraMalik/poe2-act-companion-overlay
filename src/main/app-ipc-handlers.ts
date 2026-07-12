@@ -544,18 +544,32 @@ export function runRegisterIpc(this: any) {
             }
             return true;
         });
-        ipcMain.handle('app:resize-settings-window', async (_event: any, requestedBounds: SettingsWindowBoundsPatch) => {
-            const targetWindow = this.settingsWindow;
+        ipcMain.handle('app:resize-settings-window', async (event: any, requestedBounds: SettingsWindowBoundsPatch) => {
+            const utilityWindows = [
+                this.settingsWindow,
+                this.infoWindow,
+                this.communityWindow,
+                this.supportWindow,
+                this.reportWindow
+            ].filter((window: any) => Boolean(window && !window.isDestroyed()));
+            const targetWindow = event?.sender
+                ? utilityWindows.find((window: any) => window.webContents === event.sender) ?? null
+                : this.settingsWindow;
             if (!targetWindow || targetWindow.isDestroyed()) {
                 return false;
             }
             const currentBounds = targetWindow.getBounds();
+            const [minimumWidth, minimumHeight] = targetWindow.getMinimumSize();
+            const minimumSize = {
+                width: Math.max(1, minimumWidth || SETTINGS_WINDOW_MINIMUM_SIZE.width),
+                height: Math.max(1, minimumHeight || SETTINGS_WINDOW_MINIMUM_SIZE.height)
+            };
             const display = screen.getDisplayMatching(currentBounds);
             const nextBounds = resolveSettingsWindowResizeBounds({
                 currentBounds,
                 requestedBounds,
                 workArea: display.workArea,
-                minimumSize: SETTINGS_WINDOW_MINIMUM_SIZE
+                minimumSize
             });
             if (
                 nextBounds.x === currentBounds.x &&
@@ -568,10 +582,7 @@ export function runRegisterIpc(this: any) {
 
             // Transparent frameless windows can occasionally retain a stale native minimum
             // after growing. Reassert the real minimum before a shrink so Windows accepts it.
-            targetWindow.setMinimumSize(
-                SETTINGS_WINDOW_MINIMUM_SIZE.width,
-                SETTINGS_WINDOW_MINIMUM_SIZE.height
-            );
+            targetWindow.setMinimumSize(minimumSize.width, minimumSize.height);
             targetWindow.setBounds(nextBounds, false);
             return true;
         });

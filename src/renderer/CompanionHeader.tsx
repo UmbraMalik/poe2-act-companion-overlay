@@ -96,7 +96,9 @@ export function CompanionHeader({
           <span aria-hidden="true" />
           <div><strong>{status.label}</strong><small>{status.detail}</small></div>
         </div>
-        <button className="companion-header-icon" type="button" title={labels.settings} aria-label={labels.settings} disabled={busy} onClick={onSettings}>⚙</button>
+        <button className="companion-header-icon is-settings" type="button" title={labels.settings} aria-label={labels.settings} disabled={busy} onClick={onSettings}>
+          <span aria-hidden="true">⚙</span>
+        </button>
         <details
           ref={menuRef}
           className="companion-utility-menu"
@@ -108,7 +110,9 @@ export function CompanionHeader({
             aria-label={labels.more}
             aria-haspopup="menu"
             aria-expanded={menuOpen}
-          >⋯</summary>
+          >
+            <span aria-hidden="true">⋯</span>
+          </summary>
           <div className="companion-utility-popover" role="menu">
             <button type="button" role="menuitem" disabled={busy} onClick={() => runMenuAction(onInfo)}>{labels.info}</button>
             <button type="button" role="menuitem" disabled={busy} onClick={() => runMenuAction(onCommunity)}>{labels.community}</button>
@@ -116,7 +120,9 @@ export function CompanionHeader({
             <button type="button" role="menuitem" disabled={busy} onClick={() => runMenuAction(onReportIssue)}>{labels.reportIssue}</button>
           </div>
         </details>
-        <button className="companion-header-icon is-close" type="button" title={labels.close} aria-label={labels.close} onClick={onClose}>×</button>
+        <button className="companion-header-icon is-close" type="button" title={labels.close} aria-label={labels.close} onClick={onClose}>
+          <span aria-hidden="true">×</span>
+        </button>
       </div>
     </header>
   );

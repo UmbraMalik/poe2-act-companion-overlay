@@ -455,6 +455,39 @@ test('settings window opens compactly and remains shrinkable', () => {
   assert.match(styles, /@media \(max-height:\s*560px\)[\s\S]*?--settings-quick-nav-offset:\s*170px/);
 });
 
+test('standalone utility windows reuse the Settings frame and manual resize surface', () => {
+  const frame = readText('src/renderer/UtilityWindowFrame.tsx');
+  const controller = readText('src/main/app-window-controller.ts');
+  const ipcHandlers = readText('src/main/app-ipc-handlers.ts');
+  const styles = readRendererStyles();
+
+  for (const pagePath of [
+    'src/renderer/pages/InfoPage.tsx',
+    'src/renderer/pages/CommunityPage.tsx',
+    'src/renderer/pages/SupportPage.tsx',
+    'src/renderer/pages/ReportIssuePage.tsx'
+  ]) {
+    const page = readText(pagePath);
+    assert.match(page, /UtilityWindowFrame/);
+    assert.doesNotMatch(page, /<main className=.*settings-page/);
+    assert.doesNotMatch(page, /<header className="settings-header/);
+  }
+
+  assert.match(frame, /settings-header window-drag-strip utility-window-header/);
+  assert.match(frame, /settings-shell.*utility-window-shell/);
+  assert.match(frame, /SettingsWindowShellEffects/);
+  assert.match(frame, /SettingsWindowResizeGrip/);
+  assert.match(controller, /this\.infoWindow = new BrowserWindow\([\s\S]*?transparent:\s*true/);
+  assert.match(controller, /this\.communityWindow = new BrowserWindow\([\s\S]*?transparent:\s*true/);
+  assert.match(controller, /this\.supportWindow = new BrowserWindow\([\s\S]*?transparent:\s*true/);
+  assert.match(controller, /this\.reportWindow = new BrowserWindow\([\s\S]*?transparent:\s*true/);
+  assert.match(ipcHandlers, /const utilityWindows = \[/);
+  assert.match(ipcHandlers, /window\.webContents === event\.sender/);
+  assert.match(styles, /\.utility-window-page \.utility-window-header/);
+  assert.match(styles, /\.companion-page \.companion-card > \.companion-primary-nav button[\s\S]*?font-size:\s*12px/);
+  assert.match(styles, /\.companion-page \.companion-subtab-row button[\s\S]*?font-size:\s*11px/);
+});
+
 test('hidden windows and unchanged bounds do not trigger unnecessary smoothness work', () => {
   const stateController = readText('src/main/app-state-controller.ts');
   const boundsController = readText('src/main/app-overlay-bounds-controller.ts');
