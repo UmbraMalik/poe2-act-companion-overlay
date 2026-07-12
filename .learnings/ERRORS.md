@@ -95,3 +95,95 @@ Prefer project scripts such as `npm run build`, or invoke the local binary throu
 - **Notes**: `npm run build` passed and already includes `tsc -p tsconfig.electron.json`.
 
 ---
+
+## [ERR-20260713-001] git-dubious-workspace-ownership
+
+**Logged**: 2026-07-13T01:27:50+03:00
+**Priority**: low
+**Status**: resolved
+**Area**: config
+
+### Summary
+Git refused to inspect the workspace because the repository owner differs from the current Windows user.
+
+### Error
+```text
+fatal: detected dubious ownership in repository at 'E:/POE2ACT'
+```
+
+### Context
+- Command attempted: `git status --short`
+- The workspace is owned by the local Administrators group while commands run as `UmbraMalik`.
+
+### Suggested Fix
+Use the command-scoped option `git -c safe.directory=E:/POE2ACT ...` so repository inspection works without mutating global Git configuration.
+
+### Metadata
+- Reproducible: yes
+- Related Files: .git
+
+### Resolution
+- **Resolved**: 2026-07-13T01:27:50+03:00
+- **Notes**: Retried successfully with command-scoped `safe.directory`.
+
+---
+
+## [ERR-20260713-002] rg-windows-glob-arguments
+
+**Logged**: 2026-07-13T01:27:50+03:00
+**Priority**: low
+**Status**: resolved
+**Area**: config
+
+### Summary
+Passing Windows wildcard paths directly to ripgrep caused invalid path syntax errors.
+
+### Error
+```text
+rg: src\renderer\*.tsx: Syntax error in file name, directory name, or volume label. (os error 123)
+```
+
+### Context
+- Command attempted with wildcard path arguments such as `src\renderer\*.tsx`.
+- PowerShell did not expand those arguments in a form accepted by ripgrep.
+
+### Suggested Fix
+Search the directory and filter with ripgrep glob flags, for example `rg -g '*.tsx' -g '*.css' PATTERN src\renderer`.
+
+### Metadata
+- Reproducible: yes
+- Related Files: src/renderer
+
+### Resolution
+- **Resolved**: 2026-07-13T01:27:50+03:00
+- **Notes**: Retried successfully using `-g` filters.
+
+---
+
+## [ERR-20260713-003] companion-preview-missing-electron-guard
+
+**Logged**: 2026-07-13T01:29:49+03:00
+**Priority**: medium
+**Status**: pending
+**Area**: frontend
+
+### Summary
+The browser preview of the companion page crashes because one effect calls an Electron-only API without checking whether the preload bridge exists.
+
+### Error
+```text
+TypeError: Cannot read properties of undefined (reading 'onRunResetConfirmationRequested')
+```
+
+### Context
+- URL opened: `companion.html?preview=1&demo=1`
+- `useAppSnapshot` supports preview mode without `window.poe2Overlay`, but `CompanionPage` still calls `window.poe2Overlay.onRunResetConfirmationRequested` unconditionally.
+
+### Suggested Fix
+Skip the subscription when the preload bridge or callback is unavailable, matching the existing preview guards in renderer hooks.
+
+### Metadata
+- Reproducible: yes
+- Related Files: src/renderer/pages/CompanionPage.tsx, src/renderer/hooks.ts
+
+---

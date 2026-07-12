@@ -77,8 +77,8 @@
 }
 
 .overlay-page button:not(.overlay-language-toggle-hitarea) > :not(.click-feedback-burst),
-.companion-page button > :not(.click-feedback-burst),
-.settings-page button > :not(.click-feedback-burst),
+.companion-page button:not(.companion-theme-toggle) > :not(.click-feedback-burst),
+.settings-page button:not(.companion-theme-toggle) > :not(.click-feedback-burst),
 .settings-page .toggle-card > :not(.click-feedback-burst),
 .report-page button > :not(.click-feedback-burst),
 .update-page button > :not(.click-feedback-burst),
