@@ -4624,73 +4624,58 @@ textarea {
   }
 }
 
-/* Timer-only: keep long elapsed values clear of the start/pause control. */
+/* Timer-only: keep the original centered timer + side control composition. */
 .overlay-page.overlay-page-timer-only .timer-only-main-panel {
   container-type: inline-size;
-}
-
-.overlay-page.overlay-page-timer-only .timer-only-main-head {
-  width: 100%;
-  min-width: 0;
-  display: grid;
-  grid-template-columns: 30px minmax(0, 1fr) 30px;
-  align-items: center;
-  gap: 6px;
-}
-
-.overlay-page.overlay-page-timer-only .timer-only-main-head::before {
-  content: "";
-  width: 30px;
-  height: 1px;
-}
-
-.overlay-page.overlay-page-timer-only .timer-only-main-label {
-  min-width: 0;
-  margin: 0;
-  text-align: center;
-}
-
-.overlay-page.overlay-page-timer-only .timer-only-main-head .timer-only-controls-row {
-  grid-column: 3;
-  justify-self: end;
-  margin: 0 !important;
 }
 
 .overlay-page.overlay-page-timer-only .timer-only-time-control-row {
   width: 100%;
   min-width: 0;
-  display: block;
+  min-height: 46px;
+  display: grid !important;
+  grid-template-columns: 30px minmax(0, 1fr) 30px !important;
+  align-items: center;
+  column-gap: 5px;
 }
 
 .overlay-page.overlay-page-timer-only .timer-only-time-control-row .timer-only-time {
+  grid-column: 2 !important;
+  justify-self: stretch !important;
   width: 100%;
-  min-width: 0;
+  min-width: 0 !important;
   max-width: 100%;
-  display: block;
+  margin: 0 !important;
   overflow: hidden;
   text-align: center;
-  font-size: clamp(31px, 14cqi, 58px) !important;
-  line-height: 0.94;
-  letter-spacing: -0.055em;
+  font-size: clamp(32px, 17.5cqi, 56px) !important;
+  line-height: 0.90;
+  letter-spacing: -0.075em;
 }
 
 .overlay-page.overlay-page-timer-only .timer-only-time-control-row .timer-only-time > span {
   display: block;
+  width: 100%;
   max-width: 100%;
   white-space: nowrap;
 }
 
-@media (max-width: 280px) {
-  .overlay-page.overlay-page-timer-only .timer-only-main-head {
-    grid-template-columns: 28px minmax(0, 1fr) 28px;
-    gap: 4px;
-  }
+.overlay-page.overlay-page-timer-only .timer-only-time-control-row .timer-only-controls-row {
+  grid-column: 3 !important;
+  justify-self: center !important;
+  align-self: center !important;
+  margin: 0 !important;
+  transform: none !important;
+}
 
-  .overlay-page.overlay-page-timer-only .timer-only-main-head::before {
-    width: 28px;
+@media (max-width: 280px) {
+  .overlay-page.overlay-page-timer-only .timer-only-time-control-row {
+    grid-template-columns: 30px minmax(0, 1fr) 30px !important;
+    column-gap: 3px;
   }
 
   .overlay-page.overlay-page-timer-only .timer-only-time-control-row .timer-only-time {
-    font-size: clamp(29px, 13.5cqi, 44px) !important;
+    font-size: clamp(30px, 16.5cqi, 44px) !important;
+    letter-spacing: -0.08em;
   }
 }
