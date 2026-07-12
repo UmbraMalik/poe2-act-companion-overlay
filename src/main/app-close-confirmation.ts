@@ -26,12 +26,12 @@ export async function runShowCustomQuitConfirmation(this: any) {
         try {
             const parentWindow = this.getQuitDialogOwnerWindow();
             const closeConfirmWindow = new BrowserWindow({
-                width: 500,
-                height: 252,
-                minWidth: 460,
-                minHeight: 220,
-                maxWidth: 520,
-                maxHeight: 320,
+                width: 540,
+                height: 320,
+                minWidth: 500,
+                minHeight: 300,
+                maxWidth: 580,
+                maxHeight: 360,
                 resizable: false,
                 minimizable: false,
                 maximizable: false,

@@ -1747,9 +1747,7 @@ export function OverlayPage() {
       aria-label={timerPrimaryTitle}
       onClick={handleTimerPrimaryAction}
     >
-      <span className="timer-button-glyph" aria-hidden="true">
-        <UiIcon name={timerPrimaryIcon} />
-      </span>
+      <UiIcon name={timerPrimaryIcon} className="timer-button-icon" />
     </button>
   );
   const overlayQuickActions = (

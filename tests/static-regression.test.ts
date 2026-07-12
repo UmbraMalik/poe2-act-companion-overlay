@@ -678,6 +678,32 @@ test('interactive chrome uses the shared typed SVG icon system instead of font g
   }
 });
 
+test('timer play and pause SVGs stay centered in every overlay layout', () => {
+  const overlay = readText('src/renderer/pages/OverlayPage.tsx');
+  const iconSystem = readText('src/renderer/styles/37-icon-system.css');
+
+  assert.match(overlay, /overlay-timer-icon-control/);
+  assert.match(overlay, /<UiIcon name=\{timerPrimaryIcon\} className="timer-button-icon"/);
+  assert.doesNotMatch(overlay, /<span className="timer-button-glyph"/);
+  assert.match(iconSystem, /\.overlay-page button\.overlay-timer-icon-control \{[\s\S]*position: relative !important;[\s\S]*place-items: center !important;[\s\S]*padding: 0 !important;/);
+  assert.match(iconSystem, /\.overlay-page button\.overlay-timer-icon-control > \.timer-button-icon\.ui-icon \{[\s\S]*width: 14px !important;[\s\S]*height: 14px !important;[\s\S]*align-self: center !important;[\s\S]*justify-self: center !important;[\s\S]*transform: none !important;/);
+});
+
+test('running-timer close confirmation fits its fixed Electron window without clipping', () => {
+  const main = readText('src/main/app-close-confirmation.ts');
+  const page = readText('src/renderer/pages/CloseConfirmPage.tsx');
+  const polish = readText('src/renderer/styles/38-close-confirm-polish.css');
+  const stylesIndex = readText('src/renderer/styles.css');
+
+  assert.match(main, /width: 540,[\s\S]*height: 320,[\s\S]*minWidth: 500,[\s\S]*minHeight: 300/);
+  assert.match(page, /className="close-confirm-shell"/);
+  assert.match(page, /className="button-row close-confirm-actions no-drag"/);
+  assert.match(stylesIndex, /38-close-confirm-polish\.css/);
+  assert.match(polish, /\.close-confirm-page \{[\s\S]*height: 100vh;[\s\S]*box-sizing: border-box;[\s\S]*overflow: hidden;/);
+  assert.match(polish, /\.close-confirm-page \.close-confirm-shell \{[\s\S]*max-height: calc\(100vh - 32px\);[\s\S]*overflow: hidden;/);
+  assert.match(polish, /\.close-confirm-page \.close-confirm-actions \{[\s\S]*grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
+});
+
 test('companion run history details button opens a stable detached detail card', () => {
   const detailPanel = readText('src/renderer/RunHistoryDetailPanel.tsx');
   const companion = readText('src/renderer/pages/CompanionPage.tsx');

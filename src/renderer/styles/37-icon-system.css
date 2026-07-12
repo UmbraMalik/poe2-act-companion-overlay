@@ -74,10 +74,20 @@ summary:focus-visible > .ui-icon {
   padding: 0;
 }
 
-.timer-button-glyph > .ui-icon {
-  width: 14px;
-  height: 14px;
-  margin: auto;
+.overlay-page button.overlay-timer-icon-control {
+  position: relative !important;
+  display: grid !important;
+  place-items: center !important;
+  padding: 0 !important;
+}
+
+.overlay-page button.overlay-timer-icon-control > .timer-button-icon.ui-icon {
+  width: 14px !important;
+  height: 14px !important;
+  margin: 0 !important;
+  align-self: center !important;
+  justify-self: center !important;
+  transform: none !important;
 }
 
 .timer-button-glyph::before,

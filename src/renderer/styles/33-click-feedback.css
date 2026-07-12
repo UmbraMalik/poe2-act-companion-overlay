@@ -143,6 +143,7 @@
 }
 
 .overlay-page .is-click-feedback-active > .overlay-icon-glyph,
+.overlay-page .is-click-feedback-active > .timer-button-icon,
 .overlay-page .is-click-feedback-active > .timer-button-glyph,
 .companion-page .is-click-feedback-active > .ui-icon,
 .companion-page .is-click-feedback-active > span,
@@ -234,6 +235,7 @@
   }
 
   .overlay-page .is-click-feedback-active > .overlay-icon-glyph,
+  .overlay-page .is-click-feedback-active > .timer-button-icon,
   .overlay-page .is-click-feedback-active > .timer-button-glyph,
   .companion-page .is-click-feedback-active > .ui-icon,
   .companion-page .is-click-feedback-active > span,

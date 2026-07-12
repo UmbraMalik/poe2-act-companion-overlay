@@ -91,6 +91,7 @@ const expected = [
   '35-dark-fantasy-theme.css',
   '36-companion-cohesion.css',
   '37-icon-system.css',
+  '38-close-confirm-polish.css',
 ];
 const expectedCssFiles = [...expected, ...trackedNonNumberedPartials].sort();
 const expectedImports = [

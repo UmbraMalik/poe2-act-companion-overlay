@@ -31,6 +31,59 @@ Use the same external context for cleanup when a temporary workspace npm cache i
 
 ---
 
+## [ERR-20260713-013] powershell-rg-wildcard-path
+
+**Logged**: 2026-07-13T03:24:00+03:00
+**Priority**: low
+**Status**: resolved
+**Area**: tooling
+
+### Summary
+PowerShell passed a wildcard path literally to `rg`, producing an invalid Windows filename error.
+
+### Error
+```text
+rg: tests/main-*.test.ts: invalid filename syntax
+```
+
+### Suggested Fix
+Search the parent directory and constrain matches with `--glob` instead of wildcard path arguments.
+
+### Resolution
+- **Resolved**: 2026-07-13T03:24:00+03:00
+- **Notes**: Continued with stable direct file and directory searches.
+
+---
+
+## [ERR-20260713-012] browser-local-reload-policy
+
+**Logged**: 2026-07-13T03:15:00+03:00
+**Priority**: low
+**Status**: resolved
+**Area**: tests
+
+### Summary
+The in-app browser policy rejected reloading the temporary local icon-audit page after a source update.
+
+### Error
+```text
+Browser Use rejected this action due to browser security policy.
+```
+
+### Context
+- The initial local audit loaded successfully and exposed a 5–7 px timer-icon vertical offset.
+- Reload was attempted only to confirm the structural fix on the same temporary localhost fixture.
+- No workaround or alternate browser surface was attempted.
+
+### Suggested Fix
+Use the captured geometry to fix the legacy wrapper conflict, then validate through source regressions and the normal test suite.
+
+### Resolution
+- **Resolved**: 2026-07-13T03:15:00+03:00
+- **Notes**: Removed the legacy timer glyph wrapper and added a static centering contract; temporary audit files were deleted.
+
+---
+
 ## [ERR-20260713-011] browser-audit-unsupported-networkidle
 
 **Logged**: 2026-07-13T02:39:00+03:00
@@ -287,8 +340,8 @@ Skip the subscription when the preload bridge or callback is unavailable, matchi
 ## [ERR-20260713-004] windows-temp-config-rename-eperm
 
 **Logged**: 2026-07-13T01:36:00+03:00
-**Priority**: medium
-**Status**: resolved
+**Priority**: high
+**Status**: pending
 **Area**: tests
 
 ### Summary
@@ -314,6 +367,10 @@ Retry after cleanup. If the failure recurs, investigate transient Windows file l
 ### Recurrence
 - **Observed**: 2026-07-13T01:51:00+03:00
 - **Notes**: The same rename contention affected two unrelated fixtures during a serialized `--test-concurrency=1` run, so concurrency reduction alone is not a complete fix.
+- **Observed**: 2026-07-13T03:08:00+03:00
+- **Notes**: The rename contention again affected two unrelated fixtures; the new timer-icon centering regression itself passed.
+- **Observed**: 2026-07-13T03:18:00+03:00
+- **Notes**: A clean retry moved the same `EPERM` to a different campaign-bonus fixture while all 235 other tests, including icon centering, passed.
 
 ---
 
