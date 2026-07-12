@@ -3,8 +3,7 @@ import { access, open, stat } from 'node:fs/promises';
 import { basename, dirname } from 'node:path';
 import { StringDecoder } from 'node:string_decoder';
 import { GuideService, type ExtractedZoneMatch } from './guide-service';
-import { extractGeneratedAreaId, extractNamedZoneFromLine } from './log-parser';
-import { shouldKeepPendingZoneAreaId } from '../scene-classifier';
+import { ZoneMatchExtractor } from './zone-match-extractor';
 import type {
   LogWatcherRuntimeState,
   LogWatcherStatus
@@ -35,7 +34,7 @@ export class LogWatcher {
   private scheduledRead: NodeJS.Timeout | null = null;
   private filePosition = 0;
   private remainder = '';
-  private pendingAreaId: string | null = null;
+  private readonly zoneExtractor: ZoneMatchExtractor;
   private decoder = new StringDecoder('utf8');
   private reading = false;
   private needsResync = false;
@@ -55,13 +54,15 @@ export class LogWatcher {
   };
 
   constructor(
-    private readonly guideService: GuideService,
+    guideService: GuideService,
     private readonly callbacks: LogWatcherCallbacks
-  ) {}
+  ) {
+    this.zoneExtractor = new ZoneMatchExtractor(guideService);
+  }
 
   private resetTextState(): void {
     this.remainder = '';
-    this.pendingAreaId = null;
+    this.zoneExtractor.reset();
     this.decoder = new StringDecoder('utf8');
   }
 
@@ -73,35 +74,8 @@ export class LogWatcher {
     return stripNulCharacters(buffer.toString('utf8'));
   }
 
-  private shouldKeepPendingAreaId(zoneName: string | null | undefined): boolean {
-    return shouldKeepPendingZoneAreaId(zoneName);
-  }
-
   private extractZoneMatch(line: string): ExtractedZoneMatch | null {
-    const trimmedLine = stripNulCharacters(String(line ?? '')).trim();
-    if (!trimmedLine) {
-      return null;
-    }
-
-    const extractedInternalAreaId = extractGeneratedAreaId(trimmedLine)?.trim() ?? null;
-    if (extractedInternalAreaId) {
-      this.pendingAreaId = extractedInternalAreaId;
-    }
-
-    const extractedZoneName = extractNamedZoneFromLine(trimmedLine)?.trim() ?? null;
-    if (extractedZoneName) {
-      const zoneMatch = this.guideService.resolveZoneMatch({
-        rawLine: trimmedLine,
-        extractedInternalAreaId: this.pendingAreaId,
-        extractedZoneName
-      });
-      if (!this.shouldKeepPendingAreaId(extractedZoneName)) {
-        this.pendingAreaId = null;
-      }
-      return zoneMatch;
-    }
-
-    return this.guideService.extractZoneMatchFromLine(trimmedLine);
+    return this.zoneExtractor.extractFromLogLine(line);
   }
 
   async start(filePath: string, options?: { skipBootstrap?: boolean }): Promise<void> {
@@ -324,7 +298,7 @@ export class LogWatcher {
       const content = this.decodeBootstrapBuffer(buffer);
       const lines = content.split(/\r?\n/).filter(Boolean);
       let lastZone: ExtractedZoneMatch | null = null;
-      this.pendingAreaId = null;
+      this.zoneExtractor.reset();
 
       for (const line of lines) {
         this.callbacks.onLine(line, 'bootstrap');

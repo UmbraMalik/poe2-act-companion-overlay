@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { DEFAULT_CONFIG, DEFAULT_HOTKEYS } from '../src/shared/defaults';
+import { CURRENT_CONFIG_SCHEMA_VERSION, DEFAULT_CONFIG, DEFAULT_HOTKEYS } from '../src/shared/defaults';
 import { ConfigStore, normalizeAppConfig } from '../src/main/services/config-store';
 import { readMainProcessSource, readText } from './helpers/loadJson';
 
@@ -16,6 +16,8 @@ test('normalizeAppConfig keeps defaults, custom settings and strips legacy unkno
     overlayEffectsEnabled: false,
     theme: 'dark_fantasy',
     themePreferencePrompted: true,
+    setupWizardCompleted: true,
+    runTimerSettings: { targetRunTimeMs: 6 * 60 * 60 * 1000 },
     overlayDebugLayoutEnabled: true,
     overlayMovementLocked: true,
     realtimePriorityEnabled: true,
@@ -25,6 +27,7 @@ test('normalizeAppConfig keeps defaults, custom settings and strips legacy unkno
     oldSupportBlock: true
   } as never);
 
+  assert.equal(normalized.configSchemaVersion, CURRENT_CONFIG_SCHEMA_VERSION);
   assert.equal(normalized.logFilePath, 'C:\\temp\\LatestClient.txt');
   assert.equal(normalized.overlayOpacity, 0.5);
   assert.equal(normalized.overlayScale, 120);
@@ -33,6 +36,8 @@ test('normalizeAppConfig keeps defaults, custom settings and strips legacy unkno
   assert.equal(normalized.overlayEffectsEnabled, false);
   assert.equal(normalized.theme, 'dark_fantasy');
   assert.equal(normalized.themePreferencePrompted, true);
+  assert.equal(normalized.setupWizardCompleted, true);
+  assert.equal(normalized.runTimerSettings.targetRunTimeMs, 6 * 60 * 60 * 1000);
   assert.equal(normalized.overlayDebugLayoutEnabled, true);
   assert.equal(normalized.overlayMovementLocked, true);
   assert.equal(normalized.realtimePriorityEnabled, true);
@@ -41,6 +46,28 @@ test('normalizeAppConfig keeps defaults, custom settings and strips legacy unkno
   assert.equal('oldSupportBlock' in (normalized as unknown as Record<string, unknown>), false);
 });
 
+test('normalizeAppConfig upgrades legacy configs to the current schema without dropping valid settings', () => {
+  const normalized = normalizeAppConfig({
+    appLanguage: 'en',
+    overlayDensity: 'compact',
+    companionAlwaysOnTop: true
+  } as never);
+
+  assert.equal(normalized.configSchemaVersion, CURRENT_CONFIG_SCHEMA_VERSION);
+  assert.equal(normalized.appLanguage, 'en');
+  assert.equal(normalized.overlayDensity, 'compact');
+  assert.equal(normalized.companionAlwaysOnTop, true);
+});
+
+test('normalizeAppConfig keeps the first-run wizard pending when the completion marker is absent', () => {
+  const normalized = normalizeAppConfig({
+    logFilePath: 'C:\\Games\\Path of Exile 2\\logs\\LatestClient.txt',
+    themePreferencePrompted: true,
+    theme: 'dark_fantasy'
+  } as never);
+
+  assert.equal(normalized.setupWizardCompleted, false);
+});
 
 test('normalizeAppConfig hardens corrupted user config values', () => {
   const normalized = normalizeAppConfig({
@@ -51,6 +78,7 @@ test('normalizeAppConfig hardens corrupted user config values', () => {
     overlayEffectsEnabled: 'no',
     theme: 'neon',
     themePreferencePrompted: 'yes',
+    setupWizardCompleted: 'yes',
     overlayDebugLayoutEnabled: 'yes',
     overlayOpacity: 5,
     realtimePriorityEnabled: 'yes',
@@ -112,6 +140,7 @@ test('normalizeAppConfig hardens corrupted user config values', () => {
       autoStartMode: 'broken',
       leagueStartAt: -1,
       leagueStartTimeLabel: 123,
+      targetRunTimeMs: 1,
       autoStart: 'yes',
       showZoneTimer: false
     }
@@ -124,6 +153,7 @@ test('normalizeAppConfig hardens corrupted user config values', () => {
   assert.equal(normalized.overlayEffectsEnabled, DEFAULT_CONFIG.overlayEffectsEnabled);
   assert.equal(normalized.theme, DEFAULT_CONFIG.theme);
   assert.equal(normalized.themePreferencePrompted, DEFAULT_CONFIG.themePreferencePrompted);
+  assert.equal(normalized.setupWizardCompleted, DEFAULT_CONFIG.setupWizardCompleted);
   assert.equal(normalized.overlayDebugLayoutEnabled, DEFAULT_CONFIG.overlayDebugLayoutEnabled);
   assert.equal(normalized.overlayOpacity, 1);
   assert.equal(normalized.realtimePriorityEnabled, DEFAULT_CONFIG.realtimePriorityEnabled);
@@ -169,8 +199,40 @@ test('normalizeAppConfig hardens corrupted user config values', () => {
   assert.equal(normalized.runTimerSettings.autoStartMode, 'scheduled_time');
   assert.equal(normalized.runTimerSettings.leagueStartAt, null);
   assert.equal(normalized.runTimerSettings.leagueStartTimeLabel, null);
+  assert.equal(normalized.runTimerSettings.targetRunTimeMs, DEFAULT_CONFIG.runTimerSettings.targetRunTimeMs);
   assert.equal(normalized.runTimerSettings.autoStart, DEFAULT_CONFIG.runTimerSettings.autoStart);
   assert.equal(normalized.runTimerSettings.showZoneTimer, false);
+});
+
+
+test('normalizeAppConfig trims saved run zone history payloads', () => {
+  const zoneTimeHistory = Array.from({ length: 300 }, (_, index) => ({
+    zoneId: `zone-${index}`,
+    zone_ru: `Зона ${index}`,
+    act: 1,
+    elapsedMs: index + 1,
+    enteredAt: 1_700_000_000_000 + index,
+    leftAt: 1_700_000_001_000 + index
+  }));
+
+  const normalized = normalizeAppConfig({
+    runHistory: [{
+      id: 'run-large-history',
+      label: 'Large history',
+      savedAt: 1_700_000_000_000,
+      totalElapsedMs: 100_000,
+      currentAct: 1,
+      status: 'finished',
+      actSplits: [],
+      longestZones: [zoneTimeHistory[0]],
+      zoneTimeHistory,
+      runTimer: DEFAULT_CONFIG.runTimer
+    }]
+  } as never);
+
+  assert.equal(normalized.runHistory[0]?.zoneTimeHistory.length, 240);
+  assert.equal(normalized.runHistory[0]?.zoneTimeHistory[0]?.zoneId, 'zone-60');
+  assert.equal(normalized.runHistory[0]?.longestZones[0]?.zoneId, 'zone-0');
 });
 
 test('normalizeAppConfig drops corrupted checklist and campaign bonus progress entries', () => {
@@ -267,6 +329,24 @@ test('normalizeAppConfig drops corrupted checklist and campaign bonus progress e
   assert.equal(normalized.campaignBonusProgress.legacy_unknown_source.detectedBy, 'unknown');
 });
 
+test('ConfigStore persists a migrated schema version on first legacy load', () => {
+  const configPath = join(
+    process.cwd(),
+    '.tmp-tests',
+    `settings-legacy-schema-${process.pid}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.json`
+  );
+  mkdirSync(join(process.cwd(), '.tmp-tests'), { recursive: true });
+  writeFileSync(configPath, JSON.stringify({ appLanguage: 'en', overlayDensity: 'compact' }), 'utf8');
+
+  const loaded = new ConfigStore(configPath).load();
+  const persisted = JSON.parse(readFileSync(configPath, 'utf8')) as typeof DEFAULT_CONFIG;
+
+  assert.equal(loaded.configSchemaVersion, CURRENT_CONFIG_SCHEMA_VERSION);
+  assert.equal(persisted.configSchemaVersion, CURRENT_CONFIG_SCHEMA_VERSION);
+  assert.equal(persisted.appLanguage, 'en');
+  assert.equal(persisted.overlayDensity, 'compact');
+});
+
 test('ConfigStore persists log path and merges settings safely', () => {
   const configPath = join(
     process.cwd(),
@@ -289,6 +369,8 @@ test('ConfigStore persists log path and merges settings safely', () => {
     overlayEffectsEnabled: false,
     theme: 'dark_fantasy',
     themePreferencePrompted: true,
+    setupWizardCompleted: true,
+    runTimerSettings: { targetRunTimeMs: 5 * 60 * 60 * 1000 },
     realtimePriorityEnabled: true,
     hotkeys: {
       openCompanion: 'Ctrl+F9'
@@ -304,6 +386,8 @@ test('ConfigStore persists log path and merges settings safely', () => {
   assert.equal(reloaded.overlayEffectsEnabled, false);
   assert.equal(reloaded.theme, 'dark_fantasy');
   assert.equal(reloaded.themePreferencePrompted, true);
+  assert.equal(reloaded.setupWizardCompleted, true);
+  assert.equal(reloaded.runTimerSettings.targetRunTimeMs, 5 * 60 * 60 * 1000);
   assert.equal(reloaded.realtimePriorityEnabled, true);
   assert.equal(reloaded.hotkeys.openCompanion, 'Ctrl+F9');
   assert.equal(reloaded.hotkeys.toggleOverlayMode, DEFAULT_HOTKEYS.toggleOverlayMode);

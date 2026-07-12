@@ -56,12 +56,12 @@
   border-radius: 999px !important;
   border: 1px solid rgba(150, 170, 190, 0.30) !important;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.035)) !important;
+    linear-gradient(180deg, rgba(255, 255, 255, 0.052), rgba(255, 255, 255, 0.018)) !important;
   color: rgba(238, 243, 248, 0.72) !important;
   cursor: pointer;
   overflow: hidden;
   box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.035),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.024),
     0 0 0 1px rgba(0, 0, 0, 0.14);
   transition:
     border-color 160ms ease,

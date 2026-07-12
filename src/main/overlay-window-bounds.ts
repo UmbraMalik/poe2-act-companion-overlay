@@ -10,6 +10,37 @@ export type OverlayBoundsChangeSource =
 
 export type OverlayBoundsApplyMode = 'none' | 'setPosition' | 'setBounds';
 
+export interface WindowWorkArea {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+export function fitBoundsToWorkArea(
+  bounds: OverlayBounds,
+  workArea: WindowWorkArea,
+  minimumSize: { width: number; height: number }
+): OverlayBounds {
+  const availableWidth = Math.max(1, Math.round(workArea.width));
+  const availableHeight = Math.max(1, Math.round(workArea.height));
+  const minimumWidth = Math.min(Math.max(1, Math.round(minimumSize.width)), availableWidth);
+  const minimumHeight = Math.min(Math.max(1, Math.round(minimumSize.height)), availableHeight);
+  const width = Math.min(availableWidth, Math.max(minimumWidth, Math.round(bounds.width)));
+  const height = Math.min(availableHeight, Math.max(minimumHeight, Math.round(bounds.height)));
+  const minimumX = Math.round(workArea.x);
+  const minimumY = Math.round(workArea.y);
+  const maximumX = minimumX + availableWidth - width;
+  const maximumY = minimumY + availableHeight - height;
+
+  return {
+    x: Math.min(maximumX, Math.max(minimumX, Math.round(bounds.x))),
+    y: Math.min(maximumY, Math.max(minimumY, Math.round(bounds.y))),
+    width,
+    height
+  };
+}
+
 const SIZE_CHANGE_ALLOWED_SOURCES = new Set<OverlayBoundsChangeSource>([
   'manualResize',
   'autoHeight',

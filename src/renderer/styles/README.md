@@ -18,6 +18,9 @@ The app uses the numbered CSS partials in this folder as the single source of tr
 12. `12-localization-toggle.css` — very narrow overlay and RU/EN language toggle.
 13. `13-guide-update-highlights.css` and later numbered partials — focused late-stage overlay/companion polish. Keep new overrides at the end of the numbered chain.
 14. `36-companion-cohesion.css` — final companion panel pass that aligns tab surfaces, current states and theme-specific accents.
+15. `37-icon-system.css` — shared vector icon sizing, alignment, state motion and theme-aware accents.
+16. `38-close-confirm-polish.css` — unclipped fixed-window layout for the running-timer close confirmation.
+17. `39-overlay-mode-stability.css` — compositor-stable overlay mode swaps without root-surface animation.
 
 Keep imports in `src/renderer/styles.css` in numeric order unless you intentionally change cascade priority.
 

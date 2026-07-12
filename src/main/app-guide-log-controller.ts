@@ -2,11 +2,8 @@ import { access, stat } from 'node:fs/promises';
 import { constants } from 'node:fs';
 import { join } from 'node:path';
 import { app } from 'electron';
-import {
-  extractGeneratedAreaId,
-  extractNamedZoneFromLine
-} from './services/log-parser';
 import { ENDGAME_T15_ACT } from '../shared/timers';
+import type { ZoneMatchExtractor } from './services/zone-match-extractor';
 import {
   inferActHintFromInternalAreaId as inferActHintFromInternalAreaIdFromScene,
   inferActHintFromTownScene,
@@ -15,10 +12,13 @@ import {
   isTownSceneWithGuide,
   isUnknownOrNullScene,
   isValidGameplaySceneSource,
-  normalizeSceneText,
-  shouldKeepPendingZoneAreaId
+  normalizeSceneText
 } from './scene-classifier';
 import { diagnosticInfo } from './diagnostic-logger';
+
+type ZoneMatchExtractionContext = {
+    zoneMatchExtractor: ZoneMatchExtractor;
+};
 
 
 export function runLoadGuide(this: any) {
@@ -171,7 +171,7 @@ export async function runRefreshLogFileInfo(this: any, filePath: any = this.conf
 
 export async function runStartLogWatcher(this: any, filePath: any, skipBootstrap: any = false) {
         await this.refreshLogFileInfo(filePath);
-        this.pendingZoneAreaId = null;
+        this.zoneMatchExtractor.reset();
         await this.logWatcher.start(filePath, { skipBootstrap });
         if (skipBootstrap && this.config.ignoreExistingLogOnNextStart) {
             this.config = this.configStore.update({
@@ -491,30 +491,6 @@ export function runLogZoneEventDecision(this: any, zoneMatch: any, action: any, 
         });
     }
 
-export function runShouldKeepPendingZoneAreaId(this: any, zoneName: any) {
-        return shouldKeepPendingZoneAreaId(zoneName);
-    }
-
-export function runExtractZoneMatchFromLogLine(this: any, line: any) {
-        const trimmedLine = String(line ?? '').replace(/\u0000/g, '').trim();
-        if (!trimmedLine) {
-            return null;
-        }
-        const extractedInternalAreaId = extractGeneratedAreaId(trimmedLine)?.trim() ?? null;
-        if (extractedInternalAreaId) {
-            this.pendingZoneAreaId = extractedInternalAreaId;
-        }
-        const extractedZoneName = extractNamedZoneFromLine(trimmedLine)?.trim() ?? null;
-        if (extractedZoneName) {
-            const zoneMatch = this.guideService.resolveZoneMatch({
-                rawLine: trimmedLine,
-                extractedInternalAreaId: this.pendingZoneAreaId,
-                extractedZoneName
-            });
-            if (!this.shouldKeepPendingZoneAreaId(extractedZoneName)) {
-                this.pendingZoneAreaId = null;
-            }
-            return zoneMatch;
-        }
-        return this.guideService.extractZoneMatchFromLine(trimmedLine);
+export function runExtractZoneMatchFromLogLine(this: ZoneMatchExtractionContext, line: unknown) {
+        return this.zoneMatchExtractor.extractFromLogLine(line);
     }

@@ -30,7 +30,7 @@
 .overlay-page .section-single-text,
 .overlay-page .details-checklist li {
   color: var(--ui-text-body-calm) !important;
-  font-family: "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif !important;
+  font-family: var(--font-ui) !important;
   font-weight: 430 !important;
   line-height: 1.56;
   text-shadow: none;

@@ -4,16 +4,17 @@
   "description": "Safe desktop overlay helper for Path of Exile 2 campaign routing.",
   "main": "dist-electron/main/main.js",
   "scripts": {
-    "dev": "concurrently -k \"tsc -p tsconfig.electron.json --watch --preserveWatchOutput\" \"vite --host 127.0.0.1\" \"wait-on http://127.0.0.1:5173/overlay.html dist-electron/main/main.js && electron .\"",
-    "build": "tsc -p tsconfig.electron.json && vite build",
-    "dist": "tsc -p tsconfig.electron.json && vite build && electron-builder",
+    "dev": "node scripts/clean-dev-electron.cjs && concurrently -k \"tsc -p tsconfig.electron.json --watch --preserveWatchOutput\" \"vite --host 127.0.0.1\" \"wait-on http://127.0.0.1:5173/overlay.html dist-electron/main/main.js dist-electron/i18n/translations.js dist-electron/i18n/translation-overrides.js && electron .\"",
+    "typecheck:renderer": "tsc -p tsconfig.json",
+    "build": "npm run typecheck:renderer && tsc -p tsconfig.electron.json && vite build",
+    "dist": "npm run typecheck:renderer && tsc -p tsconfig.electron.json && vite build && electron-builder",
     "start": "npm run build && set ELECTRON_RENDERER_MODE=production&& electron .",
     "check:release": "node scripts/check-release-files.cjs",
     "dist:check": "npm run dist && npm run check:release",
     "clean:release": "node scripts/clean-release.cjs",
     "dist:clean": "npm run clean:release && npm run dist && npm run check:release",
     "test": "node scripts/run-and-clean.cjs npm run test:regression",
-    "test:regression": "tsc -p tsconfig.test.json && node scripts/run-regression-tests.cjs && npm run check:mappings && npm run check:styles && npm run check:artifacts && npm run check:download-stats && npm run check:mojibake && npm run check:guide-consistency && npm run check:main-modules && npm run check:renderer-modules && npm run check:logging && npm run check:branding",
+    "test:regression": "npm run typecheck:renderer && tsc -p tsconfig.test.json && node scripts/run-regression-tests.cjs && npm run check:mappings && npm run check:styles && npm run check:artifacts && npm run check:download-stats && npm run check:mojibake && npm run check:guide-consistency && npm run check:main-modules && npm run check:renderer-modules && npm run check:logging && npm run check:release-readiness && npm run check:branding",
     "build:checked": "node scripts/run-and-clean.cjs npm run build:checked:raw",
     "dist:checked": "npm run clean:release && npm run build:checked && electron-builder && npm run check:release",
     "clean:tmp": "node scripts/clean-tmp.cjs",
@@ -29,7 +30,8 @@
     "check:logging": "node scripts/check-logging.cjs",
     "clean:generated": "node scripts/clean-generated.cjs",
     "check:bundle": "node scripts/check-renderer-bundle.cjs",
-    "check:branding": "node scripts/check-branding.cjs"
+    "check:branding": "node scripts/check-branding.cjs",
+    "check:release-readiness": "node scripts/check-release-readiness.cjs"
   },
   "build": {
     "appId": "com.umbramalik.poe2-act-companion-overlay",
@@ -84,6 +86,8 @@
     "react-dom": "^19.1.0"
   },
   "devDependencies": {
+    "@fontsource-variable/geist": "^5.2.9",
+    "@fontsource-variable/jetbrains-mono": "^5.2.8",
     "@types/node": "^24.0.0",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",

@@ -1,0 +1,83 @@
+/* Close confirmation: comfortable fixed-window geometry without clipped edges. */
+.close-confirm-page {
+  height: 100vh;
+  min-height: 0;
+  box-sizing: border-box;
+  padding: 16px;
+  overflow: hidden;
+}
+
+.close-confirm-page .close-confirm-shell {
+  width: 100%;
+  max-width: 540px;
+  max-height: calc(100vh - 32px);
+  box-sizing: border-box;
+  overflow: hidden;
+  border-radius: 18px;
+}
+
+.close-confirm-page .close-confirm-header {
+  align-items: center;
+  padding: 18px 18px 10px;
+}
+
+.close-confirm-page .close-confirm-header-copy {
+  gap: 7px;
+}
+
+.close-confirm-page .close-confirm-header h1 {
+  font-size: 23px;
+  line-height: 1.12;
+}
+
+.close-confirm-page .close-confirm-close {
+  width: 38px;
+  min-width: 38px !important;
+  height: 38px;
+  min-height: 38px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+}
+
+.close-confirm-page .close-confirm-content {
+  gap: 11px;
+  padding: 6px 18px 0;
+}
+
+.close-confirm-page .close-confirm-message {
+  font-size: 14px;
+  line-height: 1.52;
+}
+
+.close-confirm-page .close-confirm-note {
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.close-confirm-page .close-confirm-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+  padding: 18px;
+  gap: 10px;
+}
+
+.close-confirm-page .close-confirm-actions button {
+  width: 100%;
+  min-width: 0;
+  min-height: 42px;
+  padding: 9px 14px;
+  white-space: normal;
+  line-height: 1.2;
+}
+
+@media (max-width: 520px) {
+  .close-confirm-page {
+    padding: 12px;
+  }
+
+  .close-confirm-page .close-confirm-shell {
+    max-height: calc(100vh - 24px);
+  }
+}

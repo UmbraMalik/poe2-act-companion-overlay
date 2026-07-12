@@ -54,9 +54,10 @@ const nodeHelp = spawnSync(process.execPath, ['--help'], {
   shell: false
 });
 const helpText = `${nodeHelp.stdout ?? ''}\n${nodeHelp.stderr ?? ''}`;
-const testIsolationFlag = helpText.includes('--test-isolation')
+const nodeMajorVersion = Number(process.versions.node.split('.')[0]);
+const testIsolationFlag = helpText.includes('--test-isolation') || nodeMajorVersion >= 22
   ? '--test-isolation=none'
-  : helpText.includes('--experimental-test-isolation')
+  : helpText.includes('--experimental-test-isolation') || nodeMajorVersion >= 20
     ? '--experimental-test-isolation=none'
     : null;
 

@@ -1,12 +1,4 @@
 /* 0.2.x UI polish, companion actions, settings/support polish. Extracted from styles.css preserving cascade order. */
-/* Companion header actions: Info / Community / Support / Settings / Report / Close */
-.companion-page .settings-header .companion-header-actions {
-  max-width: 920px;
-}
-
-.companion-page .companion-header-actions button {
-  min-width: 128px;
-}
 
 .compact-helper-text {
   margin: 6px 0 0;
@@ -720,46 +712,6 @@
 
 
 
-/* Companion current-zone tab: keep scrolling on the tab body, not inside tiny cards. */
-.companion-page .companion-zone-dashboard {
-  align-items: start;
-  align-content: start;
-  grid-auto-rows: max-content;
-  overflow-x: hidden;
-  overflow-y: auto;
-  padding-right: 6px;
-  scrollbar-width: thin;
-}
-
-.companion-page .companion-zone-dashboard .companion-column {
-  align-self: start;
-  min-height: 0;
-  height: auto;
-  overflow: visible;
-}
-
-.companion-page .companion-zone-dashboard .companion-block,
-.companion-page .companion-zone-dashboard .companion-details-block {
-  flex: 0 0 auto;
-  max-height: none;
-  overflow: visible;
-  scrollbar-width: auto;
-}
-
-.companion-page .companion-zone-dashboard .companion-checklist-list,
-.companion-page .companion-zone-dashboard .companion-stack {
-  max-height: none;
-  overflow: visible;
-}
-
-.companion-zone-dashboard::-webkit-scrollbar {
-  width: 8px;
-}
-
-.companion-zone-dashboard::-webkit-scrollbar-thumb {
-  border-radius: 999px;
-  background: rgba(214, 162, 84, 0.45);
-}
 
 /* Companion detailed panel header: title/intro must not be squeezed by the action buttons. */
 .companion-page .settings-header.window-drag-strip {
@@ -787,21 +739,6 @@
   word-break: normal;
 }
 
-.companion-page .settings-header .companion-header-actions {
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
-  justify-content: stretch;
-  align-items: stretch;
-  gap: 8px;
-}
-
-.companion-page .companion-header-actions button {
-  width: 100%;
-  min-width: 0;
-}
 
 /* Semantic overlay blocks: each frame should read as a different kind of data. */
 @keyframes poe2-overlay-section-edge-breathe {

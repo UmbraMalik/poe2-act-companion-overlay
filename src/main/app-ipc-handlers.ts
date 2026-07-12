@@ -15,6 +15,11 @@ import {
 import { isTimerDiagnosticsEnabled } from './timer-diagnostics-log';
 import type { OverlayMode, SettingsPatch, SettingsWindowBoundsPatch, TimerDiagnosticsPayload } from '../shared/types';
 import {
+  resolveSettingsWindowResizeBounds,
+  SETTINGS_WINDOW_MINIMUM_SIZE,
+  UTILITY_WINDOW_MINIMUM_SIZES
+} from '../shared/settings-window-resize';
+import {
   DEV_SAMPLE_ZONE_LINE,
   clampOpacity,
   isDev,
@@ -540,70 +545,72 @@ export function runRegisterIpc(this: any) {
             }
             return true;
         });
-        ipcMain.handle('app:resize-settings-window', async (_event: any, requestedBounds: SettingsWindowBoundsPatch) => {
-            const targetWindow = this.settingsWindow;
+        ipcMain.handle('app:resize-settings-window', async (event: any, requestedBounds: SettingsWindowBoundsPatch) => {
+            const utilityWindows = [
+                this.settingsWindow,
+                this.infoWindow,
+                this.communityWindow,
+                this.supportWindow,
+                this.reportWindow
+            ].filter((window: any) => Boolean(window && !window.isDestroyed()));
+            const targetWindow = event?.sender
+                ? utilityWindows.find((window: any) => window.webContents === event.sender) ?? null
+                : this.settingsWindow;
             if (!targetWindow || targetWindow.isDestroyed()) {
                 return false;
             }
             const currentBounds = targetWindow.getBounds();
-            const [minimumWidth, minimumHeight] = targetWindow.getMinimumSize();
+            const minimumSize = targetWindow === this.settingsWindow
+                ? UTILITY_WINDOW_MINIMUM_SIZES.settings
+                : targetWindow === this.infoWindow
+                    ? UTILITY_WINDOW_MINIMUM_SIZES.info
+                    : targetWindow === this.communityWindow
+                        ? UTILITY_WINDOW_MINIMUM_SIZES.community
+                        : targetWindow === this.supportWindow
+                            ? UTILITY_WINDOW_MINIMUM_SIZES.support
+                            : targetWindow === this.reportWindow
+                                ? UTILITY_WINDOW_MINIMUM_SIZES.report
+                                : SETTINGS_WINDOW_MINIMUM_SIZE;
             const display = screen.getDisplayMatching(currentBounds);
-            const workArea = display.workArea;
-            const safeMargin = 8;
-            const maxWidth = Math.max(minimumWidth, workArea.width - safeMargin * 2);
-            const maxHeight = Math.max(minimumHeight, workArea.height - safeMargin * 2);
-            const request = requestedBounds && typeof requestedBounds === 'object' ? requestedBounds : {};
-            const edge = typeof request.edge === 'string' ? request.edge : '';
-            const deltaX = finiteRoundedNumber(request.deltaX, 0);
-            const deltaY = finiteRoundedNumber(request.deltaY, 0);
-            const isDeltaResize = Boolean(edge);
-            let requestedX = finiteRoundedNumber(request.x, currentBounds.x);
-            let requestedY = finiteRoundedNumber(request.y, currentBounds.y);
-            let requestedWidth = finiteRoundedNumber(request.width, currentBounds.width);
-            let requestedHeight = finiteRoundedNumber(request.height, currentBounds.height);
-
-            if (isDeltaResize) {
-                const right = currentBounds.x + currentBounds.width;
-                const bottom = currentBounds.y + currentBounds.height;
-                requestedX = currentBounds.x;
-                requestedY = currentBounds.y;
-                requestedWidth = currentBounds.width;
-                requestedHeight = currentBounds.height;
-
-                if (edge.includes('e')) {
-                    requestedWidth = currentBounds.width + deltaX;
-                }
-                if (edge.includes('s')) {
-                    requestedHeight = currentBounds.height + deltaY;
-                }
-                if (edge.includes('w')) {
-                    requestedWidth = currentBounds.width - deltaX;
-                    requestedX = right - Math.min(Math.max(requestedWidth, minimumWidth), maxWidth);
-                }
-                if (edge.includes('n')) {
-                    requestedHeight = currentBounds.height - deltaY;
-                    requestedY = bottom - Math.min(Math.max(requestedHeight, minimumHeight), maxHeight);
-                }
-            }
-
-            const nextWidth = Math.min(Math.max(requestedWidth, minimumWidth), maxWidth);
-            const nextHeight = Math.min(Math.max(requestedHeight, minimumHeight), maxHeight);
-            const minX = workArea.x + safeMargin;
-            const minY = workArea.y + safeMargin;
-            const maxX = workArea.x + workArea.width - nextWidth - safeMargin;
-            const maxY = workArea.y + workArea.height - nextHeight - safeMargin;
-            const nextX = Math.min(Math.max(requestedX, minX), Math.max(minX, maxX));
-            const nextY = Math.min(Math.max(requestedY, minY), Math.max(minY, maxY));
+            const nextBounds = resolveSettingsWindowResizeBounds({
+                currentBounds,
+                requestedBounds,
+                workArea: display.workArea,
+                minimumSize
+            });
             if (
-                nextX === currentBounds.x &&
-                nextY === currentBounds.y &&
-                nextWidth === currentBounds.width &&
-                nextHeight === currentBounds.height
+                nextBounds.x === currentBounds.x &&
+                nextBounds.y === currentBounds.y &&
+                nextBounds.width === currentBounds.width &&
+                nextBounds.height === currentBounds.height
             ) {
-                return true;
+                return false;
             }
-            targetWindow.setBounds({ x: nextX, y: nextY, width: nextWidth, height: nextHeight }, false);
-            return true;
+
+            // Transparent frameless windows can occasionally retain a stale native minimum
+            // after growing. Reassert the real minimum before a shrink so Windows accepts it.
+            targetWindow.setResizable(true);
+            targetWindow.setMinimumSize(minimumSize.width, minimumSize.height);
+            targetWindow.setBounds(nextBounds, false);
+
+            let appliedBounds = targetWindow.getBounds();
+            const sizeMismatch = appliedBounds.width !== nextBounds.width || appliedBounds.height !== nextBounds.height;
+            const positionMismatch = appliedBounds.x !== nextBounds.x || appliedBounds.y !== nextBounds.y;
+
+            if (sizeMismatch) {
+                targetWindow.setSize(nextBounds.width, nextBounds.height, false);
+            }
+            if (positionMismatch) {
+                targetWindow.setPosition(nextBounds.x, nextBounds.y, false);
+            }
+
+            appliedBounds = targetWindow.getBounds();
+            return (
+                appliedBounds.x !== currentBounds.x ||
+                appliedBounds.y !== currentBounds.y ||
+                appliedBounds.width !== currentBounds.width ||
+                appliedBounds.height !== currentBounds.height
+            );
         });
         ipcMain.handle('app:set-overlay-auto-resize-suspended', async (_event: any, suspended: any) => {
             this.overlayAutoResizeSuspendedUntil = suspended

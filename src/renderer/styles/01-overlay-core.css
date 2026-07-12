@@ -1,17 +1,21 @@
 /* Base overlay, shared HUD, timer-only early rules. Extracted from styles.css preserving cascade order. */
 :root {
   --font-ui:
-    "Inter",
-    "Segoe UI Variable",
+    "Geist Variable",
+    "Segoe UI Variable Text",
     "Segoe UI",
     system-ui,
     sans-serif;
   --font-display:
-    "Inter",
-    "Segoe UI Variable Display",
-    "Segoe UI",
-    system-ui,
-    sans-serif;
+    var(--font-ui);
+  --font-caps:
+    var(--font-ui);
+  --font-mono:
+    "JetBrains Mono Variable",
+    "Cascadia Code",
+    "Consolas",
+    ui-monospace,
+    monospace;
   color-scheme: dark;
   font-family: var(--font-ui);
   background: transparent;

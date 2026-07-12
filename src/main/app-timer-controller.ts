@@ -1,103 +1,11 @@
-import { access, appendFile, stat } from 'node:fs/promises';
-import { constants } from 'node:fs';
-import { join } from 'node:path';
-import {
-  app,
-  BrowserWindow,
-  dialog,
-  globalShortcut,
-  ipcMain,
-  Menu,
-  screen,
-  shell,
-  Tray
-} from 'electron';
-import type { OpenDialogOptions } from 'electron';
-
-import { ConfigStore } from './services/config-store';
-import { GuideService } from './services/guide-service';
-import {
-  extractGeneratedAreaId,
-  extractNamedZoneFromLine,
-  normalizeText,
-  parseLevelUp,
-  parsePermanentReward
-} from './services/log-parser';
-import { LogWatcher } from './services/log-watcher';
-import { resolveRuntimePath } from './services/runtime-paths';
-import { checkForUpdates } from './services/update-service';
-import { AutoUpdateService } from './services/auto-update-service';
-import {
-  DEFAULT_COMPACT_OVERLAY_BOUNDS,
-  DEFAULT_COMPANION_BOUNDS,
-  DEFAULT_HOTKEYS,
-  DEFAULT_OVERLAY_BOUNDS,
-  DEFAULT_RUN_TIMER,
-  DEFAULT_TIMER_ONLY_OVERLAY_BOUNDS,
-  DEFAULT_TOWN_TIMER
-} from '../shared/defaults';
-import { buildChecklistDefinition, buildChecklistViewItems } from '../shared/checklist';
+import { parseLevelUp } from './services/log-parser';
+import { DEFAULT_RUN_TIMER, DEFAULT_TOWN_TIMER } from '../shared/defaults';
 import { ENDGAME_T15_ACT, getRunTimerDisplayElapsed, getZoneTimerDisplayElapsed } from '../shared/timers';
-import { getOverlayMinimumSize } from '../shared/overlay-layout';
+import { inferActHintFromTownScene } from './scene-classifier';
+import type { RunTimerState } from '../shared/types';
 import {
-  areOverlayBoundsEqual,
-  areOverlayBoundsSizeEqual,
-  canSourceChangeOverlaySize,
-  planOverlayBoundsChange,
-  shouldIgnoreOverlayAutoHeight
-} from './overlay-window-bounds';
-import { TimerDiagnosticsLog, isTimerDiagnosticsEnabled } from './timer-diagnostics-log';
-import { translate } from '../i18n/translations';
-import { DIRECT_COMPOSITION_COMPAT_ENABLED, configureElectronStartup } from './electron-startup';
-import { createAppIcon } from './app-icons';
-import {
-  HOTKEY_ACTION_LABELS,
-  formatConfiguredHotkey,
-  normalizeHotkeyAccelerator
-} from './hotkey-utils';
-import {
-  inferActHintFromInternalAreaId as inferActHintFromInternalAreaIdFromScene,
-  inferActHintFromTownScene,
-  isActLabelScene,
-  isLoginLikeScene,
-  isTownSceneWithGuide,
-  isUnknownOrNullScene,
-  isValidGameplaySceneSource,
-  normalizeSceneText,
-  shouldKeepPendingZoneAreaId
-} from './scene-classifier';
-import campaignBonusesData from '../data/campaign-bonuses.json';
-import type {
-  AppConfig,
-  AppLanguage,
-  AppSnapshot,
-  AutoUpdateState,
-  CampaignBonusDefinition,
-  CurrentZoneState,
-  GuideEntry,
-  GuideZoneProgress,
-  LogWatcherStatus,
-  OverlayBounds,
-  OverlayMode,
-  RunSummary,
-  RunTimerState,
-  SettingsPatch,
-  TimerDiagnosticsPayload,
-  UpdateCheckResult,
-  UpdateInfo,
-  ZoneAct,
-  ZoneSource
-} from '../shared/types';
-import {
-  BROADCAST_THROTTLE_MS,
-  DEV_SAMPLE_ZONE_LINE,
   TIMER_DIAGNOSTICS_TICK_DELAY_THRESHOLD_MS,
-  TIMER_VISUAL_HEARTBEAT_MS,
-  UPDATE_CHECK_DELAY_MS,
-  clampOpacity,
-  devServerUrl,
-  isDev,
-  isSafeExternalUrl
+  TIMER_VISUAL_HEARTBEAT_MS
 } from './app-environment';
 
 

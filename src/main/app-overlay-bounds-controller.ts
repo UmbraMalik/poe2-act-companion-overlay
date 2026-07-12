@@ -10,6 +10,7 @@ import {
   areOverlayBoundsEqual,
   areOverlayBoundsSizeEqual,
   canSourceChangeOverlaySize,
+  fitBoundsToWorkArea,
   planOverlayBoundsChange
 } from './overlay-window-bounds';
 import { diagnosticInfo, diagnosticWarn } from './diagnostic-logger';
@@ -307,14 +308,15 @@ export function runGetOverlayBoundsForMode(this: any, mode: any, density: any = 
     }
 
 export function runGetCompanionBounds(this: any) {
+        const minimumSize = { width: 720, height: 520 };
         const fallbackDisplay = screen.getPrimaryDisplay();
         const fallbackWorkArea = fallbackDisplay.workArea;
-        const fallbackBounds = {
-            x: Math.max(0, fallbackWorkArea.x + Math.floor((fallbackWorkArea.width - DEFAULT_COMPANION_BOUNDS.width) / 2)),
-            y: Math.max(20, fallbackWorkArea.y + 60),
+        const fallbackBounds = fitBoundsToWorkArea({
+            x: fallbackWorkArea.x + Math.floor((fallbackWorkArea.width - DEFAULT_COMPANION_BOUNDS.width) / 2),
+            y: fallbackWorkArea.y + 60,
             width: DEFAULT_COMPANION_BOUNDS.width,
             height: DEFAULT_COMPANION_BOUNDS.height
-        };
+        }, fallbackWorkArea, minimumSize);
         const saved = this.config.companionBounds;
         if (!saved) {
             return fallbackBounds;
@@ -329,12 +331,8 @@ export function runGetCompanionBounds(this: any) {
         if (!visibleOnSomeDisplay) {
             return fallbackBounds;
         }
-        return {
-            x: saved.x,
-            y: saved.y,
-            width: Math.max(720, saved.width),
-            height: Math.max(520, saved.height)
-        };
+        const targetDisplay = screen.getDisplayMatching(saved);
+        return fitBoundsToWorkArea(saved, targetDisplay.workArea, minimumSize);
     }
 
 export function runPersistOverlayBoundsForState(this: any, mode: any, density: any, bounds: any) {
@@ -387,6 +385,22 @@ export function runPersistOverlayBounds(this: any) {
         }, 350);
     }
 
+export function runPersistCompanionBoundsImmediately(this: any) {
+        if (!this.companionWindow || this.companionWindow.isDestroyed()) {
+            return false;
+        }
+        if (this.companionBoundsTimer) {
+            clearTimeout(this.companionBoundsTimer);
+            this.companionBoundsTimer = null;
+        }
+        const bounds = this.companionWindow.getBounds();
+        if (this.config.companionBounds && areOverlayBoundsEqual(this.config.companionBounds, bounds)) {
+            return false;
+        }
+        this.config = this.configStore.setCompanionBounds(bounds);
+        return true;
+    }
+
 export function runPersistCompanionBounds(this: any) {
         if (!this.companionWindow) {
             return;
@@ -395,14 +409,9 @@ export function runPersistCompanionBounds(this: any) {
             clearTimeout(this.companionBoundsTimer);
         }
         this.companionBoundsTimer = setTimeout(() => {
-            if (!this.companionWindow || this.companionWindow.isDestroyed()) {
-                return;
+            const changed = this.persistCompanionBoundsImmediately();
+            if (changed) {
+                this.broadcastState();
             }
-            const bounds = this.companionWindow.getBounds();
-            if (this.config.companionBounds && areOverlayBoundsEqual(this.config.companionBounds, bounds)) {
-                return;
-            }
-            this.config = this.configStore.setCompanionBounds(bounds);
-            this.broadcastState();
         }, 350);
     }

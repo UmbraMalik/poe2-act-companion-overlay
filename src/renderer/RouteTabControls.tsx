@@ -50,11 +50,13 @@ export function RouteTabControls({
           <button
             key={mode}
             type="button"
-            className={filterMode === mode ? 'button-primary' : 'button-secondary'}
+            className={`route-filter-button ${filterMode === mode ? 'button-primary' : 'button-secondary'}`}
             aria-pressed={filterMode === mode}
             onClick={() => onFilterChange(mode)}
           >
-            {formatRouteFilterLabel(mode, language)}
+            <span className="route-filter-button-label">
+              {formatRouteFilterLabel(mode, language)}
+            </span>
           </button>
         ))}
       </div>

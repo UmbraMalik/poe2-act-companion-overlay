@@ -316,6 +316,7 @@ export interface RunTimerSettings {
   autoStartMode: RunTimerAutoStartMode;
   leagueStartAt: number | null;
   leagueStartTimeLabel: string | null;
+  targetRunTimeMs: number | null;
   autoStart: boolean;
   showCountdownBeforeStart: boolean;
   showZoneTimer: boolean;
@@ -385,6 +386,7 @@ export interface SavedRunHistoryEntry {
 }
 
 export interface AppConfig {
+  configSchemaVersion: number;
   appLanguage: AppLanguage;
   logFilePath: string | null;
   logFileSelectionMode: 'auto' | 'manual' | null;
@@ -404,6 +406,7 @@ export interface AppConfig {
   overlayEffectsEnabled: boolean;
   theme: AppTheme;
   themePreferencePrompted: boolean;
+  setupWizardCompleted: boolean;
   overlayDebugLayoutEnabled: boolean;
   overlayVisibleSections: OverlayVisibleSections;
   mainOverlaySettings: MainOverlaySettings;
@@ -577,6 +580,7 @@ export interface SettingsPatch {
   overlayEffectsEnabled?: boolean;
   theme?: AppTheme;
   themePreferencePrompted?: boolean;
+  setupWizardCompleted?: boolean;
   overlayDebugLayoutEnabled?: boolean;
   overlayVisibleSections?: Partial<OverlayVisibleSections>;
   mainOverlaySettings?: Partial<MainOverlaySettings>;

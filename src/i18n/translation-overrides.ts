@@ -10,6 +10,8 @@ export const translationOverrides: Record<AppLanguage, TranslationTree> = {
   ru: {
     settings: {
       firstRunTitle: 'ПЕРВЫЙ ЗАПУСК',
+      firstRunWizardDescription: 'Запусти пошаговый мастер заново, чтобы проверить лог-файл, тему и горячие клавиши.',
+      openSetupWizard: 'Открыть мастер настройки',
       firstRunStepChoose: 'Нажми “Выбрать лог-файл”.',
       firstRunStepPointTo: 'Укажи файл:',
       firstRunStepEnterZone: 'Запусти игру и зайди в любую игровую зону.',
@@ -73,6 +75,8 @@ export const translationOverrides: Record<AppLanguage, TranslationTree> = {
   en: {
     settings: {
       firstRunTitle: 'FIRST RUN',
+      firstRunWizardDescription: 'Run the guided setup again to verify the log file, theme, and hotkeys.',
+      openSetupWizard: 'Open setup wizard',
       firstRunStepChoose: 'Click “Choose log file”.',
       firstRunStepPointTo: 'Point it to:',
       firstRunStepEnterZone: 'Launch the game and enter any gameplay zone.',

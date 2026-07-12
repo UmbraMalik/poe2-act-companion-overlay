@@ -7,8 +7,8 @@ type OverlayControlEvent = {
 };
 type OverlaySettingsApi = Pick<ElectronApi, 'updateSettings'>;
 
-export function getOverlayLockButtonIcon(movementLocked: boolean): string {
-  return movementLocked ? '🔒' : '🔓';
+export function getOverlayLockButtonIcon(movementLocked: boolean): 'lock' | 'unlock' {
+  return movementLocked ? 'lock' : 'unlock';
 }
 
 export function getOverlayLockButtonLabel(

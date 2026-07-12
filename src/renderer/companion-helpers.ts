@@ -427,13 +427,31 @@ export function getRequiredRewardLabelsForZone(
     (guideView?.checklist ?? []).map((item) => [item.id, item.text])
   );
 
-  return getRouteRewardItems(guide, snapshot).map((item) => {
-    const marker = item.displayState === 'current' ? '▶' : '○';
-    return `${marker} ${translatedChecklist.get(item.id) ?? item.text}`;
-  });
+  return getRouteRewardItems(guide, snapshot).map((item) => (
+    translatedChecklist.get(item.id) ?? item.text
+  ));
 }
 
 
 export function getLongestZones(zoneTimeHistory: ZoneTimeEntry[]): ZoneTimeEntry[] {
-  return [...zoneTimeHistory].sort((left, right) => right.elapsedMs - left.elapsedMs).slice(0, 5);
+  const topRows: ZoneTimeEntry[] = [];
+
+  for (const zone of zoneTimeHistory) {
+    if (!Number.isFinite(zone.elapsedMs) || zone.elapsedMs <= 0) {
+      continue;
+    }
+
+    const insertIndex = topRows.findIndex((candidate) => zone.elapsedMs > candidate.elapsedMs);
+    const nextIndex = insertIndex === -1 ? topRows.length : insertIndex;
+    if (nextIndex >= 5) {
+      continue;
+    }
+
+    topRows.splice(nextIndex, 0, zone);
+    if (topRows.length > 5) {
+      topRows.length = 5;
+    }
+  }
+
+  return topRows;
 }

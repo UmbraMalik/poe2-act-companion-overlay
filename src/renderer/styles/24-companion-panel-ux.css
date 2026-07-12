@@ -133,9 +133,6 @@
   grid-auto-rows: max-content;
 }
 
-.companion-page .zone-card-board .companion-column {
-  gap: 10px;
-}
 
 .companion-page .zone-task-card {
   border-color: rgba(205, 220, 237, 0.080);
@@ -228,9 +225,6 @@
     rgba(255, 255, 255, 0.016);
 }
 
-.companion-page .zone-card-board .companion-column:not(.zone-main-column) .zone-task-card {
-  opacity: 0.94;
-}
 
 .companion-page .zone-card-board .details-list {
   display: grid;

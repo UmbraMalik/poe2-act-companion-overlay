@@ -4,6 +4,7 @@ import {
   BrowserWindow,
   globalShortcut,
   Menu,
+  screen,
   Tray
 } from 'electron';
 
@@ -24,6 +25,11 @@ import {
   attachWindowNavigationGuards,
   getSecureWebPreferences
 } from './window-security';
+import {
+  getSettingsWindowInitialSize,
+  SETTINGS_WINDOW_MINIMUM_SIZE,
+  UTILITY_WINDOW_MINIMUM_SIZES
+} from '../shared/settings-window-resize';
 
 function showWindowWhenReady(
         window: BrowserWindow | null | undefined,
@@ -101,6 +107,7 @@ export function runCreateOverlayWindow(this: any) {
         this.overlayWindow.setMenuBarVisibility(false);
         this.overlayWindow.setFocusable(true);
         this.overlayWindow.on('close', (event: any) => {
+            this.persistOverlayBoundsImmediately();
             if (this.isClosingOverlayWindow) {
                 return;
             }
@@ -260,12 +267,12 @@ export function runOpenSettingsWindow(this: any) {
             showWindowWhenReady(this.settingsWindow, { afterShow: () => this.broadcastState() });
             return;
         }
+        const settingsWindowInitialSize = getSettingsWindowInitialSize(screen.getPrimaryDisplay().workArea);
         this.settingsWindow = new BrowserWindow({
             icon: createAppIcon(),
-            width: 900,
-            height: 840,
-            minWidth: 720,
-            minHeight: 600,
+            ...settingsWindowInitialSize,
+            minWidth: SETTINGS_WINDOW_MINIMUM_SIZE.width,
+            minHeight: SETTINGS_WINDOW_MINIMUM_SIZE.height,
             center: true,
             frame: false,
             resizable: true,
@@ -297,6 +304,7 @@ export function runOpenSettingsWindow(this: any) {
 export function runToggleCompanionWindow(this: any) {
         if (this.companionWindow && !this.companionWindow.isDestroyed()) {
             if (this.companionWindow.isVisible()) {
+                this.persistCompanionBoundsImmediately();
                 this.companionWindow.hide();
                 return;
             }
@@ -327,6 +335,7 @@ export function runOpenCompanionWindow(this: any) {
         attachWindowNavigationGuards(this.companionWindow);
         this.attachManualHotkeys(this.companionWindow);
         this.companionWindow.on('close', (event: any) => {
+            this.persistCompanionBoundsImmediately();
             if (!this.isQuitting) {
                 event.preventDefault();
                 this.companionWindow?.hide();
@@ -356,11 +365,15 @@ export function runOpenInfoWindow(this: any) {
             icon: createAppIcon(),
             width: 760,
             height: 760,
-            minWidth: 680,
-            minHeight: 620,
+            minWidth: UTILITY_WINDOW_MINIMUM_SIZES.info.width,
+            minHeight: UTILITY_WINDOW_MINIMUM_SIZES.info.height,
+            center: true,
             frame: false,
+            resizable: true,
             titleBarStyle: 'hidden',
-            backgroundColor: '#10161f',
+            transparent: true,
+            hasShadow: true,
+            backgroundColor: '#00000000',
             show: false,
             autoHideMenuBar: true,
             webPreferences: getSecureWebPreferences()
@@ -391,11 +404,15 @@ export function runOpenCommunityWindow(this: any) {
             icon: createAppIcon(),
             width: 760,
             height: 680,
-            minWidth: 680,
-            minHeight: 560,
+            minWidth: UTILITY_WINDOW_MINIMUM_SIZES.community.width,
+            minHeight: UTILITY_WINDOW_MINIMUM_SIZES.community.height,
+            center: true,
             frame: false,
+            resizable: true,
             titleBarStyle: 'hidden',
-            backgroundColor: '#10161f',
+            transparent: true,
+            hasShadow: true,
+            backgroundColor: '#00000000',
             show: false,
             autoHideMenuBar: true,
             webPreferences: getSecureWebPreferences()
@@ -426,11 +443,15 @@ export function runOpenSupportWindow(this: any) {
             icon: createAppIcon(),
             width: 760,
             height: 700,
-            minWidth: 680,
-            minHeight: 560,
+            minWidth: UTILITY_WINDOW_MINIMUM_SIZES.support.width,
+            minHeight: UTILITY_WINDOW_MINIMUM_SIZES.support.height,
+            center: true,
             frame: false,
+            resizable: true,
             titleBarStyle: 'hidden',
-            backgroundColor: '#10161f',
+            transparent: true,
+            hasShadow: true,
+            backgroundColor: '#00000000',
             show: false,
             autoHideMenuBar: true,
             webPreferences: getSecureWebPreferences()
@@ -461,11 +482,15 @@ export function runOpenReportIssueWindow(this: any) {
             icon: createAppIcon(),
             width: 820,
             height: 780,
-            minWidth: 720,
-            minHeight: 620,
+            minWidth: UTILITY_WINDOW_MINIMUM_SIZES.report.width,
+            minHeight: UTILITY_WINDOW_MINIMUM_SIZES.report.height,
+            center: true,
             frame: false,
+            resizable: true,
             titleBarStyle: 'hidden',
-            backgroundColor: '#10161f',
+            transparent: true,
+            hasShadow: true,
+            backgroundColor: '#00000000',
             show: false,
             autoHideMenuBar: true,
             webPreferences: getSecureWebPreferences()

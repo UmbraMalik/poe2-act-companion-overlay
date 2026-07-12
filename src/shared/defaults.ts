@@ -6,6 +6,8 @@ import type {
   HotkeySettings
 } from './types';
 
+export const CURRENT_CONFIG_SCHEMA_VERSION = 1;
+
 export const DEFAULT_OVERLAY_BOUNDS = {
   width: 500,
   height: 650
@@ -62,6 +64,7 @@ export const DEFAULT_RUN_TIMER_SETTINGS: RunTimerSettings = {
   autoStartMode: 'scheduled_time',
   leagueStartAt: null,
   leagueStartTimeLabel: null,
+  targetRunTimeMs: null,
   autoStart: true,
   showCountdownBeforeStart: true,
   showZoneTimer: true,
@@ -69,6 +72,7 @@ export const DEFAULT_RUN_TIMER_SETTINGS: RunTimerSettings = {
 };
 
 export const DEFAULT_CONFIG: AppConfig = {
+  configSchemaVersion: CURRENT_CONFIG_SCHEMA_VERSION,
   appLanguage: 'ru',
   logFilePath: null,
   logFileSelectionMode: null,
@@ -88,6 +92,7 @@ export const DEFAULT_CONFIG: AppConfig = {
   overlayEffectsEnabled: true,
   theme: 'classic',
   themePreferencePrompted: false,
+  setupWizardCompleted: false,
   overlayDebugLayoutEnabled: false,
   overlayVisibleSections: {
     nearby: true,

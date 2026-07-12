@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
+import { UiIcon } from '../UiIcon';
 
 export interface SettingsSelectOption<T extends string | number> {
   value: T;
@@ -13,6 +14,10 @@ interface SettingsSelectProps<T extends string | number> {
   onChange: (value: T) => void;
 }
 
+type SettingsSelectMenuStyle = CSSProperties & {
+  '--settings-select-width'?: string;
+};
+
 export function SettingsSelect<T extends string | number>({
   ariaLabel,
   value,
@@ -20,7 +25,7 @@ export function SettingsSelect<T extends string | number>({
   onChange
 }: SettingsSelectProps<T>) {
   const [isOpen, setIsOpen] = useState(false);
-  const [menuStyle, setMenuStyle] = useState<CSSProperties>({});
+  const [menuStyle, setMenuStyle] = useState<SettingsSelectMenuStyle>({});
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
   const selectedIndex = Math.max(0, options.findIndex((option) => option.value === value));
@@ -66,7 +71,7 @@ export function SettingsSelect<T extends string | number>({
         width,
         '--settings-select-width': `${width}px`,
         ...verticalPosition
-      } as CSSProperties);
+      });
     };
 
     const handlePointerDown = (event: PointerEvent) => {
@@ -161,7 +166,9 @@ export function SettingsSelect<T extends string | number>({
         onKeyDown={handleKeyDown}
       >
         <span className="settings-select-value">{selectedOption?.label ?? '—'}</span>
-        <span className="settings-select-chevron" aria-hidden="true" />
+        <span className="settings-select-chevron" aria-hidden="true">
+          <UiIcon name="chevron-down" />
+        </span>
       </button>
 
       {isOpen &&

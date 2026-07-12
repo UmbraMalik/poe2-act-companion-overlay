@@ -3,6 +3,7 @@ import type { AutoUpdateState, UpdateInfo } from '../../shared/types';
 import { translateSystemText } from '../../i18n/runtime';
 import { formatFileSize, formatTimestamp, getReleaseNoteItems } from '../utils';
 import { useDocumentTitle, useI18n } from '../useI18n';
+import { UiIcon } from '../UiIcon';
 
 function getSpeedLabel(bytesPerSecond: number | undefined): string {
   if (!bytesPerSecond || bytesPerSecond <= 0) {
@@ -132,7 +133,7 @@ export function UpdatePage() {
             title={t('common.later')}
             onClick={() => window.close()}
           >
-            ×
+            <UiIcon name="close" />
           </button>
         </header>
 

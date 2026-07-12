@@ -149,6 +149,29 @@ test('window page routing uses explicit html markers before URL fallback', () =>
   );
 });
 
+test('electron renderer html entrypoints define CSP without unsafe-eval', () => {
+  const rendererHtmlFiles = [
+    'overlay.html',
+    'settings.html',
+    'companion.html',
+    'info.html',
+    'community.html',
+    'support.html',
+    'report.html',
+    'close-confirm.html',
+    'update.html'
+  ];
+
+  for (const file of rendererHtmlFiles) {
+    const html = readText(file);
+
+    assert.match(html, /http-equiv="Content-Security-Policy"/, `${file} must define a CSP`);
+    assert.match(html, /script-src 'self' 'unsafe-inline'/, `${file} CSP must avoid unsafe-eval`);
+    assert.match(html, /connect-src 'self' http:\/\/127\.0\.0\.1:5173 ws:\/\/127\.0\.0\.1:5173/, `${file} CSP must allow Vite dev websocket`);
+    assert.doesNotMatch(html, /unsafe-eval/, `${file} CSP must not allow unsafe-eval`);
+  }
+});
+
 test('run timer snapshot sync tracks act split content changes', () => {
   const hooks = readText('src/renderer/hooks.ts');
   const runTimerHook = hooks.slice(
@@ -269,13 +292,13 @@ test('overlay visual effects can be disabled independently from global FX intens
   assert.match(settingsPage, /checked=\{config\.overlayEffectsEnabled\}/);
   assert.match(settingsPage, /overlayEffectsEnabled:\s*event\.target\.checked/);
   assert.match(overlay, /config\.overlayEffectsEnabled\s*\?\s*`fx-\$\{config\.visualFxIntensity\}`\s*:\s*'fx-off'/);
-  assert.match(overlay, /!\s*config\.overlayEffectsEnabled/);
   assert.match(translations, /Эффекты оверлея/);
   assert.match(translations, /Overlay effects/);
 });
 
 test('app theme is persisted and available in overlay and settings', () => {
   const overlay = readText('src/renderer/pages/OverlayPage.tsx');
+  const setupWizard = readText('src/renderer/FirstRunWizard.tsx');
   const settingsPage = readText('src/renderer/pages/SettingsPage.tsx');
   const companionPage = readText('src/renderer/pages/CompanionPage.tsx');
   const defaults = readText('src/shared/defaults.ts');
@@ -289,12 +312,19 @@ test('app theme is persisted and available in overlay and settings', () => {
   assert.match(types, /export type AppTheme = 'classic' \| 'dark_fantasy'/);
   assert.match(defaults, /theme:\s*'classic'/);
   assert.match(defaults, /themePreferencePrompted:\s*false/);
+  assert.match(defaults, /setupWizardCompleted:\s*false/);
   assert.match(configStore, /normalizeAppTheme\(rawConfig\.theme\)/);
   assert.match(configStore, /safeBoolean\(rawConfig\.themePreferencePrompted/);
+  assert.match(configStore, /rawConfig\.setupWizardCompleted/);
   assert.match(configStore, /patch\.theme/);
   assert.match(configStore, /patch\.themePreferencePrompted/);
-  assert.match(overlay, /overlay-theme-preference-card/);
-  assert.match(overlay, /themePreferencePrompted:\s*true/);
+  assert.match(configStore, /patch\.setupWizardCompleted/);
+  assert.match(overlay, /FirstRunWizard/);
+  assert.match(overlay, /!config\.setupWizardCompleted/);
+  assert.match(setupWizard, /themePreferencePrompted:\s*true/);
+  assert.match(setupWizard, /setupWizardCompleted:\s*true/);
+  assert.match(setupWizard, /SETUP_WIZARD_STEP_COUNT = 4/);
+  assert.doesNotMatch(setupWizard, /WizardMode|updateMode|setupWizard\.mode\./);
   assert.doesNotMatch(overlay, /overlay-theme-icon-button/);
   assert.match(settingsPage, /app-theme-choice/);
   assert.match(settingsPage, /updateSettings\(\{ theme, themePreferencePrompted:\s*true \}\)/);
@@ -306,8 +336,40 @@ test('app theme is persisted and available in overlay and settings', () => {
   assert.match(themeStyles, /overlay-shell::after[\s\S]*content:\s*none !important/);
   assert.match(themeStyles, /\.theme-dark-fantasy\.overlay-page \.resize-grip:not\(\.is-disabled\)/);
   assert.match(translations, /Тёмное фэнтези/);
-  assert.match(translations, /Выбери тему/);
+  assert.match(translations, /Первый запуск/);
   assert.match(translations, /Dark fantasy/);
+});
+
+test('renderer uses bundled app fonts with shared theme metrics and centered act status pills', () => {
+  const packageJson = readJson('package.json') as any;
+  const stylesIndex = readText('src/renderer/styles.css');
+  const typography = readText('src/renderer/styles/10-typography-refresh.css');
+  const cohesion = readText('src/renderer/styles/36-companion-cohesion.css');
+
+  assert.equal(packageJson.devDependencies['@fontsource-variable/geist'], '^5.2.9');
+  assert.equal(packageJson.devDependencies['@fontsource-variable/jetbrains-mono'], '^5.2.8');
+  assert.match(stylesIndex, /@import '@fontsource-variable\/geist';/);
+  assert.match(stylesIndex, /@import '@fontsource-variable\/jetbrains-mono';/);
+  assert.match(typography, /--font-ui:[\s\S]*"Geist Variable"/);
+  assert.match(typography, /--font-mono:[\s\S]*"JetBrains Mono Variable"/);
+  assert.match(typography, /\.timer-only-time \{[\s\S]*font-family: var\(--font-mono\) !important;/);
+  assert.match(cohesion, /App typography guard/);
+  assert.match(
+    cohesion,
+    /\.theme-classic\.companion-page,\s*[\r\n]+\.theme-dark-fantasy\.companion-page \{[\s\S]*font-family: var\(--font-ui\) !important;/
+  );
+  assert.match(
+    cohesion,
+    /\.theme-classic\.companion-page \.timer-main-readout h3,[\s\S]*\.theme-dark-fantasy\.companion-page \.summary-act-breakdown-row small \{[\s\S]*font-family: var\(--font-mono\) !important;[\s\S]*letter-spacing: 0 !important;[\s\S]*line-height: 1\.08 !important;/
+  );
+  assert.match(
+    cohesion,
+    /\.theme-classic\.companion-page \.act-split-table-head span:last-child,[\s\S]*\.theme-dark-fantasy\.companion-page \.act-time-status-pill \{[\s\S]*width: 92px !important;[\s\S]*justify-self: center !important;/
+  );
+  assert.match(
+    cohesion,
+    /\.theme-classic\.companion-page \.route-step-index,[\s\S]*\.theme-classic\.companion-page \.act-time-status-pill,[\s\S]*\.theme-dark-fantasy\.companion-page \.act-time-status-pill,[\s\S]*\.theme-dark-fantasy\.companion-page \.summary-history-stats span \{[\s\S]*align-items: center !important;[\s\S]*justify-content: center !important;[\s\S]*text-align: center !important;/
+  );
 });
 
 test('no forbidden performance hacks are reintroduced', () => {
@@ -363,6 +425,81 @@ test('secondary app windows share smooth show/focus handling', () => {
     controller,
     /this\.(settings|companion|info|community|support|report)Window\.show\(\);\s*this\.\1Window\.focus\(\);/
   );
+});
+
+test('settings window opens comfortably and remains shrinkable', () => {
+  const controller = readText('src/main/app-window-controller.ts');
+  const resizeModel = readText('src/shared/settings-window-resize.ts');
+  const resizeGrip = readText('src/renderer/settings/SettingsWindowResizeGrip.tsx');
+  const settingsWindowBlock = controller.slice(
+    controller.indexOf('this.settingsWindow = new BrowserWindow({'),
+    controller.indexOf('attachWindowNavigationGuards(this.settingsWindow);')
+  );
+  const styles = readRendererStyles();
+
+  assert.match(resizeModel, /SETTINGS_WINDOW_MINIMUM_SIZE\s*=\s*\{\s*width:\s*560,\s*height:\s*420\s*\}\s*as const/);
+  assert.match(resizeModel, /SETTINGS_WINDOW_PREFERRED_SIZE\s*=\s*\{\s*width:\s*1120,\s*height:\s*900\s*\}\s*as const/);
+  assert.match(resizeModel, /UTILITY_WINDOW_MINIMUM_SIZES/);
+  assert.match(controller, /getSettingsWindowInitialSize\(screen\.getPrimaryDisplay\(\)\.workArea\)/);
+  assert.match(settingsWindowBlock, /\.\.\.settingsWindowInitialSize/);
+  assert.match(settingsWindowBlock, /minWidth:\s*SETTINGS_WINDOW_MINIMUM_SIZE\.width/);
+  assert.match(settingsWindowBlock, /minHeight:\s*SETTINGS_WINDOW_MINIMUM_SIZE\.height/);
+  assert.match(settingsWindowBlock, /resizable:\s*true/);
+  assert.doesNotMatch(settingsWindowBlock, /minHeight:\s*600/);
+  assert.doesNotMatch(settingsWindowBlock, /height:\s*840/);
+  assert.match(resizeGrip, /startBounds:\s*SettingsWindowBounds/);
+  assert.match(resizeGrip, /buildSettingsWindowResizeRequest/);
+  assert.match(resizeGrip, /resizeRequestInFlight/);
+  assert.doesNotMatch(resizeGrip, /queuedDeltaX|queuedDeltaY/);
+  assert.match(readText('src/main/app-ipc-handlers.ts'), /targetWindow === this\.settingsWindow[\s\S]*?UTILITY_WINDOW_MINIMUM_SIZES\.settings/);
+  assert.doesNotMatch(readText('src/main/app-ipc-handlers.ts'), /targetWindow\.getMinimumSize\(\)/);
+  assert.match(styles, /@media \(max-width:\s*640px\)[\s\S]*?\.settings-page:not\(\.companion-page\) \.settings-header\.window-drag-strip[\s\S]*?flex-direction:\s*column/);
+  assert.match(styles, /@media \(max-height:\s*560px\)[\s\S]*?--settings-quick-nav-offset:\s*170px/);
+});
+
+test('standalone utility windows reuse the Settings frame and manual resize surface', () => {
+  const frame = readText('src/renderer/UtilityWindowFrame.tsx');
+  const controller = readText('src/main/app-window-controller.ts');
+  const ipcHandlers = readText('src/main/app-ipc-handlers.ts');
+  const styles = readRendererStyles();
+
+  for (const pagePath of [
+    'src/renderer/pages/InfoPage.tsx',
+    'src/renderer/pages/CommunityPage.tsx',
+    'src/renderer/pages/SupportPage.tsx',
+    'src/renderer/pages/ReportIssuePage.tsx'
+  ]) {
+    const page = readText(pagePath);
+    assert.match(page, /UtilityWindowFrame/);
+    assert.doesNotMatch(page, /<main className=.*settings-page/);
+    assert.doesNotMatch(page, /<header className="settings-header/);
+  }
+
+  assert.match(frame, /settings-header window-drag-strip utility-window-header/);
+  assert.match(frame, /settings-shell.*utility-window-shell/);
+  assert.match(frame, /SettingsWindowShellEffects/);
+  assert.match(frame, /SettingsWindowResizeGrip/);
+  assert.match(controller, /this\.infoWindow = new BrowserWindow\([\s\S]*?transparent:\s*true/);
+  assert.match(controller, /this\.communityWindow = new BrowserWindow\([\s\S]*?transparent:\s*true/);
+  assert.match(controller, /this\.supportWindow = new BrowserWindow\([\s\S]*?transparent:\s*true/);
+  assert.match(controller, /this\.reportWindow = new BrowserWindow\([\s\S]*?transparent:\s*true/);
+  assert.match(ipcHandlers, /const utilityWindows = \[/);
+  assert.match(ipcHandlers, /window\.webContents === event\.sender/);
+  assert.match(styles, /\.utility-window-page \.utility-window-header/);
+  assert.match(styles, /\.utility-window-page \.utility-window-header[\s\S]*?flex-direction:\s*row\s*!important/);
+  assert.match(styles, /\.utility-window-page \.utility-window-header \.utility-window-close[\s\S]*?align-self:\s*center\s*!important/);
+  assert.match(styles, /\.companion-page \.companion-card > \.companion-primary-nav button[\s\S]*?font-size:\s*12px/);
+  assert.match(styles, /\.companion-page \.companion-subtab-row button[\s\S]*?font-size:\s*11px/);
+});
+
+test('route filter labels stay centered when their selected style changes', () => {
+  const controls = readText('src/renderer/RouteTabControls.tsx');
+  const styles = readRendererStyles();
+
+  assert.match(controls, /route-filter-button/);
+  assert.match(controls, /route-filter-button-label/);
+  assert.match(styles, /\.route-filter-button[\s\S]*?place-items:\s*center\s*!important/);
+  assert.match(styles, /\.route-filter-button-label[\s\S]*?text-align:\s*center/);
 });
 
 test('hidden windows and unchanged bounds do not trigger unnecessary smoothness work', () => {
@@ -476,48 +613,164 @@ test('companion bonus manual marks keep visible source-specific feedback', () =>
   assert.match(cohesion, /\.bonus-detected-line\.is-log_reward_line/);
   assert.match(cohesion, /\.bonus-detected-line\.is-context/);
   assert.match(cohesion, /\.bonus-detected-line\.is-unknown/);
+  assert.match(cohesion, /Bonus tab readability guard/);
+  assert.match(cohesion, /\.companion-page \.bonuses-tab-layout \{[\s\S]*grid-template-rows: auto minmax\(0, 1fr\) !important;[\s\S]*overflow-y: hidden !important;/);
+  assert.match(cohesion, /\.companion-page \.bonuses-summary-card \{[\s\S]*overflow: visible !important;/);
+  assert.match(cohesion, /\.companion-page \.bonuses-act-grid \{[\s\S]*overflow-y: auto !important;/);
+  assert.match(cohesion, /\.companion-page \.bonuses-act-card,[\s\S]*\.companion-page \.bonuses-list,[\s\S]*\.companion-page \.bonuses-list > \.bonus-row \{[\s\S]*overflow: visible !important;/);
 });
 
-test('companion run history details button opens an inline detail card', () => {
+test('current-zone details drawer reuses the Settings select chevron state contract', () => {
+  const hub = readText('src/renderer/CurrentRunHub.tsx');
+  const settingsSelect = readText('src/renderer/settings/SettingsSelect.tsx');
+  const iconSystem = readText('src/renderer/styles/37-icon-system.css');
+  const cohesion = readText('src/renderer/styles/36-companion-cohesion.css');
+
+  assert.match(hub, /const \[zoneDetailsOpen, setZoneDetailsOpen\] = useState\(false\)/);
+  assert.match(hub, /zone-detail-drawer settings-select\$\{zoneDetailsOpen \? ' is-open' : ''\}/);
+  assert.match(hub, /onToggle=\{\(event\) => setZoneDetailsOpen\(event\.currentTarget\.open\)\}/);
+  assert.match(hub, /settings-select-chevron[\s\S]*<UiIcon name="chevron-down"/);
+  assert.match(settingsSelect, /settings-select-chevron[\s\S]*<UiIcon name="chevron-down"/);
+  assert.match(iconSystem, /\.settings-select\.is-open \.settings-select-chevron > \.ui-icon \{[\s\S]*rotate\(180deg\)/);
+  assert.doesNotMatch(hub, /zone-detail-toggle/);
+  assert.doesNotMatch(cohesion, /zone-detail-toggle/);
+});
+
+test('companion theme toggle uses centered animated SVG icons at header-control height', () => {
+  const header = readText('src/renderer/CompanionHeader.tsx');
+  const cohesion = readText('src/renderer/styles/36-companion-cohesion.css');
+
+  assert.match(header, /companion-theme-icon companion-theme-icon-sun/);
+  assert.match(header, /companion-theme-icon companion-theme-icon-moon/);
+  assert.doesNotMatch(header, /className="companion-theme-(sun|moon)"/);
+  assert.match(cohesion, /Final theme switch:[\s\S]*width: 74px;[\s\S]*height: 38px;[\s\S]*grid-template-columns: repeat\(2, 36px\);/);
+  assert.match(cohesion, /companion-theme-toggle\.is-dark-fantasy > \.companion-theme-toggle-indicator \{[\s\S]*translate3d\(36px, 0, 0\)/);
+  assert.match(cohesion, /\.companion-theme-icon \{[\s\S]*width: 16px;[\s\S]*height: 16px;[\s\S]*transform 280ms/);
+  assert.match(cohesion, /@media \(prefers-reduced-motion: reduce\) \{[\s\S]*\.companion-page \.companion-theme-icon/);
+});
+
+test('interactive chrome uses the shared typed SVG icon system instead of font glyphs', () => {
+  const icon = readText('src/renderer/UiIcon.tsx');
+  const iconSystem = readText('src/renderer/styles/37-icon-system.css');
+  const stylesIndex = readText('src/renderer/styles.css');
+  const header = readText('src/renderer/CompanionHeader.tsx');
+  const overlay = readText('src/renderer/pages/OverlayPage.tsx');
+  const currentRun = readText('src/renderer/CurrentRunHub.tsx');
+  const closeConfirm = readText('src/renderer/pages/CloseConfirmPage.tsx');
+  const update = readText('src/renderer/pages/UpdatePage.tsx');
+  const legacyGlyphPattern = /⚙|⋯|×|☰|▶|⏸|🔒|🔓|▴|▾|✓|○|→|◆/;
+
+  assert.match(icon, /export type UiIconName/);
+  assert.match(icon, /export function UiIcon/);
+  assert.match(stylesIndex, /37-icon-system\.css/);
+  assert.match(iconSystem, /\.ui-icon/);
+  assert.match(iconSystem, /prefers-reduced-motion/);
+  assert.match(header, /<UiIcon name="settings"/);
+  assert.match(header, /<UiIcon name="more"/);
+  assert.match(header, /<UiIcon name="close"/);
+  assert.match(overlay, /name=\{getOverlayLockButtonIcon/);
+  assert.match(overlay, /name=\{isOverlayCollapsed \? 'chevron-down' : 'chevron-up'\}/);
+  assert.match(currentRun, /name=\{done \? 'check' : 'circle'\}/);
+
+  for (const source of [header, overlay, currentRun, closeConfirm, update]) {
+    assert.doesNotMatch(source, legacyGlyphPattern);
+  }
+});
+
+test('timer play and pause SVGs stay centered in every overlay layout', () => {
+  const overlay = readText('src/renderer/pages/OverlayPage.tsx');
+  const iconSystem = readText('src/renderer/styles/37-icon-system.css');
+
+  assert.match(overlay, /overlay-timer-icon-control/);
+  assert.match(overlay, /<UiIcon name=\{timerPrimaryIcon\} className="timer-button-icon"/);
+  assert.doesNotMatch(overlay, /<span className="timer-button-glyph"/);
+  assert.match(iconSystem, /\.overlay-page button\.overlay-timer-icon-control \{[\s\S]*position: relative !important;[\s\S]*place-items: center !important;[\s\S]*padding: 0 !important;/);
+  assert.match(iconSystem, /\.overlay-page button\.overlay-timer-icon-control > \.timer-button-icon\.ui-icon \{[\s\S]*width: 14px !important;[\s\S]*height: 14px !important;[\s\S]*align-self: center !important;[\s\S]*justify-self: center !important;[\s\S]*transform: none !important;/);
+});
+
+test('running-timer close confirmation fits its fixed Electron window without clipping', () => {
+  const main = readText('src/main/app-close-confirmation.ts');
+  const page = readText('src/renderer/pages/CloseConfirmPage.tsx');
+  const polish = readText('src/renderer/styles/38-close-confirm-polish.css');
+  const stylesIndex = readText('src/renderer/styles.css');
+
+  assert.match(main, /width: 540,[\s\S]*height: 320,[\s\S]*minWidth: 500,[\s\S]*minHeight: 300/);
+  assert.match(page, /className="close-confirm-shell"/);
+  assert.match(page, /className="button-row close-confirm-actions no-drag"/);
+  assert.match(stylesIndex, /38-close-confirm-polish\.css/);
+  assert.match(polish, /\.close-confirm-page \{[\s\S]*height: 100vh;[\s\S]*box-sizing: border-box;[\s\S]*overflow: hidden;/);
+  assert.match(polish, /\.close-confirm-page \.close-confirm-shell \{[\s\S]*max-height: calc\(100vh - 32px\);[\s\S]*overflow: hidden;/);
+  assert.match(polish, /\.close-confirm-page \.close-confirm-actions \{[\s\S]*grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
+});
+
+test('companion run history details button opens a stable detached detail card', () => {
   const detailPanel = readText('src/renderer/RunHistoryDetailPanel.tsx');
   const companion = readText('src/renderer/pages/CompanionPage.tsx');
+  const translations = readText('src/i18n/translations.ts');
+  const cohesion = readText('src/renderer/styles/36-companion-cohesion.css');
 
   assert.match(detailPanel, /const \[isDetailOpen,\s*setIsDetailOpen\] = useState\(false\)/);
-  assert.match(detailPanel, /const openRunDetails = \(runId: string\)/);
-  assert.match(detailPanel, /setPendingRunId\(runId\);\s*setSelectedRunId\(null\);\s*setIsDetailOpen\(true\);/);
-  assert.match(detailPanel, /window\.setTimeout\(\(\) => \{\s*setSelectedRunId\(runId\);/);
-  assert.match(detailPanel, /<RunHistoryDetailLoading language=\{language\} \/>/);
+  assert.match(detailPanel, /const openRunDetails = useCallback\(\(runId: string\)/);
+  assert.match(detailPanel, /setSelectedRunId\(runId\);\s*setIsDetailOpen\(true\);/);
+  assert.doesNotMatch(detailPanel, /setPendingRunId/);
+  assert.doesNotMatch(detailPanel, /window\.setTimeout/);
+  assert.doesNotMatch(detailPanel, /RunHistoryDetailLoading/);
+  assert.match(detailPanel, /run-history-detail-dock/);
+  assert.match(detailPanel, /RunHistoryDetailPlaceholder/);
   assert.match(detailPanel, /<RunHistoryDetailCard model=\{model\} language=\{language\} \/>/);
-  assert.match(detailPanel, /export const RunHistoryDetailPanel = memo\(RunHistoryDetailPanelInner\)/);
+  assert.match(detailPanel, /<RunHistoryDetailPlaceholder language=\{language\} \/>/);
+  assert.doesNotMatch(detailPanel, /<Fragment/);
+  assert.match(translations, /runHistoryDetailEmptyTitle/);
+  assert.match(translations, /runHistoryDetailEmptyText/);
+  assert.match(cohesion, /summary-history-panel \.run-history-detail-layout/);
+  assert.match(cohesion, /grid-template-columns: minmax\(0, 1fr\)/);
+  assert.match(cohesion, /summary-history-panel \*,/);
+  assert.doesNotMatch(cohesion, /run-history-detail-dock \{\s*position: sticky/);
+  assert.match(detailPanel, /detailModelCacheRef/);
+  assert.match(detailPanel, /getDetailModelCacheKey\(historySignature, selectedRunId\)/);
+  assert.match(detailPanel, /previous\.historySignature === next\.historySignature/);
+  assert.match(detailPanel, /previous\.onRestore === next\.onRestore/);
+  assert.match(detailPanel, /previous\.onDelete === next\.onDelete/);
+  assert.match(detailPanel, /export const RunHistoryDetailPanel = memo\(RunHistoryDetailPanelInner, areRunHistoryDetailPanelPropsEqual\)/);
   assert.doesNotMatch(detailPanel, /getRunHistorySignature\(previous\.history\)/);
   assert.match(companion, /stableRunHistoryRef/);
-  assert.match(companion, /getRunHistorySignature\(rawRunHistory\)/);
+  assert.match(companion, /const runHistorySignature = useMemo\(\s*\(\) => getRunHistorySignature\(rawRunHistory\),/);
+  assert.match(companion, /historySignature=\{runHistorySignature\}/);
   assert.match(companion, /const restoreSavedRun = useCallback/);
   assert.match(companion, /const deleteSavedRun = useCallback/);
+
+  const snapshotLoadingGuardIndex = companion.indexOf('if (!snapshot) {');
+  assert.notEqual(snapshotLoadingGuardIndex, -1);
+  const afterSnapshotLoadingGuard = companion.slice(snapshotLoadingGuardIndex);
+  assert.doesNotMatch(
+    afterSnapshotLoadingGuard,
+    /\buse(?:State|Effect|Memo|Ref|Callback|Reducer|LayoutEffect)\s*\(/,
+    'CompanionPage hooks must stay before the snapshot loading guard to preserve hook order'
+  );
 });
 
 test('default motion avoids continuous compositor-heavy ambient animations', () => {
   const fxControls = readText('src/renderer/styles/28-fx-controls-debug.css');
   const modeTransitions = readText('src/renderer/styles/32-overlay-mode-transitions.css');
+  const modeStability = readText('src/renderer/styles/39-overlay-mode-stability.css');
 
   assert.match(fxControls, /\.overlay-page\.fx-normal:not\(\.overlay-page-timer-only\):not\(\.is-overlay-collapsed\) \.overlay-shell/);
   assert.match(fxControls, /poe2-panel-enter var\(--motion-medium, 180ms\)/);
   assert.match(fxControls, /\.companion-page\.fx-normal \.route-overview-card\.status-current:not\(\.is-focus-flash\)/);
   assert.match(fxControls, /\.companion-page\.fx-subtle \.bonuses-tab-layout \.bonus-row\.is-pending/);
-  assert.doesNotMatch(modeTransitions, /will-change:\s*opacity,\s*transform,\s*filter/);
+  assert.doesNotMatch(modeTransitions, /@keyframes|will-change:|is-overlay-mode-transitioning/);
+  assert.match(modeStability, /\.overlay-page \.overlay-shell,[\s\S]*\.overlay-page \.overlay-main-compact \{[\s\S]*animation: none !important;/);
+  assert.match(modeStability, /\.overlay-page \.overlay-shell::after,[\s\S]*animation: none !important;/);
+});
 
-  for (const keyframeName of [
-    'poe2-overlay-mode-enter-full',
-    'poe2-overlay-mode-enter-compact',
-    'poe2-overlay-mode-enter-collapsed'
-  ]) {
-    const keyframeStart = modeTransitions.indexOf(`@keyframes ${keyframeName}`);
-    const nextKeyframe = modeTransitions.indexOf('@keyframes', keyframeStart + 1);
-    const shellRule = modeTransitions.indexOf('.overlay-page.is-overlay-mode-transitioning .overlay-shell', keyframeStart);
-    const keyframeEnd = nextKeyframe === -1 ? shellRule : Math.min(nextKeyframe, shellRule);
-    const keyframeSource = modeTransitions.slice(keyframeStart, keyframeEnd);
-    assert.doesNotMatch(keyframeSource, /filter:/);
-  }
+test('overlay mode changes use one latest-layout resize without transition-shell flashes', () => {
+  const overlay = readText('src/renderer/pages/OverlayPage.tsx');
+
+  assert.match(overlay, /scheduleAdaptiveOverlayHeightRef\.current = scheduleAdaptiveOverlayHeight/);
+  assert.match(overlay, /window\.setTimeout\(\(\) => \{[\s\S]*scheduleAdaptiveOverlayHeightRef\.current\?\.\(\{ force: true, allowBelowMinimum \}\);[\s\S]*\}, 48\)/);
+  assert.match(overlay, /void Promise\.resolve\(commit\(\)\)[\s\S]*\.then\(\(\) => scheduleOverlayModeSettledResize\(allowBelowMinimum\)\)/);
+  assert.doesNotMatch(overlay, /setOverlayModeTransition|OVERLAY_MODE_ENTER_MS|overlayModeTransitionClass/);
+  assert.doesNotMatch(overlay, /setTimeout\(forceResize, (?:90|240)\)/);
 });
 
 test('overlay supports full left-click drag with an icon-only lock toggle', () => {
@@ -555,8 +808,8 @@ test('overlay supports full left-click drag with an icon-only lock toggle', () =
   assert.match(overlay, /getOverlayLockButtonIcon/);
   assert.match(overlay, /toggleOverlayMovementLock/);
   assert.match(overlay, /getResizeGripClassName/);
-  assert.match(lock, /'🔓'/);
-  assert.match(lock, /'🔒'/);
+  assert.match(lock, /'unlock'/);
+  assert.match(lock, /'lock'/);
   assert.match(styles, /overlay-lock-icon-button/);
   assert.match(styles, /resize-grip\.is-disabled/);
   assert.doesNotMatch(overlay, /unlockDragGuardActiveRef/);

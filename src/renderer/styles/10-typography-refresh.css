@@ -1,24 +1,22 @@
 /* Typography refresh and text weight tuning. Extracted from styles.css preserving cascade order. */
 /* === Typography refresh v2: visible system-font change, layout untouched === */
 :root {
-  /* Windows-safe stack: no bundled font files, no downloads. */
+  /* Bundled app typography: fontsource packages are imported from styles.css. */
   --font-ui:
-    "Trebuchet MS",
-    "Segoe UI",
+    "Geist Variable",
     "Segoe UI Variable Text",
     system-ui,
     sans-serif;
   --font-display:
-    Georgia,
-    Cambria,
-    "Times New Roman",
-    serif;
+    var(--font-ui);
   --font-caps:
-    Bahnschrift,
-    "Arial Narrow",
-    "Segoe UI Semibold",
-    "Segoe UI",
-    sans-serif;
+    var(--font-ui);
+  --font-mono:
+    "JetBrains Mono Variable",
+    "Cascadia Code",
+    "Consolas",
+    ui-monospace,
+    monospace;
   --fw-body: 500;
   --fw-body-strong: 600;
   --fw-heading: 650;
@@ -188,7 +186,7 @@ textarea,
 }
 
 .timer-only-time {
-  font-family: var(--font-caps) !important;
+  font-family: var(--font-mono) !important;
   font-weight: var(--fw-heavy) !important;
   letter-spacing: -0.035em !important;
 }
@@ -200,4 +198,3 @@ textarea,
 .close-confirm-close {
   font-family: var(--font-ui) !important;
 }
-

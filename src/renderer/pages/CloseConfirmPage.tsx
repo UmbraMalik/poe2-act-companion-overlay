@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useDocumentTitle, useI18n } from '../useI18n';
+import { UiIcon } from '../UiIcon';
 
 export function CloseConfirmPage() {
   const stayButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -38,7 +39,7 @@ export function CloseConfirmPage() {
             title={t('closeConfirm.stay')}
             onClick={() => void window.poe2Overlay.cancelCloseConfirm()}
           >
-            ×
+            <UiIcon name="close" />
           </button>
         </header>
 

@@ -1,0 +1,167 @@
+/* Unified vector icon system for controls, status markers, and navigation. */
+.ui-icon {
+  flex: 0 0 auto;
+  display: block;
+  overflow: visible;
+  color: inherit;
+  shape-rendering: geometricPrecision;
+  transform-origin: 50% 50%;
+  pointer-events: none;
+}
+
+button .ui-icon,
+summary .ui-icon {
+  transition:
+    transform 180ms var(--motion-ease-standard, ease),
+    opacity 160ms ease,
+    filter 180ms ease;
+}
+
+button:hover:not(:disabled) > .ui-icon,
+button:focus-visible > .ui-icon,
+summary:hover > .ui-icon,
+summary:focus-visible > .ui-icon {
+  filter: drop-shadow(0 0 5px currentColor);
+}
+
+.companion-header-icon > .ui-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.companion-page .settings-header .companion-header-icon {
+  padding: 0;
+}
+
+.companion-header-icon.is-settings > .ui-icon {
+  transform: none;
+}
+
+.companion-utility-menu > summary > .ui-icon {
+  width: 20px;
+  height: 20px;
+  transform: none;
+}
+
+.companion-header-icon.is-close > .ui-icon,
+.companion-modal-close > .ui-icon,
+.close-confirm-close > .ui-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.overlay-page .overlay-icon-glyph.ui-icon {
+  width: 16px !important;
+  height: 16px !important;
+  transform: none !important;
+}
+
+.overlay-page .overlay-quick-actions > button.overlay-icon-button > svg.overlay-icon-glyph.ui-icon,
+.overlay-page .overlay-endgame-completion-close > svg.overlay-icon-glyph.ui-icon {
+  width: 16px !important;
+  height: 16px !important;
+  flex-basis: 16px;
+}
+
+.overlay-page .overlay-quick-actions > button.overlay-icon-button > svg.overlay-icon-glyph-lock.ui-icon {
+  width: 15px !important;
+  height: 15px !important;
+  flex-basis: 15px;
+}
+
+.overlay-page .overlay-quick-actions > button.overlay-icon-button,
+.overlay-page .overlay-endgame-completion-close {
+  padding: 0;
+}
+
+.overlay-page button.overlay-timer-icon-control {
+  position: relative !important;
+  display: grid !important;
+  place-items: center !important;
+  padding: 0 !important;
+}
+
+.overlay-page button.overlay-timer-icon-control > .timer-button-icon.ui-icon {
+  width: 14px !important;
+  height: 14px !important;
+  margin: 0 !important;
+  align-self: center !important;
+  justify-self: center !important;
+  transform: none !important;
+}
+
+.timer-button-glyph::before,
+.timer-button-glyph::after {
+  content: none !important;
+  display: none !important;
+}
+
+.settings-select-chevron::before {
+  content: none !important;
+}
+
+.settings-select-chevron > .ui-icon {
+  width: 14px;
+  height: 14px;
+  color: rgba(255, 231, 184, 0.95);
+  transform: rotate(0deg);
+  transition: transform var(--motion-fast, 160ms) var(--motion-ease-standard, ease);
+}
+
+.settings-select.is-open .settings-select-chevron > .ui-icon {
+  transform: rotate(180deg);
+}
+
+.theme-dark-fantasy.settings-page .settings-select-chevron > .ui-icon,
+.theme-dark-fantasy.companion-page .settings-select-chevron > .ui-icon {
+  color: rgba(236, 222, 255, 0.98);
+}
+
+.ui-status-icon {
+  width: 13px;
+  height: 13px;
+  margin: auto;
+}
+
+.route-card-bonus-marker .ui-icon,
+.zone-command-bonus-state .ui-icon,
+.bonus-state-marker .ui-icon,
+.bonus-status-marker .ui-icon,
+.overlay-setup-status-card > .ui-icon,
+.overlay-setup-checklist > div > .ui-icon {
+  width: 13px;
+  height: 13px;
+}
+
+.zone-command-route-flow > .ui-icon {
+  width: 17px;
+  height: 17px;
+  color: var(--companion-gold);
+}
+
+.overlay-endgame-completion-mark.ui-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.ui-skip-icon {
+  position: absolute;
+  left: 9px;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  color: var(--companion-red);
+  transform: translateY(-50%);
+}
+
+.companion-page .zone-detail-drawer-body .skip-section .details-list li::before {
+  content: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-icon,
+  button .ui-icon,
+  summary .ui-icon {
+    transition-duration: 0.01ms !important;
+  }
+}

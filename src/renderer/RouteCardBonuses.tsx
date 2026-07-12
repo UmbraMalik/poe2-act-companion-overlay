@@ -3,6 +3,7 @@ import { translate } from '../i18n/translations';
 import { getCampaignBonusProvenanceView } from '../shared/campaign-bonus-provenance';
 import type { AppLanguage, AppSnapshot, GuideEntry } from '../shared/types';
 import { getStructuredRouteBonusIds } from './route-tab-search';
+import { UiIcon } from './UiIcon';
 
 export type RouteCardBonusModel = {
   id: string;
@@ -52,13 +53,13 @@ export function getRouteCampaignBonusModels(
   return snapshot.campaignBonuses
     .filter((bonus) => bonusIds.has(bonus.id))
     .map((bonus) => {
-      const bonusView = getCampaignBonusView(bonus, language) ?? bonus;
+      const bonusView = getCampaignBonusView(bonus, language);
       const progress = snapshot.config.campaignBonusProgress?.[bonus.id] ?? null;
 
       return {
         id: bonus.id,
-        title: 'displayTitle' in bonusView ? bonusView.displayTitle : bonus.title,
-        source: 'displaySource' in bonusView ? bonusView.displaySource : bonus.source,
+        title: bonusView?.displayTitle ?? bonus.title,
+        source: bonusView?.displaySource ?? bonus.source,
         categoryLabel: getBonusCategoryLabel(bonus.category, language),
         done: Boolean(progress),
         provenanceLabel: getCampaignBonusProvenanceView(progress, language)?.label ?? null
@@ -91,7 +92,9 @@ export function RouteCardBonusPanel({ bonuses, language }: { bonuses: RouteCardB
       <ul className="route-card-bonus-list">
         {bonuses.map((bonus) => (
           <li key={bonus.id} className={bonus.done ? 'is-done' : 'is-pending'}>
-            <span className="route-card-bonus-marker" aria-hidden="true">{bonus.done ? '✓' : '○'}</span>
+            <span className="route-card-bonus-marker" aria-hidden="true">
+              <UiIcon name={bonus.done ? 'check' : 'circle'} className="ui-status-icon" />
+            </span>
             <span className="route-card-bonus-copy">
               <strong>{bonus.title}</strong>
               <small>{bonus.source} · {bonus.categoryLabel}</small>

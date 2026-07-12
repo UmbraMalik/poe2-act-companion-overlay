@@ -1,4 +1,4 @@
-import { Fragment, memo, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { translateDataText } from '../i18n/data';
 import { translate } from '../i18n/translations';
 import { isEndgameT15Act } from '../shared/timers';
@@ -8,18 +8,34 @@ import {
   buildRunHistoryDetailModel,
   formatRunHistoryDelta,
   getRunHistoryDeltaClass,
-  getRunHistorySignature,
   type RunHistoryDetailModel
 } from './run-history-detail';
 
 type RunHistoryDetailPanelProps = {
   history: SavedRunHistoryEntry[];
+  historySignature: string;
   language: AppLanguage;
   onRestore: (runId: string) => void;
   onDelete: (runId: string) => void;
 };
 
 const TOTAL_CAMPAIGN_ACTS = 5;
+const DETAIL_MODEL_CACHE_LIMIT = 8;
+
+function getDetailModelCacheKey(historySignature: string, runId: string): string {
+  return `${historySignature}\u0000${runId}`;
+}
+
+function trimDetailModelCache(cache: Map<string, RunHistoryDetailModel>): void {
+  while (cache.size > DETAIL_MODEL_CACHE_LIMIT) {
+    const firstKey = cache.keys().next().value;
+    if (typeof firstKey !== 'string') {
+      return;
+    }
+
+    cache.delete(firstKey);
+  }
+}
 
 function formatSavedRunDate(timestamp: number, language: AppLanguage): string {
   return new Date(timestamp).toLocaleString(language === 'en' ? 'en-US' : 'ru-RU');
@@ -59,6 +75,15 @@ function renderDeltaCell(deltaMs: number | null) {
     <small className={getRunHistoryDeltaClass(deltaMs)}>
       {formatRunHistoryDelta(deltaMs)}
     </small>
+  );
+}
+
+function RunHistoryDetailPlaceholder({ language }: { language: AppLanguage }) {
+  return (
+    <div className="run-history-detail-placeholder">
+      <strong>{translate(language, 'companion.runHistoryDetailEmptyTitle')}</strong>
+      <span>{translate(language, 'companion.runHistoryDetailEmptyText')}</span>
+    </div>
   );
 }
 
@@ -150,24 +175,16 @@ function RunHistoryDetailCard({
   );
 }
 
-function RunHistoryDetailLoading({ language }: { language: AppLanguage }) {
-  return (
-    <div className="run-history-detail-card">
-      <p className="helper-text">{translate(language, 'companion.loading')}</p>
-    </div>
-  );
-}
-
 function RunHistoryDetailPanelInner({
   history,
+  historySignature,
   language,
   onRestore,
   onDelete
 }: RunHistoryDetailPanelProps) {
   const [selectedRunId, setSelectedRunId] = useState<string | null>(null);
-  const [pendingRunId, setPendingRunId] = useState<string | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
-  const detailOpenTimeoutRef = useRef<number | null>(null);
+  const detailModelCacheRef = useRef<Map<string, RunHistoryDetailModel>>(new Map());
   const sortedHistory = useMemo(
     () => [...history].sort((left, right) => right.savedAt - left.savedAt),
     [history]
@@ -181,44 +198,48 @@ function RunHistoryDetailPanelInner({
     [sortedHistory, language]
   );
   const model = useMemo(
-    () => isDetailOpen && selectedRunId ? buildRunHistoryDetailModel(history, selectedRunId) : null,
-    [history, selectedRunId, isDetailOpen]
+    () => {
+      if (!isDetailOpen || !selectedRunId) {
+        return null;
+      }
+
+      const cacheKey = getDetailModelCacheKey(historySignature, selectedRunId);
+      const cachedModel = detailModelCacheRef.current.get(cacheKey);
+      if (cachedModel) {
+        return cachedModel;
+      }
+
+      const nextModel = buildRunHistoryDetailModel(history, selectedRunId);
+      detailModelCacheRef.current.set(cacheKey, nextModel);
+      trimDetailModelCache(detailModelCacheRef.current);
+      return nextModel;
+    },
+    [history, historySignature, selectedRunId, isDetailOpen]
   );
-  const openRunId = selectedRunId ?? pendingRunId;
-  const selectedRunIdFromModel = model?.selectedRun?.id ?? openRunId;
+  const selectedRunIdFromModel = model?.selectedRun?.id ?? (isDetailOpen ? selectedRunId : null);
 
-  const openRunDetails = (runId: string) => {
-    if (detailOpenTimeoutRef.current !== null) {
-      window.clearTimeout(detailOpenTimeoutRef.current);
-    }
-
-    setPendingRunId(runId);
-    setSelectedRunId(null);
+  const openRunDetails = useCallback((runId: string) => {
+    setSelectedRunId(runId);
     setIsDetailOpen(true);
-
-    detailOpenTimeoutRef.current = window.setTimeout(() => {
-      setSelectedRunId(runId);
-      setPendingRunId(null);
-      detailOpenTimeoutRef.current = null;
-    }, 0);
-  };
-
-  useEffect(() => {
-    if (openRunId !== null && !history.some((entry) => entry.id === openRunId)) {
-      setSelectedRunId(null);
-      setPendingRunId(null);
-      setIsDetailOpen(false);
-    }
-  }, [history, openRunId]);
-
-  useEffect(() => () => {
-    if (detailOpenTimeoutRef.current !== null) {
-      window.clearTimeout(detailOpenTimeoutRef.current);
-    }
   }, []);
 
+  useEffect(() => {
+    for (const cacheKey of detailModelCacheRef.current.keys()) {
+      if (!cacheKey.startsWith(`${historySignature}\u0000`)) {
+        detailModelCacheRef.current.delete(cacheKey);
+      }
+    }
+  }, [historySignature]);
+
+  useEffect(() => {
+    if (selectedRunId !== null && !history.some((entry) => entry.id === selectedRunId)) {
+      setSelectedRunId(null);
+      setIsDetailOpen(false);
+    }
+  }, [history, selectedRunId]);
+
   return (
-    <section className="companion-block summary-history-panel">
+    <section className={`companion-block summary-history-panel ${isDetailOpen ? 'is-detail-open' : ''}`}>
       <div className="summary-section-heading">
         <h3>{translate(language, 'companion.runHistoryTitle')}</h3>
         <span>{translate(language, 'companion.runHistoryCount', { count: history.length })}</span>
@@ -232,42 +253,38 @@ function RunHistoryDetailPanelInner({
             {visibleHistoryRows.map(({ entry, completedActCount, longestZoneLabel }) => {
               const isSelected = isDetailOpen && entry.id === selectedRunIdFromModel;
               return (
-                <Fragment key={entry.id}>
-                  <article className={`summary-history-row ${isSelected ? 'is-selected' : ''}`}>
-                    <div className="summary-history-main">
-                      <strong>{entry.label || translate(language, 'companion.savedRunFallback')}</strong>
-                      <span>{formatSavedRunDate(entry.savedAt, language)}</span>
-                    </div>
-                    <div className="summary-history-stats">
-                      <span><b>{formatDuration(entry.totalElapsedMs)}</b></span>
-                      <span>{completedActCount} / {TOTAL_CAMPAIGN_ACTS}</span>
-                      <span>{longestZoneLabel}</span>
-                    </div>
-                    <div className="button-row summary-history-actions">
-                      <button
-                        type="button"
-                        className="button-secondary"
-                        onClick={() => openRunDetails(entry.id)}
-                      >
-                        {translate(language, 'companion.runHistoryDetails')}
-                      </button>
-                      <button type="button" className="button-secondary" onClick={() => onRestore(entry.id)}>
-                        {translate(language, 'companion.continueSavedRun')}
-                      </button>
-                      <button type="button" className="button-danger" onClick={() => onDelete(entry.id)}>
-                        {translate(language, 'companion.deleteSavedRun')}
-                      </button>
-                    </div>
-                  </article>
-                  {isSelected && (model ? (
-                    <RunHistoryDetailCard model={model} language={language} />
-                  ) : (
-                    <RunHistoryDetailLoading language={language} />
-                  ))}
-                </Fragment>
+                <article key={entry.id} className={`summary-history-row ${isSelected ? 'is-selected' : ''}`}>
+                  <div className="summary-history-main">
+                    <strong>{entry.label || translate(language, 'companion.savedRunFallback')}</strong>
+                    <span>{formatSavedRunDate(entry.savedAt, language)}</span>
+                  </div>
+                  <div className="summary-history-stats">
+                    <span><b>{formatDuration(entry.totalElapsedMs)}</b></span>
+                    <span>{completedActCount} / {TOTAL_CAMPAIGN_ACTS}</span>
+                    <span>{longestZoneLabel}</span>
+                  </div>
+                  <div className="button-row summary-history-actions">
+                    <button
+                      type="button"
+                      className="button-secondary"
+                      onClick={() => openRunDetails(entry.id)}
+                    >
+                      {translate(language, 'companion.runHistoryDetails')}
+                    </button>
+                    <button type="button" className="button-secondary" onClick={() => onRestore(entry.id)}>
+                      {translate(language, 'companion.continueSavedRun')}
+                    </button>
+                    <button type="button" className="button-danger" onClick={() => onDelete(entry.id)}>
+                      {translate(language, 'companion.deleteSavedRun')}
+                    </button>
+                  </div>
+                </article>
               );
             })}
           </div>
+          <aside className="run-history-detail-dock" aria-live="polite">
+            {model ? <RunHistoryDetailCard model={model} language={language} /> : <RunHistoryDetailPlaceholder language={language} />}
+          </aside>
         </div>
       )}
     </section>
@@ -278,15 +295,10 @@ function areRunHistoryDetailPanelPropsEqual(
   previous: RunHistoryDetailPanelProps,
   next: RunHistoryDetailPanelProps
 ): boolean {
-  if (previous.language !== next.language) {
-    return false;
-  }
-
-  if (previous.history === next.history) {
-    return true;
-  }
-
-  return getRunHistorySignature(previous.history) === getRunHistorySignature(next.history);
+  return previous.historySignature === next.historySignature &&
+    previous.language === next.language &&
+    previous.onRestore === next.onRestore &&
+    previous.onDelete === next.onDelete;
 }
 
 export const RunHistoryDetailPanel = memo(RunHistoryDetailPanelInner, areRunHistoryDetailPanelPropsEqual);

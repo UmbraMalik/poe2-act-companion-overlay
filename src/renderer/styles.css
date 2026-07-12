@@ -5,6 +5,8 @@
  * cascade readable without changing selector order or runtime behavior.
  * Keep imports in this order unless you intentionally change override priority.
  */
+@import '@fontsource-variable/geist';
+@import '@fontsource-variable/jetbrains-mono';
 @import './styles/01-overlay-core.css'; /* Base overlay, shared HUD, timer-only early rules */
 @import './styles/02-settings-shell.css'; /* Settings and app shell layout */
 @import './styles/03-route-reminders-bonuses.css'; /* Route density, reminders dashboard, bonus tabs */
@@ -42,3 +44,6 @@
 @import './styles/34-event-feedback-polish.css'; /* One-shot route, bonus, timer split and overlay event feedback */
 @import './styles/35-dark-fantasy-theme.css'; /* Optional persisted black-violet fantasy theme */
 @import './styles/36-companion-cohesion.css'; /* Final companion panel cohesion across tabs and themes */
+@import './styles/37-icon-system.css'; /* Unified SVG icons for controls, navigation and status markers */
+@import './styles/38-close-confirm-polish.css'; /* Fixed-window close confirmation geometry and clipping guard */
+@import './styles/39-overlay-mode-stability.css'; /* Flicker-free transparent-window mode changes */

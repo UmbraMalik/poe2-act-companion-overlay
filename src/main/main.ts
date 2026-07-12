@@ -1,92 +1,31 @@
-import { access, appendFile, stat } from 'node:fs/promises';
-import { constants } from 'node:fs';
 import { join } from 'node:path';
 import {
   app,
   BrowserWindow,
   dialog,
   globalShortcut,
-  ipcMain,
-  Menu,
-  screen,
-  shell,
   Tray
 } from 'electron';
-import type { OpenDialogOptions } from 'electron';
 
 import { ConfigStore } from './services/config-store';
 import { GuideService } from './services/guide-service';
-import {
-  extractGeneratedAreaId,
-  extractNamedZoneFromLine,
-  normalizeText,
-  parseLevelUp,
-  parsePermanentReward
-} from './services/log-parser';
+import { ZoneMatchExtractor } from './services/zone-match-extractor';
 import { LogWatcher } from './services/log-watcher';
-import { resolveRuntimePath } from './services/runtime-paths';
-import { checkForUpdates } from './services/update-service';
 import { AutoUpdateService } from './services/auto-update-service';
-import {
-  DEFAULT_COMPACT_OVERLAY_BOUNDS,
-  DEFAULT_COMPANION_BOUNDS,
-  DEFAULT_HOTKEYS,
-  DEFAULT_OVERLAY_BOUNDS,
-  DEFAULT_RUN_TIMER,
-  DEFAULT_TIMER_ONLY_OVERLAY_BOUNDS,
-  DEFAULT_TOWN_TIMER
-} from '../shared/defaults';
-import { buildChecklistDefinition, buildChecklistViewItems } from '../shared/checklist';
-import { getRunTimerDisplayElapsed, getZoneTimerDisplayElapsed } from '../shared/timers';
-import { getOverlayMinimumSize } from '../shared/overlay-layout';
-import {
-  areOverlayBoundsEqual,
-  areOverlayBoundsSizeEqual,
-  canSourceChangeOverlaySize,
-  planOverlayBoundsChange,
-  shouldIgnoreOverlayAutoHeight
-} from './overlay-window-bounds';
-import { TimerDiagnosticsLog, isTimerDiagnosticsEnabled } from './timer-diagnostics-log';
+import { TimerDiagnosticsLog } from './timer-diagnostics-log';
 import { translate } from '../i18n/translations';
 import { DIRECT_COMPOSITION_COMPAT_ENABLED, configureElectronStartup } from './electron-startup';
-import { createAppIcon } from './app-icons';
-import {
-  HOTKEY_ACTION_LABELS,
-  formatConfiguredHotkey,
-  normalizeHotkeyAccelerator
-} from './hotkey-utils';
-import {
-  inferActHintFromInternalAreaId as inferActHintFromInternalAreaIdFromScene,
-  isActLabelScene,
-  isLoginLikeScene,
-  isTownSceneWithGuide,
-  isUnknownOrNullScene,
-  isValidGameplaySceneSource,
-  normalizeSceneText,
-  shouldKeepPendingZoneAreaId
-} from './scene-classifier';
 import campaignBonusesData from '../data/campaign-bonuses.json';
 import type {
   AppConfig,
-  AppLanguage,
   AppSnapshot,
-  AutoUpdateState,
   CampaignBonusDefinition,
   CurrentZoneState,
-  GuideEntry,
-  GuideZoneProgress,
-  LogWatcherStatus,
   OverlayBounds,
   OverlayMode,
-  RunSummary,
-  RunTimerState,
   SavedRunHistoryEntry,
-  SettingsPatch,
-  TimerDiagnosticsPayload,
   UpdateCheckResult,
   UpdateInfo,
-  ZoneAct,
-  ZoneSource
 } from '../shared/types';
 
 import { DEFAULT_LOG_STATUS_MESSAGE } from './app-environment';
@@ -140,6 +79,7 @@ import {
   runPersistOverlayBoundsForCurrentState as runPersistOverlayBoundsForCurrentStateMethod,
   runPersistOverlayBoundsImmediately as runPersistOverlayBoundsImmediatelyMethod,
   runPersistOverlayBounds as runPersistOverlayBoundsMethod,
+  runPersistCompanionBoundsImmediately as runPersistCompanionBoundsImmediatelyMethod,
   runPersistCompanionBounds as runPersistCompanionBoundsMethod
 } from './app-overlay-bounds-controller';
 import {
@@ -201,7 +141,6 @@ import {
   runIsValidGameplaySceneSource as runIsValidGameplaySceneSourceMethod,
   runGetIgnoredZoneEventReason as runGetIgnoredZoneEventReasonMethod,
   runLogZoneEventDecision as runLogZoneEventDecisionMethod,
-  runShouldKeepPendingZoneAreaId as runShouldKeepPendingZoneAreaIdMethod,
   runExtractZoneMatchFromLogLine as runExtractZoneMatchFromLogLineMethod
 } from './app-guide-log-controller';
 import {
@@ -280,6 +219,7 @@ configureElectronStartup();
 export class PoeOverlayApp {
     private configStore: ConfigStore;
     private guideService: GuideService;
+    readonly zoneMatchExtractor: ZoneMatchExtractor;
     private campaignBonuses: CampaignBonusDefinition[];
     private logWatcher: LogWatcher;
     private overlayWindow: BrowserWindow | null;
@@ -301,7 +241,6 @@ export class PoeOverlayApp {
     private config: AppConfig;
     private overlayMode: OverlayMode;
     private currentZone: CurrentZoneState;
-    private pendingZoneAreaId: string | null;
     private runtime: AppSnapshot['runtime'];
     private isQuitting: boolean;
     private isClosingOverlayWindow: boolean;
@@ -332,6 +271,7 @@ export class PoeOverlayApp {
     constructor() {
         this.configStore = new ConfigStore(join(app.getPath('userData'), 'config.json'));
         this.guideService = new GuideService();
+        this.zoneMatchExtractor = new ZoneMatchExtractor(this.guideService);
         this.campaignBonuses = campaignBonusesData.bonuses as CampaignBonusDefinition[];
         this.logWatcher = new LogWatcher(this.guideService, {
             onLine: (line: any, source: any) => {
@@ -399,7 +339,6 @@ export class PoeOverlayApp {
             sceneKind: 'unknown',
             actHint: null
         };
-        this.pendingZoneAreaId = null;
         this.runtime = {
             timerNowMs: Date.now(),
             guideLoadedAt: null,
@@ -554,6 +493,8 @@ export class PoeOverlayApp {
         }
         this.clearLogFileInfoRefreshTimer();
         this.clearBroadcastTimer();
+        this.persistOverlayBoundsImmediately();
+        this.persistCompanionBoundsImmediately();
         if (this.overlayBoundsTimer) {
             clearTimeout(this.overlayBoundsTimer);
             this.overlayBoundsTimer = null;
@@ -788,6 +729,9 @@ export class PoeOverlayApp {
     persistOverlayBounds() {
         return runPersistOverlayBoundsMethod.apply(this, arguments as any);
     }
+    persistCompanionBoundsImmediately() {
+        return runPersistCompanionBoundsImmediatelyMethod.apply(this, arguments as any);
+    }
     persistCompanionBounds() {
         return runPersistCompanionBoundsMethod.apply(this, arguments as any);
     }
@@ -919,9 +863,6 @@ export class PoeOverlayApp {
     }
     logZoneEventDecision(zoneMatch: any, action: any, reason: any = null) {
         return runLogZoneEventDecisionMethod.apply(this, arguments as any);
-    }
-    shouldKeepPendingZoneAreaId(zoneName: any) {
-        return runShouldKeepPendingZoneAreaIdMethod.apply(this, arguments as any);
     }
     extractZoneMatchFromLogLine(line: any) {
         return runExtractZoneMatchFromLogLineMethod.apply(this, arguments as any);

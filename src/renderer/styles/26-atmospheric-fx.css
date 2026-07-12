@@ -226,7 +226,8 @@
     0 0 34px rgba(82, 170, 255, 0.045);
 }
 
-.companion-page .companion-card > .companion-tab-row .button-primary {
+.companion-page .companion-card > .companion-tab-row .button-primary,
+.companion-page .companion-subtab-row .button-primary {
   border-color: rgba(241, 185, 106, 0.68) !important;
   text-shadow: 0 0 12px rgba(241, 185, 106, 0.22);
   box-shadow:
@@ -235,13 +236,17 @@
     0 0 18px rgba(241, 185, 106, 0.14) !important;
 }
 
-.companion-page .companion-card > .companion-tab-row .button-primary::after {
+.companion-page .companion-card > .companion-tab-row .button-primary::after,
+.companion-page .companion-subtab-row .button-primary::after {
   content: "";
-  display: block;
-  width: 100%;
+  position: absolute;
+  right: 16px;
+  bottom: 5px;
+  left: 16px;
   height: 1px;
-  margin-top: 4px;
+  margin: 0;
   border-radius: 999px;
+  pointer-events: none;
   background: linear-gradient(90deg, transparent, rgba(255, 228, 167, 0.72), transparent);
   animation: poe2-fx-focus-flare 180ms var(--motion-ease-out, ease-out) both;
 }
@@ -393,7 +398,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .companion-page .companion-card > .companion-tab-row .button-primary::after {
+  .companion-page .companion-card > .companion-tab-row .button-primary::after,
+  .companion-page .companion-subtab-row .button-primary::after {
     animation: none !important;
   }
 }

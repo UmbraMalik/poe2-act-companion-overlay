@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
+  fitBoundsToWorkArea,
   planOverlayBoundsChange,
   shouldIgnoreOverlayAutoHeight
 } from '../src/main/overlay-window-bounds';
@@ -9,6 +10,26 @@ import {
   resetElectronMockState
 } from './helpers/electron-mock';
 import { createTestAppInstance } from './helpers/zoneTestUtils';
+
+test('window bounds are fitted fully inside the selected display work area', () => {
+  assert.deepEqual(
+    fitBoundsToWorkArea(
+      { x: 2400, y: 1300, width: 1000, height: 900 },
+      { x: 0, y: 0, width: 2560, height: 1440 },
+      { width: 720, height: 520 }
+    ),
+    { x: 1560, y: 540, width: 1000, height: 900 }
+  );
+
+  assert.deepEqual(
+    fitBoundsToWorkArea(
+      { x: -500, y: -400, width: 4000, height: 3000 },
+      { x: 1920, y: 0, width: 1920, height: 1080 },
+      { width: 720, height: 520 }
+    ),
+    { x: 1920, y: 0, width: 1920, height: 1080 }
+  );
+});
 
 test('dragMove source keeps width and height locked to current bounds', () => {
   const plan = planOverlayBoundsChange({
@@ -187,4 +208,29 @@ test('timer-only mode never restores stale full-height bounds', () => {
   );
 
   assert.equal(normalizedFull.height, 920);
+});
+
+test('companion bounds flush saves the last resize without waiting for debounce', () => {
+  resetElectronMockState();
+  const app = createTestAppInstance() as any;
+  const { BrowserWindow } = require('electron') as typeof import('electron');
+
+  app.companionWindow = new BrowserWindow({ width: 1180, height: 820 });
+  app.companionWindow.setPosition(180, 120);
+  app.companionBoundsTimer = setTimeout(() => undefined, 10_000);
+
+  const changed = app.persistCompanionBoundsImmediately();
+
+  assert.equal(changed, true);
+  assert.equal(app.companionBoundsTimer, null);
+  assert.deepEqual(app.config.companionBounds, { x: 180, y: 120, width: 1180, height: 820 });
+  assert.equal(app.persistCompanionBoundsImmediately(), false);
+});
+
+test('companion bounds restore is clamped to the visible display', () => {
+  resetElectronMockState();
+  const app = createTestAppInstance() as any;
+  app.config.companionBounds = { x: 2400, y: 1300, width: 1000, height: 900 };
+
+  assert.deepEqual(app.getCompanionBounds(), { x: 1560, y: 540, width: 1000, height: 900 });
 });

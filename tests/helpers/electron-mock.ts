@@ -30,10 +30,12 @@ class MockBrowserWindow {
   private destroyed = false;
   private visible = false;
   private bounds = { x: 0, y: 0, width: 500, height: 500 };
+  private minimumSize: [number, number] = [0, 0];
 
-  constructor(options?: { width?: number; height?: number }) {
+  constructor(options?: { width?: number; height?: number; minWidth?: number; minHeight?: number }) {
     this.bounds.width = options?.width ?? this.bounds.width;
     this.bounds.height = options?.height ?? this.bounds.height;
+    this.minimumSize = [options?.minWidth ?? 0, options?.minHeight ?? 0];
   }
 
   on(): void {}
@@ -58,7 +60,13 @@ class MockBrowserWindow {
   setMenuBarVisibility(): void {}
   removeMenu(): void {}
   setOpacity(): void {}
-  setMinimumSize(): void {}
+  setMinimumSize(width: number, height: number): void {
+    this.minimumSize = [width, height];
+  }
+  setResizable(): void {}
+  getMinimumSize(): [number, number] {
+    return [this.minimumSize[0], this.minimumSize[1]];
+  }
   setFocusable(): void {}
   setVisibleOnAllWorkspaces(): void {}
   showInactive(): void {
@@ -71,8 +79,19 @@ class MockBrowserWindow {
       y
     };
   }
+  setSize(width: number, height: number): void {
+    this.bounds = {
+      ...this.bounds,
+      width: Math.max(this.minimumSize[0], width),
+      height: Math.max(this.minimumSize[1], height)
+    };
+  }
   setBounds(bounds: typeof this.bounds): void {
-    this.bounds = { ...bounds };
+    this.bounds = {
+      ...bounds,
+      width: Math.max(this.minimumSize[0], bounds.width),
+      height: Math.max(this.minimumSize[1], bounds.height)
+    };
   }
   getBounds(): typeof this.bounds {
     return { ...this.bounds };
@@ -212,4 +231,16 @@ export async function invokeIpcHandler<T = unknown>(
     throw new Error(`Missing IPC handler for ${channel}`);
   }
   return await handler({}, ...args) as T;
+}
+
+export async function invokeIpcHandlerWithEvent<T = unknown>(
+  channel: string,
+  event: unknown,
+  ...args: unknown[]
+): Promise<T> {
+  const handler = ipcHandlers.get(channel);
+  if (!handler) {
+    throw new Error(`Missing IPC handler for ${channel}`);
+  }
+  return await handler(event, ...args) as T;
 }

@@ -2,6 +2,8 @@ import { getActTimeRowsFromSplits, type ActTimeRow } from './companion-helpers';
 import { formatDuration } from '../shared/timers';
 import type { SavedRunHistoryEntry, ZoneTimeEntry } from '../shared/types';
 
+const MAX_ZONE_HISTORY_DETAIL_SOURCE_ROWS = 240;
+
 export interface RunHistoryActDetailRow extends ActTimeRow {
   previousDeltaMs: number | null;
   bestDeltaMs: number | null;
@@ -43,29 +45,59 @@ export function getRunHistoryActRows(entry: SavedRunHistoryEntry | null): ActTim
   );
 }
 
-function getZoneSourceRows(entry: SavedRunHistoryEntry | null): ZoneTimeEntry[] {
+function pushUniqueZoneRows(target: ZoneTimeEntry[], rows: ZoneTimeEntry[]): void {
+  const seen = new Set(target.map((zone) => `${zone.zoneId}:${zone.enteredAt}:${zone.leftAt}`));
+
+  for (const zone of rows) {
+    const key = `${zone.zoneId}:${zone.enteredAt}:${zone.leftAt}`;
+    if (seen.has(key)) {
+      continue;
+    }
+
+    seen.add(key);
+    target.push(zone);
+  }
+}
+
+function getBoundedZoneSourceRows(entry: SavedRunHistoryEntry | null): ZoneTimeEntry[] {
   if (!entry) {
     return [];
   }
 
   const fullHistory = Array.isArray(entry.zoneTimeHistory) ? entry.zoneTimeHistory : [];
   const longestZones = Array.isArray(entry.longestZones) ? entry.longestZones : [];
-  return fullHistory.length > 0 ? fullHistory : longestZones;
+  if (fullHistory.length === 0) {
+    return longestZones;
+  }
+
+  const boundedRows = fullHistory.slice(-MAX_ZONE_HISTORY_DETAIL_SOURCE_ROWS);
+  pushUniqueZoneRows(boundedRows, longestZones);
+  return boundedRows;
+}
+
+function pushTopZoneRow(topRows: ZoneTimeEntry[], zone: ZoneTimeEntry, maxRows: number): void {
+  const insertIndex = topRows.findIndex((candidate) => zone.elapsedMs > candidate.elapsedMs);
+  const nextIndex = insertIndex === -1 ? topRows.length : insertIndex;
+
+  if (nextIndex >= maxRows) {
+    return;
+  }
+
+  topRows.splice(nextIndex, 0, zone);
+  if (topRows.length > maxRows) {
+    topRows.length = maxRows;
+  }
 }
 
 function getTopZoneRows(entry: SavedRunHistoryEntry | null, maxRows: number): ZoneTimeEntry[] {
   const topRows: ZoneTimeEntry[] = [];
 
-  for (const zone of getZoneSourceRows(entry)) {
+  for (const zone of getBoundedZoneSourceRows(entry)) {
     if (!isFiniteNumber(zone.elapsedMs) || zone.elapsedMs <= 0) {
       continue;
     }
 
-    topRows.push(zone);
-    topRows.sort((left, right) => right.elapsedMs - left.elapsedMs);
-    if (topRows.length > maxRows) {
-      topRows.length = maxRows;
-    }
+    pushTopZoneRow(topRows, zone, maxRows);
   }
 
   return topRows;
@@ -74,7 +106,7 @@ function getTopZoneRows(entry: SavedRunHistoryEntry | null, maxRows: number): Zo
 function getBestZoneById(entry: SavedRunHistoryEntry | null): Map<string, ZoneTimeEntry> {
   const zonesById = new Map<string, ZoneTimeEntry>();
 
-  for (const zone of getZoneSourceRows(entry)) {
+  for (const zone of getBoundedZoneSourceRows(entry)) {
     if (!isFiniteNumber(zone.elapsedMs) || zone.elapsedMs <= 0) {
       continue;
     }

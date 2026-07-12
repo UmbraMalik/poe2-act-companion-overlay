@@ -1,6 +1,7 @@
 import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { basename, dirname, extname, join } from 'node:path';
 import {
+  CURRENT_CONFIG_SCHEMA_VERSION,
   DEFAULT_CONFIG,
   DEFAULT_RUN_TIMER,
   DEFAULT_TOWN_TIMER,
@@ -40,6 +41,7 @@ const OVERLAY_DENSITIES: OverlayDensity[] = ['compact', 'normal', 'detailed'];
 const VISUAL_FX_INTENSITIES: VisualFxIntensity[] = ['off', 'subtle', 'normal', 'rich'];
 const APP_THEMES: AppTheme[] = ['classic', 'dark_fantasy'];
 const RUN_TIMER_STATUSES: RunTimerStatus[] = ['not_started', 'armed', 'running', 'paused', 'finished'];
+const MAX_SAVED_RUN_ZONE_TIME_HISTORY_ROWS = 240;
 const CHECKLIST_ITEM_STATES: ChecklistItemState[] = ['pending', 'current', 'likely_done', 'done', 'missed'];
 const CHECKLIST_DETECTED_BY: ChecklistDetectedBy[] = ['log', 'manual', 'zone_leave', 'linked_reward', 'inferred_zone_leave'];
 const HOTKEY_KEYS: Array<keyof HotkeySettings> = [
@@ -158,6 +160,19 @@ function normalizeOverlayOpacity(value: unknown): number {
     return DEFAULT_CONFIG.overlayOpacity;
   }
   return Math.round(clamp(numberValue, 0.35, 1) * 100) / 100;
+}
+
+function normalizeTargetRunTime(value: unknown): number | null {
+  if (value === null || value === undefined || value === '') {
+    return null;
+  }
+
+  const numberValue = finiteNumber(value);
+  if (numberValue === null || numberValue < 10 * 60 * 1000 || numberValue > 72 * 60 * 60 * 1000) {
+    return DEFAULT_RUN_TIMER_SETTINGS.targetRunTimeMs;
+  }
+
+  return Math.round(numberValue);
 }
 
 function normalizeCurrentLevel(value: unknown): number | null {
@@ -421,6 +436,7 @@ function normalizeRunTimerSettings(value: unknown): AppConfig['runTimerSettings'
     autoStartMode: source.autoStartMode === 'manual' ? 'manual' : 'scheduled_time',
     leagueStartAt: finiteTimestamp(source.leagueStartAt),
     leagueStartTimeLabel: safeString(source.leagueStartTimeLabel, DEFAULT_RUN_TIMER_SETTINGS.leagueStartTimeLabel),
+    targetRunTimeMs: normalizeTargetRunTime(source.targetRunTimeMs),
     autoStart: safeBoolean(source.autoStart, DEFAULT_RUN_TIMER_SETTINGS.autoStart),
     showCountdownBeforeStart: safeBoolean(
       source.showCountdownBeforeStart,
@@ -488,6 +504,10 @@ function normalizeZoneTimeHistory(value: unknown): ZoneTimeEntry[] {
   });
 }
 
+function normalizeSavedRunZoneTimeHistory(value: unknown): ZoneTimeEntry[] {
+  return normalizeZoneTimeHistory(value).slice(-MAX_SAVED_RUN_ZONE_TIME_HISTORY_ROWS);
+}
+
 export 
 function normalizeSavedRunHistoryEntry(value: unknown): SavedRunHistoryEntry | null {
   if (!isRecord(value)) {
@@ -517,7 +537,7 @@ function normalizeSavedRunHistoryEntry(value: unknown): SavedRunHistoryEntry | n
       ? value.actSplits.map(normalizeRunTimerActSplit).filter((split): split is RunTimerActSplit => split !== null)
       : [...runTimer.actSplits],
     longestZones: normalizeZoneTimeHistory(value.longestZones),
-    zoneTimeHistory: normalizeZoneTimeHistory(value.zoneTimeHistory),
+    zoneTimeHistory: normalizeSavedRunZoneTimeHistory(value.zoneTimeHistory),
     runTimer: {
       ...runTimer,
       elapsedMs: runTimer.elapsedMs > 0 ? runTimer.elapsedMs : totalElapsedMs
@@ -580,6 +600,7 @@ export function normalizeAppConfig(config: Partial<AppConfig> = {}): AppConfig {
 
   return {
     ...DEFAULT_CONFIG,
+    configSchemaVersion: CURRENT_CONFIG_SCHEMA_VERSION,
     appLanguage: rawConfig.appLanguage === 'en' ? 'en' : DEFAULT_CONFIG.appLanguage,
     logFilePath: safeString(rawConfig.logFilePath, DEFAULT_CONFIG.logFilePath),
     logFileSelectionMode:
@@ -605,6 +626,10 @@ export function normalizeAppConfig(config: Partial<AppConfig> = {}): AppConfig {
     overlayEffectsEnabled: safeBoolean(rawConfig.overlayEffectsEnabled, DEFAULT_CONFIG.overlayEffectsEnabled),
     theme: normalizeAppTheme(rawConfig.theme),
     themePreferencePrompted: safeBoolean(rawConfig.themePreferencePrompted, DEFAULT_CONFIG.themePreferencePrompted),
+    setupWizardCompleted: safeBoolean(
+      rawConfig.setupWizardCompleted,
+      DEFAULT_CONFIG.setupWizardCompleted
+    ),
     overlayDebugLayoutEnabled: safeBoolean(
       rawConfig.overlayDebugLayoutEnabled,
       DEFAULT_CONFIG.overlayDebugLayoutEnabled
@@ -643,6 +668,13 @@ export class ConfigStore {
       const raw = readFileSync(this.configPath, 'utf8');
       const parsed = JSON.parse(raw) as Partial<AppConfig>;
       this.config = normalizeAppConfig(parsed);
+      if (parsed.configSchemaVersion !== CURRENT_CONFIG_SCHEMA_VERSION) {
+        try {
+          this.save();
+        } catch {
+          // Keep the migrated config in memory; a later successful update can persist it.
+        }
+      }
     } catch {
       this.backupCorruptConfig();
       this.config = { ...DEFAULT_CONFIG };
@@ -703,6 +735,9 @@ export class ConfigStore {
         : {}),
       ...(patch.themePreferencePrompted !== undefined
         ? { themePreferencePrompted: patch.themePreferencePrompted }
+        : {}),
+      ...(patch.setupWizardCompleted !== undefined
+        ? { setupWizardCompleted: patch.setupWizardCompleted }
         : {}),
       ...(patch.overlayDebugLayoutEnabled !== undefined
         ? { overlayDebugLayoutEnabled: patch.overlayDebugLayoutEnabled }
