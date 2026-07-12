@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
+import type { CompanionNavigationTab, CompanionSection } from './companion-navigation-state';
 
-export type CompanionSection = 'zone' | 'route' | 'progress' | 'run';
-export type CompanionNavigationTab = 'zone' | 'route' | 'timer' | 'actTimes' | 'reminders' | 'bonuses' | 'summary';
+export type { CompanionNavigationTab, CompanionSection } from './companion-navigation-state';
 
 interface CompanionNavigationProps {
   activeSection: CompanionSection;
@@ -30,6 +30,7 @@ export function CompanionNavigation({
             key={section}
             type="button"
             className={section === activeSection ? 'button-primary' : 'button-secondary'}
+            aria-current={section === activeSection ? 'page' : undefined}
             onClick={() => onSectionChange(section)}
           >
             {sectionLabels[section]}

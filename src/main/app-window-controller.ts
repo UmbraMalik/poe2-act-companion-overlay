@@ -123,6 +123,7 @@ export function runCreateOverlayWindow(this: any) {
         this.overlayWindow.setMenuBarVisibility(false);
         this.overlayWindow.setFocusable(true);
         this.overlayWindow.on('close', (event: any) => {
+            this.persistOverlayBoundsImmediately();
             if (this.isClosingOverlayWindow) {
                 return;
             }
@@ -319,6 +320,7 @@ export function runOpenSettingsWindow(this: any) {
 export function runToggleCompanionWindow(this: any) {
         if (this.companionWindow && !this.companionWindow.isDestroyed()) {
             if (this.companionWindow.isVisible()) {
+                this.persistCompanionBoundsImmediately();
                 this.companionWindow.hide();
                 return;
             }
@@ -349,6 +351,7 @@ export function runOpenCompanionWindow(this: any) {
         attachWindowNavigationGuards(this.companionWindow);
         this.attachManualHotkeys(this.companionWindow);
         this.companionWindow.on('close', (event: any) => {
+            this.persistCompanionBoundsImmediately();
             if (!this.isQuitting) {
                 event.preventDefault();
                 this.companionWindow?.hide();

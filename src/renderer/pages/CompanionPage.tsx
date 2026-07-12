@@ -33,7 +33,17 @@ import { RouteTabControls } from '../RouteTabControls';
 import { filterRouteCards, getRouteFilterEmptyText, type RouteFilterMode } from '../route-tab-search';
 import { CurrentRunHub } from '../CurrentRunHub';
 import { CompanionHeader } from '../CompanionHeader';
-import { CompanionNavigation, type CompanionNavigationTab, type CompanionSection } from '../CompanionNavigation';
+import { CompanionNavigation } from '../CompanionNavigation';
+import {
+  COMPANION_NAVIGATION_STORAGE_KEY,
+  COMPANION_SECTION_DEFAULT_TAB,
+  getCompanionSection,
+  normalizeCompanionNavigationState,
+  updateCompanionNavigationState,
+  type CompanionNavigationState,
+  type CompanionNavigationTab,
+  type CompanionSection
+} from '../companion-navigation-state';
 import type { AppLanguage, CampaignBonusDefinition, CampaignBonusProgress, GuideEntry, RunSummary, SavedRunHistoryEntry, ZoneAct } from '../../shared/types';
 
 type CompanionTab = CompanionNavigationTab;
@@ -73,21 +83,6 @@ type RouteCardModel = {
 const ROUTE_OVERVIEW_VISIBLE_ITEMS = 2;
 const TOTAL_CAMPAIGN_ACTS = 5;
 const EMPTY_CAMPAIGN_BONUS_PROGRESS: Record<string, CampaignBonusProgress> = {};
-
-const COMPANION_SECTION_DEFAULT_TAB: Record<CompanionSection, CompanionTab> = {
-  zone: 'zone',
-  route: 'route',
-  progress: 'bonuses',
-  run: 'timer'
-};
-
-function getCompanionSection(tab: CompanionTab): CompanionSection {
-  if (tab === 'zone' || tab === 'route') {
-    return tab;
-  }
-
-  return tab === 'bonuses' || tab === 'reminders' ? 'progress' : 'run';
-}
 
 function getRouteStatusLabel(
   status: 'current' | 'missed' | 'completed' | 'visited' | 'pending',
@@ -945,7 +940,15 @@ export function CompanionPage() {
       component: 'companion-live-timer'
     } : undefined
   );
-  const [activeTab, setActiveTab] = useState<CompanionTab>('zone');
+  const [navigationState, setNavigationState] = useState<CompanionNavigationState>(() => {
+    try {
+      const stored = window.localStorage.getItem(COMPANION_NAVIGATION_STORAGE_KEY);
+      return normalizeCompanionNavigationState(stored ? JSON.parse(stored) : null);
+    } catch {
+      return normalizeCompanionNavigationState(null);
+    }
+  });
+  const activeTab = navigationState.activeTab;
   const activeSection = getCompanionSection(activeTab);
   const [selectedAct, setSelectedAct] = useState<ZoneAct | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
@@ -967,6 +970,25 @@ export function CompanionPage() {
   });
 
   useDocumentTitle(t('titles.companion'));
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(COMPANION_NAVIGATION_STORAGE_KEY, JSON.stringify(navigationState));
+    } catch {
+      // Navigation persistence is a convenience; storage failures must not break the panel.
+    }
+  }, [navigationState]);
+
+  const selectTab = useCallback((tab: CompanionTab) => {
+    setNavigationState((current) => updateCompanionNavigationState(current, tab));
+  }, []);
+
+  const selectSection = useCallback((section: CompanionSection) => {
+    setNavigationState((current) => updateCompanionNavigationState(
+      current,
+      current.lastTabs[section] ?? COMPANION_SECTION_DEFAULT_TAB[section]
+    ));
+  }, []);
 
   const displayRunTimer = liveRunTimer.runTimer ?? snapshot?.config.runTimer ?? null;
   const nowAct = useMemo(
@@ -1215,12 +1237,12 @@ export function CompanionPage() {
 
   useEffect(() => {
     const unsubscribe = window.poe2Overlay.onRunResetConfirmationRequested(() => {
-      setActiveTab('timer');
+      selectTab('timer');
       setRunConfirmDialog({ type: 'reset' });
     });
 
     return unsubscribe;
-  }, []);
+  }, [selectTab]);
 
   useEffect(() => () => {
     if (focusedRouteZoneTimeoutRef.current !== null) {
@@ -1404,7 +1426,7 @@ export function CompanionPage() {
     setSelectedAct(nowAct);
     setRouteFilterMode('current_act');
     setRouteSearchQuery('');
-    setActiveTab('route');
+    selectTab('route');
   };
   const zoneTab = activeTab === 'zone' ? (
     <CurrentRunHub
@@ -2103,8 +2125,8 @@ export function CompanionPage() {
           activeTab={activeTab}
           sectionLabels={sectionLabels}
           subTabs={subTabs}
-          onSectionChange={(section) => setActiveTab(COMPANION_SECTION_DEFAULT_TAB[section])}
-          onTabChange={setActiveTab}
+          onSectionChange={selectSection}
+          onTabChange={selectTab}
         >
           <div
             className={`companion-tab-body${activeTab === 'zone' ? ' is-zone-run-hub' : ''}`}

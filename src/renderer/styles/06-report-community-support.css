@@ -105,14 +105,6 @@
   }
 }
 
-/* Companion header has one extra feedback button in 0.2.0. */
-.companion-page .settings-header .companion-header-actions {
-  max-width: 760px;
-}
-
-.companion-header-actions button {
-  min-width: 132px;
-}
 
 /* Community / support tabs in companion panel */
 .companion-scroll-layout {

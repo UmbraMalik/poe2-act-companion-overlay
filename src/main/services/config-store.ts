@@ -1,6 +1,7 @@
 import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { basename, dirname, extname, join } from 'node:path';
 import {
+  CURRENT_CONFIG_SCHEMA_VERSION,
   DEFAULT_CONFIG,
   DEFAULT_RUN_TIMER,
   DEFAULT_TOWN_TIMER,
@@ -599,6 +600,7 @@ export function normalizeAppConfig(config: Partial<AppConfig> = {}): AppConfig {
 
   return {
     ...DEFAULT_CONFIG,
+    configSchemaVersion: CURRENT_CONFIG_SCHEMA_VERSION,
     appLanguage: rawConfig.appLanguage === 'en' ? 'en' : DEFAULT_CONFIG.appLanguage,
     logFilePath: safeString(rawConfig.logFilePath, DEFAULT_CONFIG.logFilePath),
     logFileSelectionMode:
@@ -666,6 +668,13 @@ export class ConfigStore {
       const raw = readFileSync(this.configPath, 'utf8');
       const parsed = JSON.parse(raw) as Partial<AppConfig>;
       this.config = normalizeAppConfig(parsed);
+      if (parsed.configSchemaVersion !== CURRENT_CONFIG_SCHEMA_VERSION) {
+        try {
+          this.save();
+        } catch {
+          // Keep the migrated config in memory; a later successful update can persist it.
+        }
+      }
     } catch {
       this.backupCorruptConfig();
       this.config = { ...DEFAULT_CONFIG };

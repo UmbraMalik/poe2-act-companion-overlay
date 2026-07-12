@@ -6,6 +6,8 @@ import type {
   HotkeySettings
 } from './types';
 
+export const CURRENT_CONFIG_SCHEMA_VERSION = 1;
+
 export const DEFAULT_OVERLAY_BOUNDS = {
   width: 500,
   height: 650
@@ -70,6 +72,7 @@ export const DEFAULT_RUN_TIMER_SETTINGS: RunTimerSettings = {
 };
 
 export const DEFAULT_CONFIG: AppConfig = {
+  configSchemaVersion: CURRENT_CONFIG_SCHEMA_VERSION,
   appLanguage: 'ru',
   logFilePath: null,
   logFileSelectionMode: null,

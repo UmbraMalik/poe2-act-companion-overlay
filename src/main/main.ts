@@ -79,6 +79,7 @@ import {
   runPersistOverlayBoundsForCurrentState as runPersistOverlayBoundsForCurrentStateMethod,
   runPersistOverlayBoundsImmediately as runPersistOverlayBoundsImmediatelyMethod,
   runPersistOverlayBounds as runPersistOverlayBoundsMethod,
+  runPersistCompanionBoundsImmediately as runPersistCompanionBoundsImmediatelyMethod,
   runPersistCompanionBounds as runPersistCompanionBoundsMethod
 } from './app-overlay-bounds-controller';
 import {
@@ -492,6 +493,8 @@ export class PoeOverlayApp {
         }
         this.clearLogFileInfoRefreshTimer();
         this.clearBroadcastTimer();
+        this.persistOverlayBoundsImmediately();
+        this.persistCompanionBoundsImmediately();
         if (this.overlayBoundsTimer) {
             clearTimeout(this.overlayBoundsTimer);
             this.overlayBoundsTimer = null;
@@ -725,6 +728,9 @@ export class PoeOverlayApp {
     }
     persistOverlayBounds() {
         return runPersistOverlayBoundsMethod.apply(this, arguments as any);
+    }
+    persistCompanionBoundsImmediately() {
+        return runPersistCompanionBoundsImmediatelyMethod.apply(this, arguments as any);
     }
     persistCompanionBounds() {
         return runPersistCompanionBoundsMethod.apply(this, arguments as any);

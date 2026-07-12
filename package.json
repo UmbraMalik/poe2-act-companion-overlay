@@ -14,7 +14,7 @@
     "clean:release": "node scripts/clean-release.cjs",
     "dist:clean": "npm run clean:release && npm run dist && npm run check:release",
     "test": "node scripts/run-and-clean.cjs npm run test:regression",
-    "test:regression": "npm run typecheck:renderer && tsc -p tsconfig.test.json && node scripts/run-regression-tests.cjs && npm run check:mappings && npm run check:styles && npm run check:artifacts && npm run check:download-stats && npm run check:mojibake && npm run check:guide-consistency && npm run check:main-modules && npm run check:renderer-modules && npm run check:logging && npm run check:branding",
+    "test:regression": "npm run typecheck:renderer && tsc -p tsconfig.test.json && node scripts/run-regression-tests.cjs && npm run check:mappings && npm run check:styles && npm run check:artifacts && npm run check:download-stats && npm run check:mojibake && npm run check:guide-consistency && npm run check:main-modules && npm run check:renderer-modules && npm run check:logging && npm run check:release-readiness && npm run check:branding",
     "build:checked": "node scripts/run-and-clean.cjs npm run build:checked:raw",
     "dist:checked": "npm run clean:release && npm run build:checked && electron-builder && npm run check:release",
     "clean:tmp": "node scripts/clean-tmp.cjs",
@@ -30,7 +30,8 @@
     "check:logging": "node scripts/check-logging.cjs",
     "clean:generated": "node scripts/clean-generated.cjs",
     "check:bundle": "node scripts/check-renderer-bundle.cjs",
-    "check:branding": "node scripts/check-branding.cjs"
+    "check:branding": "node scripts/check-branding.cjs",
+    "check:release-readiness": "node scripts/check-release-readiness.cjs"
   },
   "build": {
     "appId": "com.umbramalik.poe2-act-companion-overlay",

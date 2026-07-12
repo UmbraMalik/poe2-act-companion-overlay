@@ -386,6 +386,7 @@ export interface SavedRunHistoryEntry {
 }
 
 export interface AppConfig {
+  configSchemaVersion: number;
   appLanguage: AppLanguage;
   logFilePath: string | null;
   logFileSelectionMode: 'auto' | 'manual' | null;

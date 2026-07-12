@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { DEFAULT_CONFIG, DEFAULT_HOTKEYS } from '../src/shared/defaults';
+import { CURRENT_CONFIG_SCHEMA_VERSION, DEFAULT_CONFIG, DEFAULT_HOTKEYS } from '../src/shared/defaults';
 import { ConfigStore, normalizeAppConfig } from '../src/main/services/config-store';
 import { readMainProcessSource, readText } from './helpers/loadJson';
 
@@ -27,6 +27,7 @@ test('normalizeAppConfig keeps defaults, custom settings and strips legacy unkno
     oldSupportBlock: true
   } as never);
 
+  assert.equal(normalized.configSchemaVersion, CURRENT_CONFIG_SCHEMA_VERSION);
   assert.equal(normalized.logFilePath, 'C:\\temp\\LatestClient.txt');
   assert.equal(normalized.overlayOpacity, 0.5);
   assert.equal(normalized.overlayScale, 120);
@@ -43,6 +44,19 @@ test('normalizeAppConfig keeps defaults, custom settings and strips legacy unkno
   assert.equal(normalized.hotkeys.openCompanion, 'Ctrl+F9');
   assert.equal(normalized.hotkeys.toggleOverlayMode, DEFAULT_HOTKEYS.toggleOverlayMode);
   assert.equal('oldSupportBlock' in (normalized as unknown as Record<string, unknown>), false);
+});
+
+test('normalizeAppConfig upgrades legacy configs to the current schema without dropping valid settings', () => {
+  const normalized = normalizeAppConfig({
+    appLanguage: 'en',
+    overlayDensity: 'compact',
+    companionAlwaysOnTop: true
+  } as never);
+
+  assert.equal(normalized.configSchemaVersion, CURRENT_CONFIG_SCHEMA_VERSION);
+  assert.equal(normalized.appLanguage, 'en');
+  assert.equal(normalized.overlayDensity, 'compact');
+  assert.equal(normalized.companionAlwaysOnTop, true);
 });
 
 test('normalizeAppConfig keeps the first-run wizard pending when the completion marker is absent', () => {
@@ -313,6 +327,24 @@ test('normalizeAppConfig drops corrupted checklist and campaign bonus progress e
   assert.deepEqual(Object.keys(normalized.campaignBonusProgress), ['valid_manual', 'valid_log', 'legacy_unknown_source']);
   assert.equal(normalized.campaignBonusProgress.valid_log.logLine, 'You have gained a permanent bonus');
   assert.equal(normalized.campaignBonusProgress.legacy_unknown_source.detectedBy, 'unknown');
+});
+
+test('ConfigStore persists a migrated schema version on first legacy load', () => {
+  const configPath = join(
+    process.cwd(),
+    '.tmp-tests',
+    `settings-legacy-schema-${process.pid}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.json`
+  );
+  mkdirSync(join(process.cwd(), '.tmp-tests'), { recursive: true });
+  writeFileSync(configPath, JSON.stringify({ appLanguage: 'en', overlayDensity: 'compact' }), 'utf8');
+
+  const loaded = new ConfigStore(configPath).load();
+  const persisted = JSON.parse(readFileSync(configPath, 'utf8')) as typeof DEFAULT_CONFIG;
+
+  assert.equal(loaded.configSchemaVersion, CURRENT_CONFIG_SCHEMA_VERSION);
+  assert.equal(persisted.configSchemaVersion, CURRENT_CONFIG_SCHEMA_VERSION);
+  assert.equal(persisted.appLanguage, 'en');
+  assert.equal(persisted.overlayDensity, 'compact');
 });
 
 test('ConfigStore persists log path and merges settings safely', () => {
