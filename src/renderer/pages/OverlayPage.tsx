@@ -1889,7 +1889,9 @@ export function OverlayPage() {
           </header>
 
           <section className="timer-only-main-panel" aria-label={t('overlay.mainTimer')}>
-            <p className="timer-only-main-label">{timerOnlyPrimaryLabel}</p>
+            <div className="timer-only-main-head">
+              <p className="timer-only-main-label">{timerOnlyPrimaryLabel}</p><div className="timer-only-controls-row">{timerControls}</div>
+            </div>
             <div className="timer-only-time-control-row">
               <div className="timer-only-time">
                 <LiveRunTimeText
@@ -1902,7 +1904,6 @@ export function OverlayPage() {
                   act={currentActTimerAct}
                 />
               </div>
-              <div className="timer-only-controls-row">{timerControls}</div>
             </div>
           </section>
 

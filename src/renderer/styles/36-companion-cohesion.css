@@ -4623,3 +4623,74 @@ textarea {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* Timer-only: keep long elapsed values clear of the start/pause control. */
+.overlay-page.overlay-page-timer-only .timer-only-main-panel {
+  container-type: inline-size;
+}
+
+.overlay-page.overlay-page-timer-only .timer-only-main-head {
+  width: 100%;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr) 30px;
+  align-items: center;
+  gap: 6px;
+}
+
+.overlay-page.overlay-page-timer-only .timer-only-main-head::before {
+  content: "";
+  width: 30px;
+  height: 1px;
+}
+
+.overlay-page.overlay-page-timer-only .timer-only-main-label {
+  min-width: 0;
+  margin: 0;
+  text-align: center;
+}
+
+.overlay-page.overlay-page-timer-only .timer-only-main-head .timer-only-controls-row {
+  grid-column: 3;
+  justify-self: end;
+  margin: 0 !important;
+}
+
+.overlay-page.overlay-page-timer-only .timer-only-time-control-row {
+  width: 100%;
+  min-width: 0;
+  display: block;
+}
+
+.overlay-page.overlay-page-timer-only .timer-only-time-control-row .timer-only-time {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  display: block;
+  overflow: hidden;
+  text-align: center;
+  font-size: clamp(31px, 14cqi, 58px) !important;
+  line-height: 0.94;
+  letter-spacing: -0.055em;
+}
+
+.overlay-page.overlay-page-timer-only .timer-only-time-control-row .timer-only-time > span {
+  display: block;
+  max-width: 100%;
+  white-space: nowrap;
+}
+
+@media (max-width: 280px) {
+  .overlay-page.overlay-page-timer-only .timer-only-main-head {
+    grid-template-columns: 28px minmax(0, 1fr) 28px;
+    gap: 4px;
+  }
+
+  .overlay-page.overlay-page-timer-only .timer-only-main-head::before {
+    width: 28px;
+  }
+
+  .overlay-page.overlay-page-timer-only .timer-only-time-control-row .timer-only-time {
+    font-size: clamp(29px, 13.5cqi, 44px) !important;
+  }
+}
