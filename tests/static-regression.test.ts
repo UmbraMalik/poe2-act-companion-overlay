@@ -428,7 +428,7 @@ test('secondary app windows share smooth show/focus handling', () => {
   );
 });
 
-test('settings window opens compactly and remains shrinkable', () => {
+test('settings window opens comfortably and remains shrinkable', () => {
   const controller = readText('src/main/app-window-controller.ts');
   const resizeModel = readText('src/shared/settings-window-resize.ts');
   const resizeGrip = readText('src/renderer/settings/SettingsWindowResizeGrip.tsx');
@@ -439,7 +439,8 @@ test('settings window opens compactly and remains shrinkable', () => {
   const styles = readRendererStyles();
 
   assert.match(resizeModel, /SETTINGS_WINDOW_MINIMUM_SIZE\s*=\s*\{\s*width:\s*560,\s*height:\s*420\s*\}\s*as const/);
-  assert.match(resizeModel, /SETTINGS_WINDOW_PREFERRED_SIZE\s*=\s*\{\s*width:\s*880,\s*height:\s*720\s*\}\s*as const/);
+  assert.match(resizeModel, /SETTINGS_WINDOW_PREFERRED_SIZE\s*=\s*\{\s*width:\s*1120,\s*height:\s*900\s*\}\s*as const/);
+  assert.match(resizeModel, /UTILITY_WINDOW_MINIMUM_SIZES/);
   assert.match(controller, /getSettingsWindowInitialSize\(screen\.getPrimaryDisplay\(\)\.workArea\)/);
   assert.match(settingsWindowBlock, /\.\.\.settingsWindowInitialSize/);
   assert.match(settingsWindowBlock, /minWidth:\s*SETTINGS_WINDOW_MINIMUM_SIZE\.width/);
@@ -451,6 +452,8 @@ test('settings window opens compactly and remains shrinkable', () => {
   assert.match(resizeGrip, /buildSettingsWindowResizeRequest/);
   assert.match(resizeGrip, /resizeRequestInFlight/);
   assert.doesNotMatch(resizeGrip, /queuedDeltaX|queuedDeltaY/);
+  assert.match(readText('src/main/app-ipc-handlers.ts'), /targetWindow === this\.settingsWindow[\s\S]*?UTILITY_WINDOW_MINIMUM_SIZES\.settings/);
+  assert.doesNotMatch(readText('src/main/app-ipc-handlers.ts'), /targetWindow\.getMinimumSize\(\)/);
   assert.match(styles, /@media \(max-width:\s*640px\)[\s\S]*?\.settings-page:not\(\.companion-page\) \.settings-header\.window-drag-strip[\s\S]*?flex-direction:\s*column/);
   assert.match(styles, /@media \(max-height:\s*560px\)[\s\S]*?--settings-quick-nav-offset:\s*170px/);
 });
@@ -484,8 +487,20 @@ test('standalone utility windows reuse the Settings frame and manual resize surf
   assert.match(ipcHandlers, /const utilityWindows = \[/);
   assert.match(ipcHandlers, /window\.webContents === event\.sender/);
   assert.match(styles, /\.utility-window-page \.utility-window-header/);
+  assert.match(styles, /\.utility-window-page \.utility-window-header[\s\S]*?flex-direction:\s*row\s*!important/);
+  assert.match(styles, /\.utility-window-page \.utility-window-header \.utility-window-close[\s\S]*?align-self:\s*center\s*!important/);
   assert.match(styles, /\.companion-page \.companion-card > \.companion-primary-nav button[\s\S]*?font-size:\s*12px/);
   assert.match(styles, /\.companion-page \.companion-subtab-row button[\s\S]*?font-size:\s*11px/);
+});
+
+test('route filter labels stay centered when their selected style changes', () => {
+  const controls = readText('src/renderer/RouteTabControls.tsx');
+  const styles = readRendererStyles();
+
+  assert.match(controls, /route-filter-button/);
+  assert.match(controls, /route-filter-button-label/);
+  assert.match(styles, /\.route-filter-button[\s\S]*?place-items:\s*center\s*!important/);
+  assert.match(styles, /\.route-filter-button-label[\s\S]*?text-align:\s*center/);
 });
 
 test('hidden windows and unchanged bounds do not trigger unnecessary smoothness work', () => {

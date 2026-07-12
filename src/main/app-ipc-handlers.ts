@@ -16,7 +16,8 @@ import { isTimerDiagnosticsEnabled } from './timer-diagnostics-log';
 import type { OverlayMode, SettingsPatch, SettingsWindowBoundsPatch, TimerDiagnosticsPayload } from '../shared/types';
 import {
   resolveSettingsWindowResizeBounds,
-  SETTINGS_WINDOW_MINIMUM_SIZE
+  SETTINGS_WINDOW_MINIMUM_SIZE,
+  UTILITY_WINDOW_MINIMUM_SIZES
 } from '../shared/settings-window-resize';
 import {
   DEV_SAMPLE_ZONE_LINE,
@@ -559,11 +560,17 @@ export function runRegisterIpc(this: any) {
                 return false;
             }
             const currentBounds = targetWindow.getBounds();
-            const [minimumWidth, minimumHeight] = targetWindow.getMinimumSize();
-            const minimumSize = {
-                width: Math.max(1, minimumWidth || SETTINGS_WINDOW_MINIMUM_SIZE.width),
-                height: Math.max(1, minimumHeight || SETTINGS_WINDOW_MINIMUM_SIZE.height)
-            };
+            const minimumSize = targetWindow === this.settingsWindow
+                ? UTILITY_WINDOW_MINIMUM_SIZES.settings
+                : targetWindow === this.infoWindow
+                    ? UTILITY_WINDOW_MINIMUM_SIZES.info
+                    : targetWindow === this.communityWindow
+                        ? UTILITY_WINDOW_MINIMUM_SIZES.community
+                        : targetWindow === this.supportWindow
+                            ? UTILITY_WINDOW_MINIMUM_SIZES.support
+                            : targetWindow === this.reportWindow
+                                ? UTILITY_WINDOW_MINIMUM_SIZES.report
+                                : SETTINGS_WINDOW_MINIMUM_SIZE;
             const display = screen.getDisplayMatching(currentBounds);
             const nextBounds = resolveSettingsWindowResizeBounds({
                 currentBounds,
@@ -582,9 +589,28 @@ export function runRegisterIpc(this: any) {
 
             // Transparent frameless windows can occasionally retain a stale native minimum
             // after growing. Reassert the real minimum before a shrink so Windows accepts it.
+            targetWindow.setResizable(true);
             targetWindow.setMinimumSize(minimumSize.width, minimumSize.height);
             targetWindow.setBounds(nextBounds, false);
-            return true;
+
+            let appliedBounds = targetWindow.getBounds();
+            const sizeMismatch = appliedBounds.width !== nextBounds.width || appliedBounds.height !== nextBounds.height;
+            const positionMismatch = appliedBounds.x !== nextBounds.x || appliedBounds.y !== nextBounds.y;
+
+            if (sizeMismatch) {
+                targetWindow.setSize(nextBounds.width, nextBounds.height, false);
+            }
+            if (positionMismatch) {
+                targetWindow.setPosition(nextBounds.x, nextBounds.y, false);
+            }
+
+            appliedBounds = targetWindow.getBounds();
+            return (
+                appliedBounds.x !== currentBounds.x ||
+                appliedBounds.y !== currentBounds.y ||
+                appliedBounds.width !== currentBounds.width ||
+                appliedBounds.height !== currentBounds.height
+            );
         });
         ipcMain.handle('app:set-overlay-auto-resize-suspended', async (_event: any, suspended: any) => {
             this.overlayAutoResizeSuspendedUntil = suspended

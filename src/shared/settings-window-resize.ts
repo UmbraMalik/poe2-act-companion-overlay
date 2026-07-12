@@ -1,7 +1,14 @@
 import type { SettingsWindowBoundsPatch, SettingsWindowResizeEdge } from './types';
 
 export const SETTINGS_WINDOW_MINIMUM_SIZE = { width: 560, height: 420 } as const;
-export const SETTINGS_WINDOW_PREFERRED_SIZE = { width: 880, height: 720 } as const;
+export const SETTINGS_WINDOW_PREFERRED_SIZE = { width: 1120, height: 900 } as const;
+export const UTILITY_WINDOW_MINIMUM_SIZES = {
+  settings: SETTINGS_WINDOW_MINIMUM_SIZE,
+  info: { width: 680, height: 620 },
+  community: { width: 680, height: 560 },
+  support: { width: 680, height: 560 },
+  report: { width: 720, height: 620 }
+} as const;
 export const SETTINGS_WINDOW_WORK_AREA_MARGIN = 24;
 export const SETTINGS_WINDOW_RESIZE_SAFE_MARGIN = 8;
 

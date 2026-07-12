@@ -27,7 +27,8 @@ import {
 } from './window-security';
 import {
   getSettingsWindowInitialSize,
-  SETTINGS_WINDOW_MINIMUM_SIZE
+  SETTINGS_WINDOW_MINIMUM_SIZE,
+  UTILITY_WINDOW_MINIMUM_SIZES
 } from '../shared/settings-window-resize';
 
 function showWindowWhenReady(
@@ -364,8 +365,8 @@ export function runOpenInfoWindow(this: any) {
             icon: createAppIcon(),
             width: 760,
             height: 760,
-            minWidth: 680,
-            minHeight: 620,
+            minWidth: UTILITY_WINDOW_MINIMUM_SIZES.info.width,
+            minHeight: UTILITY_WINDOW_MINIMUM_SIZES.info.height,
             center: true,
             frame: false,
             resizable: true,
@@ -403,8 +404,8 @@ export function runOpenCommunityWindow(this: any) {
             icon: createAppIcon(),
             width: 760,
             height: 680,
-            minWidth: 680,
-            minHeight: 560,
+            minWidth: UTILITY_WINDOW_MINIMUM_SIZES.community.width,
+            minHeight: UTILITY_WINDOW_MINIMUM_SIZES.community.height,
             center: true,
             frame: false,
             resizable: true,
@@ -442,8 +443,8 @@ export function runOpenSupportWindow(this: any) {
             icon: createAppIcon(),
             width: 760,
             height: 700,
-            minWidth: 680,
-            minHeight: 560,
+            minWidth: UTILITY_WINDOW_MINIMUM_SIZES.support.width,
+            minHeight: UTILITY_WINDOW_MINIMUM_SIZES.support.height,
             center: true,
             frame: false,
             resizable: true,
@@ -481,8 +482,8 @@ export function runOpenReportIssueWindow(this: any) {
             icon: createAppIcon(),
             width: 820,
             height: 780,
-            minWidth: 720,
-            minHeight: 620,
+            minWidth: UTILITY_WINDOW_MINIMUM_SIZES.report.width,
+            minHeight: UTILITY_WINDOW_MINIMUM_SIZES.report.height,
             center: true,
             frame: false,
             resizable: true,

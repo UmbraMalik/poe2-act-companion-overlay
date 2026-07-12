@@ -820,6 +820,27 @@
   min-height: 30px !important;
 }
 
+.companion-page .route-polish-layout .route-filter-button {
+  display: grid !important;
+  place-items: center !important;
+  box-sizing: border-box;
+  padding-inline: 12px !important;
+  text-align: center !important;
+}
+
+.companion-page .route-polish-layout .route-filter-button-label {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  text-align: center;
+  transform: none !important;
+}
+
+.companion-page .route-polish-layout .route-filter-button.is-click-feedback-active > .route-filter-button-label {
+  animation: none !important;
+  transform: none !important;
+}
+
 .companion-page .route-polish-layout .route-filter-summary {
   width: fit-content;
   max-width: 100%;
@@ -2779,6 +2800,38 @@ textarea {
   align-items: center;
   justify-content: center;
   text-align: center;
+}
+
+.utility-window-page .utility-window-header {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 18px !important;
+}
+
+.utility-window-page .utility-window-header .settings-header-copy {
+  flex: 1 1 auto;
+  min-width: 0;
+  text-align: left;
+}
+
+.utility-window-page .utility-window-header .utility-window-close {
+  flex: 0 0 auto;
+  align-self: center !important;
+  min-width: 126px;
+  margin: 0 !important;
+}
+
+@media (max-width: 720px) {
+  .utility-window-page .utility-window-header {
+    gap: 12px !important;
+  }
+
+  .utility-window-page .utility-window-header .utility-window-close {
+    min-width: 112px;
+    padding-inline: 14px;
+  }
 }
 
 /* Current zone becomes a run hub instead of a full duplicate of the overlay. */

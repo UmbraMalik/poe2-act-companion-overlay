@@ -4,7 +4,8 @@ import {
   buildSettingsWindowResizeRequest,
   getSettingsWindowInitialSize,
   resolveSettingsWindowResizeBounds,
-  SETTINGS_WINDOW_MINIMUM_SIZE
+  SETTINGS_WINDOW_MINIMUM_SIZE,
+  SETTINGS_WINDOW_PREFERRED_SIZE
 } from '../src/shared/settings-window-resize';
 import {
   invokeIpcHandler,
@@ -71,6 +72,13 @@ test('settings initial size stays compact on smaller work areas', () => {
   );
 });
 
+test('settings initial size opens at the comfortable desktop size', () => {
+  assert.deepEqual(
+    getSettingsWindowInitialSize({ width: 1920, height: 1080 }),
+    SETTINGS_WINDOW_PREFERRED_SIZE
+  );
+});
+
 test('settings resize IPC accepts an absolute shrink request', async () => {
   resetElectronMockState();
   const app = createTestAppInstance() as any;
@@ -102,6 +110,38 @@ test('settings resize IPC accepts an absolute shrink request', async () => {
   });
 });
 
+
+test('settings resize IPC ignores a stale native minimum after the window grows', async () => {
+  resetElectronMockState();
+  const app = createTestAppInstance() as any;
+  const { BrowserWindow } = require('electron') as typeof import('electron');
+
+  app.settingsWindow = new BrowserWindow({
+    width: 1120,
+    height: 900,
+    minWidth: SETTINGS_WINDOW_MINIMUM_SIZE.width,
+    minHeight: SETTINGS_WINDOW_MINIMUM_SIZE.height
+  });
+  app.settingsWindow.setPosition(100, 80);
+  app.settingsWindow.getMinimumSize = () => [1120, 900];
+  app.registerIpc();
+
+  const changed = await invokeIpcHandler<boolean>('app:resize-settings-window', {
+    edge: 'se',
+    x: 100,
+    y: 80,
+    width: 760,
+    height: 620
+  });
+
+  assert.equal(changed, true);
+  assert.deepEqual(app.settingsWindow.getBounds(), {
+    x: 100,
+    y: 80,
+    width: 760,
+    height: 620
+  });
+});
 
 test('standalone utility windows use the same resize IPC without targeting settings', async () => {
   resetElectronMockState();
