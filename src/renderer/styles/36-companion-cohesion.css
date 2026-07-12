@@ -4646,7 +4646,8 @@ textarea {
   min-width: 0 !important;
   max-width: 100%;
   margin: 0 !important;
-  overflow: hidden;
+  overflow: visible;
+  background: transparent !important;
   text-align: center;
   font-size: clamp(32px, 17.5cqi, 56px) !important;
   line-height: 0.90;
@@ -4657,6 +4658,7 @@ textarea {
   display: block;
   width: 100%;
   max-width: 100%;
+  background: transparent !important;
   white-space: nowrap;
 }
 
