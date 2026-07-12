@@ -427,10 +427,9 @@ export function getRequiredRewardLabelsForZone(
     (guideView?.checklist ?? []).map((item) => [item.id, item.text])
   );
 
-  return getRouteRewardItems(guide, snapshot).map((item) => {
-    const marker = item.displayState === 'current' ? '▶' : '○';
-    return `${marker} ${translatedChecklist.get(item.id) ?? item.text}`;
-  });
+  return getRouteRewardItems(guide, snapshot).map((item) => (
+    translatedChecklist.get(item.id) ?? item.text
+  ));
 }
 
 

@@ -44,7 +44,7 @@ import {
   type CompanionNavigationTab,
   type CompanionSection
 } from '../companion-navigation-state';
-import type { AppLanguage, CampaignBonusDefinition, CampaignBonusProgress, GuideEntry, RunSummary, SavedRunHistoryEntry, ZoneAct } from '../../shared/types';
+import type { AppLanguage, CampaignBonusDefinition, CampaignBonusProgress, GuideEntry, RunSummary, RunTimerStatus, SavedRunHistoryEntry, ZoneAct } from '../../shared/types';
 
 type CompanionTab = CompanionNavigationTab;
 type RunConfirmDialog =
@@ -843,19 +843,21 @@ function renderSummaryStat(label: string, value: string, hint?: string, classNam
 
 function renderLiveSummary(
   totalElapsedMs: number,
-  statusLabel: string,
+  status: RunTimerStatus,
   completedActCount: number,
   currentActLabel: string,
   currentActElapsedLabel: string,
   longestZone: { zone_ru: string; elapsedMs: number } | null,
   language: AppLanguage
 ) {
+  const statusLabel = formatRunStatus(status, language);
+
   return (
     <section className="companion-block summary-result-panel is-live">
       <div className="summary-result-main">
         <span className="eyebrow">{translate(language, 'companion.summaryLiveTitle')}</span>
         <strong>{formatDuration(totalElapsedMs)}</strong>
-        <small>{statusLabel}</small>
+        <span className={`timer-status-pill summary-status-pill is-${status}`}>{statusLabel}</span>
       </div>
       <div className="summary-result-facts">
         {renderSummaryStat(translate(language, 'common.status'), statusLabel)}
@@ -1931,7 +1933,7 @@ export function CompanionPage() {
     <div className="summary-results-dashboard">
       {renderLiveSummary(
         currentRunElapsed,
-        formatRunStatus(activeDisplayRunTimer.status, language),
+        activeDisplayRunTimer.status,
         getCompletedActCount(actTimeRows),
         nowAct === null ? '—' : formatActTitle(nowAct, language),
         currentActElapsed !== null ? formatDuration(currentActElapsed) : t('common.notAvailable'),

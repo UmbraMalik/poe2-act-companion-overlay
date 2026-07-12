@@ -49,7 +49,7 @@ export function CompanionNavigation({
               <button
                 key={tab.id}
                 type="button"
-                className={isActive ? 'is-active' : ''}
+                className={isActive ? 'button-primary is-active' : 'button-secondary'}
                 aria-current={isActive ? 'page' : undefined}
                 onClick={() => onTabChange(tab.id)}
               >

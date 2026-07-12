@@ -4372,3 +4372,212 @@ textarea {
     letter-spacing: -0.08em;
   }
 }
+
+/* Final visual consistency pass: navigation, reminders, route guide and run recap. */
+.companion-page .companion-subtab-row button.button-secondary,
+.companion-page .companion-subtab-row button.button-primary {
+  min-height: 38px;
+  border-width: 1px !important;
+  border-style: solid !important;
+  border-radius: 10px !important;
+  overflow: hidden;
+}
+
+.companion-page .companion-subtab-row button.button-secondary {
+  border-color: var(--companion-panel-line-soft, var(--companion-border)) !important;
+  color: var(--companion-text) !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.025), rgba(255, 255, 255, 0.008)),
+    var(--companion-panel, rgba(12, 15, 20, 0.72)) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.035),
+    0 7px 16px rgba(0, 0, 0, 0.10) !important;
+}
+
+.companion-page .companion-subtab-row button.button-primary {
+  border-color: color-mix(in srgb, var(--companion-gold) 68%, var(--companion-panel-line)) !important;
+  color: var(--companion-title) !important;
+  background:
+    radial-gradient(circle at 50% 0, var(--companion-gold-soft), transparent 72%),
+    linear-gradient(180deg, var(--companion-panel-highlight), rgba(255, 255, 255, 0.012)) !important;
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--companion-gold) 14%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.075),
+    0 0 18px color-mix(in srgb, var(--companion-gold-soft) 72%, transparent) !important;
+}
+
+.theme-dark-fantasy.companion-page .companion-subtab-row button.button-secondary {
+  border-color: rgba(190, 162, 255, 0.22) !important;
+  color: rgba(236, 226, 255, 0.88) !important;
+  background:
+    linear-gradient(180deg, rgba(27, 18, 44, 0.88), rgba(14, 9, 24, 0.86)) !important;
+}
+
+.theme-dark-fantasy.companion-page .companion-subtab-row button.button-primary {
+  border-color: rgba(217, 167, 95, 0.58) !important;
+  color: #fff3d7 !important;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(217, 167, 95, 0.30), transparent 42%),
+    linear-gradient(180deg, rgba(92, 64, 145, 0.74), rgba(31, 20, 53, 0.84)) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 232, 176, 0.12),
+    0 0 20px rgba(167, 123, 255, 0.20) !important;
+}
+
+/* Dark Fantasy utility controls share one palette; close is no longer a red outlier. */
+.theme-dark-fantasy.companion-page .companion-header-icon,
+.theme-dark-fantasy.companion-page .companion-utility-popover button {
+  border-color: rgba(190, 162, 255, 0.24) !important;
+  color: rgba(238, 230, 255, 0.90) !important;
+  background:
+    linear-gradient(180deg, rgba(31, 21, 49, 0.88), rgba(15, 10, 25, 0.86)) !important;
+}
+
+.theme-dark-fantasy.companion-page .companion-header-icon:hover,
+.theme-dark-fantasy.companion-page .companion-header-icon.is-close:hover,
+.theme-dark-fantasy.companion-page .companion-utility-menu[open] > summary,
+.theme-dark-fantasy.companion-page .companion-utility-popover button:hover {
+  border-color: rgba(217, 167, 95, 0.54) !important;
+  color: #fff3d7 !important;
+  background:
+    radial-gradient(circle at 50% 0, rgba(217, 167, 95, 0.20), transparent 72%),
+    linear-gradient(180deg, rgba(79, 54, 126, 0.72), rgba(25, 16, 42, 0.88)) !important;
+}
+
+/* Classic utility menu items keep visible individual frames. */
+.theme-classic.companion-page .companion-utility-popover button {
+  border: 1px solid var(--companion-panel-line-soft, var(--companion-border)) !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.028), rgba(255, 255, 255, 0.010)),
+    rgba(255, 255, 255, 0.012) !important;
+}
+
+.theme-classic.companion-page .companion-utility-popover button:hover {
+  border-color: color-mix(in srgb, var(--companion-gold) 44%, var(--companion-panel-line)) !important;
+  background: var(--companion-panel-highlight) !important;
+}
+
+/* Run summary: plain history metrics in Classic and the same status pill as the timer tab. */
+.theme-classic.companion-page .summary-history-row .summary-history-stats span {
+  min-height: auto !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  justify-content: flex-start !important;
+}
+
+.companion-page .summary-result-main .summary-status-pill {
+  width: max-content;
+  margin-top: 5px;
+  justify-self: start;
+}
+
+/* Act-time actions stay on one line at the normal companion width. */
+.companion-page .run-save-card .run-save-actions {
+  width: min(100%, 440px);
+  min-width: min(100%, 360px);
+}
+
+.companion-page .run-save-card .run-save-actions .button-row {
+  width: 100%;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.85fr);
+  gap: 10px;
+  flex-wrap: nowrap !important;
+}
+
+.companion-page .run-save-card .run-save-actions .button-row button {
+  width: 100%;
+  white-space: nowrap;
+}
+
+/* Reminders: keep timeline accents inside cards and remove level-pill backgrounds. */
+.companion-page .reminders-tab-layout .reminder-level,
+.companion-page .reminders-tab-layout .power-spike-timeline-label,
+.companion-page .reminders-tab-layout .vendor-checkpoint > span,
+.companion-page .reminders-tab-layout .summary-section-heading > span {
+  min-height: auto !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.companion-page .reminders-power-roadmap-card {
+  overflow: hidden !important;
+}
+
+.companion-page .power-spike-timeline {
+  padding-left: 0 !important;
+}
+
+.companion-page .power-spike-timeline::before {
+  display: none !important;
+}
+
+.companion-page .power-spike-timeline-item {
+  grid-template-columns: minmax(0, 1fr) !important;
+  padding-left: 0 !important;
+}
+
+.companion-page .power-spike-timeline-node {
+  display: none !important;
+}
+
+.companion-page .power-spike-timeline-card {
+  position: relative;
+  overflow: hidden;
+  padding-left: 14px !important;
+}
+
+.companion-page .power-spike-timeline-card::before {
+  top: 6px !important;
+  bottom: 6px !important;
+  left: 0 !important;
+  width: 3px !important;
+  border-radius: 0 999px 999px 0 !important;
+  background: rgba(105, 128, 150, 0.44) !important;
+  opacity: 1 !important;
+}
+
+.companion-page .power-spike-timeline-item.is-past:not(.is-nearest) .power-spike-timeline-card::before {
+  background: rgba(122, 214, 144, 0.72) !important;
+  box-shadow: 0 0 10px rgba(122, 214, 144, 0.16);
+}
+
+.companion-page .power-spike-timeline-item.is-nearest .power-spike-timeline-card::before {
+  background: rgba(241, 185, 106, 0.82) !important;
+  box-shadow: 0 0 10px rgba(241, 185, 106, 0.18);
+}
+
+/* Route guide: plain text rows without rectangular fills or decorative glyphs. */
+.companion-page .route-polish-layout .route-overview-card .compact-reward-list {
+  padding-left: 0 !important;
+}
+
+.companion-page .route-polish-layout .route-overview-card .compact-reward-list li {
+  min-height: 0 !important;
+  padding: 2px 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.companion-page .route-polish-layout .route-overview-card .compact-reward-list li::before {
+  display: none !important;
+  content: none !important;
+}
+
+@media (max-width: 760px) {
+  .companion-page .run-save-card {
+    align-items: stretch;
+  }
+
+  .companion-page .run-save-card .run-save-actions {
+    width: 100%;
+    min-width: 0;
+  }
+}
