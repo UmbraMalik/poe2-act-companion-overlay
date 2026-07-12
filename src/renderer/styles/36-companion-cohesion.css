@@ -4362,38 +4362,99 @@ textarea {
 }
 
 .companion-page .companion-subtab-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  min-height: 34px;
-  padding: 4px;
-  border: 1px solid var(--companion-panel-line-soft, var(--companion-border));
-  border-radius: 11px;
-  background: rgba(255, 255, 255, 0.012);
+  display: grid;
+  align-items: stretch;
+  gap: 7px;
+  min-height: 48px;
+  padding: 6px;
+  border: 1px solid color-mix(in srgb, var(--companion-panel-line) 78%, transparent);
+  border-radius: 12px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.028), rgba(255, 255, 255, 0.010)),
+    var(--companion-panel, rgba(12, 15, 20, 0.72));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.035),
+    0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.companion-page .companion-subtab-row.is-count-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.companion-page .companion-subtab-row.is-count-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .companion-page .companion-subtab-row button {
-  min-height: 26px;
-  padding: 5px 13px;
-  border: 0;
-  border-radius: 8px;
-  color: var(--companion-muted);
-  background: transparent;
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  min-height: 36px;
+  padding: 8px 14px;
+  border: 1px solid color-mix(in srgb, var(--companion-panel-line-soft, var(--companion-border)) 86%, transparent);
+  border-radius: 9px;
+  color: color-mix(in srgb, var(--companion-text) 76%, var(--companion-muted));
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.024), rgba(255, 255, 255, 0.008)),
+    rgba(255, 255, 255, 0.012);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.025);
   font-size: 10px;
-  font-weight: 750;
-  letter-spacing: 0.045em;
+  font-weight: 800;
+  letter-spacing: 0.055em;
+  transition:
+    border-color 140ms ease,
+    color 140ms ease,
+    background-color 140ms ease,
+    box-shadow 140ms ease,
+    transform 140ms ease;
+}
+
+.companion-page .companion-subtab-row button::after {
+  content: "";
+  position: absolute;
+  right: 16px;
+  bottom: 5px;
+  left: 16px;
+  height: 1px;
+  border-radius: 999px;
+  background: transparent;
 }
 
 .companion-page .companion-subtab-row button:hover {
-  color: var(--companion-text);
+  color: var(--companion-title);
+  border-color: color-mix(in srgb, var(--companion-gold) 30%, var(--companion-panel-line));
   background: var(--companion-panel-hover);
+  transform: translateY(-1px);
+}
+
+.companion-page .companion-subtab-row button:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--companion-gold) 72%, white);
+  outline-offset: 2px;
 }
 
 .companion-page .companion-subtab-row button.is-active {
   color: var(--companion-title);
-  background: var(--companion-panel-highlight);
-  box-shadow: inset 0 0 0 1px var(--companion-panel-line-soft);
+  border-color: color-mix(in srgb, var(--companion-gold) 72%, var(--companion-panel-line));
+  background:
+    radial-gradient(circle at 50% 0, var(--companion-gold-soft), transparent 74%),
+    linear-gradient(180deg, color-mix(in srgb, var(--companion-gold-soft) 58%, rgba(255, 255, 255, 0.025)), rgba(255, 255, 255, 0.014));
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--companion-gold) 16%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 0 18px color-mix(in srgb, var(--companion-gold-soft) 72%, transparent);
+  transform: none;
+}
+
+.companion-page .companion-subtab-row button.is-active::after {
+  background: linear-gradient(90deg, transparent, var(--companion-gold), transparent);
+  box-shadow: 0 0 8px var(--companion-gold-soft);
+}
+
+.theme-dark-fantasy.companion-page .companion-subtab-row button.is-active {
+  border-color: color-mix(in srgb, var(--companion-gold) 56%, rgba(126, 84, 214, 0.80));
+  background:
+    radial-gradient(circle at 50% 0, color-mix(in srgb, var(--companion-gold-soft) 68%, rgba(126, 84, 214, 0.16)), transparent 74%),
+    linear-gradient(180deg, rgba(126, 84, 214, 0.14), rgba(255, 255, 255, 0.012));
 }
 
 .companion-page .zone-command-pace-breakdown {

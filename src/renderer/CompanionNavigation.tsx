@@ -37,17 +37,25 @@ export function CompanionNavigation({
         ))}
       </nav>
       {subTabs.length > 0 && (
-        <nav className="companion-subtab-row" aria-label={sectionLabels[activeSection]}>
-          {subTabs.map((tab) => (
-            <button
-              key={tab.id}
-              type="button"
-              className={tab.id === activeTab ? 'is-active' : ''}
-              onClick={() => onTabChange(tab.id)}
-            >
-              {tab.label}
-            </button>
-          ))}
+        <nav
+          className={`companion-subtab-row is-count-${subTabs.length}`}
+          aria-label={sectionLabels[activeSection]}
+        >
+          {subTabs.map((tab) => {
+            const isActive = tab.id === activeTab;
+
+            return (
+              <button
+                key={tab.id}
+                type="button"
+                className={isActive ? 'is-active' : ''}
+                aria-current={isActive ? 'page' : undefined}
+                onClick={() => onTabChange(tab.id)}
+              >
+                {tab.label}
+              </button>
+            );
+          })}
         </nav>
       )}
       {children}
