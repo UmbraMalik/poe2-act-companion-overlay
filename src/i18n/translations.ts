@@ -336,6 +336,7 @@ const baseTranslations = {
       intro: 'Живая панель забега, маршрута, наград и таймера без перегруза основного оверлея.',
       loading: 'Загрузка подробной панели…',
       moreActions: 'Ещё действия',
+      switchTheme: 'Переключить на тему «{theme}»',
       sections: { zone: 'Сейчас', route: 'Маршрут', progress: 'Прогресс', run: 'Забег' },
       tabs: {
         zone: 'Сейчас',
@@ -1136,6 +1137,7 @@ const baseTranslations = {
       intro: 'A live panel for the run, route, rewards, and timer without overloading the main overlay.',
       loading: 'Loading detailed panel…',
       moreActions: 'More actions',
+      switchTheme: 'Switch to the “{theme}” theme',
       sections: { zone: 'Now', route: 'Route', progress: 'Progress', run: 'Run' },
       tabs: {
         zone: 'Now',

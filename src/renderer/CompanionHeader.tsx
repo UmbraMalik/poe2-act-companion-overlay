@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import type { ZoneRecognitionView } from './log-health';
+import type { AppTheme } from '../shared/types';
 
 interface CompanionHeaderProps {
   appName: string;
   title: string;
   intro: string;
   status: ZoneRecognitionView;
+  theme: AppTheme;
   busy: boolean;
   labels: {
     info: string;
@@ -15,11 +17,13 @@ interface CompanionHeaderProps {
     reportIssue: string;
     close: string;
     more: string;
+    themeToggle: string;
   };
   onInfo: () => void;
   onCommunity: () => void;
   onSupport: () => void;
   onSettings: () => void;
+  onToggleTheme: () => void;
   onReportIssue: () => void;
   onClose: () => void;
 }
@@ -29,12 +33,14 @@ export function CompanionHeader({
   title,
   intro,
   status,
+  theme,
   busy,
   labels,
   onInfo,
   onCommunity,
   onSupport,
   onSettings,
+  onToggleTheme,
   onReportIssue,
   onClose
 }: CompanionHeaderProps) {
@@ -96,6 +102,22 @@ export function CompanionHeader({
           <span aria-hidden="true" />
           <div><strong>{status.label}</strong><small>{status.detail}</small></div>
         </div>
+        <button
+          className={`companion-theme-toggle is-${theme === 'dark_fantasy' ? 'dark-fantasy' : 'classic'}`}
+          type="button"
+          title={labels.themeToggle}
+          aria-label={labels.themeToggle}
+          aria-pressed={theme === 'dark_fantasy'}
+          disabled={busy}
+          onClick={onToggleTheme}
+        >
+          <span className="companion-theme-option is-classic" aria-hidden="true">
+            <span className="companion-theme-sun" />
+          </span>
+          <span className="companion-theme-option is-dark-fantasy" aria-hidden="true">
+            <span className="companion-theme-moon" />
+          </span>
+        </button>
         <button className="companion-header-icon is-settings" type="button" title={labels.settings} aria-label={labels.settings} disabled={busy} onClick={onSettings}>
           <span aria-hidden="true">⚙</span>
         </button>

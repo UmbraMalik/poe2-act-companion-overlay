@@ -4581,3 +4581,184 @@ textarea {
     min-width: 0;
   }
 }
+
+/* Final route readability, command-card alignment, and quick theme switch. */
+.companion-page .route-polish-layout .route-overview-card .compact-reward-list li {
+  position: relative;
+  padding: 2px 0 2px 14px !important;
+}
+
+.companion-page .route-polish-layout .route-overview-card .compact-reward-list li::before {
+  content: "" !important;
+  position: absolute;
+  top: 0.68em;
+  left: 1px;
+  display: block !important;
+  width: 4px;
+  height: 4px;
+  border: 0 !important;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--companion-muted) 76%, transparent) !important;
+  box-shadow: none;
+}
+
+.companion-page .route-polish-layout .route-overview-card.status-current .compact-reward-list li::before {
+  background: var(--companion-gold) !important;
+  box-shadow: 0 0 7px var(--companion-gold-soft);
+}
+
+.companion-page .route-polish-layout .route-overview-card.status-completed .compact-reward-list li::before,
+.companion-page .route-polish-layout .route-overview-card.status-visited .compact-reward-list li::before,
+.companion-page .route-polish-layout .route-overview-card.status-done .compact-reward-list li::before {
+  background: color-mix(in srgb, var(--companion-green) 72%, transparent) !important;
+}
+
+.companion-page .zone-command-panel::before {
+  inset: 4px auto 4px 0;
+  border-radius: 0 999px 999px 0;
+}
+
+.companion-page .zone-command-bonuses.is-empty {
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+.companion-page .zone-command-bonuses.is-empty .zone-command-bonus-empty {
+  width: 100%;
+  min-height: 0;
+  height: 100%;
+  place-self: stretch;
+  place-content: center;
+  align-items: center;
+  justify-items: center;
+  text-align: center;
+}
+
+.companion-page .companion-theme-toggle {
+  flex: 0 0 58px;
+  width: 58px;
+  min-width: 58px !important;
+  max-width: 58px;
+  height: 38px;
+  min-height: 38px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--companion-panel-line-soft, var(--companion-border));
+  border-radius: 11px;
+  color: var(--companion-muted);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.022), rgba(255, 255, 255, 0.006)),
+    rgba(0, 0, 0, 0.10);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.025);
+  cursor: pointer;
+  overflow: hidden;
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease,
+    background-color 150ms ease;
+}
+
+.companion-page .companion-theme-toggle:hover:not(:disabled),
+.companion-page .companion-theme-toggle:focus-visible {
+  border-color: color-mix(in srgb, var(--companion-gold) 46%, var(--companion-panel-line));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.045),
+    0 0 14px color-mix(in srgb, var(--companion-gold-soft) 62%, transparent);
+}
+
+.companion-page .companion-theme-toggle:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--companion-gold) 68%, white);
+  outline-offset: 2px;
+}
+
+.companion-page .companion-theme-toggle:disabled {
+  cursor: default;
+  opacity: 0.58;
+}
+
+.companion-page .companion-theme-option {
+  min-width: 0;
+  display: grid;
+  place-items: center;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  color: color-mix(in srgb, var(--companion-muted) 82%, transparent);
+  background: transparent;
+  transition:
+    color 150ms ease,
+    border-color 150ms ease,
+    background-color 150ms ease,
+    box-shadow 150ms ease,
+    transform 150ms ease;
+}
+
+.companion-page .companion-theme-sun {
+  position: relative;
+  width: 9px;
+  height: 9px;
+  display: block;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+}
+
+.companion-page .companion-theme-sun::before {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  background: repeating-conic-gradient(
+    from 0deg,
+    currentColor 0deg 7deg,
+    transparent 7deg 43deg
+  );
+  -webkit-mask: radial-gradient(circle, transparent 0 6px, #000 6.5px 100%);
+  mask: radial-gradient(circle, transparent 0 6px, #000 6.5px 100%);
+}
+
+.companion-page .companion-theme-moon {
+  width: 14px;
+  height: 14px;
+  display: block;
+  border-radius: 50%;
+  box-shadow: inset 5px -1px 0 0 currentColor;
+  transform: translateX(1px) rotate(-12deg);
+}
+
+.companion-page .companion-theme-toggle.is-classic .companion-theme-option.is-classic {
+  color: var(--companion-gold);
+  border-color: color-mix(in srgb, var(--companion-gold) 42%, transparent);
+  background:
+    radial-gradient(circle at 50% 40%, var(--companion-gold-soft), transparent 74%),
+    rgba(255, 255, 255, 0.035);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--companion-gold) 10%, transparent);
+}
+
+.companion-page .companion-theme-toggle.is-dark-fantasy .companion-theme-option.is-dark-fantasy {
+  color: #d8c3ff;
+  border-color: rgba(184, 146, 255, 0.42);
+  background:
+    radial-gradient(circle at 50% 35%, rgba(151, 105, 235, 0.28), transparent 74%),
+    rgba(93, 57, 150, 0.16);
+  box-shadow:
+    inset 0 0 0 1px rgba(226, 205, 255, 0.08),
+    0 0 10px rgba(132, 84, 213, 0.14);
+}
+
+.theme-dark-fantasy.companion-page .companion-theme-toggle {
+  border-color: rgba(190, 162, 255, 0.24);
+  background:
+    linear-gradient(180deg, rgba(31, 21, 49, 0.90), rgba(15, 10, 25, 0.88));
+}
+
+.theme-dark-fantasy.companion-page .companion-theme-toggle.is-dark-fantasy .companion-theme-option.is-dark-fantasy {
+  color: #f0ddff;
+  border-color: rgba(217, 167, 95, 0.46);
+  background:
+    radial-gradient(circle at 50% 30%, rgba(217, 167, 95, 0.20), transparent 68%),
+    linear-gradient(180deg, rgba(110, 72, 173, 0.52), rgba(47, 29, 78, 0.62));
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 235, 190, 0.08),
+    0 0 11px rgba(154, 100, 235, 0.20);
+}

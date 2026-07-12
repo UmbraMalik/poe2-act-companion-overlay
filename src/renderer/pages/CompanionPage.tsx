@@ -2103,6 +2103,7 @@ export function CompanionPage() {
         title={t('companion.title')}
         intro={t('companion.intro')}
         status={zoneRecognition}
+        theme={config.theme}
         busy={busy !== null}
         labels={{
           info: t('common.info'),
@@ -2111,12 +2112,23 @@ export function CompanionPage() {
           settings: t('common.settings'),
           reportIssue: t('common.reportIssue'),
           close: t('common.close'),
-          more: t('companion.moreActions')
+          more: t('companion.moreActions'),
+          themeToggle: t('companion.switchTheme', {
+            theme: config.theme === 'dark_fantasy'
+              ? t('appTheme.classic')
+              : t('appTheme.darkFantasy')
+          })
         }}
         onInfo={() => { void runTask('open-info', () => window.poe2Overlay.openInfo()); }}
         onCommunity={() => { void runTask('open-community', () => window.poe2Overlay.openCommunity()); }}
         onSupport={() => { void runTask('open-support', () => window.poe2Overlay.openSupport()); }}
         onSettings={() => { void runTask('open-settings', () => window.poe2Overlay.openSettings()); }}
+        onToggleTheme={() => {
+          void runTask('toggle-theme', () => window.poe2Overlay.updateSettings({
+            theme: config.theme === 'dark_fantasy' ? 'classic' : 'dark_fantasy',
+            themePreferencePrompted: true
+          }));
+        }}
         onReportIssue={() => { void runTask('open-report-issue', () => window.poe2Overlay.openReportIssue()); }}
         onClose={() => window.close()}
       />
