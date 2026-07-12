@@ -3932,30 +3932,39 @@ textarea {
 }
 
 /* Completion pass: live pace, first-run setup, and calmer companion navigation. */
-.overlay-shell:has(.overlay-setup-wizard) {
-  min-height: 520px;
+.overlay-page.overlay-page-setup {
+  height: auto !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
 }
 
-.overlay-shell:has(.overlay-setup-wizard) > :not(.overlay-setup-wizard):not(.resize-grip) {
-  opacity: 0.12;
-  pointer-events: none;
+.overlay-page-setup .overlay-setup-shell {
+  min-height: 0 !important;
+  max-height: 100vh !important;
+  padding: 6px !important;
+  gap: 0 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
 }
 
 .overlay-setup-wizard {
-  position: absolute;
+  position: relative;
   z-index: 140;
-  inset: 10px;
+  width: 100%;
   min-width: 0;
+  min-height: 470px;
   display: grid;
   grid-template-rows: auto auto minmax(0, 1fr) auto;
   gap: 12px;
-  padding: 16px;
+  padding: 15px;
   border: 1px solid rgba(230, 177, 96, 0.42);
   border-radius: 16px;
   background:
     radial-gradient(circle at 92% 0, rgba(221, 161, 79, 0.15), transparent 36%),
-    linear-gradient(180deg, rgba(19, 21, 25, 0.985), rgba(8, 10, 14, 0.99));
-  box-shadow: 0 22px 54px rgba(0, 0, 0, 0.48), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    linear-gradient(180deg, rgba(19, 21, 25, 0.992), rgba(8, 10, 14, 0.996));
+  box-shadow:
+    0 18px 42px rgba(0, 0, 0, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
   overflow: hidden;
 }
 
@@ -3964,17 +3973,21 @@ textarea {
   background:
     radial-gradient(circle at 8% 0, rgba(217, 167, 95, 0.15), transparent 34%),
     radial-gradient(circle at 100% 0, rgba(112, 72, 192, 0.21), transparent 42%),
-    linear-gradient(180deg, rgba(17, 10, 28, 0.99), rgba(8, 5, 14, 0.995));
+    linear-gradient(180deg, rgba(17, 10, 28, 0.994), rgba(8, 5, 14, 0.998));
 }
 
 .overlay-setup-wizard-head,
-.overlay-setup-wizard-actions,
 .overlay-setup-status-card,
 .overlay-setup-ready-list > div {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+}
+
+.overlay-setup-wizard-head {
+  cursor: move;
+  user-select: none;
 }
 
 .overlay-setup-wizard-head h2,
@@ -3991,6 +4004,7 @@ textarea {
 }
 
 .overlay-setup-wizard-head > span {
+  flex: 0 0 auto;
   color: rgba(246, 215, 163, 0.72);
   font-family: var(--font-mono, monospace);
   font-size: 11px;
@@ -3999,8 +4013,8 @@ textarea {
 
 .overlay-setup-progress {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 5px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
 }
 
 .overlay-setup-progress span {
@@ -4015,16 +4029,30 @@ textarea {
 }
 
 .overlay-setup-wizard-body {
+  min-width: 0;
   min-height: 0;
-  padding-right: 3px;
+  padding: 2px 3px 2px 0;
   overflow-y: auto;
+  overflow-x: hidden;
   overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(218, 165, 86, 0.48) rgba(255, 255, 255, 0.04);
+}
+
+.overlay-setup-wizard-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.overlay-setup-wizard-body::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(218, 165, 86, 0.48);
 }
 
 .overlay-setup-choice-stack,
 .overlay-setup-log-step,
 .overlay-setup-hotkeys,
 .overlay-setup-ready-list {
+  min-width: 0;
   display: grid;
   align-content: start;
   gap: 12px;
@@ -4032,14 +4060,17 @@ textarea {
 
 .overlay-setup-wizard-body p,
 .overlay-setup-wizard-body small {
-  color: rgba(225, 229, 236, 0.68);
+  color: rgba(225, 229, 236, 0.70);
   line-height: 1.45;
 }
 
-.overlay-setup-choice-grid,
-.overlay-setup-mode-grid {
+.overlay-setup-wizard-body p {
+  font-size: 13px;
+}
+
+.overlay-setup-choice-grid {
+  min-width: 0;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
 }
 
@@ -4047,51 +4078,62 @@ textarea {
   grid-template-columns: repeat(2, minmax(0, 88px));
 }
 
-.overlay-setup-mode-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+.overlay-setup-choice-grid.is-theme {
+  grid-template-columns: minmax(0, 1fr);
 }
 
-.overlay-setup-choice-grid button,
-.overlay-setup-mode-grid button {
+.overlay-setup-choice-grid button {
   min-width: 0;
+  width: 100%;
   display: grid;
-  align-content: start;
+  align-content: center;
   gap: 4px;
-  padding: 10px;
+  padding: 10px 11px;
   border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: 11px;
-  color: rgba(235, 238, 243, 0.80);
+  color: rgba(235, 238, 243, 0.82);
   text-align: left;
   background: rgba(255, 255, 255, 0.022);
+  overflow: hidden;
 }
 
 .overlay-setup-choice-grid.is-language button {
+  min-height: 42px;
   justify-items: center;
   text-align: center;
 }
 
-.overlay-setup-choice-grid button.is-selected,
-.overlay-setup-mode-grid button.is-selected {
-  border-color: rgba(222, 168, 88, 0.50);
-  background: rgba(222, 168, 88, 0.11);
-  box-shadow: inset 0 0 0 1px rgba(222, 168, 88, 0.08);
+.overlay-setup-choice-grid.is-theme button {
+  min-height: 58px;
 }
 
-.theme-dark-fantasy .overlay-setup-choice-grid button.is-selected,
-.theme-dark-fantasy .overlay-setup-mode-grid button.is-selected {
+.overlay-setup-choice-grid button.is-selected {
+  border-color: rgba(222, 168, 88, 0.55);
+  background:
+    linear-gradient(90deg, rgba(222, 168, 88, 0.14), rgba(222, 168, 88, 0.045)),
+    rgba(255, 255, 255, 0.025);
+  box-shadow:
+    inset 0 0 0 1px rgba(222, 168, 88, 0.08),
+    0 0 16px rgba(222, 168, 88, 0.08);
+}
+
+.theme-dark-fantasy .overlay-setup-choice-grid button.is-selected {
   border-color: rgba(185, 136, 255, 0.50);
-  background: rgba(135, 88, 219, 0.13);
+  background:
+    linear-gradient(90deg, rgba(135, 88, 219, 0.16), rgba(217, 167, 95, 0.055)),
+    rgba(255, 255, 255, 0.022);
 }
 
-.overlay-setup-choice-grid strong,
-.overlay-setup-mode-grid strong {
+.overlay-setup-choice-grid strong {
   color: #f0dfc4;
   font-size: 11px;
+  line-height: 1.25;
 }
 
-.overlay-setup-choice-grid small,
-.overlay-setup-mode-grid small {
+.overlay-setup-choice-grid small {
+  min-width: 0;
   font-size: 9px;
+  overflow-wrap: anywhere;
 }
 
 .overlay-setup-status-card,
@@ -4141,6 +4183,11 @@ textarea {
   color: #65c98f;
 }
 
+.overlay-setup-log-step > button {
+  width: 100%;
+  min-width: 0;
+}
+
 .overlay-setup-hotkeys dl {
   display: grid;
   gap: 7px;
@@ -4148,22 +4195,25 @@ textarea {
 }
 
 .overlay-setup-hotkeys dl > div {
+  min-width: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 8px 10px;
+  padding: 9px 10px;
   border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 9px;
   background: rgba(255, 255, 255, 0.015);
 }
 
 .overlay-setup-hotkeys dt {
+  min-width: 0;
   color: rgba(228, 230, 235, 0.72);
   font-size: 10px;
 }
 
 .overlay-setup-hotkeys dd {
+  flex: 0 0 auto;
   margin: 0;
   color: #e2b46f;
   font-family: var(--font-mono, monospace);
@@ -4171,12 +4221,42 @@ textarea {
 }
 
 .overlay-setup-wizard-actions {
-  justify-content: flex-end;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.12fr);
+  gap: 9px;
   padding-top: 2px;
 }
 
 .overlay-setup-wizard-actions button {
-  min-height: 34px;
+  width: 100%;
+  min-width: 0 !important;
+  min-height: 38px;
+  padding-inline: 9px;
+  white-space: normal;
+  line-height: 1.15;
+}
+
+@media (max-width: 360px) {
+  .overlay-setup-wizard {
+    min-height: 455px;
+    gap: 10px;
+    padding: 12px;
+    border-radius: 14px;
+  }
+
+  .overlay-setup-wizard-head h2 {
+    font-size: 18px;
+  }
+
+  .overlay-setup-wizard-actions {
+    gap: 7px;
+  }
+
+  .overlay-setup-wizard-actions button {
+    padding-inline: 6px;
+    font-size: 10px;
+  }
 }
 
 .companion-page .companion-header {
@@ -4531,11 +4611,6 @@ textarea {
 }
 
 @media (max-width: 720px) {
-  .overlay-setup-mode-grid,
-  .overlay-setup-choice-grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
   .companion-page .companion-header-copy .settings-intro {
     display: none;
   }

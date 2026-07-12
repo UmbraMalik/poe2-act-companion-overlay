@@ -324,6 +324,8 @@ test('app theme is persisted and available in overlay and settings', () => {
   assert.match(overlay, /!config\.setupWizardCompleted/);
   assert.match(setupWizard, /themePreferencePrompted:\s*true/);
   assert.match(setupWizard, /setupWizardCompleted:\s*true/);
+  assert.match(setupWizard, /SETUP_WIZARD_STEP_COUNT = 4/);
+  assert.doesNotMatch(setupWizard, /WizardMode|updateMode|setupWizard\.mode\./);
   assert.doesNotMatch(overlay, /overlay-theme-icon-button/);
   assert.match(settingsPage, /app-theme-choice/);
   assert.match(settingsPage, /updateSettings\(\{ theme, themePreferencePrompted:\s*true \}\)/);

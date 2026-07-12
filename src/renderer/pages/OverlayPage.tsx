@@ -1806,9 +1806,29 @@ export function OverlayPage() {
       {timerPrimaryButton}
     </div>
   );
-  const firstRunWizard = !config.setupWizardCompleted ? (
-    <FirstRunWizard snapshot={snapshot} language={language} />
-  ) : null;
+  if (!config.setupWizardCompleted) {
+    return (
+      <main
+        ref={overlayPageRef}
+        className={`overlay-page overlay-page-setup scale-${config.overlayScale} text-size-${config.overlayTextSize} ${overlayFxClass} ${overlayThemeClass}${overlayDebugClass}${overlayLockClass}`}
+      >
+        <section
+          ref={overlayShellRef}
+          className="overlay-shell overlay-hud overlay-setup-shell"
+          onPointerDownCapture={beginOverlayDrag}
+        >
+          <FirstRunWizard snapshot={snapshot} language={language} />
+          <div
+            className={getResizeGripClassName(config.overlayMovementLocked)}
+            aria-label={config.overlayMovementLocked ? t('overlay.resizeLocked') : t('overlay.resize')}
+            role="button"
+            tabIndex={-1}
+            onPointerDown={beginResize}
+          />
+        </section>
+      </main>
+    );
+  }
 
   const endgameT15CompletionBlock = showEndgameT15CompletionNotice ? (
     <section className="hud-block overlay-endgame-completion-card no-drag" role="status" aria-live="polite">
@@ -1867,7 +1887,6 @@ export function OverlayPage() {
               {overlayQuickActions}
             </div>
           </header>
-          {firstRunWizard}
 
           <section className="timer-only-main-panel" aria-label={t('overlay.mainTimer')}>
             <p className="timer-only-main-label">{timerOnlyPrimaryLabel}</p>
@@ -1930,7 +1949,6 @@ export function OverlayPage() {
               {overlayQuickActions}
             </div>
           </header>
-          {firstRunWizard}
         </section>
       </main>
     );
@@ -1972,7 +1990,6 @@ export function OverlayPage() {
             />
           </p>
         </header>
-        {firstRunWizard}
 
         {endgameT15CompletionBlock}
 

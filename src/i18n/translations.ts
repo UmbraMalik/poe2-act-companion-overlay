@@ -181,9 +181,8 @@ const baseTranslations = {
       kicker: 'Первый запуск',
       step1Title: 'Язык и тема',
       step2Title: 'Подключение к игре',
-      step3Title: 'Режим оверлея',
-      step4Title: 'Горячие клавиши',
-      step5Title: 'Всё готово',
+      step3Title: 'Горячие клавиши',
+      step4Title: 'Всё готово',
       appearanceBody: 'Сначала выбери язык и внешний вид. Всё можно поменять позже в настройках.',
       theme: {
         classic: 'Сдержанная тёмная тема с золотыми акцентами.',
@@ -193,15 +192,6 @@ const baseTranslations = {
       logReady: 'Лог-файл подключён',
       logPending: 'Лог-файл пока не найден',
       logHint: 'После подключения зайди в любую игровую зону — карточка обновится автоматически.',
-      modeBody: 'Выбери, сколько информации показывать поверх игры.',
-      mode: {
-        full: 'Полный',
-        fullHint: 'Все ключевые подсказки и блоки текущей зоны.',
-        compact: 'Компактный',
-        compactHint: 'Меньше места, только самое важное.',
-        timer_only: 'Только таймер',
-        timer_onlyHint: 'Минимальный режим без маршрутных карточек.'
-      },
       hotkeysBody: 'Эти клавиши работают глобально, пока приложение запущено.',
       hotkeysHint: 'Изменить сочетания можно в настройках.',
       readyBody: 'Финальная проверка перед первым забегом.',
@@ -209,7 +199,6 @@ const baseTranslations = {
       readyLogPending: 'Нужно выбрать Client.txt или LatestClient.txt',
       readyClient: 'Связь с клиентом',
       readyClientPending: 'Зона появится после входа в игру',
-      readyOverlay: 'Режим оверлея',
       readyHotkeys: 'Горячие клавиши',
       skip: 'Пропустить настройку',
       finish: 'Начать пользоваться'
@@ -999,9 +988,8 @@ const baseTranslations = {
       kicker: 'First launch',
       step1Title: 'Language and theme',
       step2Title: 'Connect the game',
-      step3Title: 'Overlay mode',
-      step4Title: 'Hotkeys',
-      step5Title: 'Ready to go',
+      step3Title: 'Hotkeys',
+      step4Title: 'Ready to go',
       appearanceBody: 'Choose the language and look first. You can change both later in Settings.',
       theme: {
         classic: 'A restrained dark theme with gold accents.',
@@ -1011,15 +999,6 @@ const baseTranslations = {
       logReady: 'Log file connected',
       logPending: 'Log file not found yet',
       logHint: 'After connecting it, enter any gameplay zone and the card will update automatically.',
-      modeBody: 'Choose how much information should appear over the game.',
-      mode: {
-        full: 'Full',
-        fullHint: 'All key guidance and current-zone blocks.',
-        compact: 'Compact',
-        compactHint: 'Less space, only the essentials.',
-        timer_only: 'Timer only',
-        timer_onlyHint: 'Minimal mode without route cards.'
-      },
       hotkeysBody: 'These shortcuts work globally while the app is running.',
       hotkeysHint: 'You can change them later in Settings.',
       readyBody: 'A final check before your first run.',
@@ -1027,7 +1006,6 @@ const baseTranslations = {
       readyLogPending: 'Choose Client.txt or LatestClient.txt',
       readyClient: 'Game connection',
       readyClientPending: 'A zone will appear after you enter the game',
-      readyOverlay: 'Overlay mode',
       readyHotkeys: 'Hotkeys',
       skip: 'Skip setup',
       finish: 'Start using the overlay'

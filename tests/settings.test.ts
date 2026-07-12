@@ -45,6 +45,16 @@ test('normalizeAppConfig keeps defaults, custom settings and strips legacy unkno
   assert.equal('oldSupportBlock' in (normalized as unknown as Record<string, unknown>), false);
 });
 
+test('normalizeAppConfig keeps the first-run wizard pending when the completion marker is absent', () => {
+  const normalized = normalizeAppConfig({
+    logFilePath: 'C:\\Games\\Path of Exile 2\\logs\\LatestClient.txt',
+    themePreferencePrompted: true,
+    theme: 'dark_fantasy'
+  } as never);
+
+  assert.equal(normalized.setupWizardCompleted, false);
+});
+
 test('normalizeAppConfig hardens corrupted user config values', () => {
   const normalized = normalizeAppConfig({
     currentLevel: -42,

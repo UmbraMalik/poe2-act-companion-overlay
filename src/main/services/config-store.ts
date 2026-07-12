@@ -624,9 +624,10 @@ export function normalizeAppConfig(config: Partial<AppConfig> = {}): AppConfig {
     overlayEffectsEnabled: safeBoolean(rawConfig.overlayEffectsEnabled, DEFAULT_CONFIG.overlayEffectsEnabled),
     theme: normalizeAppTheme(rawConfig.theme),
     themePreferencePrompted: safeBoolean(rawConfig.themePreferencePrompted, DEFAULT_CONFIG.themePreferencePrompted),
-    setupWizardCompleted: typeof rawConfig.setupWizardCompleted === 'boolean'
-      ? rawConfig.setupWizardCompleted
-      : safeBoolean(rawConfig.themePreferencePrompted, false) || Boolean(safeString(rawConfig.logFilePath, null)),
+    setupWizardCompleted: safeBoolean(
+      rawConfig.setupWizardCompleted,
+      DEFAULT_CONFIG.setupWizardCompleted
+    ),
     overlayDebugLayoutEnabled: safeBoolean(
       rawConfig.overlayDebugLayoutEnabled,
       DEFAULT_CONFIG.overlayDebugLayoutEnabled

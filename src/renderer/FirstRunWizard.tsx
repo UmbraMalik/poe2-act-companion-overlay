@@ -1,41 +1,26 @@
 import { useEffect, useMemo, useState } from 'react';
 import { translate } from '../i18n/translations';
-import type {
-  AppLanguage,
-  AppTheme,
-  OverlayDensity,
-  OverlayMode,
-  OverlaySnapshot
-} from '../shared/types';
-
-type WizardMode = 'full' | 'compact' | 'timer_only';
+import type { AppLanguage, AppTheme, OverlaySnapshot } from '../shared/types';
 
 interface FirstRunWizardProps {
   snapshot: OverlaySnapshot;
   language: AppLanguage;
 }
 
-function getCurrentWizardMode(snapshot: OverlaySnapshot): WizardMode {
-  if (snapshot.runtime.overlayMode === 'timer_only') {
-    return 'timer_only';
-  }
-
-  return snapshot.config.overlayDensity === 'compact' ? 'compact' : 'full';
-}
+const SETUP_WIZARD_STEP_COUNT = 4;
 
 export function FirstRunWizard({ snapshot, language }: FirstRunWizardProps) {
   const [step, setStep] = useState(() => {
     const stored = Number(window.sessionStorage.getItem('poe2-setup-wizard-step'));
-    return Number.isInteger(stored) && stored >= 0 && stored < 5 ? stored : 0;
+    return Number.isInteger(stored) && stored >= 0 && stored < SETUP_WIZARD_STEP_COUNT ? stored : 0;
   });
   const [busy, setBusy] = useState<string | null>(null);
   const { config, currentGuideEntry, currentZone, runtime } = snapshot;
-  const totalSteps = 5;
   const hasLogFile = Boolean(runtime.watchedLogPath ?? config.logFilePath);
   const logReady = hasLogFile && runtime.logFileExists;
   const zoneDetected = Boolean(currentGuideEntry ?? currentZone.rawZoneName);
-  const hotkeysReady = Object.values(config.hotkeys).every((value) => value.trim().length > 0);
-  const currentMode = getCurrentWizardMode(snapshot);
+  const hotkeysReady = [config.hotkeys.openCompanion, config.hotkeys.toggleTimerPause]
+    .every((value) => value.trim().length > 0);
 
   useEffect(() => {
     window.sessionStorage.setItem('poe2-setup-wizard-step', String(step));
@@ -59,22 +44,16 @@ export function FirstRunWizard({ snapshot, language }: FirstRunWizardProps) {
         : translate(language, 'setupWizard.readyClientPending')
     },
     {
-      id: 'overlay',
-      label: translate(language, 'setupWizard.readyOverlay'),
-      ready: true,
-      detail: translate(language, `setupWizard.mode.${currentMode}`)
-    },
-    {
       id: 'hotkeys',
       label: translate(language, 'setupWizard.readyHotkeys'),
       ready: hotkeysReady,
-      detail: `${config.hotkeys.openCompanion} · ${config.hotkeys.toggleTimerPause} · ${config.hotkeys.toggleOverlayMode}`
+      detail: `${config.hotkeys.openCompanion} · ${config.hotkeys.toggleTimerPause}`
     }
   ], [
-    config.hotkeys,
+    config.hotkeys.openCompanion,
+    config.hotkeys.toggleTimerPause,
     config.logFilePath,
     currentGuideEntry,
-    currentMode,
     currentZone.rawZoneName,
     hotkeysReady,
     language,
@@ -102,16 +81,6 @@ export function FirstRunWizard({ snapshot, language }: FirstRunWizardProps) {
 
   const chooseLogFile = () => runTask('log', () => window.poe2Overlay.chooseLogFile());
 
-  const updateMode = (mode: WizardMode) => {
-    const overlayMode: OverlayMode = mode === 'timer_only' ? 'timer_only' : 'full';
-    const overlayDensity: OverlayDensity = mode === 'compact' ? 'compact' : 'normal';
-
-    void runTask(`mode-${mode}`, () => window.poe2Overlay.updateSettings({
-      overlayDensity,
-      mainOverlaySettings: { overlayMode }
-    }));
-  };
-
   const completeWizard = (name: 'finish' | 'skip') => runTask(name, async () => {
     window.sessionStorage.removeItem('poe2-setup-wizard-step');
     await window.poe2Overlay.updateSettings({
@@ -124,22 +93,22 @@ export function FirstRunWizard({ snapshot, language }: FirstRunWizardProps) {
   const skip = () => completeWizard('skip');
 
   return (
-    <section className="overlay-setup-wizard no-drag" role="dialog" aria-modal="true" aria-labelledby="setup-wizard-title">
+    <section className="overlay-setup-wizard" role="dialog" aria-modal="true" aria-labelledby="setup-wizard-title">
       <div className="overlay-setup-wizard-head">
         <div>
           <p className="eyebrow">{translate(language, 'setupWizard.kicker')}</p>
           <h2 id="setup-wizard-title">{translate(language, `setupWizard.step${step + 1}Title`)}</h2>
         </div>
-        <span>{step + 1}/{totalSteps}</span>
+        <span>{step + 1}/{SETUP_WIZARD_STEP_COUNT}</span>
       </div>
 
       <div className="overlay-setup-progress" aria-hidden="true">
-        {Array.from({ length: totalSteps }, (_, index) => (
+        {Array.from({ length: SETUP_WIZARD_STEP_COUNT }, (_, index) => (
           <span key={index} className={index <= step ? 'is-active' : ''} />
         ))}
       </div>
 
-      <div className="overlay-setup-wizard-body">
+      <div className="overlay-setup-wizard-body no-drag">
         {step === 0 && (
           <div className="overlay-setup-choice-stack">
             <p>{translate(language, 'setupWizard.appearanceBody')}</p>
@@ -155,7 +124,7 @@ export function FirstRunWizard({ snapshot, language }: FirstRunWizardProps) {
                 </button>
               ))}
             </div>
-            <div className="overlay-setup-choice-grid">
+            <div className="overlay-setup-choice-grid is-theme">
               {(['classic', 'dark_fantasy'] as AppTheme[]).map((theme) => (
                 <button
                   key={theme}
@@ -189,38 +158,17 @@ export function FirstRunWizard({ snapshot, language }: FirstRunWizardProps) {
         )}
 
         {step === 2 && (
-          <div className="overlay-setup-choice-stack">
-            <p>{translate(language, 'setupWizard.modeBody')}</p>
-            <div className="overlay-setup-mode-grid">
-              {(['full', 'compact', 'timer_only'] as WizardMode[]).map((mode) => (
-                <button
-                  key={mode}
-                  type="button"
-                  className={currentMode === mode ? 'is-selected' : ''}
-                  disabled={busy !== null}
-                  onClick={() => updateMode(mode)}
-                >
-                  <strong>{translate(language, `setupWizard.mode.${mode}`)}</strong>
-                  <small>{translate(language, `setupWizard.mode.${mode}Hint`)}</small>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {step === 3 && (
           <div className="overlay-setup-hotkeys">
             <p>{translate(language, 'setupWizard.hotkeysBody')}</p>
             <dl>
               <div><dt>{translate(language, 'settings.hotkeyPause')}</dt><dd>{config.hotkeys.toggleTimerPause}</dd></div>
               <div><dt>{translate(language, 'settings.hotkeyCompanion')}</dt><dd>{config.hotkeys.openCompanion}</dd></div>
-              <div><dt>{translate(language, 'settings.hotkeyOverlayMode')}</dt><dd>{config.hotkeys.toggleOverlayMode}</dd></div>
             </dl>
             <small>{translate(language, 'setupWizard.hotkeysHint')}</small>
           </div>
         )}
 
-        {step === 4 && (
+        {step === 3 && (
           <div className="overlay-setup-ready-list">
             <p>{translate(language, 'setupWizard.readyBody')}</p>
             {readiness.map((item) => (
@@ -236,7 +184,7 @@ export function FirstRunWizard({ snapshot, language }: FirstRunWizardProps) {
         )}
       </div>
 
-      <div className="overlay-setup-wizard-actions">
+      <div className="overlay-setup-wizard-actions no-drag">
         {step > 0 ? (
           <button type="button" className="button-secondary" disabled={busy !== null} onClick={() => setStep((value) => value - 1)}>
             {translate(language, 'common.back')}
@@ -246,7 +194,7 @@ export function FirstRunWizard({ snapshot, language }: FirstRunWizardProps) {
             {translate(language, 'setupWizard.skip')}
           </button>
         )}
-        {step < totalSteps - 1 ? (
+        {step < SETUP_WIZARD_STEP_COUNT - 1 ? (
           <button type="button" className="button-primary" disabled={busy !== null} onClick={() => setStep((value) => value + 1)}>
             {translate(language, 'common.next')}
           </button>
