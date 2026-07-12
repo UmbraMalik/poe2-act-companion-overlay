@@ -746,7 +746,9 @@ export function CurrentRunHub({
             <strong>{translate(language, 'companion.zoneHubDetailsSummary')}</strong>
             <small>{translate(language, 'companion.zoneHubDetailsHint')}</small>
           </span>
-          <span className="zone-detail-toggle-icon" aria-hidden="true">⌄</span>
+          <span className="zone-detail-toggle-icon" aria-hidden="true">
+            <span className="zone-detail-toggle-chevron" />
+          </span>
         </summary>
 
         <div className="zone-detail-drawer-body">
