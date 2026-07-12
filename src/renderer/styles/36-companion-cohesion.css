@@ -4209,10 +4209,13 @@ textarea {
 }
 
 .companion-page .companion-header {
+  position: relative;
+  z-index: 40;
   min-height: 84px;
   align-items: center;
   gap: 18px;
   padding: 14px 18px;
+  overflow: visible !important;
 }
 
 .companion-page .companion-header-copy {
@@ -4320,11 +4323,20 @@ textarea {
 
 .companion-page .companion-utility-menu {
   position: relative;
+  z-index: 1;
+}
+
+.companion-page .companion-utility-menu[open] {
+  z-index: 90;
+}
+
+.companion-page .companion-utility-menu > summary::marker {
+  content: "";
 }
 
 .companion-page .companion-utility-popover {
   position: absolute;
-  z-index: 80;
+  z-index: 100;
   top: calc(100% + 7px);
   right: 0;
   width: 210px;
