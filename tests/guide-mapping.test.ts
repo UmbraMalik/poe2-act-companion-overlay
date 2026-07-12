@@ -152,6 +152,36 @@ test('Act 2 Keth and Titan route internal area ids stay mapped to the correct RU
   }
 });
 
+test('release mapping smoke cases resolve to canonical Russian guide names', () => {
+  const service = loadGuideService();
+  const cases = [
+    ['G1_5', 'Красная Долина'],
+    ['G1_6', 'Мрачные заросли'],
+    ['G1_8', 'Мавзолей претора'],
+    ['G1_9', 'Супружеская гробница'],
+    ['G1_11', 'Охотничьи угодья'],
+    ['G1_12', 'Фрейторн'],
+    ['G4_2_1', 'Кеджский залив'],
+    ['G4_3_2', 'Поющие пещеры'],
+    ['G4_4_1', 'Глаз Хинекоры'],
+    ['G4_11_1b', 'Нгакану'],
+    ['P2_5', 'Ворота Галаи'],
+    ['P2_6', 'Кима'],
+    ['P3_3', 'Ледниковое озеро'],
+    ['P3_4', 'Воющие пещеры'],
+    ['P3_5', 'Пики Криар']
+  ] as const;
+
+  for (const [areaId, expectedZoneRu] of cases) {
+    const match = service.resolveZoneMatch({
+      rawLine: areaId,
+      extractedInternalAreaId: areaId,
+      extractedZoneName: expectedZoneRu
+    });
+    assert.equal(match?.guide?.zone_ru, expectedZoneRu, `${areaId} expected ${expectedZoneRu}`);
+  }
+});
+
 test('areaId takes priority over fuzzy/name matching for ambiguous zones', () => {
   const service = loadGuideService();
 
@@ -239,7 +269,7 @@ test('Interlude route keeps audited page order', () => {
     ['interlude_etched_ravine', 'Убежище Куачик'],
     ['interlude_cuachic_vault', 'Пристанище'],
     ['interlude_refuge', 'Выжженные фермерские земли'],
-    ['i_final_holten_estate', 'Ориат']
+    ['i_final_holten_estate', 'Кингсмарш']
   ] as const;
 
   for (const [guideId, nextZoneRu] of route) {

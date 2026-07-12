@@ -170,15 +170,22 @@ test('Yeti tusks weapon-set reward can be claimed after returning to Kriar Villa
   assert.deepEqual(getDoneBonusIds(app), ['int3_howling_caves_yeti_weapon_points']);
 });
 
-test('Final interlude weapon-set reward can be claimed in the endgame refuge', () => {
-  const app = createTestAppInstance();
-  applyAppLogLine(app as never, '2026/05/24 16:50:00 123 [DEBUG Client] Generating level 59 area "P1_6" with seed 1');
-  applyAppLogLine(app as never, '[SCENE] Set Source [Поместье Холтен]');
-  applyAppLogLine(app as never, '2026/05/24 16:59:09 123 [DEBUG Client] Generating level 65 area "G_Endgame_Town" with seed 1');
-  applyAppLogLine(app as never, '[SCENE] Set Source [Убежище в зиккурате]');
-  applyAppLogLine(app as never, ': Вы получили 2 очка пассивных умений для набора оружия.');
+test('Final interlude weapon-set reward is independent from the last completed branch', () => {
+  const lastBranchCases = [
+    ['P1_6', 'Поместье Холтен'],
+    ['P2_7', 'Водохранилище Кима'],
+    ['P3_7', 'Убежище Куачик']
+  ] as const;
 
-  assert.deepEqual(getDoneBonusIds(app), ['int3_final_zolin_zelina_weapon_points']);
+  for (const [areaId, sceneName] of lastBranchCases) {
+    const app = createTestAppInstance();
+    applyAppLogLine(app as never, `2026/05/24 16:50:00 123 [DEBUG Client] Generating level 58 area "${areaId}" with seed 1`);
+    applyAppLogLine(app as never, `[SCENE] Set Source [${sceneName}]`);
+    applyAppLogLine(app as never, '[SCENE] Set Source [Кингсмарш]');
+    applyAppLogLine(app as never, ': Вы получили 2 очка пассивных умений для набора оружия.');
+
+    assert.deepEqual(getDoneBonusIds(app), ['int3_final_zolin_zelina_weapon_points']);
+  }
 });
 
 test('Servi venom vial choice can be completed after leaving Venom Crypts', () => {

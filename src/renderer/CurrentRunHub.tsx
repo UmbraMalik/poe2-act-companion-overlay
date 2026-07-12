@@ -57,6 +57,7 @@ interface LeagueMechanicRewardEntry {
   hasReward: boolean;
   displayInOverlay: boolean;
   oneTimeGuaranteed: boolean;
+  uncertain?: boolean;
 }
 
 const LEAGUE_MECHANIC_REWARDS = (
@@ -238,7 +239,7 @@ function getCurrentZoneLeagueReward(
   addLeagueZoneCandidate(candidates, sceneName);
 
   return LEAGUE_MECHANIC_REWARDS.find((reward) => {
-    if (!reward.displayInOverlay || !reward.hasReward) {
+    if (reward.uncertain || !reward.displayInOverlay || !reward.hasReward) {
       return false;
     }
 
