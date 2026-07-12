@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
+import { UiIcon } from '../UiIcon';
 
 export interface SettingsSelectOption<T extends string | number> {
   value: T;
@@ -165,7 +166,9 @@ export function SettingsSelect<T extends string | number>({
         onKeyDown={handleKeyDown}
       >
         <span className="settings-select-value">{selectedOption?.label ?? '—'}</span>
-        <span className="settings-select-chevron" aria-hidden="true" />
+        <span className="settings-select-chevron" aria-hidden="true">
+          <UiIcon name="chevron-down" />
+        </span>
       </button>
 
       {isOpen &&

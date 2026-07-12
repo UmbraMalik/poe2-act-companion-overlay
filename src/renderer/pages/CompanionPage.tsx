@@ -34,6 +34,7 @@ import { filterRouteCards, getRouteFilterEmptyText, type RouteFilterMode } from 
 import { CurrentRunHub } from '../CurrentRunHub';
 import { CompanionHeader } from '../CompanionHeader';
 import { CompanionNavigation } from '../CompanionNavigation';
+import { UiIcon } from '../UiIcon';
 import {
   COMPANION_NAVIGATION_STORAGE_KEY,
   COMPANION_SECTION_DEFAULT_TAB,
@@ -1894,7 +1895,9 @@ export function CompanionPage() {
                           key={bonus.id}
                           className={`bonus-row ${done ? 'is-done' : 'is-pending'}${isBonusFeedback ? ` is-bonus-toggle-feedback is-feedback-${bonusFeedback.tone}` : ''}`}
                         >
-                          <div className="bonus-status-marker" aria-hidden="true">{done ? '✓' : '○'}</div>
+                          <div className="bonus-status-marker" aria-hidden="true">
+                            <UiIcon name={done ? 'check' : 'circle'} className="ui-status-icon" />
+                          </div>
                           <div className="bonus-main">
                             <div className="bonus-title-line">
                               <strong>{bonusTitle}</strong>
@@ -2012,7 +2015,7 @@ export function CompanionPage() {
               <h3 id="run-confirm-title">{dialogTitle}</h3>
             </div>
             <button className="button-secondary companion-modal-close" type="button" onClick={closeRunConfirmDialog}>
-              ×
+              <UiIcon name="close" />
             </button>
           </div>
           <p className="helper-text companion-modal-message">{dialogMessage}</p>

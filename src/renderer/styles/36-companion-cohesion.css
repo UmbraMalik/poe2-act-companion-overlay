@@ -2979,17 +2979,6 @@ textarea {
     rgba(255, 255, 255, 0.014);
 }
 
-.companion-page .zone-detail-drawer-body .skip-section .details-list li::before {
-  content: "×";
-  left: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--companion-red);
-  font-size: 15px;
-  font-weight: 850;
-  line-height: 1;
-}
-
 @media (max-width: 1180px) {
   .companion-page .zone-detail-drawer-body {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -3770,7 +3759,9 @@ textarea {
 }
 
 .overlay-setup-status-card > span,
-.overlay-setup-ready-list > div > span {
+.overlay-setup-status-card > .ui-icon,
+.overlay-setup-ready-list > div > span,
+.overlay-setup-ready-list > div > .ui-icon {
   flex: 0 0 auto;
   color: #dfad61;
   font-size: 17px;
@@ -3803,7 +3794,9 @@ textarea {
 }
 
 .overlay-setup-status-card.is-ready > span,
-.overlay-setup-ready-list > div.is-ready > span {
+.overlay-setup-status-card.is-ready > .ui-icon,
+.overlay-setup-ready-list > div.is-ready > span,
+.overlay-setup-ready-list > div.is-ready > .ui-icon {
   color: #65c98f;
 }
 

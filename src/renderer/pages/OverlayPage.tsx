@@ -50,6 +50,7 @@ import { translateSystemText } from '../../i18n/runtime';
 import { translate } from '../../i18n/translations';
 import { getZoneRecognitionView } from '../log-health';
 import { FirstRunWizard } from '../FirstRunWizard';
+import { UiIcon, type UiIconName } from '../UiIcon';
 import type {
   AppLanguage,
   CampaignBonusDefinition,
@@ -1547,7 +1548,7 @@ export function OverlayPage() {
   const timerOnlyPrimaryLabel =
     timerOnlyShowsCountdown ? t('overlay.timerOnlyCountdownLabel') : t('companion.totalTime');
   const timerOnlyLevelText = `${t('common.level')} ${config.currentLevel ?? '?'} · ${t('common.recommended')}: ${guideView?.recommendedLevelLabel ?? t('common.notAvailable')} · ${levelState.label}`;
-  const timerPrimaryIcon = displayRunTimer.status === 'running' ? '⏸' : '▶';
+  const timerPrimaryIcon: UiIconName = displayRunTimer.status === 'running' ? 'pause' : 'play';
   const timerPrimaryTone = displayRunTimer.status === 'running' ? 'pause' : 'start';
   const timerPrimaryTitle =
     displayRunTimer.status === 'running'
@@ -1648,9 +1649,10 @@ export function OverlayPage() {
       onMouseDown={stopOverlayControlPropagation}
       onClick={handleOverlayMovementLockToggle}
     >
-      <span className={`overlay-icon-glyph overlay-icon-glyph-lock${config.overlayMovementLocked ? ' is-locked' : ' is-unlocked'}`} aria-hidden="true">
-        {getOverlayLockButtonIcon(config.overlayMovementLocked)}
-      </span>
+      <UiIcon
+        name={getOverlayLockButtonIcon(config.overlayMovementLocked)}
+        className={`overlay-icon-glyph overlay-icon-glyph-lock${config.overlayMovementLocked ? ' is-locked' : ' is-unlocked'}`}
+      />
     </button>
   );
   const overlayOpenCompanionButton = (
@@ -1661,7 +1663,7 @@ export function OverlayPage() {
       aria-label={t('overlay.openCompanion', { hotkey: openCompanionHotkey })}
       onClick={handleToggleCompanion}
     >
-      <span className="overlay-icon-glyph overlay-icon-glyph-menu" aria-hidden="true">☰</span>
+      <UiIcon name="panel" className="overlay-icon-glyph overlay-icon-glyph-menu" />
     </button>
   );
   const overlayOpenSettingsButton = (
@@ -1672,7 +1674,7 @@ export function OverlayPage() {
       aria-label={t('overlay.openSettings')}
       onClick={handleToggleSettings}
     >
-      <span className="overlay-icon-glyph overlay-icon-glyph-settings" aria-hidden="true">⚙</span>
+      <UiIcon name="settings" className="overlay-icon-glyph overlay-icon-glyph-settings" />
     </button>
   );
   const overlayCloseButton = (
@@ -1685,7 +1687,7 @@ export function OverlayPage() {
       onMouseDown={stopOverlayControlPropagation}
       onClick={handleCloseOverlay}
     >
-      <span className="overlay-icon-glyph overlay-icon-glyph-close" aria-hidden="true">×</span>
+      <UiIcon name="close" className="overlay-icon-glyph overlay-icon-glyph-close" />
     </button>
   );
   const overlayCollapseButton = (
@@ -1699,9 +1701,10 @@ export function OverlayPage() {
       onMouseDown={stopOverlayControlPropagation}
       onClick={handleOverlayCollapsedToggle}
     >
-      <span className="overlay-icon-glyph overlay-icon-glyph-collapse" aria-hidden="true">
-        {isOverlayCollapsed ? '▾' : '▴'}
-      </span>
+      <UiIcon
+        name={isOverlayCollapsed ? 'chevron-down' : 'chevron-up'}
+        className="overlay-icon-glyph overlay-icon-glyph-collapse"
+      />
     </button>
   );
   const overlayLanguageToggle = (
@@ -1744,7 +1747,9 @@ export function OverlayPage() {
       aria-label={timerPrimaryTitle}
       onClick={handleTimerPrimaryAction}
     >
-      <span className="timer-button-glyph" aria-hidden="true">{timerPrimaryIcon}</span>
+      <span className="timer-button-glyph" aria-hidden="true">
+        <UiIcon name={timerPrimaryIcon} />
+      </span>
     </button>
   );
   const overlayQuickActions = (
@@ -1824,7 +1829,7 @@ export function OverlayPage() {
     <section className="hud-block overlay-endgame-completion-card no-drag" role="status" aria-live="polite">
       <div className="overlay-endgame-completion-copy">
         <div className="overlay-endgame-completion-title-row">
-          <span className="overlay-endgame-completion-mark" aria-hidden="true">◆</span>
+          <UiIcon name="diamond" className="overlay-endgame-completion-mark" />
           <h2>{t('overlay.endgameT15CompleteTitle')}</h2>
         </div>
         <p>{t('overlay.endgameT15CompleteMessage')}</p>
@@ -1842,7 +1847,7 @@ export function OverlayPage() {
         onMouseDown={stopOverlayControlPropagation}
         onClick={() => setDismissedEndgameNoticeAt(endgameT15CompletionNotice?.completedAt ?? null)}
       >
-        <span className="overlay-icon-glyph overlay-icon-glyph-close" aria-hidden="true">×</span>
+        <UiIcon name="close" className="overlay-icon-glyph overlay-icon-glyph-close" />
       </button>
     </section>
   ) : null;
@@ -2053,7 +2058,9 @@ export function OverlayPage() {
 
                 return (
                   <li key={bonus.id} className={done ? 'bonus-line is-done' : 'bonus-line'}>
-                    <span className="bonus-state-marker">{done ? '✓' : '○'}</span>
+                    <span className="bonus-state-marker">
+                      <UiIcon name={done ? 'check' : 'circle'} className="ui-status-icon" />
+                    </span>
                     <span>{bonusTitle}</span>
                   </li>
                 );

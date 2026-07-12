@@ -90,6 +90,7 @@ const expected = [
   '34-event-feedback-polish.css',
   '35-dark-fantasy-theme.css',
   '36-companion-cohesion.css',
+  '37-icon-system.css',
 ];
 const expectedCssFiles = [...expected, ...trackedNonNumberedPartials].sort();
 const expectedImports = [

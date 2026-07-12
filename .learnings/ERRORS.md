@@ -31,6 +31,102 @@ Use the same external context for cleanup when a temporary workspace npm cache i
 
 ---
 
+## [ERR-20260713-011] browser-audit-unsupported-networkidle
+
+**Logged**: 2026-07-13T02:39:00+03:00
+**Priority**: low
+**Status**: resolved
+**Area**: tooling
+
+### Summary
+The in-app browser backend rejected `networkidle` even though it appears in the generic API type list.
+
+### Error
+```text
+playwright_wait_for_load_state does not support networkidle
+```
+
+### Suggested Fix
+Use the supported `domcontentloaded` state for local visual fixtures.
+
+### Resolution
+- **Resolved**: 2026-07-13T02:39:00+03:00
+- **Notes**: The fixture loaded and its DOM was verified with `domcontentloaded`.
+
+---
+
+## [ERR-20260713-010] test-tsconfig-tsx-type-import
+
+**Logged**: 2026-07-13T02:31:00+03:00
+**Priority**: low
+**Status**: resolved
+**Area**: tests
+
+### Summary
+The test TypeScript config rejected a type-only import from `UiIcon.tsx` in the non-JSX `overlay-lock.ts` module.
+
+### Error
+```text
+TS6142: Module './UiIcon' was resolved to 'UiIcon.tsx', but '--jsx' is not set.
+```
+
+### Suggested Fix
+Keep non-renderer helper modules independent from TSX and return a narrow literal union.
+
+### Resolution
+- **Resolved**: 2026-07-13T02:31:00+03:00
+- **Notes**: Replaced the TSX type import with the return type `'lock' | 'unlock'`.
+
+---
+
+## [ERR-20260713-009] powershell-npm-script-policy
+
+**Logged**: 2026-07-13T02:25:00+03:00
+**Priority**: low
+**Status**: resolved
+**Area**: tooling
+
+### Summary
+PowerShell blocked `npm.ps1` while running the renderer typecheck.
+
+### Error
+```text
+npm.ps1 cannot be loaded because running scripts is disabled on this system
+```
+
+### Suggested Fix
+Invoke `npm.cmd` directly for package scripts in this Windows workspace.
+
+### Resolution
+- **Resolved**: 2026-07-13T02:25:00+03:00
+- **Notes**: `npm.cmd run typecheck:renderer` completed successfully.
+
+---
+
+## [ERR-20260713-008] powershell-regex-quote-conflict
+
+**Logged**: 2026-07-13T02:18:00+03:00
+**Priority**: low
+**Status**: resolved
+**Area**: tooling
+
+### Summary
+A combined PowerShell `rg` inventory command produced an unclosed regex character class because nested quote escaping changed the pattern.
+
+### Error
+```text
+rg: regex parse error: unclosed character class
+```
+
+### Suggested Fix
+Use single-quoted PowerShell regex arguments and split complex source and CSS searches.
+
+### Resolution
+- **Resolved**: 2026-07-13T02:18:00+03:00
+- **Notes**: Re-ran as two simple searches and completed the inventory.
+
+---
+
 ## [ERR-20260709-002] sandbox-node-spawn-eperm
 
 **Logged**: 2026-07-09T23:39:09+03:00
@@ -250,5 +346,70 @@ Pass `--test-concurrency=1` directly to a `node --test` invocation after compili
 ### Resolution
 - **Resolved**: 2026-07-13T01:38:00+03:00
 - **Notes**: Switched to a direct Node test-runner invocation for serialized verification.
+
+---
+
+## [ERR-20260713-006] powershell-icon-inventory-quoting
+
+**Logged**: 2026-07-13T02:00:00+03:00
+**Priority**: low
+**Status**: resolved
+**Area**: config
+
+### Summary
+A combined PowerShell icon-inventory command failed because nested quote characters left a string unterminated.
+
+### Error
+```text
+The string is missing the terminator: ".
+```
+
+### Context
+- Command combined several ripgrep patterns for JSX glyphs, Unicode symbols, and CSS `content` declarations.
+- The CSS quote pattern conflicted with the enclosing PowerShell string.
+
+### Suggested Fix
+Run the inventory as separate ripgrep commands with single-quoted PowerShell arguments.
+
+### Metadata
+- Reproducible: yes
+- Related Files: src/renderer
+
+### Resolution
+- **Resolved**: 2026-07-13T02:00:00+03:00
+- **Notes**: Split the inventory into independently quoted searches.
+
+---
+
+## [ERR-20260713-007] atomic-patch-readme-encoding-context
+
+**Logged**: 2026-07-13T02:06:00+03:00
+**Priority**: low
+**Status**: resolved
+**Area**: docs
+
+### Summary
+A multi-file icon-system patch was rejected because a README context line used a differently decoded dash sequence.
+
+### Error
+```text
+apply_patch verification failed: Failed to find expected lines in src/renderer/styles/README.md
+```
+
+### Context
+- The patch combined new TSX/CSS files, stylesheet registration, and a README update.
+- The README contains legacy mojibake around the em dash, so the expected context did not match byte-for-byte.
+- The atomic patch wrote no partial changes.
+
+### Suggested Fix
+Apply source changes independently, then patch documentation using stable ASCII-only context.
+
+### Metadata
+- Reproducible: yes
+- Related Files: src/renderer/styles/README.md
+
+### Resolution
+- **Resolved**: 2026-07-13T02:06:00+03:00
+- **Notes**: Split implementation and documentation into separate patches.
 
 ---

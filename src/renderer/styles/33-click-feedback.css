@@ -144,10 +144,14 @@
 
 .overlay-page .is-click-feedback-active > .overlay-icon-glyph,
 .overlay-page .is-click-feedback-active > .timer-button-glyph,
+.companion-page .is-click-feedback-active > .ui-icon,
 .companion-page .is-click-feedback-active > span,
+.settings-page .is-click-feedback-active > .ui-icon,
 .settings-page .is-click-feedback-active > span,
 .report-page .is-click-feedback-active > span,
+.update-page .is-click-feedback-active > .ui-icon,
 .update-page .is-click-feedback-active > span,
+.close-confirm-page .is-click-feedback-active > .ui-icon,
 .close-confirm-page .is-click-feedback-active > span {
   animation: poe2-click-feedback-glyph-pop 260ms var(--motion-ease-out, cubic-bezier(0.16, 1, 0.3, 1)) both;
 }
@@ -231,10 +235,14 @@
 
   .overlay-page .is-click-feedback-active > .overlay-icon-glyph,
   .overlay-page .is-click-feedback-active > .timer-button-glyph,
+  .companion-page .is-click-feedback-active > .ui-icon,
   .companion-page .is-click-feedback-active > span,
+  .settings-page .is-click-feedback-active > .ui-icon,
   .settings-page .is-click-feedback-active > span,
   .report-page .is-click-feedback-active > span,
+  .update-page .is-click-feedback-active > .ui-icon,
   .update-page .is-click-feedback-active > span,
+  .close-confirm-page .is-click-feedback-active > .ui-icon,
   .close-confirm-page .is-click-feedback-active > span {
     animation-duration: 1ms !important;
   }

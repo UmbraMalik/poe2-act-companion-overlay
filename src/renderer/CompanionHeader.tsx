@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { ZoneRecognitionView } from './log-health';
 import type { AppTheme } from '../shared/types';
+import { UiIcon } from './UiIcon';
 
 interface CompanionHeaderProps {
   appName: string;
@@ -113,38 +114,14 @@ export function CompanionHeader({
         >
           <span className="companion-theme-toggle-indicator" aria-hidden="true" />
           <span className="companion-theme-option is-classic" aria-hidden="true">
-            <svg
-              className="companion-theme-icon companion-theme-icon-sun"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={1.8}
-              strokeLinecap="round"
-              aria-hidden="true"
-              focusable="false"
-            >
-              <circle cx="12" cy="12" r="3.6" />
-              <path d="M12 2.4v2.1M12 19.5v2.1M2.4 12h2.1M19.5 12h2.1M5.2 5.2l1.5 1.5M17.3 17.3l1.5 1.5M18.8 5.2l-1.5 1.5M6.7 17.3l-1.5 1.5" />
-            </svg>
+            <UiIcon name="sun" className="companion-theme-icon companion-theme-icon-sun" />
           </span>
           <span className="companion-theme-option is-dark-fantasy" aria-hidden="true">
-            <svg
-              className="companion-theme-icon companion-theme-icon-moon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={1.8}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-              focusable="false"
-            >
-              <path d="M20.7 14.3A8.7 8.7 0 0 1 9.7 3.3 8.8 8.8 0 1 0 20.7 14.3Z" />
-            </svg>
+            <UiIcon name="moon" className="companion-theme-icon companion-theme-icon-moon" />
           </span>
         </button>
         <button className="companion-header-icon is-settings" type="button" title={labels.settings} aria-label={labels.settings} disabled={busy} onClick={onSettings}>
-          <span aria-hidden="true">⚙</span>
+          <UiIcon name="settings" />
         </button>
         <details
           ref={menuRef}
@@ -158,7 +135,7 @@ export function CompanionHeader({
             aria-haspopup="menu"
             aria-expanded={menuOpen}
           >
-            <span aria-hidden="true">⋯</span>
+            <UiIcon name="more" />
           </summary>
           <div className="companion-utility-popover" role="menu">
             <button type="button" role="menuitem" disabled={busy} onClick={() => runMenuAction(onInfo)}>{labels.info}</button>
@@ -168,7 +145,7 @@ export function CompanionHeader({
           </div>
         </details>
         <button className="companion-header-icon is-close" type="button" title={labels.close} aria-label={labels.close} onClick={onClose}>
-          <span aria-hidden="true">×</span>
+          <UiIcon name="close" />
         </button>
       </div>
     </header>

@@ -9,8 +9,8 @@ import {
 } from '../src/renderer/overlay-lock';
 
 test('overlay lock button is icon-only and reflects the current movement flag', () => {
-  assert.equal(getOverlayLockButtonIcon(false), '🔓');
-  assert.equal(getOverlayLockButtonIcon(true), '🔒');
+  assert.equal(getOverlayLockButtonIcon(false), 'unlock');
+  assert.equal(getOverlayLockButtonIcon(true), 'lock');
   assert.equal(getOverlayLockButtonLabel(false, 'ru'), 'Закрепить');
   assert.equal(getOverlayLockButtonLabel(true, 'ru'), 'Открепить');
 });

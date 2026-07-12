@@ -624,15 +624,15 @@ test('companion bonus manual marks keep visible source-specific feedback', () =>
 test('current-zone details drawer reuses the Settings select chevron state contract', () => {
   const hub = readText('src/renderer/CurrentRunHub.tsx');
   const settingsSelect = readText('src/renderer/settings/SettingsSelect.tsx');
-  const settingsTheme = readText('src/renderer/styles/35-dark-fantasy-theme.css');
+  const iconSystem = readText('src/renderer/styles/37-icon-system.css');
   const cohesion = readText('src/renderer/styles/36-companion-cohesion.css');
 
   assert.match(hub, /const \[zoneDetailsOpen, setZoneDetailsOpen\] = useState\(false\)/);
   assert.match(hub, /zone-detail-drawer settings-select\$\{zoneDetailsOpen \? ' is-open' : ''\}/);
   assert.match(hub, /onToggle=\{\(event\) => setZoneDetailsOpen\(event\.currentTarget\.open\)\}/);
-  assert.match(hub, /<span className="settings-select-chevron" aria-hidden="true" \/>/);
-  assert.match(settingsSelect, /<span className="settings-select-chevron" aria-hidden="true" \/>/);
-  assert.match(settingsTheme, /\.settings-select\.is-open \.settings-select-chevron::before \{[\s\S]*rotate\(225deg\)/);
+  assert.match(hub, /settings-select-chevron[\s\S]*<UiIcon name="chevron-down"/);
+  assert.match(settingsSelect, /settings-select-chevron[\s\S]*<UiIcon name="chevron-down"/);
+  assert.match(iconSystem, /\.settings-select\.is-open \.settings-select-chevron > \.ui-icon \{[\s\S]*rotate\(180deg\)/);
   assert.doesNotMatch(hub, /zone-detail-toggle/);
   assert.doesNotMatch(cohesion, /zone-detail-toggle/);
 });
@@ -648,6 +648,34 @@ test('companion theme toggle uses centered animated SVG icons at header-control 
   assert.match(cohesion, /companion-theme-toggle\.is-dark-fantasy > \.companion-theme-toggle-indicator \{[\s\S]*translate3d\(36px, 0, 0\)/);
   assert.match(cohesion, /\.companion-theme-icon \{[\s\S]*width: 16px;[\s\S]*height: 16px;[\s\S]*transform 280ms/);
   assert.match(cohesion, /@media \(prefers-reduced-motion: reduce\) \{[\s\S]*\.companion-page \.companion-theme-icon/);
+});
+
+test('interactive chrome uses the shared typed SVG icon system instead of font glyphs', () => {
+  const icon = readText('src/renderer/UiIcon.tsx');
+  const iconSystem = readText('src/renderer/styles/37-icon-system.css');
+  const stylesIndex = readText('src/renderer/styles.css');
+  const header = readText('src/renderer/CompanionHeader.tsx');
+  const overlay = readText('src/renderer/pages/OverlayPage.tsx');
+  const currentRun = readText('src/renderer/CurrentRunHub.tsx');
+  const closeConfirm = readText('src/renderer/pages/CloseConfirmPage.tsx');
+  const update = readText('src/renderer/pages/UpdatePage.tsx');
+  const legacyGlyphPattern = /⚙|⋯|×|☰|▶|⏸|🔒|🔓|▴|▾|✓|○|→|◆/;
+
+  assert.match(icon, /export type UiIconName/);
+  assert.match(icon, /export function UiIcon/);
+  assert.match(stylesIndex, /37-icon-system\.css/);
+  assert.match(iconSystem, /\.ui-icon/);
+  assert.match(iconSystem, /prefers-reduced-motion/);
+  assert.match(header, /<UiIcon name="settings"/);
+  assert.match(header, /<UiIcon name="more"/);
+  assert.match(header, /<UiIcon name="close"/);
+  assert.match(overlay, /name=\{getOverlayLockButtonIcon/);
+  assert.match(overlay, /name=\{isOverlayCollapsed \? 'chevron-down' : 'chevron-up'\}/);
+  assert.match(currentRun, /name=\{done \? 'check' : 'circle'\}/);
+
+  for (const source of [header, overlay, currentRun, closeConfirm, update]) {
+    assert.doesNotMatch(source, legacyGlyphPattern);
+  }
 });
 
 test('companion run history details button opens a stable detached detail card', () => {
@@ -755,8 +783,8 @@ test('overlay supports full left-click drag with an icon-only lock toggle', () =
   assert.match(overlay, /getOverlayLockButtonIcon/);
   assert.match(overlay, /toggleOverlayMovementLock/);
   assert.match(overlay, /getResizeGripClassName/);
-  assert.match(lock, /'🔓'/);
-  assert.match(lock, /'🔒'/);
+  assert.match(lock, /'unlock'/);
+  assert.match(lock, /'lock'/);
   assert.match(styles, /overlay-lock-icon-button/);
   assert.match(styles, /resize-grip\.is-disabled/);
   assert.doesNotMatch(overlay, /unlockDragGuardActiveRef/);

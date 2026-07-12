@@ -21,6 +21,7 @@ import { getGuideUpdateClassName } from './guide-update-highlights';
 import { getZoneRecognitionView } from './log-health';
 import { formatSignedPaceDuration, getRunPaceSnapshot } from './run-pace';
 import { formatDuration } from './utils';
+import { UiIcon } from './UiIcon';
 
 type RenderableGuideDetails = GuideEntry['details'] | LocalizedGuideEntryView['details'];
 
@@ -113,12 +114,17 @@ function renderStringSection(title: string, items: string[], className?: string)
     return null;
   }
 
+  const isSkipSection = className?.split(/\s+/).includes('skip-section') ?? false;
+
   return (
     <section className={`companion-block ${className ?? ''}`.trim()}>
       <h3>{title}</h3>
       <ul className="details-list">
         {items.map((item) => (
-          <li key={`${title}-${item}`} className={getGuideUpdateClassName(item).trim()}>{item}</li>
+          <li key={`${title}-${item}`} className={getGuideUpdateClassName(item).trim()}>
+            {isSkipSection && <UiIcon name="close" className="ui-skip-icon" />}
+            <span>{item}</span>
+          </li>
         ))}
       </ul>
     </section>
@@ -651,7 +657,9 @@ export function CurrentRunHub({
               <ul className="zone-command-bonus-list">
                 {localizedCurrentZoneBonuses.map(({ bonus, bonusView, done }) => (
                   <li key={bonus.id} className={done ? 'is-done' : 'is-pending'}>
-                    <span className="zone-command-bonus-state" aria-hidden="true">{done ? '✓' : '○'}</span>
+                    <span className="zone-command-bonus-state" aria-hidden="true">
+                      <UiIcon name={done ? 'check' : 'circle'} className="ui-status-icon" />
+                    </span>
                     <div>
                       <strong>{bonusView?.displayTitle ?? bonus.title}</strong>
                       <small>
@@ -701,7 +709,7 @@ export function CurrentRunHub({
             <span>{translate(language, 'companion.zoneHubRouteTitle')}</span>
             <div className="zone-command-route-flow">
               <strong>{sceneName}</strong>
-              <b aria-hidden="true">→</b>
+              <UiIcon name="arrow-right" />
               <strong>{nextZoneName ?? translate(language, 'common.notAvailable')}</strong>
             </div>
             <small>{routePositionLabel}</small>
@@ -750,7 +758,9 @@ export function CurrentRunHub({
             <strong>{translate(language, 'companion.zoneHubDetailsSummary')}</strong>
             <small>{translate(language, 'companion.zoneHubDetailsHint')}</small>
           </span>
-          <span className="settings-select-chevron" aria-hidden="true" />
+          <span className="settings-select-chevron" aria-hidden="true">
+            <UiIcon name="chevron-down" />
+          </span>
         </summary>
 
         <div className="zone-detail-drawer-body">
@@ -783,7 +793,9 @@ export function CurrentRunHub({
               <ul className="details-list zone-bonus-details-list">
                 {localizedCurrentZoneBonuses.map(({ bonus, bonusView, done }) => (
                   <li key={bonus.id} className={done ? 'bonus-line is-done' : 'bonus-line'}>
-                    <span className="bonus-state-marker">{done ? '✓' : '○'}</span>
+                    <span className="bonus-state-marker">
+                      <UiIcon name={done ? 'check' : 'circle'} className="ui-status-icon" />
+                    </span>
                     <span>{bonusView?.displayTitle ?? bonus.title}</span>
                   </li>
                 ))}

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { translate } from '../i18n/translations';
 import type { AppLanguage, AppTheme, OverlaySnapshot } from '../shared/types';
+import { UiIcon } from './UiIcon';
 
 interface FirstRunWizardProps {
   snapshot: OverlaySnapshot;
@@ -144,7 +145,7 @@ export function FirstRunWizard({ snapshot, language }: FirstRunWizardProps) {
           <div className="overlay-setup-log-step">
             <p>{translate(language, 'setupWizard.logBody')}</p>
             <div className={`overlay-setup-status-card ${logReady ? 'is-ready' : 'is-pending'}`}>
-              <span aria-hidden="true">{logReady ? '✓' : '○'}</span>
+              <UiIcon name={logReady ? 'check' : 'circle'} className="ui-status-icon" />
               <div>
                 <strong>{logReady ? translate(language, 'setupWizard.logReady') : translate(language, 'setupWizard.logPending')}</strong>
                 <small>{runtime.watchedLogPath ?? config.logFilePath ?? translate(language, 'overlay.onboardingPath')}</small>
@@ -173,7 +174,7 @@ export function FirstRunWizard({ snapshot, language }: FirstRunWizardProps) {
             <p>{translate(language, 'setupWizard.readyBody')}</p>
             {readiness.map((item) => (
               <div key={item.id} className={item.ready ? 'is-ready' : 'is-pending'}>
-                <span aria-hidden="true">{item.ready ? '✓' : '○'}</span>
+                <UiIcon name={item.ready ? 'check' : 'circle'} className="ui-status-icon" />
                 <div>
                   <strong>{item.label}</strong>
                   <small>{item.detail}</small>
