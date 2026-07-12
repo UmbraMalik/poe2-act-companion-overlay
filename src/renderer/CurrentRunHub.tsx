@@ -69,7 +69,6 @@ interface CurrentRunHubProps {
   sceneName: string;
   nowAct: ZoneAct | null;
   currentRunElapsed: number;
-  currentZoneElapsed: number;
   currentActElapsed: number | null;
   runHistory: SavedRunHistoryEntry[];
   timerStatus: RunTimerStatus;
@@ -361,7 +360,6 @@ export function CurrentRunHub({
   sceneName,
   nowAct,
   currentRunElapsed,
-  currentZoneElapsed,
   currentActElapsed,
   runHistory,
   timerStatus,
@@ -519,7 +517,6 @@ export function CurrentRunHub({
       runHistory,
       zoneId: guide?.id ?? null,
       currentRunElapsedMs: currentRunElapsed,
-      currentZoneElapsedMs: currentZoneElapsed,
       currentAct: nowAct,
       currentActElapsedMs: currentActElapsed,
       targetRunTimeMs: snapshot.config.runTimerSettings.targetRunTimeMs,
@@ -528,7 +525,6 @@ export function CurrentRunHub({
     [
       currentActElapsed,
       currentRunElapsed,
-      currentZoneElapsed,
       guide?.id,
       nowAct,
       runHistory,

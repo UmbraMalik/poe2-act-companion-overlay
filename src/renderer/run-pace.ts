@@ -97,7 +97,6 @@ export function getRunPaceSnapshot(options: {
   runHistory: SavedRunHistoryEntry[];
   zoneId: string | null;
   currentRunElapsedMs: number;
-  currentZoneElapsedMs: number;
   currentAct: ZoneAct | null;
   currentActElapsedMs: number | null;
   targetRunTimeMs: number | null;
@@ -107,7 +106,6 @@ export function getRunPaceSnapshot(options: {
     runHistory,
     zoneId,
     currentRunElapsedMs,
-    currentZoneElapsedMs,
     currentAct,
     currentActElapsedMs,
     targetRunTimeMs,
@@ -141,7 +139,7 @@ export function getRunPaceSnapshot(options: {
     return empty;
   }
 
-  const currentCheckpointMs = Math.max(0, currentRunElapsedMs - currentZoneElapsedMs);
+  const currentCheckpointMs = Math.max(0, currentRunElapsedMs);
   const checkpointDeltaMs = currentCheckpointMs - reference.checkpointMs;
   const projectedFinishMs = Math.max(
     currentRunElapsedMs,
@@ -152,7 +150,7 @@ export function getRunPaceSnapshot(options: {
     : null;
   const currentActCheckpointMs = currentActElapsedMs === null
     ? null
-    : Math.max(0, currentActElapsedMs - currentZoneElapsedMs);
+    : Math.max(0, currentActElapsedMs);
   const actDeltaMs = currentActCheckpointMs !== null && bestActElapsedMs !== null
     ? currentActCheckpointMs - bestActElapsedMs
     : null;

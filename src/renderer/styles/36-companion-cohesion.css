@@ -3932,35 +3932,6 @@ textarea {
 }
 
 /* Completion pass: live pace, first-run setup, and calmer companion navigation. */
-.overlay-live-pace-line {
-  width: fit-content;
-  max-width: 100%;
-  display: inline-flex;
-  align-items: center;
-  margin-top: 6px;
-  padding: 5px 9px;
-  border: 1px solid rgba(230, 177, 96, 0.24);
-  border-radius: 999px;
-  color: rgba(245, 225, 193, 0.84);
-  background: rgba(8, 10, 14, 0.46);
-  font-size: max(9px, calc(var(--font-meta) - 1px));
-  font-weight: 720;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.025em;
-  line-height: 1.25;
-  overflow-wrap: anywhere;
-}
-
-.overlay-live-pace-line:empty {
-  display: none;
-}
-
-.theme-dark-fantasy .overlay-live-pace-line {
-  border-color: rgba(185, 136, 255, 0.28);
-  color: rgba(237, 221, 255, 0.88);
-  background: rgba(19, 11, 31, 0.56);
-}
-
 .overlay-shell:has(.overlay-setup-wizard) {
   min-height: 520px;
 }
@@ -4321,9 +4292,21 @@ textarea {
   background: var(--companion-red-soft);
 }
 
-.companion-page .companion-utility-menu {
+.companion-page .companion-utility-menu,
+.companion-page .companion-utility-menu[open] {
   position: relative;
   z-index: 1;
+  flex: 0 0 36px;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  min-height: 36px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  overflow: visible;
 }
 
 .companion-page .companion-utility-menu[open] {
@@ -4339,7 +4322,11 @@ textarea {
   z-index: 100;
   top: calc(100% + 7px);
   right: 0;
-  width: 210px;
+  left: auto;
+  box-sizing: border-box;
+  width: 220px !important;
+  min-width: 220px;
+  max-width: calc(100vw - 24px);
   display: grid;
   gap: 3px;
   padding: 6px;
@@ -4347,10 +4334,14 @@ textarea {
   border-radius: 12px;
   background: var(--companion-surface, rgba(12, 15, 20, 0.98));
   box-shadow: 0 18px 36px rgba(0, 0, 0, 0.38);
+  overflow: hidden;
 }
 
 .companion-page .companion-utility-popover button {
+  box-sizing: border-box;
   width: 100%;
+  min-width: 0 !important;
+  max-width: 100%;
   min-height: 34px;
   padding: 7px 9px;
   border: 0;

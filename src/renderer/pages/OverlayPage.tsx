@@ -50,7 +50,6 @@ import { translateSystemText } from '../../i18n/runtime';
 import { translate } from '../../i18n/translations';
 import { getZoneRecognitionView } from '../log-health';
 import { FirstRunWizard } from '../FirstRunWizard';
-import { OverlayPaceLine } from '../OverlayPaceLine';
 import type {
   AppLanguage,
   CampaignBonusDefinition,
@@ -1972,17 +1971,6 @@ export function OverlayPage() {
               statusLabel={levelState.label}
             />
           </p>
-          <OverlayPaceLine
-            runTimer={displayRunTimer}
-            settings={config.runTimerSettings}
-            snapshotNowMs={runtime.timerNowMs}
-            runHistory={config.runHistory}
-            zoneId={guide?.id ?? null}
-            currentAct={currentActTimerAct}
-            language={language}
-            overlayMode={runtime.overlayMode}
-            zoneName={guide?.zone_ru ?? currentZone.rawZoneName ?? overlayZoneName}
-          />
         </header>
         {firstRunWizard}
 

@@ -41,12 +41,11 @@ function savedRun(id: string, totalElapsedMs: number, status: SavedRunHistoryEnt
   };
 }
 
-test('live pace uses the fastest finished comparable run and projects finish from the current checkpoint', () => {
+test('live pace uses the fastest finished comparable run and advances with the live timer', () => {
   const snapshot = getRunPaceSnapshot({
     runHistory: [savedRun('slow', 6 * 60 * 60_000), savedRun('fast', 5 * 60 * 60_000)],
     zoneId: 'zone-3',
     currentRunElapsedMs: 40 * 60_000,
-    currentZoneElapsedMs: 5 * 60_000,
     currentAct: 2,
     currentActElapsedMs: 40 * 60_000,
     targetRunTimeMs: 5 * 60 * 60_000,
@@ -55,13 +54,38 @@ test('live pace uses the fastest finished comparable run and projects finish fro
 
   assert.equal(snapshot.referenceRun?.id, 'fast');
   assert.equal(snapshot.referenceCheckpointMs, 30 * 60_000);
-  assert.equal(snapshot.currentCheckpointMs, 35 * 60_000);
-  assert.equal(snapshot.checkpointDeltaMs, 5 * 60_000);
-  assert.equal(snapshot.projectedFinishMs, 5 * 60 * 60_000 + 5 * 60_000);
-  assert.equal(snapshot.targetDeltaMs, 5 * 60_000);
+  assert.equal(snapshot.currentCheckpointMs, 40 * 60_000);
+  assert.equal(snapshot.checkpointDeltaMs, 10 * 60_000);
+  assert.equal(snapshot.projectedFinishMs, 5 * 60 * 60_000 + 10 * 60_000);
+  assert.equal(snapshot.targetDeltaMs, 10 * 60_000);
   assert.equal(snapshot.bestActElapsedMs, 30 * 60_000);
-  assert.equal(snapshot.actDeltaMs, 5 * 60_000);
+  assert.equal(snapshot.actDeltaMs, 10 * 60_000);
   assert.equal(snapshot.tone, 'behind');
+});
+
+test('live pace delta changes while the current zone timer advances', () => {
+  const base = {
+    runHistory: [savedRun('fast', 5 * 60 * 60_000)],
+    zoneId: 'zone-3',
+    currentAct: 2 as const,
+    targetRunTimeMs: null,
+    timerStatus: 'running' as const
+  };
+  const first = getRunPaceSnapshot({
+    ...base,
+    currentRunElapsedMs: 31 * 60_000,
+    currentActElapsedMs: 31 * 60_000
+  });
+  const later = getRunPaceSnapshot({
+    ...base,
+    currentRunElapsedMs: 32 * 60_000,
+    currentActElapsedMs: 32 * 60_000
+  });
+
+  assert.equal(first.checkpointDeltaMs, 1 * 60_000);
+  assert.equal(later.checkpointDeltaMs, 2 * 60_000);
+  assert.equal(first.actDeltaMs, 1 * 60_000);
+  assert.equal(later.actDeltaMs, 2 * 60_000);
 });
 
 test('live pace stays empty until the timer is active or a comparable checkpoint exists', () => {
@@ -69,7 +93,6 @@ test('live pace stays empty until the timer is active or a comparable checkpoint
     runHistory: [savedRun('fast', 5 * 60 * 60_000)],
     zoneId: 'zone-3',
     currentRunElapsedMs: 0,
-    currentZoneElapsedMs: 0,
     currentAct: 1,
     currentActElapsedMs: 0,
     targetRunTimeMs: null,
@@ -79,7 +102,6 @@ test('live pace stays empty until the timer is active or a comparable checkpoint
     runHistory: [savedRun('fast', 5 * 60 * 60_000)],
     zoneId: 'unknown-zone',
     currentRunElapsedMs: 40 * 60_000,
-    currentZoneElapsedMs: 5 * 60_000,
     currentAct: 1,
     currentActElapsedMs: 35 * 60_000,
     targetRunTimeMs: null,
