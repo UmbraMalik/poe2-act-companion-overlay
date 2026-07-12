@@ -187,3 +187,68 @@ Skip the subscription when the preload bridge or callback is unavailable, matchi
 - Related Files: src/renderer/pages/CompanionPage.tsx, src/renderer/hooks.ts
 
 ---
+
+## [ERR-20260713-004] windows-temp-config-rename-eperm
+
+**Logged**: 2026-07-13T01:36:00+03:00
+**Priority**: medium
+**Status**: resolved
+**Area**: tests
+
+### Summary
+A regression fixture intermittently failed while atomically renaming a temporary config file on Windows.
+
+### Error
+```text
+EPERM: operation not permitted, rename '.tmp-tests/.../config.json.tmp' -> '.tmp-tests/.../config.json'
+```
+
+### Context
+- Command attempted: `npm test`
+- The new Current-zone Settings chevron regression passed before the unrelated log-parser fixture failed.
+- The test runner cleaned `.tmp-tests` after the failure.
+
+### Suggested Fix
+Retry after cleanup. If the failure recurs, investigate transient Windows file locking around `ConfigStore.save` test fixtures.
+
+### Metadata
+- Reproducible: yes
+- Related Files: src/main/services/config-store.ts, tests/log-parser.test.ts
+
+### Resolution
+- **Resolved**: 2026-07-13T01:39:00+03:00
+- **Notes**: All 233 regression tests passed when the Node test runner was invoked with `--test-concurrency=1`; the parallel fixture run was the source of the Windows rename contention.
+
+---
+
+## [ERR-20260713-005] node-options-test-concurrency-disallowed
+
+**Logged**: 2026-07-13T01:38:00+03:00
+**Priority**: low
+**Status**: resolved
+**Area**: tests
+
+### Summary
+Node rejects `--test-concurrency` when supplied through `NODE_OPTIONS`.
+
+### Error
+```text
+node.exe: --test-concurrency= is not allowed in NODE_OPTIONS
+```
+
+### Context
+- Command attempted: `NODE_OPTIONS=--test-concurrency=1 npm test`
+- The intent was to serialize Windows filesystem-heavy regression fixtures.
+
+### Suggested Fix
+Pass `--test-concurrency=1` directly to a `node --test` invocation after compiling the test tree.
+
+### Metadata
+- Reproducible: yes
+- Related Files: scripts/run-regression-tests.cjs
+
+### Resolution
+- **Resolved**: 2026-07-13T01:38:00+03:00
+- **Notes**: Switched to a direct Node test-runner invocation for serialized verification.
+
+---

@@ -621,6 +621,22 @@ test('companion bonus manual marks keep visible source-specific feedback', () =>
   assert.match(cohesion, /\.companion-page \.bonuses-act-card,[\s\S]*\.companion-page \.bonuses-list,[\s\S]*\.companion-page \.bonuses-list > \.bonus-row \{[\s\S]*overflow: visible !important;/);
 });
 
+test('current-zone details drawer reuses the Settings select chevron state contract', () => {
+  const hub = readText('src/renderer/CurrentRunHub.tsx');
+  const settingsSelect = readText('src/renderer/settings/SettingsSelect.tsx');
+  const settingsTheme = readText('src/renderer/styles/35-dark-fantasy-theme.css');
+  const cohesion = readText('src/renderer/styles/36-companion-cohesion.css');
+
+  assert.match(hub, /const \[zoneDetailsOpen, setZoneDetailsOpen\] = useState\(false\)/);
+  assert.match(hub, /zone-detail-drawer settings-select\$\{zoneDetailsOpen \? ' is-open' : ''\}/);
+  assert.match(hub, /onToggle=\{\(event\) => setZoneDetailsOpen\(event\.currentTarget\.open\)\}/);
+  assert.match(hub, /<span className="settings-select-chevron" aria-hidden="true" \/>/);
+  assert.match(settingsSelect, /<span className="settings-select-chevron" aria-hidden="true" \/>/);
+  assert.match(settingsTheme, /\.settings-select\.is-open \.settings-select-chevron::before \{[\s\S]*rotate\(225deg\)/);
+  assert.doesNotMatch(hub, /zone-detail-toggle/);
+  assert.doesNotMatch(cohesion, /zone-detail-toggle/);
+});
+
 test('companion run history details button opens a stable detached detail card', () => {
   const detailPanel = readText('src/renderer/RunHistoryDetailPanel.tsx');
   const companion = readText('src/renderer/pages/CompanionPage.tsx');

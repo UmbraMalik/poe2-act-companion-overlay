@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import leagueMechanicRewardsData from '../data/league-mechanic-rewards.json';
 import { getCampaignBonusView, getGuideView, translateDataText, type LocalizedGuideEntryView } from '../i18n/data';
 import { translate } from '../i18n/translations';
@@ -369,6 +369,7 @@ export function CurrentRunHub({
   language,
   onOpenCurrentActRoute
 }: CurrentRunHubProps) {
+  const [zoneDetailsOpen, setZoneDetailsOpen] = useState(false);
   const guide = snapshot.currentGuideEntry;
   const guideChecklist = guideView?.checklist ?? [];
   const currentActRouteZones = useMemo(
@@ -740,15 +741,16 @@ export function CurrentRunHub({
         </div>
       </section>
 
-      <details className="companion-block zone-detail-drawer">
-        <summary>
+      <details
+        className={`companion-block zone-detail-drawer settings-select${zoneDetailsOpen ? ' is-open' : ''}`}
+        onToggle={(event) => setZoneDetailsOpen(event.currentTarget.open)}
+      >
+        <summary aria-expanded={zoneDetailsOpen}>
           <span>
             <strong>{translate(language, 'companion.zoneHubDetailsSummary')}</strong>
             <small>{translate(language, 'companion.zoneHubDetailsHint')}</small>
           </span>
-          <span className="zone-detail-toggle-icon" aria-hidden="true">
-            <span className="zone-detail-toggle-chevron" />
-          </span>
+          <span className="settings-select-chevron" aria-hidden="true" />
         </summary>
 
         <div className="zone-detail-drawer-body">
