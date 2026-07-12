@@ -637,6 +637,19 @@ test('current-zone details drawer reuses the Settings select chevron state contr
   assert.doesNotMatch(cohesion, /zone-detail-toggle/);
 });
 
+test('companion theme toggle uses centered animated SVG icons at header-control height', () => {
+  const header = readText('src/renderer/CompanionHeader.tsx');
+  const cohesion = readText('src/renderer/styles/36-companion-cohesion.css');
+
+  assert.match(header, /companion-theme-icon companion-theme-icon-sun/);
+  assert.match(header, /companion-theme-icon companion-theme-icon-moon/);
+  assert.doesNotMatch(header, /className="companion-theme-(sun|moon)"/);
+  assert.match(cohesion, /Final theme switch:[\s\S]*width: 74px;[\s\S]*height: 38px;[\s\S]*grid-template-columns: repeat\(2, 36px\);/);
+  assert.match(cohesion, /companion-theme-toggle\.is-dark-fantasy > \.companion-theme-toggle-indicator \{[\s\S]*translate3d\(36px, 0, 0\)/);
+  assert.match(cohesion, /\.companion-theme-icon \{[\s\S]*width: 16px;[\s\S]*height: 16px;[\s\S]*transform 280ms/);
+  assert.match(cohesion, /@media \(prefers-reduced-motion: reduce\) \{[\s\S]*\.companion-page \.companion-theme-icon/);
+});
+
 test('companion run history details button opens a stable detached detail card', () => {
   const detailPanel = readText('src/renderer/RunHistoryDetailPanel.tsx');
   const companion = readText('src/renderer/pages/CompanionPage.tsx');

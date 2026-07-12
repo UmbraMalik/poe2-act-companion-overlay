@@ -34,8 +34,8 @@ Use the same external context for cleanup when a temporary workspace npm cache i
 ## [ERR-20260709-002] sandbox-node-spawn-eperm
 
 **Logged**: 2026-07-09T23:39:09+03:00
-**Priority**: medium
-**Status**: resolved
+**Priority**: high
+**Status**: pending
 **Area**: tests
 
 ### Summary
@@ -215,9 +215,9 @@ Retry after cleanup. If the failure recurs, investigate transient Windows file l
 - Reproducible: yes
 - Related Files: src/main/services/config-store.ts, tests/log-parser.test.ts
 
-### Resolution
-- **Resolved**: 2026-07-13T01:39:00+03:00
-- **Notes**: All 233 regression tests passed when the Node test runner was invoked with `--test-concurrency=1`; the parallel fixture run was the source of the Windows rename contention.
+### Recurrence
+- **Observed**: 2026-07-13T01:51:00+03:00
+- **Notes**: The same rename contention affected two unrelated fixtures during a serialized `--test-concurrency=1` run, so concurrency reduction alone is not a complete fix.
 
 ---
 
