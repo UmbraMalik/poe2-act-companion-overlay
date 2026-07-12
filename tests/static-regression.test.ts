@@ -299,6 +299,7 @@ test('overlay visual effects can be disabled independently from global FX intens
 
 test('app theme is persisted and available in overlay and settings', () => {
   const overlay = readText('src/renderer/pages/OverlayPage.tsx');
+  const setupWizard = readText('src/renderer/FirstRunWizard.tsx');
   const settingsPage = readText('src/renderer/pages/SettingsPage.tsx');
   const companionPage = readText('src/renderer/pages/CompanionPage.tsx');
   const defaults = readText('src/shared/defaults.ts');
@@ -312,12 +313,17 @@ test('app theme is persisted and available in overlay and settings', () => {
   assert.match(types, /export type AppTheme = 'classic' \| 'dark_fantasy'/);
   assert.match(defaults, /theme:\s*'classic'/);
   assert.match(defaults, /themePreferencePrompted:\s*false/);
+  assert.match(defaults, /setupWizardCompleted:\s*false/);
   assert.match(configStore, /normalizeAppTheme\(rawConfig\.theme\)/);
   assert.match(configStore, /safeBoolean\(rawConfig\.themePreferencePrompted/);
+  assert.match(configStore, /rawConfig\.setupWizardCompleted/);
   assert.match(configStore, /patch\.theme/);
   assert.match(configStore, /patch\.themePreferencePrompted/);
-  assert.match(overlay, /overlay-theme-preference-card/);
-  assert.match(overlay, /themePreferencePrompted:\s*true/);
+  assert.match(configStore, /patch\.setupWizardCompleted/);
+  assert.match(overlay, /FirstRunWizard/);
+  assert.match(overlay, /!config\.setupWizardCompleted/);
+  assert.match(setupWizard, /themePreferencePrompted:\s*true/);
+  assert.match(setupWizard, /setupWizardCompleted:\s*true/);
   assert.doesNotMatch(overlay, /overlay-theme-icon-button/);
   assert.match(settingsPage, /app-theme-choice/);
   assert.match(settingsPage, /updateSettings\(\{ theme, themePreferencePrompted:\s*true \}\)/);
@@ -329,7 +335,7 @@ test('app theme is persisted and available in overlay and settings', () => {
   assert.match(themeStyles, /overlay-shell::after[\s\S]*content:\s*none !important/);
   assert.match(themeStyles, /\.theme-dark-fantasy\.overlay-page \.resize-grip:not\(\.is-disabled\)/);
   assert.match(translations, /Тёмное фэнтези/);
-  assert.match(translations, /Выбери тему/);
+  assert.match(translations, /Первый запуск/);
   assert.match(translations, /Dark fantasy/);
 });
 

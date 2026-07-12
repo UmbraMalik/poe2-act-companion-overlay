@@ -49,9 +49,10 @@ import { getCampaignBonusView, getGuideView, getLevelReminderView, getPowerSpike
 import { translateSystemText } from '../../i18n/runtime';
 import { translate } from '../../i18n/translations';
 import { getZoneRecognitionView } from '../log-health';
+import { FirstRunWizard } from '../FirstRunWizard';
+import { OverlayPaceLine } from '../OverlayPaceLine';
 import type {
   AppLanguage,
-  AppTheme,
   CampaignBonusDefinition,
   GuideEntry,
   LevelReminder,
@@ -1616,12 +1617,6 @@ export function OverlayPage() {
   const handleLanguageToggle = () => {
     handleLanguageChange(language === 'en' ? 'ru' : 'en');
   };
-  const handleThemePreferenceChoice = (theme: AppTheme) => {
-    void window.poe2Overlay?.updateSettings({
-      theme,
-      themePreferencePrompted: true
-    });
-  };
 
   const handleToggleSettings = () => {
     void window.poe2Overlay?.toggleSettings();
@@ -1812,20 +1807,8 @@ export function OverlayPage() {
       {timerPrimaryButton}
     </div>
   );
-  const themePreferencePrompt = !config.themePreferencePrompted ? (
-    <section className="overlay-theme-preference-card no-drag" role="dialog" aria-labelledby="overlay-theme-preference-title">
-      <div>
-        <h2 id="overlay-theme-preference-title">{t('overlay.themePromptTitle')}</h2>
-        <p>{t('overlay.themePromptText')}</p>
-      </div>
-      <div className="overlay-theme-preference-actions">
-        {(['classic', 'dark_fantasy'] as AppTheme[]).map((theme) => (
-          <button key={theme} type="button" onClick={() => handleThemePreferenceChoice(theme)}>
-            {t(theme === 'dark_fantasy' ? 'appTheme.darkFantasy' : 'appTheme.classic')}
-          </button>
-        ))}
-      </div>
-    </section>
+  const firstRunWizard = !config.setupWizardCompleted ? (
+    <FirstRunWizard snapshot={snapshot} language={language} />
   ) : null;
 
   const endgameT15CompletionBlock = showEndgameT15CompletionNotice ? (
@@ -1885,7 +1868,7 @@ export function OverlayPage() {
               {overlayQuickActions}
             </div>
           </header>
-          {themePreferencePrompt}
+          {firstRunWizard}
 
           <section className="timer-only-main-panel" aria-label={t('overlay.mainTimer')}>
             <p className="timer-only-main-label">{timerOnlyPrimaryLabel}</p>
@@ -1948,7 +1931,7 @@ export function OverlayPage() {
               {overlayQuickActions}
             </div>
           </header>
-          {themePreferencePrompt}
+          {firstRunWizard}
         </section>
       </main>
     );
@@ -1989,8 +1972,19 @@ export function OverlayPage() {
               statusLabel={levelState.label}
             />
           </p>
+          <OverlayPaceLine
+            runTimer={displayRunTimer}
+            settings={config.runTimerSettings}
+            snapshotNowMs={runtime.timerNowMs}
+            runHistory={config.runHistory}
+            zoneId={guide?.id ?? null}
+            currentAct={currentActTimerAct}
+            language={language}
+            overlayMode={runtime.overlayMode}
+            zoneName={guide?.zone_ru ?? currentZone.rawZoneName ?? overlayZoneName}
+          />
         </header>
-        {themePreferencePrompt}
+        {firstRunWizard}
 
         {endgameT15CompletionBlock}
 

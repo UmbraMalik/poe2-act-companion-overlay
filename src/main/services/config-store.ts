@@ -161,6 +161,19 @@ function normalizeOverlayOpacity(value: unknown): number {
   return Math.round(clamp(numberValue, 0.35, 1) * 100) / 100;
 }
 
+function normalizeTargetRunTime(value: unknown): number | null {
+  if (value === null || value === undefined || value === '') {
+    return null;
+  }
+
+  const numberValue = finiteNumber(value);
+  if (numberValue === null || numberValue < 10 * 60 * 1000 || numberValue > 72 * 60 * 60 * 1000) {
+    return DEFAULT_RUN_TIMER_SETTINGS.targetRunTimeMs;
+  }
+
+  return Math.round(numberValue);
+}
+
 function normalizeCurrentLevel(value: unknown): number | null {
   if (value === null || value === undefined) {
     return DEFAULT_CONFIG.currentLevel;
@@ -422,6 +435,7 @@ function normalizeRunTimerSettings(value: unknown): AppConfig['runTimerSettings'
     autoStartMode: source.autoStartMode === 'manual' ? 'manual' : 'scheduled_time',
     leagueStartAt: finiteTimestamp(source.leagueStartAt),
     leagueStartTimeLabel: safeString(source.leagueStartTimeLabel, DEFAULT_RUN_TIMER_SETTINGS.leagueStartTimeLabel),
+    targetRunTimeMs: normalizeTargetRunTime(source.targetRunTimeMs),
     autoStart: safeBoolean(source.autoStart, DEFAULT_RUN_TIMER_SETTINGS.autoStart),
     showCountdownBeforeStart: safeBoolean(
       source.showCountdownBeforeStart,
@@ -610,6 +624,9 @@ export function normalizeAppConfig(config: Partial<AppConfig> = {}): AppConfig {
     overlayEffectsEnabled: safeBoolean(rawConfig.overlayEffectsEnabled, DEFAULT_CONFIG.overlayEffectsEnabled),
     theme: normalizeAppTheme(rawConfig.theme),
     themePreferencePrompted: safeBoolean(rawConfig.themePreferencePrompted, DEFAULT_CONFIG.themePreferencePrompted),
+    setupWizardCompleted: typeof rawConfig.setupWizardCompleted === 'boolean'
+      ? rawConfig.setupWizardCompleted
+      : safeBoolean(rawConfig.themePreferencePrompted, false) || Boolean(safeString(rawConfig.logFilePath, null)),
     overlayDebugLayoutEnabled: safeBoolean(
       rawConfig.overlayDebugLayoutEnabled,
       DEFAULT_CONFIG.overlayDebugLayoutEnabled
@@ -708,6 +725,9 @@ export class ConfigStore {
         : {}),
       ...(patch.themePreferencePrompted !== undefined
         ? { themePreferencePrompted: patch.themePreferencePrompted }
+        : {}),
+      ...(patch.setupWizardCompleted !== undefined
+        ? { setupWizardCompleted: patch.setupWizardCompleted }
         : {}),
       ...(patch.overlayDebugLayoutEnabled !== undefined
         ? { overlayDebugLayoutEnabled: patch.overlayDebugLayoutEnabled }

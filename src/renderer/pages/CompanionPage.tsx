@@ -32,9 +32,11 @@ import { RouteCardBonusPanel, getRouteCampaignBonusModels, type RouteCardBonusMo
 import { RouteTabControls } from '../RouteTabControls';
 import { filterRouteCards, getRouteFilterEmptyText, type RouteFilterMode } from '../route-tab-search';
 import { CurrentRunHub } from '../CurrentRunHub';
+import { CompanionHeader } from '../CompanionHeader';
+import { CompanionNavigation, type CompanionNavigationTab, type CompanionSection } from '../CompanionNavigation';
 import type { AppLanguage, CampaignBonusDefinition, CampaignBonusProgress, GuideEntry, RunSummary, SavedRunHistoryEntry, ZoneAct } from '../../shared/types';
 
-type CompanionTab = 'zone' | 'route' | 'timer' | 'actTimes' | 'reminders' | 'bonuses' | 'summary';
+type CompanionTab = CompanionNavigationTab;
 type RunConfirmDialog =
   | { type: 'reset' }
   | { type: 'restore'; runId: string }
@@ -71,6 +73,21 @@ type RouteCardModel = {
 const ROUTE_OVERVIEW_VISIBLE_ITEMS = 2;
 const TOTAL_CAMPAIGN_ACTS = 5;
 const EMPTY_CAMPAIGN_BONUS_PROGRESS: Record<string, CampaignBonusProgress> = {};
+
+const COMPANION_SECTION_DEFAULT_TAB: Record<CompanionSection, CompanionTab> = {
+  zone: 'zone',
+  route: 'route',
+  progress: 'bonuses',
+  run: 'timer'
+};
+
+function getCompanionSection(tab: CompanionTab): CompanionSection {
+  if (tab === 'zone' || tab === 'route') {
+    return tab;
+  }
+
+  return tab === 'bonuses' || tab === 'reminders' ? 'progress' : 'run';
+}
 
 function getRouteStatusLabel(
   status: 'current' | 'missed' | 'completed' | 'visited' | 'pending',
@@ -929,6 +946,7 @@ export function CompanionPage() {
     } : undefined
   );
   const [activeTab, setActiveTab] = useState<CompanionTab>('zone');
+  const activeSection = getCompanionSection(activeTab);
   const [selectedAct, setSelectedAct] = useState<ZoneAct | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
   const [runSaveNotice, setRunSaveNotice] = useState<string | null>(null);
@@ -2027,6 +2045,25 @@ export function CompanionPage() {
     );
   };
 
+  const sectionLabels: Record<CompanionSection, string> = {
+    zone: t('companion.sections.zone'),
+    route: t('companion.sections.route'),
+    progress: t('companion.sections.progress'),
+    run: t('companion.sections.run')
+  };
+  const subTabs = activeSection === 'progress'
+    ? [
+      { id: 'bonuses' as const, label: t('companion.tabs.bonuses') },
+      { id: 'reminders' as const, label: t('companion.tabs.reminders') }
+    ]
+    : activeSection === 'run'
+      ? [
+        { id: 'timer' as const, label: t('companion.tabs.timer') },
+        { id: 'actTimes' as const, label: t('companion.tabs.actTimes') },
+        { id: 'summary' as const, label: t('companion.tabs.summary') }
+      ]
+      : [];
+
   const tabContent = {
     zone: zoneTab,
     route: routeTab,
@@ -2039,107 +2076,45 @@ export function CompanionPage() {
 
   return (
     <main className={`settings-page companion-page fx-${config.visualFxIntensity} ${getAppThemeClassName(config.theme)}`}>
-      <header className="settings-header window-drag-strip">
-        <div className="settings-header-copy">
-          <p className="eyebrow">{t('common.appName')}</p>
-          <h1>{t('companion.title')}</h1>
-          <p className="helper-text settings-intro">{t('companion.intro')}</p>
-        </div>
-        <div className="button-row no-drag companion-header-actions">
-          <button
-            className="button-secondary"
-            type="button"
-            onClick={() =>
-              runTask('open-info', async () => {
-                await window.poe2Overlay.openInfo();
-              })
-            }
-          >
-            {t('common.info')}
-          </button>
-          <button
-            className="button-secondary"
-            type="button"
-            onClick={() =>
-              runTask('open-community', async () => {
-                await window.poe2Overlay.openCommunity();
-              })
-            }
-          >
-            {t('common.community')}
-          </button>
-          <button
-            className="button-secondary"
-            type="button"
-            onClick={() =>
-              runTask('open-support', async () => {
-                await window.poe2Overlay.openSupport();
-              })
-            }
-          >
-            {t('common.support')}
-          </button>
-          <button
-            className="button-secondary"
-            type="button"
-            onClick={() =>
-              runTask('open-settings', async () => {
-                await window.poe2Overlay.openSettings();
-              })
-            }
-          >
-            {t('common.settings')}
-          </button>
-          <button
-            className="button-secondary"
-            type="button"
-            onClick={() =>
-              runTask('open-report-issue', async () => {
-                await window.poe2Overlay.openReportIssue();
-              })
-            }
-          >
-            {t('common.reportIssue')}
-          </button>
-          <button
-            className="button-secondary"
-            type="button"
-            onClick={() => window.close()}
-          >
-            {t('common.close')}
-          </button>
-        </div>
-      </header>
+      <CompanionHeader
+        appName={t('common.appName')}
+        title={t('companion.title')}
+        intro={t('companion.intro')}
+        status={zoneRecognition}
+        busy={busy !== null}
+        labels={{
+          info: t('common.info'),
+          community: t('common.community'),
+          support: t('common.support'),
+          settings: t('common.settings'),
+          reportIssue: t('common.reportIssue'),
+          close: t('common.close'),
+          more: t('companion.moreActions')
+        }}
+        onInfo={() => { void runTask('open-info', () => window.poe2Overlay.openInfo()); }}
+        onCommunity={() => { void runTask('open-community', () => window.poe2Overlay.openCommunity()); }}
+        onSupport={() => { void runTask('open-support', () => window.poe2Overlay.openSupport()); }}
+        onSettings={() => { void runTask('open-settings', () => window.poe2Overlay.openSettings()); }}
+        onReportIssue={() => { void runTask('open-report-issue', () => window.poe2Overlay.openReportIssue()); }}
+        onClose={() => window.close()}
+      />
 
       <section className="settings-shell companion-shell">
-        <section className="settings-card companion-card">
-          <div className="companion-tab-row">
-            {([
-              ['zone', t('companion.tabs.zone')],
-              ['route', t('companion.tabs.route')],
-              ['timer', t('companion.tabs.timer')],
-              ['actTimes', t('companion.tabs.actTimes')],
-              ['reminders', t('companion.tabs.reminders')],
-              ['bonuses', t('companion.tabs.bonuses')],
-              ['summary', t('companion.tabs.summary')]
-            ] as const).map(([tab, label]) => (
-              <button
-                key={tab}
-                type="button"
-                className={tab === activeTab ? 'button-primary' : 'button-secondary'}
-                onClick={() => setActiveTab(tab)}
-              >
-                {label}
-              </button>
-            ))}
-          </div>
+        <CompanionNavigation
+          activeSection={activeSection}
+          activeTab={activeTab}
+          sectionLabels={sectionLabels}
+          subTabs={subTabs}
+          onSectionChange={(section) => setActiveTab(COMPANION_SECTION_DEFAULT_TAB[section])}
+          onTabChange={setActiveTab}
+        >
           <div
             className={`companion-tab-body${activeTab === 'zone' ? ' is-zone-run-hub' : ''}`}
             key={activeTab}
           >
             {tabContent[activeTab]}
           </div>
-        </section>
+        </CompanionNavigation>
       </section>
       {renderRunConfirmDialog()}
     </main>

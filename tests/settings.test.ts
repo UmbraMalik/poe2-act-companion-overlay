@@ -16,6 +16,8 @@ test('normalizeAppConfig keeps defaults, custom settings and strips legacy unkno
     overlayEffectsEnabled: false,
     theme: 'dark_fantasy',
     themePreferencePrompted: true,
+    setupWizardCompleted: true,
+    runTimerSettings: { targetRunTimeMs: 6 * 60 * 60 * 1000 },
     overlayDebugLayoutEnabled: true,
     overlayMovementLocked: true,
     realtimePriorityEnabled: true,
@@ -33,6 +35,8 @@ test('normalizeAppConfig keeps defaults, custom settings and strips legacy unkno
   assert.equal(normalized.overlayEffectsEnabled, false);
   assert.equal(normalized.theme, 'dark_fantasy');
   assert.equal(normalized.themePreferencePrompted, true);
+  assert.equal(normalized.setupWizardCompleted, true);
+  assert.equal(normalized.runTimerSettings.targetRunTimeMs, 6 * 60 * 60 * 1000);
   assert.equal(normalized.overlayDebugLayoutEnabled, true);
   assert.equal(normalized.overlayMovementLocked, true);
   assert.equal(normalized.realtimePriorityEnabled, true);
@@ -50,6 +54,7 @@ test('normalizeAppConfig hardens corrupted user config values', () => {
     overlayEffectsEnabled: 'no',
     theme: 'neon',
     themePreferencePrompted: 'yes',
+    setupWizardCompleted: 'yes',
     overlayDebugLayoutEnabled: 'yes',
     overlayOpacity: 5,
     realtimePriorityEnabled: 'yes',
@@ -111,6 +116,7 @@ test('normalizeAppConfig hardens corrupted user config values', () => {
       autoStartMode: 'broken',
       leagueStartAt: -1,
       leagueStartTimeLabel: 123,
+      targetRunTimeMs: 1,
       autoStart: 'yes',
       showZoneTimer: false
     }
@@ -123,6 +129,7 @@ test('normalizeAppConfig hardens corrupted user config values', () => {
   assert.equal(normalized.overlayEffectsEnabled, DEFAULT_CONFIG.overlayEffectsEnabled);
   assert.equal(normalized.theme, DEFAULT_CONFIG.theme);
   assert.equal(normalized.themePreferencePrompted, DEFAULT_CONFIG.themePreferencePrompted);
+  assert.equal(normalized.setupWizardCompleted, DEFAULT_CONFIG.setupWizardCompleted);
   assert.equal(normalized.overlayDebugLayoutEnabled, DEFAULT_CONFIG.overlayDebugLayoutEnabled);
   assert.equal(normalized.overlayOpacity, 1);
   assert.equal(normalized.realtimePriorityEnabled, DEFAULT_CONFIG.realtimePriorityEnabled);
@@ -168,6 +175,7 @@ test('normalizeAppConfig hardens corrupted user config values', () => {
   assert.equal(normalized.runTimerSettings.autoStartMode, 'scheduled_time');
   assert.equal(normalized.runTimerSettings.leagueStartAt, null);
   assert.equal(normalized.runTimerSettings.leagueStartTimeLabel, null);
+  assert.equal(normalized.runTimerSettings.targetRunTimeMs, DEFAULT_CONFIG.runTimerSettings.targetRunTimeMs);
   assert.equal(normalized.runTimerSettings.autoStart, DEFAULT_CONFIG.runTimerSettings.autoStart);
   assert.equal(normalized.runTimerSettings.showZoneTimer, false);
 });
@@ -319,6 +327,8 @@ test('ConfigStore persists log path and merges settings safely', () => {
     overlayEffectsEnabled: false,
     theme: 'dark_fantasy',
     themePreferencePrompted: true,
+    setupWizardCompleted: true,
+    runTimerSettings: { targetRunTimeMs: 5 * 60 * 60 * 1000 },
     realtimePriorityEnabled: true,
     hotkeys: {
       openCompanion: 'Ctrl+F9'
@@ -334,6 +344,8 @@ test('ConfigStore persists log path and merges settings safely', () => {
   assert.equal(reloaded.overlayEffectsEnabled, false);
   assert.equal(reloaded.theme, 'dark_fantasy');
   assert.equal(reloaded.themePreferencePrompted, true);
+  assert.equal(reloaded.setupWizardCompleted, true);
+  assert.equal(reloaded.runTimerSettings.targetRunTimeMs, 5 * 60 * 60 * 1000);
   assert.equal(reloaded.realtimePriorityEnabled, true);
   assert.equal(reloaded.hotkeys.openCompanion, 'Ctrl+F9');
   assert.equal(reloaded.hotkeys.toggleOverlayMode, DEFAULT_HOTKEYS.toggleOverlayMode);

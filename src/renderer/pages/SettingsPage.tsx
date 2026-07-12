@@ -1,18 +1,8 @@
 import { useEffect, useMemo, useState, type KeyboardEvent, type ReactNode } from 'react';
 import { useAppSnapshot, useLiveRunTimer } from '../hooks';
 import { useDocumentTitle, useI18n } from '../useI18n';
-import {
-  getCurrentActElapsedMs,
-  getSceneDisplayName
-} from '../companion-helpers';
-import {
-  formatDuration,
-  formatFileSize,
-  formatGuideLabel,
-  getReleaseNoteItems,
-  formatTimestamp,
-  formatZoneOption
-} from '../utils';
+import { getCurrentActElapsedMs, getSceneDisplayName } from '../companion-helpers';
+import { formatDuration, formatFileSize, formatGuideLabel, getReleaseNoteItems, formatTimestamp, formatZoneOption } from '../utils';
 import { getLevelReminderView } from '../../i18n/data';
 import { formatZoneMatcherReason, translateSystemText } from '../../i18n/runtime';
 import { translate } from '../../i18n/translations';
@@ -20,7 +10,9 @@ import { getAppThemeClassName } from '../theme';
 import { SettingsSelect } from '../settings/SettingsSelect';
 import { SettingsWindowResizeGrip } from '../settings/SettingsWindowResizeGrip';
 import { SettingsWindowShellEffects } from '../settings/SettingsWindowShellEffects';
+import { TimerTargetField } from '../settings/TimerTargetField';
 import { SettingsQuickNav } from '../settings/SettingsQuickNav';
+import { formatTargetRunTimeInput, parseTargetRunTimeInput } from '../run-target';
 import {
   buildOverlayPresetPatch,
   formatOverlayPresetLabel,
@@ -261,6 +253,7 @@ export function SettingsPage() {
   const [simulateZone, setSimulateZone] = useState('');
   const [devLogLine, setDevLogLine] = useState(() => getDefaultDevLine('ru'));
   const [leagueStartDraft, setLeagueStartDraft] = useState('');
+  const [targetRunTimeDraft, setTargetRunTimeDraft] = useState('');
   const [hotkeyDrafts, setHotkeyDrafts] = useState<HotkeySettings>(DEFAULT_HOTKEYS);
   const [hotkeySaveStatus, setHotkeySaveStatus] = useState<'idle' | 'saved'>('idle');
   const [appVersion, setAppVersion] = useState('');
@@ -335,6 +328,10 @@ export function SettingsPage() {
     snapshot?.config.runTimerSettings.leagueStartAt,
     snapshot?.config.runTimerSettings.leagueStartTimeLabel
   ]);
+
+  useEffect(() => {
+    setTargetRunTimeDraft(formatTargetRunTimeInput(snapshot?.config.runTimerSettings.targetRunTimeMs ?? null));
+  }, [snapshot?.config.runTimerSettings.targetRunTimeMs]);
 
   const zoneOptions = useMemo(
     () => (snapshot?.guideEntries ?? []).map((entry) => ({
@@ -526,10 +523,12 @@ export function SettingsPage() {
 
   const saveLeagueStartSettings = async () => {
     const leagueStartAt = leagueStartDraft ? new Date(leagueStartDraft).getTime() : null;
+    const targetRunTimeMs = parseTargetRunTimeInput(targetRunTimeDraft);
     await window.poe2Overlay.updateSettings({
       runTimerSettings: {
         leagueStartAt: Number.isFinite(leagueStartAt ?? Number.NaN) ? leagueStartAt : null,
-        leagueStartTimeLabel: leagueStartDraft || null
+        leagueStartTimeLabel: leagueStartDraft || null,
+        targetRunTimeMs: Number.isNaN(targetRunTimeMs) ? config.runTimerSettings.targetRunTimeMs : targetRunTimeMs
       }
     });
   };
@@ -730,24 +729,15 @@ export function SettingsPage() {
             <h2 className="settings-section-title">{t('settings.firstRunTitle')}</h2>
             <span className={`settings-status-pill ${logFileStatusTone}`}>{logFileStatusText}</span>
           </div>
-          <ol className="settings-step-list">
-            <li>{t('settings.firstRunStepChoose')}</li>
-            <li>
-              {t('settings.firstRunStepPointTo')}
-              <code className="settings-inline-path">Path of Exile 2/logs/LatestClient.txt</code>
-            </li>
-            <li>{t('settings.firstRunStepEnterZone')}</li>
-            <li>{t('settings.firstRunStepMoveOverlay')}</li>
-          </ol>
+          <p className="helper-text">{t('settings.firstRunWizardDescription')}</p>
           <div className="button-row">
-            <button
-              type="button"
-              className="button-primary"
-              disabled={busy !== null}
-              onClick={() => {
-                void chooseLogFile();
-              }}
-            >
+            <button type="button" className="button-primary" disabled={busy !== null} onClick={() => {
+              void runTask('open-setup-wizard', async () => {
+                await window.poe2Overlay.updateSettings({ setupWizardCompleted: false });
+                window.close();
+              });
+            }}>{t('settings.openSetupWizard')}</button>
+            <button type="button" className="button-secondary" disabled={busy !== null} onClick={() => { void chooseLogFile(); }}>
               {t('settings.chooseLogFile')}
             </button>
           </div>
@@ -1014,7 +1004,8 @@ export function SettingsPage() {
               { label: t('settings.timerStatus'), value: formatRunTimerStatus(displayRunTimer.status, appLanguage) },
               { label: t('settings.totalTime'), value: formatDuration(displayElapsedMs) },
               { label: t('settings.actTime'), value: currentActElapsedMs === null ? t('common.notAvailable') : formatDuration(currentActElapsedMs) },
-              { label: t('settings.countdown'), value: currentCountdownMs === null ? t('common.notAvailable') : formatDuration(currentCountdownMs) }
+              { label: t('settings.countdown'), value: currentCountdownMs === null ? t('common.notAvailable') : formatDuration(currentCountdownMs) },
+              { label: t('settings.targetRunTime'), value: config.runTimerSettings.targetRunTimeMs === null ? t('common.notAvailable') : formatDuration(config.runTimerSettings.targetRunTimeMs) }
             ]}
           />
 
@@ -1046,6 +1037,12 @@ export function SettingsPage() {
                 onChange={(event) => setLeagueStartDraft(event.target.value)}
               />
             </label>
+
+            <TimerTargetField
+              label={t('settings.targetRunTime')} hint={t('settings.targetRunTimeHint')}
+              placeholder={t('settings.targetRunTimePlaceholder')} value={targetRunTimeDraft}
+              invalid={Number.isNaN(parseTargetRunTimeInput(targetRunTimeDraft))} onChange={setTargetRunTimeDraft}
+            />
           </div>
 
           <div className="checkbox-grid">
@@ -1099,14 +1096,14 @@ export function SettingsPage() {
             <button
               type="button"
               className="button-primary"
-              disabled={busy !== null}
+              disabled={busy !== null || Number.isNaN(parseTargetRunTimeInput(targetRunTimeDraft))}
               onClick={() =>
                 runTask('save-league-start', async () => {
                   await saveLeagueStartSettings();
                 })
               }
             >
-              {t('settings.saveLeagueStart')}
+              {t('settings.saveTimerSettings')}
             </button>
             {timerButtons}
           </div>

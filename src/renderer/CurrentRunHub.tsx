@@ -19,6 +19,7 @@ import {
 } from './companion-helpers';
 import { getGuideUpdateClassName } from './guide-update-highlights';
 import { getZoneRecognitionView } from './log-health';
+import { formatSignedPaceDuration, getRunPaceSnapshot } from './run-pace';
 import { formatDuration } from './utils';
 
 type RenderableGuideDetails = GuideEntry['details'] | LocalizedGuideEntryView['details'];
@@ -253,82 +254,6 @@ function getCurrentZoneLeagueReward(
 
 function normalizeCommandText(value: string): string {
   return value.trim().toLocaleLowerCase('ru').replace(/ё/g, 'е').replace(/\s+/g, ' ');
-}
-
-function getBestZoneEntryCheckpoint(
-  runHistory: SavedRunHistoryEntry[],
-  zoneId: string | null
-): number | null {
-  if (!zoneId) {
-    return null;
-  }
-
-  const checkpoints = runHistory.flatMap((entry) => {
-    const history = Array.isArray(entry.zoneTimeHistory) ? entry.zoneTimeHistory : [];
-    const currentZoneIndex = history.findIndex((zone) => zone.zoneId === zoneId);
-
-    if (currentZoneIndex <= 0) {
-      return [];
-    }
-
-    const elapsedMs = history
-      .slice(0, currentZoneIndex)
-      .reduce((total, zone) => total + Math.max(0, zone.elapsedMs), 0);
-
-    return elapsedMs > 0 ? [elapsedMs] : [];
-  });
-
-  return checkpoints.length > 0 ? Math.min(...checkpoints) : null;
-}
-
-function getPaceView(
-  runHistory: SavedRunHistoryEntry[],
-  guide: GuideEntry | null,
-  currentRunElapsed: number,
-  currentZoneElapsed: number,
-  timerStatus: RunTimerStatus,
-  language: AppLanguage
-): PaceView {
-  if (timerStatus === 'not_started' || timerStatus === 'armed' || currentRunElapsed <= 0) {
-    return {
-      label: translate(language, 'companion.zoneHubPaceWaiting'),
-      detail: translate(language, 'companion.zoneHubPaceWaitingHint'),
-      tone: 'empty'
-    };
-  }
-
-  const bestCheckpoint = getBestZoneEntryCheckpoint(runHistory, guide?.id ?? null);
-  if (bestCheckpoint === null) {
-    return {
-      label: translate(language, 'companion.zoneHubPaceNoHistory'),
-      detail: translate(language, 'companion.zoneHubPaceNoHistoryHint'),
-      tone: 'empty'
-    };
-  }
-
-  const currentCheckpoint = Math.max(0, currentRunElapsed - currentZoneElapsed);
-  const deltaMs = currentCheckpoint - bestCheckpoint;
-  const absoluteDelta = formatDuration(Math.abs(deltaMs));
-
-  if (Math.abs(deltaMs) < 1000) {
-    return {
-      label: translate(language, 'companion.zoneHubPaceEven'),
-      detail: translate(language, 'companion.zoneHubPaceCheckpoint'),
-      tone: 'even'
-    };
-  }
-
-  return deltaMs < 0
-    ? {
-      label: translate(language, 'companion.zoneHubPaceAhead', { time: absoluteDelta }),
-      detail: translate(language, 'companion.zoneHubPaceCheckpoint'),
-      tone: 'ahead'
-    }
-    : {
-      label: translate(language, 'companion.zoneHubPaceBehind', { time: absoluteDelta }),
-      detail: translate(language, 'companion.zoneHubPaceCheckpoint'),
-      tone: 'behind'
-    };
 }
 
 function getGuideCampaignBonusIds(guide: GuideEntry | null): Set<string> {
@@ -589,17 +514,59 @@ export function CurrentRunHub({
     pendingBonuses,
     snapshot.config.currentLevel
   ]);
-  const paceView = useMemo(
-    () => getPaceView(
+  const paceSnapshot = useMemo(
+    () => getRunPaceSnapshot({
       runHistory,
-      guide,
+      zoneId: guide?.id ?? null,
+      currentRunElapsedMs: currentRunElapsed,
+      currentZoneElapsedMs: currentZoneElapsed,
+      currentAct: nowAct,
+      currentActElapsedMs: currentActElapsed,
+      targetRunTimeMs: snapshot.config.runTimerSettings.targetRunTimeMs,
+      timerStatus
+    }),
+    [
+      currentActElapsed,
       currentRunElapsed,
       currentZoneElapsed,
-      timerStatus,
-      language
-    ),
-    [runHistory, guide, currentRunElapsed, currentZoneElapsed, timerStatus, language]
+      guide?.id,
+      nowAct,
+      runHistory,
+      snapshot.config.runTimerSettings.targetRunTimeMs,
+      timerStatus
+    ]
   );
+  const paceView: PaceView = paceSnapshot.checkpointDeltaMs === null
+    ? {
+        label: timerStatus === 'not_started' || timerStatus === 'armed'
+          ? translate(language, 'companion.zoneHubPaceWaiting')
+          : translate(language, 'companion.zoneHubPaceNoHistory'),
+        detail: timerStatus === 'not_started' || timerStatus === 'armed'
+          ? translate(language, 'companion.zoneHubPaceWaitingHint')
+          : translate(language, 'companion.zoneHubPaceNoHistoryHint'),
+        tone: 'empty'
+      }
+    : paceSnapshot.tone === 'even'
+      ? {
+          label: translate(language, 'companion.zoneHubPaceEven'),
+          detail: translate(language, 'companion.zoneHubPaceCheckpoint'),
+          tone: 'even'
+        }
+      : paceSnapshot.checkpointDeltaMs < 0
+        ? {
+            label: translate(language, 'companion.zoneHubPaceAhead', {
+              time: formatDuration(Math.abs(paceSnapshot.checkpointDeltaMs))
+            }),
+            detail: translate(language, 'companion.zoneHubPaceCheckpoint'),
+            tone: 'ahead'
+          }
+        : {
+            label: translate(language, 'companion.zoneHubPaceBehind', {
+              time: formatDuration(paceSnapshot.checkpointDeltaMs)
+            }),
+            detail: translate(language, 'companion.zoneHubPaceCheckpoint'),
+            tone: 'behind'
+          };
   const routePositionLabel = progressTotal > 0
     ? translate(language, 'companion.zoneHubPosition', { current: progressCurrent, total: progressTotal })
     : translate(language, 'companion.zoneHubProgressUnknown');
@@ -651,6 +618,33 @@ export function CurrentRunHub({
                 : zoneRecognition.sceneLabel}
             </strong>
           </div>
+        </div>
+
+        <div className="zone-command-pace-breakdown" aria-label={translate(language, 'companion.zoneHubPaceBreakdown')}>
+          <article>
+            <span>{translate(language, 'companion.zoneHubCurrentActPace')}</span>
+            <strong>{currentActElapsed === null ? '—' : formatDuration(currentActElapsed)}</strong>
+          </article>
+          <article>
+            <span>{translate(language, 'companion.zoneHubBestActPace')}</span>
+            <strong>{paceSnapshot.bestActElapsedMs === null ? '—' : formatDuration(paceSnapshot.bestActElapsedMs)}</strong>
+          </article>
+          <article className={`is-${paceSnapshot.actDeltaMs === null ? 'empty' : paceSnapshot.actDeltaMs <= 0 ? 'ahead' : 'behind'}`}>
+            <span>{translate(language, 'companion.zoneHubActDelta')}</span>
+            <strong>{formatSignedPaceDuration(paceSnapshot.actDeltaMs)}</strong>
+          </article>
+          <article className={`zone-command-projection is-${paceSnapshot.targetDeltaMs === null ? paceSnapshot.tone : paceSnapshot.targetDeltaMs <= 0 ? 'ahead' : 'behind'}`}>
+            <span>{translate(language, 'companion.zoneHubProjection')}</span>
+            <strong>{paceSnapshot.projectedFinishMs === null ? '—' : formatDuration(paceSnapshot.projectedFinishMs)}</strong>
+            <small>
+              {snapshot.config.runTimerSettings.targetRunTimeMs === null
+                ? translate(language, 'companion.zoneHubTargetNotSet')
+                : translate(language, 'companion.zoneHubTargetCompare', {
+                    target: formatDuration(snapshot.config.runTimerSettings.targetRunTimeMs),
+                    delta: formatSignedPaceDuration(paceSnapshot.targetDeltaMs)
+                  })}
+            </small>
+          </article>
         </div>
 
         <div className="zone-command-grid">

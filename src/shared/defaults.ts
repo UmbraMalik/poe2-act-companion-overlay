@@ -62,6 +62,7 @@ export const DEFAULT_RUN_TIMER_SETTINGS: RunTimerSettings = {
   autoStartMode: 'scheduled_time',
   leagueStartAt: null,
   leagueStartTimeLabel: null,
+  targetRunTimeMs: null,
   autoStart: true,
   showCountdownBeforeStart: true,
   showZoneTimer: true,
@@ -88,6 +89,7 @@ export const DEFAULT_CONFIG: AppConfig = {
   overlayEffectsEnabled: true,
   theme: 'classic',
   themePreferencePrompted: false,
+  setupWizardCompleted: false,
   overlayDebugLayoutEnabled: false,
   overlayVisibleSections: {
     nearby: true,
