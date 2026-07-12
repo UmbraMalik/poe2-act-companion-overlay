@@ -237,11 +237,14 @@
 
 .companion-page .companion-card > .companion-tab-row .button-primary::after {
   content: "";
-  display: block;
-  width: 100%;
+  position: absolute;
+  right: 16px;
+  bottom: 5px;
+  left: 16px;
   height: 1px;
-  margin-top: 4px;
+  margin: 0;
   border-radius: 999px;
+  pointer-events: none;
   background: linear-gradient(90deg, transparent, rgba(255, 228, 167, 0.72), transparent);
   animation: poe2-fx-focus-flare 180ms var(--motion-ease-out, ease-out) both;
 }
