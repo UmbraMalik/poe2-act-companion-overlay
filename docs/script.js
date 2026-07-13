@@ -190,9 +190,10 @@ const TEXT_TRANSLATIONS_EN = {
   'RU/EN + UI': 'RU/EN + UI',
   'Точнее распознавание, чище подача': 'More accurate detection, cleaner presentation',
   'Расширены internal area mapping и алиасы, исправлены названия зон и наград, а карточки, переключатели и визуальная иерархия стали аккуратнее в Classic и Dark Fantasy.': 'Internal area mapping and aliases were expanded, zone and reward names were corrected, and cards, toggles, and visual hierarchy were refined in both Classic and Dark Fantasy.',
-  'Актуальный вид основного оверлея, подробной панели, бонусов актов, режима “Только таймер” и компактного режима в версии 0.5.0.': 'Current view of the main overlay, detailed panel, act bonuses, Timer Only mode, and compact mode in version 0.5.0.',
+  'Актуальный вид версии 0.5.0: основной оверлей, подробная панель с вкладками “Сейчас”, “Маршрут”, “Прогресс” и “Забег”, режим “Только таймер” и компактный режим.': 'Current version 0.5.0 view: the main overlay, the detailed panel with Now, Route, Progress, and Run tabs, Timer Only mode, and compact mode.',
   'Текущая зона, памятка “Что в локации”, следующий переход, скипы, важные подсказки, статус уровня и блоки, которые можно включать или скрывать.': 'Current zone, zone checklist, next transition, skips, important notes, level status, and blocks you can show or hide.',
-  'Отдельное окно с маршрутом, бонусами, таймером, временем актов, сегментом “До Т15”, напоминаниями, итогами и историей забегов.': 'A separate window with route, bonuses, timer, act splits, the “To T15” segment, reminders, summary, and run history.',
+  'Отдельное окно с вкладками “Сейчас”, “Маршрут”, “Прогресс” и “Забег”: текущая зона, маршрут кампании, бонусы, напоминания, таймер, время актов, итоги и история забегов.': 'A separate window with Now, Route, Progress, and Run tabs for the current zone, campaign route, bonuses, reminders, timer, act times, summary, and run history.',
+  'Сейчас': 'Now',
   'Подробная панель · Бонусы': 'Detailed panel · Bonuses',
   'Постоянные награды кампании: пассивки оружия, резисты, дух, здоровье, мана, выборные бонусы и ручные отметки.': 'Permanent campaign rewards: weapon passives, resistances, spirit, life, mana, selectable bonuses, and manual marks.',
   'Подробная панель · Награды': 'Detailed panel · Rewards',
@@ -200,6 +201,8 @@ const TEXT_TRANSLATIONS_EN = {
   'Зоны RU/EN клиента, уровень, маршрут, подсказки, бонусы, таймер, время актов и “До Т15” — всё в одном месте.': 'RU/EN client zones, level, route, tips, bonuses, timer, act splits, and “To T15” — all in one place.',
   'Текущая зона': 'Current Zone',
   'Маршрут': 'Route',
+  'Прогресс': 'Progress',
+  'Забег': 'Run',
   'Таймер': 'Timer',
   'Время актов': 'Act Times',
   'Напоминания': 'Reminders',
@@ -207,8 +210,20 @@ const TEXT_TRANSLATIONS_EN = {
   'Итоги': 'Summary',
   'Подробная панель · Текущая зона': 'Detailed panel · Current Zone',
   'Карточка текущей зоны с подсказками, ближайшими уровнями, бонусами, лигой, следующим переходом и важными заметками.': 'Current zone card with tips, nearest level reminders, bonuses, league reward, next transition, and important notes.',
+  'Подробная панель · Сейчас': 'Detailed panel · Now',
+  'Вкладка “Сейчас”: карточка текущей зоны с подсказками, ближайшими уровнями, бонусами, лигой, следующим переходом и важными заметками.': 'The Now tab: current zone card with tips, nearby level reminders, bonuses, league content, the next transition, and important notes.',
   'Подробная панель · Маршрут': 'Detailed panel · Route',
-  'Полный маршрут по актам и interlude-частям: порядок зон, опциональные точки, хабы и переходы между страницами.': 'Full act and interlude route: zone order, optional stops, hubs, and transitions between pages.',
+  'Вкладка “Маршрут”: полный путь по актам и интерлюдиям — порядок зон, опциональные точки, хабы и переходы между страницами.': 'The Route tab: the full path through acts and Interludes, including zone order, optional stops, hubs, and transitions between pages.',
+  'Подробная панель · Прогресс · Бонусы': 'Detailed panel · Progress · Bonuses',
+  'Вкладка “Прогресс” → “Бонусы”: постоянные награды кампании, пассивки оружия, резисты, дух, здоровье, мана, выборные бонусы и ручные отметки.': 'The Progress → Bonuses tab: permanent campaign rewards, weapon passives, resistances, spirit, life, mana, selectable bonuses, and manual marks.',
+  'Подробная панель · Прогресс · Напоминания': 'Detailed panel · Progress · Reminders',
+  'Вкладка “Прогресс” → “Напоминания”: проверки торговцев, базы оружия и брони, фласки, камни и важные power-spike подсказки по уровню.': 'The Progress → Reminders tab: vendor checks, weapon and armour bases, flasks, gems, and important level-based power-spike reminders.',
+  'Подробная панель · Забег · Таймер': 'Detailed panel · Run · Timer',
+  'Вкладка “Забег” → “Таймер”: общее время, текущий акт, статус, паузы, сброс и управление прохождением.': 'The Run → Timer tab: total time, current act, status, pauses, reset, and run controls.',
+  'Подробная панель · Забег · Время актов': 'Detailed panel · Run · Act Times',
+  'Вкладка “Забег” → “Время актов”: сплиты, общий прогресс, завершённые акты и отдельный сегмент эндгейма “До Т15”.': 'The Run → Act Times tab: splits, overall progress, completed acts, and the separate endgame To T15 segment.',
+  'Подробная панель · Забег · Итоги': 'Detailed panel · Run · Summary',
+  'Вкладка “Забег” → “Итоги”: финальное время, сравнение с личным рекордом, самые долгие зоны, история забегов и сохранённые результаты.': 'The Run → Summary tab: final time, personal-best comparison, longest zones, run history, and saved results.',
   'Подробная панель · Таймер': 'Detailed panel · Timer',
   'Общее время забега, время текущего акта, статус, паузы, сброс и управление текущим прохождением.': 'Total run time, current act time, status, pauses, reset, and run controls.',
   'Подробная панель · Время актов': 'Detailed panel · Act Times',
@@ -235,8 +250,8 @@ const ATTRIBUTE_TRANSLATIONS_EN = {
   'Основной overlay: текущая зона, памятка Что в локации, следующий переход, скипы и статус уровня': 'Main overlay: current zone, zone checklist, next transition, skips, and level status',
   'Основной overlay': 'Main overlay',
   'Текущая зона, памятка “Что в локации”, следующий переход, скипы, важные подсказки и статус уровня прямо поверх игры.': 'Current zone, zone checklist, next transition, skips, important notes, and level status right over the game.',
-  'Подробная панель: маршрут, бонусы, таймер, напоминания и итоги забега': 'Detailed panel: route, bonuses, timer, reminders, and run summary',
-  'Подробная панель': 'Detailed panel',
+  'Подробная панель с вкладками Сейчас, Маршрут, Прогресс и Забег': 'Detailed panel with Now, Route, Progress, and Run tabs',
+  'Подробная панель · Сейчас / Маршрут / Прогресс / Забег': 'Detailed panel · Now / Route / Progress / Run',
   'Отдельное окно с маршрутом, бонусами, таймером, временем актов, напоминаниями и итогами забега — когда нужен весь контекст сразу.': 'A separate window with the route, bonuses, timer, act splits, reminders, and run summary — when you need full context at once.',
   'Режим только таймер: вид с таймером, уровнем и следующим переходом': 'Timer Only mode: timer, level, and next transition view',
   'Режим “только таймер”': 'Timer Only mode',
@@ -268,9 +283,18 @@ const ATTRIBUTE_TRANSLATIONS_EN = {
   'Подробная панель: вкладка времени актов и До Т15': 'Detailed panel: act times and To T15 tab',
   'Подробная панель: вкладка напоминаний': 'Detailed panel: reminders tab',
   'Подробная панель: вкладка итогов забега': 'Detailed panel: run summary tab',
+  'Подробная панель: Сейчас — текущая зона': 'Detailed panel: Now — current zone',
+  'Подробная панель: Маршрут — маршрут кампании': 'Detailed panel: Route — campaign route',
+  'Подробная панель: Прогресс — Бонусы': 'Detailed panel: Progress — Bonuses',
+  'Подробная панель: Прогресс — Напоминания': 'Detailed panel: Progress — Reminders',
+  'Подробная панель: Забег — Таймер': 'Detailed panel: Run — Timer',
+  'Подробная панель: Забег — Время актов': 'Detailed panel: Run — Act Times',
+  'Подробная панель: Забег — Итоги': 'Detailed panel: Run — Summary',
+  'Основные вкладки подробной панели': 'Detailed panel primary tabs',
+  'Подвкладки подробной панели': 'Detailed panel subtabs',
   'Основной overlay: текущая зона, памятка, следующий переход, скипы, статус уровня и настраиваемые блоки': 'Main overlay: current zone, checklist, next transition, skips, level status, and configurable blocks',
   'Текущая зона, памятка “Что в локации”, следующий переход, скипы, важные подсказки, статус уровня и блоки, которые можно включать или скрывать.': 'Current zone, zone checklist, next transition, skips, important notes, level status, and blocks you can show or hide.',
-  'Отдельное окно с маршрутом, бонусами, таймером, временем актов, сегментом “До Т15”, напоминаниями, итогами и историей забегов.': 'A separate window with route, bonuses, timer, act splits, the “To T15” segment, reminders, summary, and run history.',
+  'Отдельное окно с вкладками “Сейчас”, “Маршрут”, “Прогресс” и “Забег”: текущая зона, маршрут кампании, бонусы, напоминания, таймер, время актов, итоги и история забегов.': 'A separate window with Now, Route, Progress, and Run tabs for the current zone, campaign route, bonuses, reminders, timer, act times, summary, and run history.',
 };
 
 const UI_MESSAGES = {
@@ -641,74 +665,88 @@ const screenGalleryTabs = document.querySelector('[data-screen-gallery-tabs]');
 const SCREEN_GALLERIES = {
   'companion-panel': [
     {
-      label: 'Текущая зона',
+      groupKey: 'now',
+      groupLabel: 'Сейчас',
+      label: 'Сейчас',
       imageRu: './assets/screens/panel-current-zone-ru.png',
       imageEn: './assets/screens/panel-current-zone-en.png',
       fallbackRu: './assets/screens/companion-panel-reference.png',
       fallbackEn: './assets/screens/en-companion-panel.png',
-      alt: 'Подробная панель: вкладка текущей зоны',
-      title: 'Подробная панель · Текущая зона',
-      text: 'Карточка текущей зоны с подсказками, ближайшими уровнями, бонусами, лигой, следующим переходом и важными заметками.'
+      alt: 'Подробная панель: Сейчас — текущая зона',
+      title: 'Подробная панель · Сейчас',
+      text: 'Вкладка “Сейчас”: карточка текущей зоны с подсказками, ближайшими уровнями, бонусами, лигой, следующим переходом и важными заметками.'
     },
     {
+      groupKey: 'route',
+      groupLabel: 'Маршрут',
       label: 'Маршрут',
       imageRu: './assets/screens/panel-route-ru.png',
       imageEn: './assets/screens/panel-route-en.png',
       fallbackRu: './assets/screens/companion-panel-reference.png',
       fallbackEn: './assets/screens/en-companion-panel.png',
-      alt: 'Подробная панель: вкладка маршрута кампании',
+      alt: 'Подробная панель: Маршрут — маршрут кампании',
       title: 'Подробная панель · Маршрут',
-      text: 'Полный маршрут по актам и interlude-частям: порядок зон, опциональные точки, хабы и переходы между страницами.'
+      text: 'Вкладка “Маршрут”: полный путь по актам и интерлюдиям — порядок зон, опциональные точки, хабы и переходы между страницами.'
     },
     {
-      label: 'Таймер',
-      imageRu: './assets/screens/panel-timer-ru.png',
-      imageEn: './assets/screens/panel-timer-en.png',
-      fallbackRu: './assets/screens/companion-panel-reference.png',
-      fallbackEn: './assets/screens/en-companion-panel.png',
-      alt: 'Подробная панель: вкладка таймера забега',
-      title: 'Подробная панель · Таймер',
-      text: 'Общее время забега, время текущего акта, статус, паузы, сброс и управление текущим прохождением.'
-    },
-    {
-      label: 'Время актов',
-      imageRu: './assets/screens/panel-act-times-ru.png',
-      imageEn: './assets/screens/panel-act-times-en.png',
-      fallbackRu: './assets/screens/companion-panel-reference.png',
-      fallbackEn: './assets/screens/en-companion-panel.png',
-      alt: 'Подробная панель: вкладка времени актов и До Т15',
-      title: 'Подробная панель · Время актов',
-      text: 'Сплиты по актам, общий прогресс, завершённые акты и отдельный сегмент эндгейма “До Т15”.'
-    },
-    {
-      label: 'Напоминания',
-      imageRu: './assets/screens/panel-reminders-ru.png',
-      imageEn: './assets/screens/panel-reminders-en.png',
-      fallbackRu: './assets/screens/companion-panel-reference.png',
-      fallbackEn: './assets/screens/en-companion-panel.png',
-      alt: 'Подробная панель: вкладка напоминаний',
-      title: 'Подробная панель · Напоминания',
-      text: 'Ближайшие проверки торговцев, базы оружия/брони, фласки, камни и важные power-spike подсказки по уровню.'
-    },
-    {
+      groupKey: 'progress',
+      groupLabel: 'Прогресс',
       label: 'Бонусы',
       imageRu: './assets/screens/panel-bonuses-ru.png',
       imageEn: './assets/screens/panel-bonuses-en.png',
       fallbackRu: './assets/screens/act-bonuses-reference.png',
       fallbackEn: './assets/screens/en-companion-panel.png',
-      alt: 'Подробная панель: вкладка бонусов с наградами по актам',
-      title: 'Подробная панель · Бонусы',
-      text: 'Постоянные награды кампании: пассивки оружия, резисты, дух, здоровье, мана, выборные бонусы и ручные отметки.'
+      alt: 'Подробная панель: Прогресс — Бонусы',
+      title: 'Подробная панель · Прогресс · Бонусы',
+      text: 'Вкладка “Прогресс” → “Бонусы”: постоянные награды кампании, пассивки оружия, резисты, дух, здоровье, мана, выборные бонусы и ручные отметки.'
     },
     {
+      groupKey: 'progress',
+      groupLabel: 'Прогресс',
+      label: 'Напоминания',
+      imageRu: './assets/screens/panel-reminders-ru.png',
+      imageEn: './assets/screens/panel-reminders-en.png',
+      fallbackRu: './assets/screens/companion-panel-reference.png',
+      fallbackEn: './assets/screens/en-companion-panel.png',
+      alt: 'Подробная панель: Прогресс — Напоминания',
+      title: 'Подробная панель · Прогресс · Напоминания',
+      text: 'Вкладка “Прогресс” → “Напоминания”: проверки торговцев, базы оружия и брони, фласки, камни и важные power-spike подсказки по уровню.'
+    },
+    {
+      groupKey: 'run',
+      groupLabel: 'Забег',
+      label: 'Таймер',
+      imageRu: './assets/screens/panel-timer-ru.png',
+      imageEn: './assets/screens/panel-timer-en.png',
+      fallbackRu: './assets/screens/companion-panel-reference.png',
+      fallbackEn: './assets/screens/en-companion-panel.png',
+      alt: 'Подробная панель: Забег — Таймер',
+      title: 'Подробная панель · Забег · Таймер',
+      text: 'Вкладка “Забег” → “Таймер”: общее время, текущий акт, статус, паузы, сброс и управление прохождением.'
+    },
+    {
+      groupKey: 'run',
+      groupLabel: 'Забег',
+      label: 'Время актов',
+      imageRu: './assets/screens/panel-act-times-ru.png',
+      imageEn: './assets/screens/panel-act-times-en.png',
+      fallbackRu: './assets/screens/companion-panel-reference.png',
+      fallbackEn: './assets/screens/en-companion-panel.png',
+      alt: 'Подробная панель: Забег — Время актов',
+      title: 'Подробная панель · Забег · Время актов',
+      text: 'Вкладка “Забег” → “Время актов”: сплиты, общий прогресс, завершённые акты и отдельный сегмент эндгейма “До Т15”.'
+    },
+    {
+      groupKey: 'run',
+      groupLabel: 'Забег',
       label: 'Итоги',
       imageRu: './assets/screens/panel-summary-ru.png',
       imageEn: './assets/screens/panel-summary-en.png',
       fallbackRu: './assets/screens/act-bonuses-reference.png',
       fallbackEn: './assets/screens/en-companion-panel.png',
-      alt: 'Подробная панель: вкладка итогов забега',
-      title: 'Подробная панель · Итоги',
-      text: 'Финальное время, сравнение с личным рекордом, самые долгие зоны, история забегов и сохранённые результаты.'
+      alt: 'Подробная панель: Забег — Итоги',
+      title: 'Подробная панель · Забег · Итоги',
+      text: 'Вкладка “Забег” → “Итоги”: финальное время, сравнение с личным рекордом, самые долгие зоны, история забегов и сохранённые результаты.'
     }
   ]
 };
@@ -748,11 +786,43 @@ function renderScreenGalleryTabs(gallery = null, index = 0) {
   }
 
   screenGalleryTabs.hidden = false;
-  screenGalleryTabs.innerHTML = gallery.map((item, itemIndex) => {
-    const label = translateText(item.label || item.title || `#${itemIndex + 1}`, currentLanguage);
-    const selected = itemIndex === index;
-    return `<button class="screen-gallery-tab${selected ? ' is-active' : ''}" type="button" data-screen-gallery-index="${itemIndex}" aria-selected="${selected ? 'true' : 'false'}">${label}</button>`;
+  const activeItem = gallery[index] || gallery[0];
+  const activeGroupKey = activeItem.groupKey || `screen-${index}`;
+  const groups = [];
+
+  gallery.forEach((item, itemIndex) => {
+    const groupKey = item.groupKey || `screen-${itemIndex}`;
+    if (!groups.some((group) => group.key === groupKey)) {
+      groups.push({
+        key: groupKey,
+        label: item.groupLabel || item.label || item.title || `#${itemIndex + 1}`,
+        firstIndex: itemIndex
+      });
+    }
+  });
+
+  const primaryTabs = groups.map((group) => {
+    const label = translateText(group.label, currentLanguage);
+    const selected = group.key === activeGroupKey;
+    return `<button class="screen-gallery-tab screen-gallery-tab-primary${selected ? ' is-active' : ''}" type="button" role="tab" data-screen-gallery-index="${group.firstIndex}" aria-selected="${selected ? 'true' : 'false'}">${label}</button>`;
   }).join('');
+  const activeGroupItems = gallery
+    .map((item, itemIndex) => ({ item, itemIndex }))
+    .filter(({ item, itemIndex }) => (item.groupKey || `screen-${itemIndex}`) === activeGroupKey);
+  const secondaryTabs = activeGroupItems.length > 1
+    ? activeGroupItems.map(({ item, itemIndex }) => {
+        const label = translateText(item.label || item.title || `#${itemIndex + 1}`, currentLanguage);
+        const selected = itemIndex === index;
+        return `<button class="screen-gallery-tab screen-gallery-tab-secondary${selected ? ' is-active' : ''}" type="button" role="tab" data-screen-gallery-index="${itemIndex}" aria-selected="${selected ? 'true' : 'false'}">${label}</button>`;
+      }).join('')
+    : '';
+  const primaryLabel = translateAttr('Основные вкладки подробной панели', currentLanguage);
+  const secondaryLabel = translateAttr('Подвкладки подробной панели', currentLanguage);
+
+  screenGalleryTabs.innerHTML = `
+    <div class="screen-gallery-tab-row screen-gallery-tab-row-primary" role="tablist" aria-label="${primaryLabel}">${primaryTabs}</div>
+    ${secondaryTabs ? `<div class="screen-gallery-tab-row screen-gallery-tab-row-secondary" role="tablist" aria-label="${secondaryLabel}">${secondaryTabs}</div>` : ''}
+  `;
 }
 
 function setScreenGalleryControls(isVisible, index = 0, total = 0, gallery = null) {
