@@ -38,10 +38,21 @@ export const POST_INTERLUDES_KINGSMARCH_GUIDE_ID = 'post_interludes_kingsmarch';
 
 type ContextualGuideApp = {
     config: Pick<AppConfig, 'zoneProgress' | 'campaignBonusProgress'>;
+    currentZone?: {
+        guide?: Pick<GuideEntry, 'act'> | null;
+        actHint?: number | null;
+    };
     guideService: {
         findById: (id: string | null | undefined) => GuideEntry | null;
     };
+    runtime?: {
+        lastGameplayAct?: number | null;
+    };
 };
+
+type SetCurrentZoneOptions = Readonly<{
+    preserveExplicitGuide?: boolean;
+}>;
 
 export function resolveContextualGuide(
     app: ContextualGuideApp,
@@ -51,7 +62,11 @@ export function resolveContextualGuide(
         return guide;
     }
 
-    const contextualGuideId = hasCompletedAllInterludeBranches(app.config)
+    const campaignAct = app.runtime?.lastGameplayAct ??
+        app.currentZone?.guide?.act ??
+        app.currentZone?.actHint ??
+        null;
+    const contextualGuideId = campaignAct === 5 && hasCompletedAllInterludeBranches(app.config)
         ? POST_INTERLUDES_KINGSMARCH_GUIDE_ID
         : 'a4_kingsmarch';
     return app.guideService.findById(contextualGuideId) ?? guide;
@@ -93,10 +108,12 @@ export function runRestoreLastZoneFromConfig(this: any) {
         if (!this.config.lastZoneName) {
             return;
         }
-        const guide = resolveContextualGuide(
-            this,
-            this.guideService.findByZoneName(this.config.lastZoneName)
-        );
+        const matchedGuide = this.guideService.matchByZoneName(this.config.lastZoneName).guide;
+        const shouldPreserveRestoredKingsmarch = matchedGuide?.id === 'a4_kingsmarch' ||
+            matchedGuide?.id === POST_INTERLUDES_KINGSMARCH_GUIDE_ID;
+        const guide = shouldPreserveRestoredKingsmarch
+            ? matchedGuide
+            : resolveContextualGuide(this, matchedGuide);
         this.currentZone = {
             rawZoneName: this.config.lastZoneName,
             guide,
@@ -246,8 +263,17 @@ export async function runStartLogWatcher(this: any, filePath: any, skipBootstrap
         this.broadcastState();
     }
 
-export function runSetCurrentZone(this: any, rawZoneName: any, source: any, guide: any = this.guideService.findByZoneName(rawZoneName), actHint: any = null) {
-        guide = resolveContextualGuide(this, guide);
+export function runSetCurrentZone(
+    this: any,
+    rawZoneName: any,
+    source: any,
+    guide: any = this.guideService.findByZoneName(rawZoneName),
+    actHint: any = null,
+    options: SetCurrentZoneOptions = {}
+) {
+        if (!options.preserveExplicitGuide) {
+            guide = resolveContextualGuide(this, guide);
+        }
         if (!guide) {
             this.setSceneWithoutGuide(rawZoneName, source, 'gameplay', actHint);
             return;
@@ -363,7 +389,9 @@ export function runSetTownScene(this: any, rawZoneName: any, source: any) {
         this.runtime.lastZoneSource = source;
         this.updateZoneProgress(this.currentZone.guide);
         this.config = this.configStore.update({
-            lastZoneName: rawZoneName
+            lastZoneName: nextTownGuide?.id === POST_INTERLUDES_KINGSMARCH_GUIDE_ID
+                ? nextTownGuide.zone_ru
+                : rawZoneName
         });
         const runTimer = this.config.runTimer;
         if (sceneChanged) {

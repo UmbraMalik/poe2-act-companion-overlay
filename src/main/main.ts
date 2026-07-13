@@ -765,7 +765,13 @@ export class PoeOverlayApp {
     async startLogWatcher(filePath: any, skipBootstrap: any = false) {
         return runStartLogWatcherMethod.apply(this, arguments as any);
     }
-    setCurrentZone(rawZoneName: any, source: any, guide: any = this.guideService.findByZoneName(rawZoneName), actHint: any = null) {
+    setCurrentZone(
+        rawZoneName: any,
+        source: any,
+        guide: any = this.guideService.findByZoneName(rawZoneName),
+        actHint: any = null,
+        options: { preserveExplicitGuide?: boolean } = {}
+    ) {
         return runSetCurrentZoneMethod.apply(this, arguments as any);
     }
     handleZoneLeave(_previousGuide: any) {
