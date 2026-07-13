@@ -64,9 +64,9 @@ Generating level 47 area "G4_11_1b" with seed 123456789
 Ожидание: `АКТ 4 · Нгакану`.
 
 ```text
-Generating level 48 area "P2_5" with seed 123456789
+Generating level 54 area "P2_5" with seed 123456789
 ```
-Ожидание: `АКТ 5 · Врата Голай`.
+Ожидание: `АКТ 5 · Ворота Галаи`.
 
 ```text
 Generating level 52 area "P2_6" with seed 123456789
@@ -77,6 +77,16 @@ Generating level 52 area "P2_6" with seed 123456789
 Generating level 55 area "P3_3" with seed 123456789
 ```
 Ожидание: `АКТ 5 · Ледниковое озеро`.
+
+```text
+Generating level 56 area "P3_4" with seed 123456789
+```
+Ожидание: `АКТ 5 · Воющие пещеры`.
+
+```text
+Generating level 57 area "P3_5" with seed 123456789
+```
+Ожидание: `АКТ 5 · Пики Криар`.
 
 ```text
 Generating level 56 area "P1_3" with seed 123456789

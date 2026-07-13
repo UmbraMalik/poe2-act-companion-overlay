@@ -515,8 +515,8 @@ const LOCKED_CAMPAIGN_ZONES: LockedCampaignZone[] = [
   {
     "id": "a3_vaal_heart",
     "act": 3,
-    "zoneRu": "Ваальская часть / жертвенное сердце",
-    "zoneEn": "Vaal Pyre / Sacrificial Heart",
+    "zoneRu": "Жертвенное сердце",
+    "zoneEn": "Sacrificial Heart",
     "areaIds": [
       "C_G3_14",
       "C_G3_16_",
@@ -937,6 +937,13 @@ const LOCKED_CAMPAIGN_ZONES: LockedCampaignZone[] = [
       "C_P1_6",
       "P1_6"
     ]
+  },
+  {
+    "id": "post_interludes_kingsmarch",
+    "act": 5,
+    "zoneRu": "Кингсмарш — финал интерлюдий",
+    "zoneEn": "Kingsmarch — Interlude Finale",
+    "areaIds": []
   }
 ];
 

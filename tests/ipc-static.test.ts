@@ -312,7 +312,7 @@ test('dev log append IPC accepts bounded strings only and is gated outside dev m
   assert.match(appendHandler, /appendFile\(targetPath, payload, 'utf8'\)/);
 });
 
-test('manual checklist IPC stays a legacy no-op compatibility surface', () => {
+test('manual checklist IPC persists only explicit manual items without restoring global shortcuts', () => {
   const main = readMainProcessSource();
   const preload = readText('src/main/preload.ts');
   const stateController = readText('src/main/app-state-controller.ts');
@@ -324,7 +324,8 @@ test('manual checklist IPC stays a legacy no-op compatibility surface', () => {
   assert.match(main, /ipcMain\.handle\('app:undo-last-checklist-mark'/);
   assert.match(preload, /markCurrentChecklistItemDone: \(\) =>/);
   assert.match(preload, /undoLastChecklistMark: \(\) =>/);
-  assert.match(stateController, /Legacy compatibility no-op/);
+  assert.match(stateController, /entry\.autoCompleteMode === 'manual'/);
+  assert.match(stateController, /detectedBy: 'manual'/);
 
   const markStart = stateController.indexOf('export function runMarkCurrentChecklistItemDone');
   const undoStart = stateController.indexOf('export function runUndoLastChecklistMark');
@@ -333,8 +334,10 @@ test('manual checklist IPC stays a legacy no-op compatibility surface', () => {
   assert.notEqual(undoStart, -1);
   assert.notEqual(nextStart, -1);
 
-  const noOpBodies = stateController.slice(markStart, nextStart);
-  assert.doesNotMatch(noOpBodies, /configStore\.update|broadcastState|checklistHistory|zoneProgress/);
+  const manualBodies = stateController.slice(markStart, nextStart);
+  assert.match(manualBodies, /configStore\.update/);
+  assert.match(manualBodies, /broadcastState/);
+  assert.match(manualBodies, /zoneProgress/);
   assert.doesNotMatch(appWindow, /shortcuts\.push\(\['markChecklistDone'/);
   assert.doesNotMatch(appWindow, /matches\(hotkeys\.(markChecklistDone|undoChecklistMark)\)/);
   assert.doesNotMatch(appWindow, /hotkeys\.(markChecklistDone|undoChecklistMark)/);

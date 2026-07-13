@@ -47,14 +47,14 @@ if (fs.existsSync(guidePath)) {
     {
       id: 'a3_vaal_heart',
       field: 'zone_ru',
-      expected: 'Ваальская часть / жертвенное сердце',
-      reason: 'This combined Act 3 guide card must keep the audited RU name used by route resolution tests.',
+      expected: 'Жертвенное сердце',
+      reason: 'This virtual Act 3 objective card must use one canonical user-facing name.',
     },
     {
       id: 'a3_temple_kopec',
       field: 'next_zone_ru',
-      expected: 'Ваальская часть / жертвенное сердце',
-      reason: 'Temple of Kopec must point to the audited combined Vaal Heart card.',
+      expected: 'Жертвенное сердце',
+      reason: 'Temple of Kopec must point to the canonical Sacrificial Heart objective card.',
     },
     {
       id: 'a4_heart_of_the_tribe',

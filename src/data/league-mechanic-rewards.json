@@ -1,19 +1,30 @@
 {
-  "version": "league-mechanic-rewards-0.5-domistae-recheck-2026-06-17",
+  "version": "league-mechanic-rewards-0.5-reverified-2026-07-13",
   "feature": "leagueMechanicRewards",
   "source": {
-    "title": "[0.5] Campaign League Mechanic Rewards — project recheck",
-    "author": "GuyThatDies",
-    "url": "https://mobalytics.gg/poe-2/profile/guythatdies/guides/0-4-league-mechanic-reward-cheat-sheet",
-    "updated": "2026-06-17",
-    "note": "0.5 recheck: keep guaranteed league rewards separate from campaign permanent bonuses; Domistae route notes used for campaign flow, Mobalytics/Vulkk style tables remain secondary for reward cross-checks."
+    "title": "Campaign league mechanic rewards — project 0.5 recheck",
+    "official": false,
+    "verified": "2026-07-13",
+    "primary": {
+      "title": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet",
+      "author": "GuyThatDies",
+      "url": "https://mobalytics.gg/poe-2/guides/league-mechanic-campaign-reward-cheat-sheet",
+      "updated": "2026-05-24"
+    },
+    "crossCheck": {
+      "title": "VULKK Path of Exile 2 Campaign League Mechanic Rewards List",
+      "url": "https://vulkk.com/2026/05/18/path-of-exile-2-campaign-league-mechanic-rewards/",
+      "published": "2026-05-18"
+    },
+    "note": "Community sources, not official GGG data. The primary source is the legacy Mobalytics [0.4] reward table (page updated 2026-05-24); the project rechecked it for 0.5 on 2026-07-13 against VULKK (published 2026-05-18). Conflicting or question-marked entries remain hidden as uncertain."
   },
   "notes": [
     "Keep this file separate from campaign-bonuses.json: these are temporary/loot rewards, not permanent character bonuses.",
     "duplicateInCurrentGuide marks legacy guide overlap; overlay still shows the guaranteed league reward for consistency.",
     "For long-term cleanup, move old hardcoded league reward texts out of guide.json and render them from this file instead.",
-    "Some Interlude locations are missing as separate guide cards in current guide.json; use raw scene/aliases for detection when possible.",
-    "Scorched Farmlands support gem level remains Lv5 in this project until a fresh in-game screenshot proves Lv4."
+    "Every non-null guideZoneId must resolve to an existing guide card and use that card's canonical Russian name.",
+    "Scorched Farmlands is Level 4 in both current community tables; this is a high-confidence cross-check, not an official GGG statement.",
+    "Question-marked rewards remain candidates for future in-game verification and are not displayed as guaranteed."
   ],
   "rewards": [
     {
@@ -23,7 +34,7 @@
       "zone_en": "Clearfell",
       "zone_ru": "Клирфелл",
       "guideZoneId": "a1_clearfell",
-      "guideZoneRu": "Лагерь Клирфелл",
+      "guideZoneRu": "Клирфелл",
       "aliases_ru": [
         "Лагерь Клирфелл"
       ],
@@ -37,7 +48,7 @@
       "duplicateNote": "уже есть в guide.json: important про слабую лиг-награду — сферу превращения",
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act1_mud_burrow",
@@ -45,8 +56,8 @@
       "actLabel": "Акт 1",
       "zone_en": "Mud Burrow",
       "zone_ru": "Грязевая нора",
-      "guideZoneId": null,
-      "guideZoneRu": null,
+      "guideZoneId": "a1_mud_burrow",
+      "guideZoneRu": "Грязевая нора",
       "aliases_ru": [],
       "reward_en": "Orb of Augmentation",
       "reward_ru": "Сфера усиления",
@@ -56,9 +67,9 @@
       "oneTimeGuaranteed": true,
       "duplicateInCurrentGuide": false,
       "duplicateNote": null,
-      "coverageNote": "current guide explicitly skips Mud Burrow; no guide zone card",
+      "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act1_grelwood",
@@ -79,7 +90,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act1_the_red_vale",
@@ -100,7 +111,7 @@
       "duplicateNote": "уже есть в guide.json: награда камень умения 2 уровня из лиги",
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act1_the_grim_tangle",
@@ -121,7 +132,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act1_cemetery_of_the_eternals",
@@ -142,7 +153,7 @@
       "duplicateNote": "уже есть в guide.json: чеклист/награды — лиговая сфера царей",
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act1_tomb_of_the_consort",
@@ -163,7 +174,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act1_mausoleum_of_the_praetor",
@@ -184,7 +195,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act1_hunting_grounds",
@@ -205,7 +216,7 @@
       "duplicateNote": "уже есть в guide.json: чеклист/награды — экзальт из лиги",
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act1_ogham_farmlands",
@@ -226,7 +237,7 @@
       "duplicateNote": "уже есть в guide.json: чеклист/награды — камень умения 4 уровня через лигу/редкого моба",
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act1_freythorn",
@@ -247,7 +258,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act1_ogham_village",
@@ -265,10 +276,10 @@
       "displayInOverlay": true,
       "oneTimeGuaranteed": true,
       "duplicateInCurrentGuide": true,
-      "duplicateNote": "уже есть в guide.json: Artificer Orb сейчас записан как сфера ремесленника/пустая руна",
+      "duplicateNote": "уже есть в guide.json: Artificer Orb сейчас записан как сфера астромантии/пустая руна",
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act1_the_manor_ramparts",
@@ -289,7 +300,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act1_ogham_manor",
@@ -310,7 +321,7 @@
       "duplicateNote": "уже есть в guide.json: чеклист/награды — лиговая сфера алхимии",
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act2_vastiri_outskirts",
@@ -331,7 +342,7 @@
       "duplicateNote": "уже есть в guide.json: чеклист/награды — экзальт из лиги",
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act2_mawdun_quarry",
@@ -352,7 +363,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act2_mawdun_mine",
@@ -373,7 +384,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act2_traitor_s_passage",
@@ -394,7 +405,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act2_the_halani_gates",
@@ -415,7 +426,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act2_keth",
@@ -436,7 +447,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act2_the_lost_city",
@@ -457,7 +468,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act2_buried_shrines",
@@ -478,7 +489,7 @@
       "duplicateNote": "уже есть в guide.json: чеклист/награды — малая сфера златокузнеца из лиги",
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act2_mastodon_badlands",
@@ -499,7 +510,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act2_the_bone_pits",
@@ -520,7 +531,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act2_valley_of_the_titans",
@@ -541,7 +552,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act2_titan_grotto",
@@ -562,7 +573,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act2_deshar",
@@ -583,7 +594,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act2_path_of_mourning",
@@ -604,7 +615,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act2_spires_of_deshar",
@@ -625,7 +636,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act2_dreadnought",
@@ -646,7 +657,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act3_sandswept_marsh",
@@ -667,7 +678,7 @@
       "duplicateNote": "уже есть в guide.json: чеклист/награды — камень поддержки 3 тира из лиги",
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act3_jungle_ruins",
@@ -688,7 +699,7 @@
       "duplicateNote": "уже есть в guide.json: чеклист/награды — лиговая сфера алхимии",
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act3_the_venom_crypts",
@@ -709,7 +720,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act3_infested_barrens",
@@ -730,7 +741,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act3_the_azak_bog",
@@ -751,7 +762,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act3_chimereal_wetlands",
@@ -772,7 +783,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act3_jiquani_s_machinarium",
@@ -797,7 +808,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act3_jiquani_s_sanctum",
@@ -820,7 +831,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act3_the_matlan_waterways",
@@ -841,7 +852,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act3_the_drowned_city",
@@ -862,7 +873,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act3_the_molten_vault",
@@ -883,7 +894,7 @@
       "duplicateNote": "уже есть в guide.json: награда — уник из лиги",
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act3_apex_of_filth",
@@ -904,17 +915,19 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act3_temple_of_kopec",
       "section": "act3",
       "actLabel": "Акт 3",
       "zone_en": "Temple of Kopec",
-      "zone_ru": "Храм Кот Пика",
+      "zone_ru": "Храм Копека",
       "guideZoneId": "a3_temple_kopec",
-      "guideZoneRu": "Храм Кот Пика",
-      "aliases_ru": [],
+      "guideZoneRu": "Храм Копека",
+      "aliases_ru": [
+        "Храм Кот Пика"
+      ],
       "reward_en": "Uncut Spirit Gem (Level 11)",
       "reward_ru": "Неогранённый камень духа, ур. 11",
       "rewardType": "gem",
@@ -925,7 +938,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act3_utzaal",
@@ -946,7 +959,7 @@
       "duplicateNote": null,
       "coverageNote": "no separate guide zone in current guide; add by raw scene/alias if possible",
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act3_aggorat",
@@ -967,7 +980,7 @@
       "duplicateNote": null,
       "coverageNote": "no separate guide zone in current guide; current guide collapses Vaal heart path",
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act3_the_black_chambers",
@@ -988,7 +1001,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act4_kedge_bay",
@@ -1011,7 +1024,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act4_journey_s_end",
@@ -1034,7 +1047,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act4_isle_of_kin",
@@ -1055,7 +1068,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act4_volcanic_warrens",
@@ -1076,7 +1089,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act4_whakapanu_island",
@@ -1097,7 +1110,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act4_singing_caverns",
@@ -1118,7 +1131,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act4_abandoned_prison",
@@ -1139,7 +1152,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act4_solitary_confinement",
@@ -1160,7 +1173,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act4_shrike_island",
@@ -1181,7 +1194,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act4_eye_of_hinekora",
@@ -1202,7 +1215,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act4_halls_of_the_dead",
@@ -1223,7 +1236,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act4_arastas",
@@ -1244,7 +1257,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act4_the_excavation",
@@ -1265,7 +1278,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act4_ngakanu",
@@ -1286,7 +1299,7 @@
       "duplicateNote": "уже есть в guide.json: чеклист/награды — большая сфера златокузнеца из лиги",
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_act4_heart_of_the_tribe",
@@ -1307,7 +1320,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_interlude1_scorched_farmlands",
@@ -1318,8 +1331,8 @@
       "guideZoneId": "interlude_scorched_farmlands",
       "guideZoneRu": "Выжженные фермерские земли",
       "aliases_ru": [],
-      "reward_en": "Uncut Support Gem (Level 5)",
-      "reward_ru": "Неогранённый камень поддержки, ур. 5",
+      "reward_en": "Uncut Support Gem (Level 4)",
+      "reward_ru": "Неогранённый камень поддержки, ур. 4",
       "rewardType": "gem",
       "hasReward": true,
       "displayInOverlay": true,
@@ -1328,7 +1341,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_interlude1_stones_of_serle",
@@ -1349,7 +1362,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_interlude1_the_blackwood",
@@ -1374,7 +1387,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_interlude1_holten",
@@ -1397,7 +1410,7 @@
       "duplicateNote": "уже есть в guide.json/campaign-bonuses: большие руны уже упомянуты",
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_interlude1_wolvenhold",
@@ -1422,7 +1435,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_interlude1_holten_estate",
@@ -1445,7 +1458,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_interlude2_the_khari_crossing",
@@ -1466,7 +1479,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_interlude2_pools_of_khatal",
@@ -1485,9 +1498,9 @@
       "oneTimeGuaranteed": true,
       "duplicateInCurrentGuide": false,
       "duplicateNote": null,
-      "coverageNote": "no guide zone in current package",
+      "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_interlude2_sel_khari_sanctuary",
@@ -1512,7 +1525,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_interlude2_the_galai_gates",
@@ -1536,9 +1549,9 @@
       "oneTimeGuaranteed": true,
       "duplicateInCurrentGuide": false,
       "duplicateNote": null,
-      "coverageNote": "no guide zone in current package",
+      "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_interlude2_qimah",
@@ -1559,7 +1572,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_interlude2_qimah_reservoir",
@@ -1582,7 +1595,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_interlude3_ashen_forest",
@@ -1596,14 +1609,14 @@
       "reward_en": "Rare Belt?",
       "reward_ru": "Редкий пояс?",
       "rewardType": "item_uncertain",
-      "hasReward": true,
-      "displayInOverlay": true,
-      "oneTimeGuaranteed": true,
+      "hasReward": false,
+      "displayInOverlay": false,
+      "oneTimeGuaranteed": false,
       "duplicateInCurrentGuide": false,
       "duplicateNote": null,
-      "coverageNote": null,
+      "coverageNote": "Unconfirmed candidate: Mobalytics marks Rare Belt with a question mark; keep hidden until direct in-game verification.",
       "uncertain": true,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics marks this reward uncertain; VULKK alone is not sufficient confirmation; hidden pending in-game verification (2026-07-13)"
     },
     {
       "id": "league_interlude3_kriar_village",
@@ -1624,7 +1637,7 @@
       "duplicateNote": null,
       "coverageNote": "guide zone exists: +40 spirit campaign bonus",
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_interlude3_glacial_tarn",
@@ -1647,7 +1660,7 @@
       "duplicateNote": null,
       "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_interlude3_howling_caves",
@@ -1668,7 +1681,7 @@
       "duplicateNote": null,
       "coverageNote": "guide zone exists: Yeti fangs / 2 passive points",
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_interlude3_kriar_peaks",
@@ -1689,7 +1702,7 @@
       "duplicateNote": null,
       "coverageNote": "guide zone exists: optional unique campaign bonus",
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_interlude3_etched_ravine",
@@ -1708,9 +1721,9 @@
       "oneTimeGuaranteed": true,
       "duplicateInCurrentGuide": false,
       "duplicateNote": null,
-      "coverageNote": "no guide zone in current package",
+      "coverageNote": null,
       "uncertain": false,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },
     {
       "id": "league_interlude3_the_cuachic_vault",
@@ -1724,14 +1737,14 @@
       "reward_en": "Vaal Orb?",
       "reward_ru": "Сфера ваал?",
       "rewardType": "currency_uncertain",
-      "hasReward": true,
-      "displayInOverlay": true,
-      "oneTimeGuaranteed": true,
+      "hasReward": false,
+      "displayInOverlay": false,
+      "oneTimeGuaranteed": false,
       "duplicateInCurrentGuide": false,
       "duplicateNote": null,
-      "coverageNote": "no guide zone in current package",
+      "coverageNote": "Unconfirmed candidate: Mobalytics marks Vaal Orb with a question mark; keep hidden until direct in-game verification.",
       "uncertain": true,
-      "source": "Mobalytics [0.4] League Mechanic Reward Cheat Sheet, updated 2026-04-06"
+      "source": "Mobalytics marks this reward uncertain; VULKK alone is not sufficient confirmation; hidden pending in-game verification (2026-07-13)"
     }
   ]
 }
