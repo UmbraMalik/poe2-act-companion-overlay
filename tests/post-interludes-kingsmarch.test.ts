@@ -11,9 +11,13 @@ import {
   INTERLUDE_BRANCH_ENDPOINT_GUIDE_IDS,
   POST_INTERLUDES_REWARD_CHECKLIST_ITEM_ID
 } from '../src/shared/interlude-completion';
-import type { AppConfig, GuideEntry } from '../src/shared/types';
+import type { AppConfig, AppSnapshot, GuideEntry } from '../src/shared/types';
 import { getCampaignBonuses } from './helpers/bonusTestUtils';
-import { createMockUserDataPath } from './helpers/electron-mock';
+import {
+  createMockUserDataPath,
+  invokeIpcHandler,
+  resetElectronMockState
+} from './helpers/electron-mock';
 import {
   applyAppLogLine,
   createTestAppInstance,
@@ -56,6 +60,33 @@ function enterKingsmarch(app: TestApp): void {
   applyAppLogLine(app, '2026/07/13 12:00:00 [SCENE] Set Source [Kingsmarch]');
 }
 
+async function simulateGuideById(app: TestApp, guideId: string): Promise<AppSnapshot> {
+  resetElectronMockState();
+  app.registerIpc();
+  return await invokeIpcHandler<AppSnapshot>('app:simulate-zone', guideId);
+}
+
+function completeAllInterludeBranches(app: TestApp): void {
+  for (const guideId of INTERLUDE_BRANCH_ENDPOINT_IDS) {
+    completeInterludeBranch(app, guideId);
+  }
+}
+
+function assertOrdinaryKingsmarch(snapshot: AppSnapshot): void {
+  assert.equal(snapshot.currentGuideEntry?.id, 'a4_kingsmarch');
+  assert.equal(snapshot.currentGuideEntry?.act, 4);
+  assert.equal(snapshot.currentGuideEntry?.next_zone_ru, 'Остров Вакапану');
+  assert.doesNotMatch(JSON.stringify(snapshot.currentGuideEntry), /Скрытый|Ориат/);
+}
+
+function assertFinalKingsmarch(snapshot: AppSnapshot): void {
+  assert.equal(snapshot.currentGuideEntry?.id, POST_INTERLUDES_KINGSMARCH_ID);
+  assert.equal(snapshot.currentGuideEntry?.act, 5);
+  assert.equal(snapshot.currentGuideEntry?.next_zone_ru, 'Ориат');
+  assert.match(JSON.stringify(snapshot.currentGuideEntry), /Скрытый/);
+  assert.match(JSON.stringify(snapshot.currentGuideEntry), /\+2 пассивных очка/);
+}
+
 function permutations<T>(items: readonly T[]): T[][] {
   if (items.length <= 1) {
     return [Array.from(items)];
@@ -75,6 +106,107 @@ test('ordinary Act 4 Kingsmarch stays on the island route before all Interludes 
   assert.equal(guide?.id, 'a4_kingsmarch');
   assert.equal(guide?.act, 4);
   assert.equal(guide?.next_zone_ru, 'Остров Вакапану');
+});
+
+test('explicit simulation keeps ordinary Act 4 Kingsmarch', async () => {
+  const app = createTestAppInstance();
+
+  assertOrdinaryKingsmarch(await simulateGuideById(app, 'a4_kingsmarch'));
+});
+
+test('explicit simulation keeps ordinary Act 4 Kingsmarch after completed Interludes', async () => {
+  const app = createTestAppInstance();
+  completeAllInterludeBranches(app);
+
+  assertOrdinaryKingsmarch(await simulateGuideById(app, 'a4_kingsmarch'));
+});
+
+test('explicit simulation shows final Kingsmarch before Interludes are complete', async () => {
+  const app = createTestAppInstance();
+
+  assertFinalKingsmarch(await simulateGuideById(app, POST_INTERLUDES_KINGSMARCH_ID));
+});
+
+test('explicit simulation shows final Kingsmarch after completed Interludes', async () => {
+  const app = createTestAppInstance();
+  completeAllInterludeBranches(app);
+
+  assertFinalKingsmarch(await simulateGuideById(app, POST_INTERLUDES_KINGSMARCH_ID));
+});
+
+test('sequential final then ordinary simulation keeps the second explicit guide', async () => {
+  const app = createTestAppInstance();
+
+  assertFinalKingsmarch(await simulateGuideById(app, POST_INTERLUDES_KINGSMARCH_ID));
+  assertOrdinaryKingsmarch(await simulateGuideById(app, 'a4_kingsmarch'));
+});
+
+test('sequential ordinary then final simulation keeps the second explicit guide', async () => {
+  const app = createTestAppInstance();
+
+  assertOrdinaryKingsmarch(await simulateGuideById(app, 'a4_kingsmarch'));
+  assertFinalKingsmarch(await simulateGuideById(app, POST_INTERLUDES_KINGSMARCH_ID));
+});
+
+test('real Kingsmarch after completed Interludes resolves to final context only from post-Act-4 phase', () => {
+  const cases = [
+    { previousGuideId: 'a3_ziggurat_encampment', expectedId: 'a4_kingsmarch' },
+    { previousGuideId: 'a4_whakapanu_island', expectedId: 'a4_kingsmarch' },
+    { previousGuideId: 'interlude_the_glade', expectedId: POST_INTERLUDES_KINGSMARCH_ID }
+  ];
+
+  for (const { previousGuideId, expectedId } of cases) {
+    const app = createTestAppInstance();
+    completeAllInterludeBranches(app);
+    visitGuide(app, previousGuideId);
+
+    enterKingsmarch(app);
+    assert.equal(app.getSnapshot().currentGuideEntry?.id, expectedId, previousGuideId);
+  }
+});
+
+test('real Kingsmarch from Act 5 stays ordinary without completion evidence', () => {
+  const app = createTestAppInstance();
+  visitGuide(app, 'interlude_the_glade');
+
+  enterKingsmarch(app);
+  assertOrdinaryKingsmarch(app.getSnapshot());
+});
+
+test('first Act 3 to Kingsmarch transition ignores stale completed bonus', () => {
+  const app = createTestAppInstance();
+  assert.equal(app.setCampaignBonusDone(FINAL_INTERLUDE_BONUS_ID, 'manual'), true);
+  visitGuide(app, 'a3_ziggurat_encampment');
+
+  enterKingsmarch(app);
+  assertOrdinaryKingsmarch(app.getSnapshot());
+});
+
+test('restore config preserves the explicitly persisted final Kingsmarch guide', () => {
+  const app = createTestAppInstance();
+  const finalGuide = getGuide(app, POST_INTERLUDES_KINGSMARCH_ID);
+  const mutableApp = app as unknown as {
+    config: AppConfig;
+    configStore: { update: (patch: Partial<AppConfig>) => AppConfig };
+  };
+  mutableApp.config = mutableApp.configStore.update({ lastZoneName: finalGuide.zone_ru });
+
+  app.restoreLastZoneFromConfig();
+  assertFinalKingsmarch(app.getSnapshot());
+});
+
+test('restore config preserves ordinary Kingsmarch despite completed progress', () => {
+  const app = createTestAppInstance();
+  const ordinaryGuide = getGuide(app, 'a4_kingsmarch');
+  assert.equal(app.setCampaignBonusDone(FINAL_INTERLUDE_BONUS_ID, 'manual'), true);
+  const mutableApp = app as unknown as {
+    config: AppConfig;
+    configStore: { update: (patch: Partial<AppConfig>) => AppConfig };
+  };
+  mutableApp.config = mutableApp.configStore.update({ lastZoneName: ordinaryGuide.zone_ru });
+
+  app.restoreLastZoneFromConfig();
+  assertOrdinaryKingsmarch(app.getSnapshot());
 });
 
 test('visited all endpoints without completion does not activate post-Interludes Kingsmarch', () => {
@@ -200,6 +332,7 @@ test('persisted final bonus is trusted without migrating visited endpoints to co
     configStore: { update: (patch: Partial<AppConfig>) => AppConfig };
   };
   mutableApp.config = mutableApp.configStore.update({
+    lastZoneName: getGuide(firstApp, POST_INTERLUDES_KINGSMARCH_ID).zone_ru,
     zoneProgress: {},
     campaignBonusProgress: {
       [FINAL_INTERLUDE_BONUS_ID]: persistedProgress
@@ -266,6 +399,7 @@ test('final +2 bonus is linked only to post-Interludes Kingsmarch and keeps its 
 
   assert.equal(app.setCampaignBonusDone(FINAL_INTERLUDE_BONUS_ID, 'manual'), true);
   assert.equal(hasCompletedAllInterludeBranches(app), true);
+  visitGuide(app, 'interlude_the_glade');
   enterKingsmarch(app);
   const finalSnapshot = app.getSnapshot();
   assert.equal(finalSnapshot.currentGuideEntry?.id, POST_INTERLUDES_KINGSMARCH_ID);

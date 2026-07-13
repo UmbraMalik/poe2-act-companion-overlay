@@ -370,10 +370,13 @@ export function runRegisterIpc(this: any) {
             return this.getSnapshot();
         });
         ipcMain.handle('app:simulate-zone', async (_event: any, zoneSelector: any) => {
-            const guide = this.guideService.findById(zoneSelector) ??
+            const explicitGuide = this.guideService.findById(zoneSelector);
+            const guide = explicitGuide ??
                 this.guideService.findByZoneName(zoneSelector);
             if (guide) {
-                this.setCurrentZone(guide.zone_ru, 'simulation', guide);
+                this.setCurrentZone(guide.zone_ru, 'simulation', guide, guide.act, {
+                    preserveExplicitGuide: Boolean(explicitGuide)
+                });
             }
             return this.getSnapshot();
         });
