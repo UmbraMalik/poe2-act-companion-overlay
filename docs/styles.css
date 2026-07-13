@@ -848,27 +848,25 @@ h3 {
   right: 18px;
 }
 
-.screen-gallery-tabs {
-  display: grid;
+.screen-gallery-primary-tabs,
+.screen-gallery-secondary-tabs {
+  display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   padding: 16px 22px 0;
 }
 
-.screen-gallery-tabs[hidden] {
-  display: none;
-}
-
-.screen-gallery-tab-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.screen-gallery-tab-row-secondary {
+.screen-gallery-secondary-tabs {
+  margin: 12px 22px 0;
   padding: 10px;
   border: 1px solid rgba(var(--accent-rgb), 0.14);
   border-radius: 18px;
   background: rgba(var(--accent-rgb), 0.045);
+}
+
+.screen-gallery-primary-tabs[hidden],
+.screen-gallery-secondary-tabs[hidden] {
+  display: none;
 }
 
 .screen-gallery-tab {
@@ -1505,15 +1503,19 @@ h3 {
     letter-spacing: 0.08em;
   }
 
-  .screen-gallery-tabs {
-    padding: 12px 12px 0;
-  }
-
-  .screen-gallery-tab-row-primary,
-  .screen-gallery-tab-row-secondary {
+  .screen-gallery-primary-tabs {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
+    padding: 12px 12px 0;
+  }
+
+  .screen-gallery-secondary-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin: 10px 12px 0;
+    padding: 8px;
   }
 
   .screen-gallery-tab {
@@ -2952,4 +2954,61 @@ html[data-theme="dark-fantasy"] .download-card {
     width: 100%;
     justify-content: flex-start;
   }
+}
+
+
+/* Theme toggle hardening: keep inline SVG icons inside the control. */
+.theme-toggle {
+  width: 74px;
+  min-width: 74px;
+  height: 38px;
+  padding: 2px;
+  grid-template-columns: repeat(2, 34px);
+  gap: 2px;
+  overflow: hidden;
+  contain: layout paint;
+}
+
+.theme-toggle-pill {
+  top: 2px;
+  left: 2px;
+  width: 34px;
+  height: 34px;
+}
+
+html[data-theme="dark-fantasy"] .theme-toggle-pill {
+  transform: translate3d(36px, 0, 0);
+}
+
+.theme-toggle-option {
+  width: 34px;
+  height: 34px;
+  min-width: 0;
+  overflow: hidden;
+  line-height: 0;
+}
+
+.theme-toggle-option svg,
+.theme-toggle-icon {
+  display: block;
+  flex: 0 0 16px;
+  width: 16px !important;
+  min-width: 16px !important;
+  max-width: 16px !important;
+  height: 16px !important;
+  min-height: 16px !important;
+  max-height: 16px !important;
+  overflow: hidden;
+  transform: none !important;
+  filter: none !important;
+}
+
+html[data-theme="classic"] .theme-toggle-icon-sun,
+html[data-theme="dark-fantasy"] .theme-toggle-icon-moon {
+  opacity: 1;
+}
+
+html[data-theme="classic"] .theme-toggle-icon-moon,
+html[data-theme="dark-fantasy"] .theme-toggle-icon-sun {
+  opacity: 0.55;
 }

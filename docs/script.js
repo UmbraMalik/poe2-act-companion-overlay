@@ -2,6 +2,13 @@ const LANGUAGE_STORAGE_KEY = 'poe2-act-companion-overlay-site-language';
 const SUPPORTED_LANGUAGES = ['ru', 'en'];
 const THEME_STORAGE_KEY = 'poe2-act-companion-overlay-site-theme';
 const SUPPORTED_THEMES = ['classic', 'dark-fantasy'];
+const SITE_ASSET_VERSION = '0.5.0-4';
+
+function withAssetVersion(path) {
+  if (!path || /^(?:data:|blob:|https?:)/i.test(path) || /[?&]v=/.test(path)) return path;
+  const separator = path.includes('?') ? '&' : '?';
+  return `${path}${separator}v=${encodeURIComponent(SITE_ASSET_VERSION)}`;
+}
 
 const TEXT_TRANSLATIONS_EN = {
   'POE2 Act Companion Overlay — оверлей для актов POE2': 'POE2 Act Companion Overlay — campaign overlay for POE2',
@@ -522,7 +529,8 @@ function syncLocalizedImages() {
 }
 
 function getLocalizedScreenImage(tab) {
-  return tab.getAttribute(`data-screen-image-${currentLanguage}`) || tab.getAttribute('data-screen-image');
+  const image = tab.getAttribute(`data-screen-image-${currentLanguage}`) || tab.getAttribute('data-screen-image');
+  return withAssetVersion(image);
 }
 
 function syncActiveScreenPreview() {
@@ -660,93 +668,129 @@ const screenGalleryPrevButton = document.querySelector('[data-screen-gallery-pre
 const screenGalleryNextButton = document.querySelector('[data-screen-gallery-next]');
 const screenGalleryMeta = document.querySelector('[data-screen-gallery-meta]');
 const screenGalleryLabel = document.querySelector('[data-screen-gallery-label]');
-const screenGalleryTabs = document.querySelector('[data-screen-gallery-tabs]');
+const screenGalleryPrimaryTabs = document.querySelector('[data-screen-gallery-primary-tabs]');
+const screenGallerySecondaryTabs = document.querySelector('[data-screen-gallery-secondary-tabs]');
 
 const SCREEN_GALLERIES = {
   'companion-panel': [
     {
       groupKey: 'now',
       groupLabel: 'Сейчас',
+      groupLabelEn: 'Now',
       label: 'Сейчас',
+      labelEn: 'Now',
       imageRu: './assets/screens/panel-current-zone-ru.png',
       imageEn: './assets/screens/panel-current-zone-en.png',
       fallbackRu: './assets/screens/companion-panel-reference.png',
       fallbackEn: './assets/screens/en-companion-panel.png',
       alt: 'Подробная панель: Сейчас — текущая зона',
+      altEn: 'Detailed panel: Now — current zone',
       title: 'Подробная панель · Сейчас',
-      text: 'Вкладка “Сейчас”: карточка текущей зоны с подсказками, ближайшими уровнями, бонусами, лигой, следующим переходом и важными заметками.'
+      titleEn: 'Detailed panel · Now',
+      text: 'Вкладка “Сейчас”: карточка текущей зоны с подсказками, ближайшими уровнями, бонусами, лигой, следующим переходом и важными заметками.',
+      textEn: 'The Now tab shows the current zone, nearby level reminders, bonuses, league content, the next transition, and important notes.'
     },
     {
       groupKey: 'route',
       groupLabel: 'Маршрут',
+      groupLabelEn: 'Route',
       label: 'Маршрут',
+      labelEn: 'Route',
       imageRu: './assets/screens/panel-route-ru.png',
       imageEn: './assets/screens/panel-route-en.png',
       fallbackRu: './assets/screens/companion-panel-reference.png',
       fallbackEn: './assets/screens/en-companion-panel.png',
       alt: 'Подробная панель: Маршрут — маршрут кампании',
+      altEn: 'Detailed panel: Route — campaign route',
       title: 'Подробная панель · Маршрут',
-      text: 'Вкладка “Маршрут”: полный путь по актам и интерлюдиям — порядок зон, опциональные точки, хабы и переходы между страницами.'
+      titleEn: 'Detailed panel · Route',
+      text: 'Вкладка “Маршрут”: полный путь по актам и интерлюдиям — порядок зон, опциональные точки, хабы и переходы между страницами.',
+      textEn: 'The Route tab shows the full path through acts and Interludes, including zone order, optional stops, hubs, and transitions.'
     },
     {
       groupKey: 'progress',
       groupLabel: 'Прогресс',
+      groupLabelEn: 'Progress',
       label: 'Бонусы',
+      labelEn: 'Bonuses',
       imageRu: './assets/screens/panel-bonuses-ru.png',
       imageEn: './assets/screens/panel-bonuses-en.png',
       fallbackRu: './assets/screens/act-bonuses-reference.png',
       fallbackEn: './assets/screens/en-companion-panel.png',
       alt: 'Подробная панель: Прогресс — Бонусы',
+      altEn: 'Detailed panel: Progress — Bonuses',
       title: 'Подробная панель · Прогресс · Бонусы',
-      text: 'Вкладка “Прогресс” → “Бонусы”: постоянные награды кампании, пассивки оружия, резисты, дух, здоровье, мана, выборные бонусы и ручные отметки.'
+      titleEn: 'Detailed panel · Progress · Bonuses',
+      text: 'Вкладка “Прогресс” → “Бонусы”: постоянные награды кампании, пассивки оружия, резисты, дух, здоровье, мана, выборные бонусы и ручные отметки.',
+      textEn: 'Progress → Bonuses tracks permanent campaign rewards, weapon passives, resistances, spirit, life, mana, selectable bonuses, and manual marks.'
     },
     {
       groupKey: 'progress',
       groupLabel: 'Прогресс',
+      groupLabelEn: 'Progress',
       label: 'Напоминания',
+      labelEn: 'Reminders',
       imageRu: './assets/screens/panel-reminders-ru.png',
       imageEn: './assets/screens/panel-reminders-en.png',
       fallbackRu: './assets/screens/companion-panel-reference.png',
       fallbackEn: './assets/screens/en-companion-panel.png',
       alt: 'Подробная панель: Прогресс — Напоминания',
+      altEn: 'Detailed panel: Progress — Reminders',
       title: 'Подробная панель · Прогресс · Напоминания',
-      text: 'Вкладка “Прогресс” → “Напоминания”: проверки торговцев, базы оружия и брони, фласки, камни и важные power-spike подсказки по уровню.'
+      titleEn: 'Detailed panel · Progress · Reminders',
+      text: 'Вкладка “Прогресс” → “Напоминания”: проверки торговцев, базы оружия и брони, фласки, камни и важные power-spike подсказки по уровню.',
+      textEn: 'Progress → Reminders shows vendor checks, weapon and armour bases, flasks, gems, and important level-based power-spike reminders.'
     },
     {
       groupKey: 'run',
       groupLabel: 'Забег',
+      groupLabelEn: 'Run',
       label: 'Таймер',
+      labelEn: 'Timer',
       imageRu: './assets/screens/panel-timer-ru.png',
       imageEn: './assets/screens/panel-timer-en.png',
       fallbackRu: './assets/screens/companion-panel-reference.png',
       fallbackEn: './assets/screens/en-companion-panel.png',
       alt: 'Подробная панель: Забег — Таймер',
+      altEn: 'Detailed panel: Run — Timer',
       title: 'Подробная панель · Забег · Таймер',
-      text: 'Вкладка “Забег” → “Таймер”: общее время, текущий акт, статус, паузы, сброс и управление прохождением.'
+      titleEn: 'Detailed panel · Run · Timer',
+      text: 'Вкладка “Забег” → “Таймер”: общее время, текущий акт, статус, паузы, сброс и управление прохождением.',
+      textEn: 'Run → Timer shows total time, the current act, status, pauses, reset, and run controls.'
     },
     {
       groupKey: 'run',
       groupLabel: 'Забег',
+      groupLabelEn: 'Run',
       label: 'Время актов',
+      labelEn: 'Act Times',
       imageRu: './assets/screens/panel-act-times-ru.png',
       imageEn: './assets/screens/panel-act-times-en.png',
       fallbackRu: './assets/screens/companion-panel-reference.png',
       fallbackEn: './assets/screens/en-companion-panel.png',
       alt: 'Подробная панель: Забег — Время актов',
+      altEn: 'Detailed panel: Run — Act Times',
       title: 'Подробная панель · Забег · Время актов',
-      text: 'Вкладка “Забег” → “Время актов”: сплиты, общий прогресс, завершённые акты и отдельный сегмент эндгейма “До Т15”.'
+      titleEn: 'Detailed panel · Run · Act Times',
+      text: 'Вкладка “Забег” → “Время актов”: сплиты, общий прогресс, завершённые акты и отдельный сегмент эндгейма “До Т15”.',
+      textEn: 'Run → Act Times shows splits, overall progress, completed acts, and the separate To T15 endgame segment.'
     },
     {
       groupKey: 'run',
       groupLabel: 'Забег',
+      groupLabelEn: 'Run',
       label: 'Итоги',
+      labelEn: 'Summary',
       imageRu: './assets/screens/panel-summary-ru.png',
       imageEn: './assets/screens/panel-summary-en.png',
       fallbackRu: './assets/screens/act-bonuses-reference.png',
       fallbackEn: './assets/screens/en-companion-panel.png',
       alt: 'Подробная панель: Забег — Итоги',
+      altEn: 'Detailed panel: Run — Summary',
       title: 'Подробная панель · Забег · Итоги',
-      text: 'Вкладка “Забег” → “Итоги”: финальное время, сравнение с личным рекордом, самые долгие зоны, история забегов и сохранённые результаты.'
+      titleEn: 'Detailed panel · Run · Summary',
+      text: 'Вкладка “Забег” → “Итоги”: финальное время, сравнение с личным рекордом, самые долгие зоны, история забегов и сохранённые результаты.',
+      textEn: 'Run → Summary shows final time, personal-best comparison, longest zones, run history, and saved results.'
     }
   ]
 };
@@ -764,65 +808,83 @@ function getScreenGalleryForTab(tab) {
   return Array.isArray(gallery) && gallery.length > 0 ? { key, gallery } : null;
 }
 
+function getLocalizedGalleryField(item, field) {
+  if (currentLanguage === 'en') {
+    return item[`${field}En`] || translateText(item[field], 'en') || item[field];
+  }
+  return item[field];
+}
+
 function getLocalizedGalleryImage(item) {
-  return currentLanguage === 'en'
+  const image = currentLanguage === 'en'
     ? item.imageEn || item.imageRu || item.image
     : item.imageRu || item.imageEn || item.image;
+  return withAssetVersion(image);
 }
 
 function getLocalizedGalleryFallbackImage(item) {
-  return currentLanguage === 'en'
+  const image = currentLanguage === 'en'
     ? item.fallbackEn || item.fallbackRu || item.fallbackImage
     : item.fallbackRu || item.fallbackEn || item.fallbackImage;
+  return withAssetVersion(image);
 }
 
-function renderScreenGalleryTabs(gallery = null, index = 0) {
-  if (!screenGalleryTabs) return;
-
-  if (!Array.isArray(gallery) || gallery.length <= 1) {
-    screenGalleryTabs.hidden = true;
-    screenGalleryTabs.innerHTML = '';
-    return;
-  }
-
-  screenGalleryTabs.hidden = false;
-  const activeItem = gallery[index] || gallery[0];
-  const activeGroupKey = activeItem.groupKey || `screen-${index}`;
+function getGalleryGroups(gallery) {
   const groups = [];
-
   gallery.forEach((item, itemIndex) => {
-    const groupKey = item.groupKey || `screen-${itemIndex}`;
-    if (!groups.some((group) => group.key === groupKey)) {
+    const key = item.groupKey || `screen-${itemIndex}`;
+    if (!groups.some((group) => group.key === key)) {
       groups.push({
-        key: groupKey,
+        key,
         label: item.groupLabel || item.label || item.title || `#${itemIndex + 1}`,
+        labelEn: item.groupLabelEn || item.labelEn || item.titleEn,
         firstIndex: itemIndex
       });
     }
   });
+  return groups;
+}
 
-  const primaryTabs = groups.map((group) => {
-    const label = translateText(group.label, currentLanguage);
-    const selected = group.key === activeGroupKey;
-    return `<button class="screen-gallery-tab screen-gallery-tab-primary${selected ? ' is-active' : ''}" type="button" role="tab" data-screen-gallery-index="${group.firstIndex}" aria-selected="${selected ? 'true' : 'false'}">${label}</button>`;
-  }).join('');
+function renderScreenGalleryTabs(gallery = null, index = 0) {
+  const containers = [screenGalleryPrimaryTabs, screenGallerySecondaryTabs];
+
+  if (!Array.isArray(gallery) || gallery.length <= 1) {
+    containers.forEach((container) => {
+      if (!container) return;
+      container.hidden = true;
+      container.innerHTML = '';
+    });
+    return;
+  }
+
+  const activeItem = gallery[index] || gallery[0];
+  const activeGroupKey = activeItem.groupKey || `screen-${index}`;
+  const groups = getGalleryGroups(gallery);
+
+  if (screenGalleryPrimaryTabs) {
+    screenGalleryPrimaryTabs.hidden = false;
+    screenGalleryPrimaryTabs.innerHTML = groups.map((group) => {
+      const label = currentLanguage === 'en' ? group.labelEn || translateText(group.label, 'en') : group.label;
+      const selected = group.key === activeGroupKey;
+      return `<button class="screen-gallery-tab screen-gallery-tab-primary${selected ? ' is-active' : ''}" type="button" role="tab" data-screen-gallery-index="${group.firstIndex}" aria-selected="${selected ? 'true' : 'false'}">${label}</button>`;
+    }).join('');
+  }
+
   const activeGroupItems = gallery
     .map((item, itemIndex) => ({ item, itemIndex }))
     .filter(({ item, itemIndex }) => (item.groupKey || `screen-${itemIndex}`) === activeGroupKey);
-  const secondaryTabs = activeGroupItems.length > 1
-    ? activeGroupItems.map(({ item, itemIndex }) => {
-        const label = translateText(item.label || item.title || `#${itemIndex + 1}`, currentLanguage);
-        const selected = itemIndex === index;
-        return `<button class="screen-gallery-tab screen-gallery-tab-secondary${selected ? ' is-active' : ''}" type="button" role="tab" data-screen-gallery-index="${itemIndex}" aria-selected="${selected ? 'true' : 'false'}">${label}</button>`;
-      }).join('')
-    : '';
-  const primaryLabel = translateAttr('Основные вкладки подробной панели', currentLanguage);
-  const secondaryLabel = translateAttr('Подвкладки подробной панели', currentLanguage);
 
-  screenGalleryTabs.innerHTML = `
-    <div class="screen-gallery-tab-row screen-gallery-tab-row-primary" role="tablist" aria-label="${primaryLabel}">${primaryTabs}</div>
-    ${secondaryTabs ? `<div class="screen-gallery-tab-row screen-gallery-tab-row-secondary" role="tablist" aria-label="${secondaryLabel}">${secondaryTabs}</div>` : ''}
-  `;
+  if (screenGallerySecondaryTabs) {
+    const showSecondary = activeGroupItems.length > 1;
+    screenGallerySecondaryTabs.hidden = !showSecondary;
+    screenGallerySecondaryTabs.innerHTML = showSecondary
+      ? activeGroupItems.map(({ item, itemIndex }) => {
+          const label = getLocalizedGalleryField(item, 'label');
+          const selected = itemIndex === index;
+          return `<button class="screen-gallery-tab screen-gallery-tab-secondary${selected ? ' is-active' : ''}" type="button" role="tab" data-screen-gallery-index="${itemIndex}" aria-selected="${selected ? 'true' : 'false'}">${label}</button>`;
+        }).join('')
+      : '';
+  }
 }
 
 function setScreenGalleryControls(isVisible, index = 0, total = 0, gallery = null) {
@@ -846,9 +908,9 @@ function renderScreenPreviewFromData(data, options = {}) {
   if (!data || !screenPreviewImage || !screenPreviewTitle || !screenPreviewText) return;
 
   const nextImage = data.image || getLocalizedGalleryImage(data);
-  const nextAlt = data.alt;
-  const nextTitle = data.title;
-  const nextText = data.text;
+  const nextAlt = getLocalizedGalleryField(data, 'alt');
+  const nextTitle = getLocalizedGalleryField(data, 'title');
+  const nextText = getLocalizedGalleryField(data, 'text');
   const nextVariant = data.variant || 'landscape';
 
   if (nextImage) {
@@ -861,13 +923,12 @@ function renderScreenPreviewFromData(data, options = {}) {
       : null;
     screenPreviewImage.src = nextImage;
   }
-  if (nextAlt) screenPreviewImage.alt = translateAttr(nextAlt, currentLanguage);
+  if (nextAlt) screenPreviewImage.alt = nextAlt;
   if (nextTitle) {
-    const localizedTitle = translateText(nextTitle, currentLanguage);
-    screenPreviewTitle.textContent = localizedTitle;
-    if (screenWindowLabel) screenWindowLabel.textContent = localizedTitle;
+    screenPreviewTitle.textContent = nextTitle;
+    if (screenWindowLabel) screenWindowLabel.textContent = nextTitle;
   }
-  if (nextText) screenPreviewText.textContent = translateText(nextText, currentLanguage);
+  if (nextText) screenPreviewText.textContent = nextText;
   if (screenWindow) screenWindow.dataset.variant = nextVariant;
 
   setScreenGalleryControls(Boolean(options.galleryTotal), options.galleryIndex || 0, options.galleryTotal || 0, options.gallery || null);
@@ -929,7 +990,7 @@ function moveScreenGallery(direction) {
 screenGalleryPrevButton?.addEventListener('click', () => moveScreenGallery(-1));
 screenGalleryNextButton?.addEventListener('click', () => moveScreenGallery(1));
 
-screenGalleryTabs?.addEventListener('click', (event) => {
+function handleScreenGalleryTabClick(event) {
   const button = event.target.closest('[data-screen-gallery-index]');
   if (!button) return;
 
@@ -943,7 +1004,10 @@ screenGalleryTabs?.addEventListener('click', (event) => {
   activeScreenGalleryKey = galleryContext.key;
   activeScreenGalleryIndex = nextIndex;
   renderActiveScreenPreview();
-});
+}
+
+screenGalleryPrimaryTabs?.addEventListener('click', handleScreenGalleryTabClick);
+screenGallerySecondaryTabs?.addEventListener('click', handleScreenGalleryTabClick);
 
 const RELEASES_REPO = "UmbraMalik/poe2-act-companion-overlay";
 const DOWNLOAD_STATS_URL = './stats/downloads.json';
