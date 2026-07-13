@@ -11,6 +11,7 @@ import {
   getGuideData,
   getGuideZones,
   getZoneAliases,
+  loadGuideService,
   normalizeText
 } from './helpers/zoneTestUtils';
 
@@ -69,8 +70,18 @@ interface LeagueMechanicRewardEntry {
 interface LeagueMechanicRewardsDataFile {
   version: string;
   source: {
+    title: string;
     official: boolean;
     verified: string;
+    primary: {
+      title: string;
+      updated: string;
+    };
+    crossCheck: {
+      title: string;
+      published: string;
+    };
+    note: string;
   };
   rewards: LeagueMechanicRewardEntry[];
 }
@@ -417,8 +428,15 @@ test('league rewards are structurally valid, canonical and safe to display', () 
   const seenIds = new Set<string>();
 
   assert.match(data.version, /0\.5.*2026-07-13/);
+  assert.match(data.source.title, /project 0\.5 recheck/i);
   assert.equal(data.source.official, false, 'community reward tables must not be labelled official');
   assert.equal(data.source.verified, '2026-07-13');
+  assert.match(data.source.primary.title, /Mobalytics \[0\.4\]/);
+  assert.equal(data.source.primary.updated, '2026-05-24');
+  assert.match(data.source.crossCheck.title, /VULKK/);
+  assert.equal(data.source.crossCheck.published, '2026-05-18');
+  assert.match(data.source.note, /community sources, not official GGG data/i);
+  assert.match(data.source.note, /legacy Mobalytics \[0\.4\]/i);
   assert.ok(Array.isArray(data.rewards) && data.rewards.length > 0);
 
   for (const reward of data.rewards) {
@@ -480,6 +498,23 @@ test('league reward regressions stay synchronized with guide cards', () => {
   assert.ok(kopec);
   assert.equal(kopec.zone_ru, 'Храм Копека');
   assert.equal(kopec.guideZoneRu, 'Храм Копека');
+
+  const etchedRavine = rewardsById.get('league_interlude3_etched_ravine');
+  const ashenForest = rewardsById.get('league_interlude3_ashen_forest');
+  assert.ok(etchedRavine && ashenForest);
+  assert.equal(etchedRavine.reward_en, 'Exalted Orb');
+  assert.equal(etchedRavine.reward_ru, 'Сфера возвышения');
+  assert.equal(etchedRavine.coverageNote, null);
+  assert.equal(etchedRavine.uncertain, false);
+  assert.equal(etchedRavine.hasReward, true);
+  assert.equal(etchedRavine.displayInOverlay, true);
+  assert.equal(etchedRavine.oneTimeGuaranteed, true);
+  assert.doesNotMatch(JSON.stringify(etchedRavine), /Rare Belt|Редкий пояс/i);
+  assert.equal(ashenForest.uncertain, true);
+  assert.equal(ashenForest.hasReward, false);
+  assert.equal(ashenForest.displayInOverlay, false);
+  assert.equal(ashenForest.oneTimeGuaranteed, false);
+  assert.match(ashenForest.coverageNote ?? '', /Rare Belt|unconfirmed/i);
 });
 
 test('both internal area alias tables target real cards without case conflicts', () => {
@@ -574,13 +609,44 @@ test('final Interlude bonus is global, branch-independent and counted once', () 
   const matches = bonuses.filter((bonus) => bonus.id === 'int3_final_zolin_zelina_weapon_points');
   assert.equal(matches.length, 1, 'legacy persisted id must remain unique');
   const finalBonus = matches[0];
-  assert.equal(finalBonus.zoneId, undefined);
-  assert.equal(finalBonus.zone_ru, 'Кингсмарш');
+  assert.equal(finalBonus.zoneId, 'post_interludes_kingsmarch');
+  assert.equal(finalBonus.zone_ru, 'Кингсмарш — финал интерлюдий');
   assert.equal(finalBonus.reward.type, 'weapon_set_passive_points');
   assert.equal(finalBonus.reward.value, 2);
   assert.doesNotMatch(`${finalBonus.source} ${finalBonus.details.join(' ')}`, /Золин|Зелин|Поместье Холтен/i);
   assert.ok(finalBonus.eventRules.every((rule) => (rule.zoneIds?.length ?? 0) === 0));
   assert.ok(finalBonus.eventRules.some((rule) => rule.sceneNames?.includes('Кингсмарш')));
+  const rawFinalBonus = readJson<{ bonuses: Array<Record<string, unknown>> }>('src/data/campaign-bonuses.json')
+    .bonuses.find((bonus) => bonus.id === finalBonus.id);
+  assert.ok(rawFinalBonus);
+  assert.equal('idCompatibility' in rawFinalBonus, false, 'legacy id rationale belongs in tests, not runtime JSON');
+});
+
+test('Sacrificial Heart keeps one canonical display name and legacy resolution', () => {
+  const guideById = new Map(getGuideZones().map((zone) => [zone.id, zone]));
+  const heart = guideById.get('a3_vaal_heart');
+  const kopec = guideById.get('a3_temple_kopec');
+  assert.ok(heart && kopec);
+  assert.equal(heart.zone_ru, 'Жертвенное сердце');
+  assert.equal(heart.zone_ru.includes('/'), false);
+  assert.equal(kopec.next_zone_ru, 'Жертвенное сердце');
+  assert.equal(kopec.next_zone_ru.includes('/'), false);
+  assert.ok(heart.aliases?.includes('Ваальская часть / жертвенное сердце'));
+  assert.ok(heart.aliases_en?.includes('Vaal Pyre / Sacrificial Heart'));
+  assert.match(JSON.stringify(heart), /Утцааль/);
+  assert.match(JSON.stringify(heart), /Аггорат/);
+  assert.match(JSON.stringify(heart), /\+2 пассивных очка набора оружия/);
+
+  const service = loadGuideService();
+  assert.equal(service.findByZoneName('Ваальская часть / жертвенное сердце')?.id, heart.id);
+  assert.equal(service.resolveZoneMatch({
+    extractedInternalAreaId: 'C_G3_14',
+    extractedZoneName: 'Utzaal'
+  })?.guide?.id, heart.id);
+  assert.equal(service.resolveZoneMatch({
+    extractedInternalAreaId: 'C_G3_16_',
+    extractedZoneName: 'Aggorat'
+  })?.guide?.id, heart.id);
 });
 
 test('Act 4 ordinary quest rewards stay in guide cards and separate from permanent or league rewards', () => {

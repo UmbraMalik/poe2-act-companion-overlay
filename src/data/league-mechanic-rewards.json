@@ -2,7 +2,7 @@
   "version": "league-mechanic-rewards-0.5-reverified-2026-07-13",
   "feature": "leagueMechanicRewards",
   "source": {
-    "title": "Campaign league mechanic rewards — 0.5 re-verification",
+    "title": "Campaign league mechanic rewards — project 0.5 recheck",
     "official": false,
     "verified": "2026-07-13",
     "primary": {
@@ -16,7 +16,7 @@
       "url": "https://vulkk.com/2026/05/18/path-of-exile-2-campaign-league-mechanic-rewards/",
       "published": "2026-05-18"
     },
-    "note": "Community sources, not official GGG data. Confirmed entries were rechecked against both tables for 0.5 on 2026-07-13; conflicting or question-marked entries remain hidden as uncertain."
+    "note": "Community sources, not official GGG data. The primary source is the legacy Mobalytics [0.4] reward table (page updated 2026-05-24); the project rechecked it for 0.5 on 2026-07-13 against VULKK (published 2026-05-18). Conflicting or question-marked entries remain hidden as uncertain."
   },
   "notes": [
     "Keep this file separate from campaign-bonuses.json: these are temporary/loot rewards, not permanent character bonuses.",
@@ -1721,7 +1721,7 @@
       "oneTimeGuaranteed": true,
       "duplicateInCurrentGuide": false,
       "duplicateNote": null,
-      "coverageNote": "Unconfirmed candidate: Mobalytics marks Rare Belt with a question mark; keep hidden until direct in-game verification.",
+      "coverageNote": null,
       "uncertain": false,
       "source": "Mobalytics table (updated 2026-05-24) + VULKK cross-check (published 2026-05-18); verified 2026-07-13"
     },

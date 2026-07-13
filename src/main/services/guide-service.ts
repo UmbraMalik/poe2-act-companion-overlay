@@ -45,6 +45,11 @@ interface ZoneNameMatchResult {
   normalizedZoneName: string | null;
 }
 
+export type GuideContextResolver = (input: {
+  rawZoneName: string;
+  guide: GuideEntry | null;
+}) => GuideEntry | null;
+
 function normalizeText(input: string): string {
   return String(input ?? '')
     .toLowerCase()
@@ -215,6 +220,7 @@ export class GuideService {
   private knownTownAreaIds = new Set<string>();
   private vendorCheckpointMap = new Map<string, LevelReminder>();
   private vendorCheckpointByLevel = new Map<number, LevelReminder>();
+  private contextResolver: GuideContextResolver | null = null;
 
   load(): GuideEntry[] {
     const guidePath = resolveRuntimePath('src', 'data', 'guide.json');
@@ -319,6 +325,17 @@ export class GuideService {
     return [...this.entries];
   }
 
+  setContextResolver(resolver: GuideContextResolver | null): void {
+    this.contextResolver = resolver;
+  }
+
+  private applyContextResolver(
+    rawZoneName: string,
+    guide: GuideEntry | null
+  ): GuideEntry | null {
+    return this.contextResolver?.({ rawZoneName, guide }) ?? guide;
+  }
+
   getLoadedAt(): string | null {
     return this.loadedAt;
   }
@@ -365,7 +382,9 @@ export class GuideService {
   }
 
   findByZoneName(zoneName: string | null | undefined): GuideEntry | null {
-    return this.matchByZoneName(zoneName).guide;
+    const rawZoneName = String(zoneName ?? '').trim();
+    const guide = this.matchByZoneName(zoneName).guide;
+    return rawZoneName ? this.applyContextResolver(rawZoneName, guide) : guide;
   }
 
   private resolveGuideReference(reference: string | null | undefined): GuideEntry | null {
@@ -577,7 +596,7 @@ export class GuideService {
       extractedZoneName,
       normalizedZoneName: zoneMatch.normalizedZoneName,
       source: extractedInternalAreaId ? 'internal-area-id' : 'entered-zone-name',
-      guide: zoneMatch.guide,
+      guide: this.applyContextResolver(rawZoneName, zoneMatch.guide),
       matcherReason: zoneMatch.matcherReason
     };
   }

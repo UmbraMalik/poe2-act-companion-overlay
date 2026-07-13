@@ -3456,7 +3456,7 @@
           "Занесённое песком болото → Лагерь на зиккурате → Развалины в джунглях → Ядовитые крипты",
           "Заражённые земли → Топи химеридов → Машинариум Джиквани → Святилище Джиквани",
           "Возврат в джунгли → Водотоки Матлан → Болото Азак → Затопленный город",
-          "Затопленный город → Расплавленные залы → Осквернённая вершина → Храм Копека → Ваальская часть / жертвенное сердце → Чёрные палаты"
+          "Затопленный город → Расплавленные залы → Осквернённая вершина → Храм Копека → Жертвенное сердце → Чёрные палаты"
         ],
         "rewards": [
           "Хаб Акта 3 и быстрый ориентир по порядку зон"
@@ -4745,7 +4745,7 @@
       "boss_tips": [],
       "xp_notes": [],
       "crafting_tips": [],
-      "next_zone_ru": "Ваальская часть / жертвенное сердце",
+      "next_zone_ru": "Жертвенное сердце",
       "details": {
         "route": [
           "На 2 этаже сначала проверить дальний угол",
@@ -4789,9 +4789,18 @@
     {
       "id": "a3_vaal_heart",
       "act": 3,
-      "zone_en": "Vaal Pyre / Sacrificial Heart",
-      "zone_ru": "Ваальская часть / жертвенное сердце",
-      "aliases": [],
+      "zone_en": "Sacrificial Heart",
+      "zone_ru": "Жертвенное сердце",
+      "aliases": [
+        "Ваальская часть",
+        "Ваальская часть / жертвенное сердце",
+        "Sacrificial Heart",
+        "Утцааль",
+        "Аггорат"
+      ],
+      "aliases_en": [
+        "Vaal Pyre / Sacrificial Heart"
+      ],
       "recommended_level": 40,
       "recommended_level_label": "40+",
       "is_good_xp_zone": false,
@@ -4823,7 +4832,7 @@
         },
         {
           "id": "a3_vaal_heart_task_4",
-          "text": "Положить жертвенное сердце, ударить кинжалом и забрать +2 пассивных очка",
+          "text": "Положить жертвенное сердце, ударить кинжалом и забрать +2 пассивных очка набора оружия",
           "type": "route_task",
           "required": false,
           "autoCompleteKeywords": [],
@@ -4839,7 +4848,7 @@
         }
       ],
       "rewards": [
-        "2 пассивных очка",
+        "2 пассивных очка набора оружия",
         "Камень поддержки 3 тира"
       ],
       "skip": [],
@@ -4856,11 +4865,11 @@
         "route": [
           "Утцааль: дорога → Вайпер Напуаци",
           "Аггорат: ваальские голиафы → жертвенное сердце",
-          "Жертвенный алтарь → кинжал → +2 пассивных очка",
+          "Жертвенный алтарь → кинжал → +2 пассивных очка набора оружия",
           "Чёрные палаты"
         ],
         "rewards": [
-          "+2 пассивных очка за жертвенное сердце"
+          "+2 пассивных очка набора оружия за жертвенное сердце"
         ],
         "skip": [],
         "important": [
@@ -6747,6 +6756,579 @@
       ]
     },
     {
+      "id": "interlude_khari_bazaar",
+      "act": 5,
+      "zone_en": "Khari Bazaar",
+      "zone_ru": "Кхарийский базар",
+      "aliases": [
+        "Khari Bazaar",
+        "Khari Bazaar Town"
+      ],
+      "recommended_level": null,
+      "recommended_level_label": "52–58 / зависит от порядка",
+      "is_good_xp_zone": false,
+      "checklist": [
+        {
+          "id": "interlude_khari_bazaar_task_1",
+          "text": "Начать вторую страницу акта: идти в Кхарийский перевал",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "interlude_khari_bazaar_task_2",
+          "text": "Порядок страниц: 2-я страница → 3-я страница → 1-я страница",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "interlude_khari_bazaar_task_3",
+          "text": "После ветки Опушки и Убежища Куачик вернуться к Пристанищу",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        }
+      ],
+      "rewards": [],
+      "skip": [],
+      "important": [
+        "Интерлюдии можно проходить в любом порядке; основной маршрут приложения начинается с Кхарийского базара.",
+        "Если билду критично нужен дух, начни с Горы Криар.",
+        "Столп Орбалы в Киме даёт один из 7 даров; выбор можно менять, возвращаясь к столпу."
+      ],
+      "after": [],
+      "boss_tips": [],
+      "xp_notes": [],
+      "crafting_tips": [],
+      "next_zone_ru": "Кхарийский перевал",
+      "details": {
+        "route": [
+          "Кхарийский базар → Кхарийский перевал → Воды Хаталя → Храм Селари",
+          "Дар Расплавленного / Лестница Черепной пасти → +5% максимум здоровья",
+          "Кима → столп Орбалы / 7 даров → Водохранилище Кимы"
+        ],
+        "important": [
+          "Не прыгать сразу в старые/первые локации: порядок страниц нужен, чтобы маршрут в оверлее не вёл назад-вперёд."
+        ],
+        "navigation": [
+          "Кхарийский базар → Кхарийский перевал → Воды Хаталя → Храм Селари → Ворота Галаи."
+        ],
+        "town_plan": [
+          "Хаб-памятка: 2-я страница начинается здесь, 3-я — Опушка, 1-я — Пристанище."
+        ],
+        "overlay_speedrun": []
+      },
+      "display": {
+        "wideModeRecommended": true,
+        "showAllChecklist": true
+      },
+      "area_ids": [
+        "C_P2_Town",
+        "P2_Town"
+      ]
+    },
+    {
+      "id": "interlude_khari_crossing",
+      "act": 5,
+      "zone_en": "The Khari Crossing",
+      "zone_ru": "Кхарийский перевал",
+      "aliases": [
+        "Khari Crossing"
+      ],
+      "recommended_level": null,
+      "recommended_level_label": "52–58 / зависит от порядка",
+      "is_good_xp_zone": false,
+      "checklist": [
+        {
+          "id": "i2_khari_crossing_life_task",
+          "text": "Найти расплавленную святыню и взять +5% максимум здоровья",
+          "type": "reward",
+          "required": true,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "i2_khari_crossing_bosses_task",
+          "text": "Убить Актхи и Анундра",
+          "type": "boss",
+          "required": true,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "i2_khari_crossing_weapon_points_task",
+          "text": "Поговорить с Рису в городе и забрать +2 пассивных очка набора оружия",
+          "type": "reward",
+          "required": true,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        }
+      ],
+      "rewards": [
+        "+5% максимум здоровья",
+        "+2 пассивных очка набора оружия"
+      ],
+      "skip": [],
+      "important": [
+        "Актхи и Анундр дают +2 пассивных очка через Рису; Дар Расплавленного / Лестница Черепной пасти даёт +5% максимум здоровья."
+      ],
+      "after": [],
+      "boss_tips": [],
+      "xp_notes": [],
+      "crafting_tips": [],
+      "next_zone_ru": "Воды Хаталя",
+      "details": {
+        "route": [
+          "Найти расплавленную святыню и взять +5% максимум здоровья.",
+          "Убить Актхи и Анундра.",
+          "Поговорить с Рису в городе и забрать +2 пассивных очка набора оружия."
+        ],
+        "rewards": [
+          "+5% максимум здоровья — расплавленная святыня в Кхарийском перевале.",
+          "+2 пассивных очка набора оружия — Актхи и Анундр, затем Рису в городе."
+        ],
+        "skip": [],
+        "important": [],
+        "after": [],
+        "boss_tips": [],
+        "xp_notes": [],
+        "crafting_tips": [],
+        "navigation": [
+          "После Кхарийского перевала идти в Воды Хаталя, а уже потом в Храм Селари."
+        ],
+        "overlay_speedrun": []
+      },
+      "display": {
+        "wideModeRecommended": true,
+        "showAllChecklist": true
+      },
+      "area_ids": [
+        "C_P2_1",
+        "P2_1"
+      ],
+      "campaign_bonus_ids": [
+        "int2_khari_crossing_life_percent",
+        "int2_khari_crossing_aktu_anundr_weapon_points"
+      ]
+    },
+    {
+      "id": "interlude_pools_of_khatal",
+      "act": 5,
+      "zone_en": "Pools of Khatal",
+      "zone_ru": "Воды Хаталя",
+      "aliases": [],
+      "recommended_level": 55,
+      "recommended_level_label": "55+",
+      "is_good_xp_zone": false,
+      "checklist": [
+        {
+          "id": "interlude_pools_khatal_task_1",
+          "text": "Пройти транзитом между Кхарийским перевалом и Храмом Селари",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "interlude_pools_khatal_task_2",
+          "text": "Не чистить полностью, если нет просадки по опыту",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        }
+      ],
+      "rewards": [
+        "Переход по ветке Хаталя / Селари"
+      ],
+      "skip": [
+        "Не разворачивать карту ради полной зачистки"
+      ],
+      "important": [
+        "Воды Хаталя: гарантированная экспедиция и вход в Храм Селари; это не просто транзитная пустая зона."
+      ],
+      "after": [],
+      "boss_tips": [],
+      "xp_notes": [],
+      "crafting_tips": [],
+      "next_zone_ru": "Храм Селари",
+      "details": {
+        "route": [
+          "Пройти транзитом между Кхарийским перевалом и Храмом Селари",
+          "Не чистить полностью, если нет просадки по опыту"
+        ],
+        "rewards": [
+          "Переход по ветке Хаталя / Селари"
+        ],
+        "skip": [
+          "Не разворачивать карту ради полной зачистки"
+        ],
+        "important": [
+          "Проходная зона: главная задача — быстро найти следующий переход"
+        ],
+        "after": [],
+        "boss_tips": [],
+        "xp_notes": [],
+        "crafting_tips": [],
+        "navigation": [
+          "Держать темп и искать переход в Храм Селари."
+        ],
+        "time_saves": [
+          "Если XP в норме — не стопориться на боковых карманах."
+        ],
+        "overlay_speedrun": []
+      },
+      "display": {
+        "wideModeRecommended": true,
+        "showAllChecklist": true
+      },
+      "area_ids": [
+        "C_P2_2",
+        "P2_2"
+      ]
+    },
+    {
+      "id": "interlude_selvari_sanctuary",
+      "act": 5,
+      "zone_en": "Sel Khari Sanctuary",
+      "zone_ru": "Храм Селари",
+      "aliases": [
+        "Selvari Sanctuary",
+        "Святилище Селвари",
+        "Святилище Селхари",
+        "Храм Селари",
+        "Храм Селхари"
+      ],
+      "recommended_level": null,
+      "recommended_level_label": "52–58 / зависит от порядка",
+      "is_good_xp_zone": false,
+      "checklist": [
+        {
+          "id": "i2_selvari_sanctuary_task_1",
+          "text": "Найти 2 барьера и поставить в пьедесталы вдоль внешней стены",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "i2_selvari_sanctuary_task_2",
+          "text": "Выбрать амулет и кольцо",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "i2_selvari_sanctuary_task_3",
+          "text": "Убить Альзура за барью 60 уровня",
+          "type": "boss",
+          "required": true,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        }
+      ],
+      "rewards": [
+        "Выбор амулета/кольца",
+        "Барья 60 уровня для третьего восхождения"
+      ],
+      "skip": [],
+      "important": [
+        "Два желания: барьи Юна/Рангин дают два редких украшения на выбор; Эльзара открывает дальнейший прогресс к Асала/Джадо."
+      ],
+      "after": [],
+      "boss_tips": [],
+      "xp_notes": [],
+      "crafting_tips": [],
+      "next_zone_ru": "Ворота Галаи",
+      "details": {
+        "route": [
+          "Найти 2 барьера и поставить в пьедесталы вдоль внешней стены",
+          "Выбрать амулет и кольцо",
+          "Убить Альзура за барью 60 уровня"
+        ],
+        "rewards": [
+          "Выбор амулета/кольца",
+          "Барья 60 уровня для третьего восхождения",
+          "Альзур даёт барьер 60 уровня под третье восхождение."
+        ],
+        "skip": [],
+        "important": [],
+        "after": [],
+        "boss_tips": [],
+        "xp_notes": [],
+        "crafting_tips": [],
+        "navigation": [
+          "Две барьи вставить в пьедесталы по внешней стене, выбрать кольцо/амулет и идти дальше в Ворота Галаи."
+        ],
+        "time_saves": [
+          "После босса поговорить, забрать выбор и двигаться в Ворота Галаи без лишнего фарма."
+        ],
+        "overlay_speedrun": []
+      },
+      "display": {
+        "wideModeRecommended": true,
+        "showAllChecklist": true
+      },
+      "area_ids": [
+        "C_P2_3",
+        "P2_3"
+      ]
+    },
+    {
+      "id": "interlude_galai_gates",
+      "act": 5,
+      "zone_en": "The Galai Gates",
+      "zone_ru": "Ворота Галаи",
+      "aliases": [
+        "Galai Gates",
+        "Ворота Галаи",
+        "Врата Голай",
+        "Ворота Голай",
+        "Врата Галаи"
+      ],
+      "recommended_level": 56,
+      "recommended_level_label": "56+",
+      "is_good_xp_zone": false,
+      "checklist": [
+        {
+          "id": "interlude_galai_gates_task_1",
+          "text": "Пройти через ворота по ветке к Киме",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "interlude_galai_gates_task_2",
+          "text": "Убить Ворнаса, Падшее пламя",
+          "type": "boss",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "interlude_galai_gates_task_3",
+          "text": "Проверить цель Бездны только если она по пути",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        }
+      ],
+      "rewards": [
+        "Босс Ворнас и дополнительная добыча / цель Бездны по пути"
+      ],
+      "skip": [
+        "Цель Бездны можно пропустить, если она уводит с маршрута"
+      ],
+      "important": [
+        "Ворота Галаи / Расплавленное святилище — северный ориентир по маршруту к Киме; при баге печатей можно сбросить инстанс."
+      ],
+      "after": [],
+      "boss_tips": [
+        "На Ворнасе держать дистанцию от опасных огненных окон и не стоять в земле."
+      ],
+      "xp_notes": [],
+      "crafting_tips": [],
+      "next_zone_ru": "Кима",
+      "details": {
+        "route": [
+          "Пройти через ворота по ветке к Киме",
+          "Убить Ворнаса, Падшее пламя",
+          "Проверить цель Бездны только если она по пути"
+        ],
+        "rewards": [
+          "Босс Ворнас и дополнительная добыча / цель Бездны по пути"
+        ],
+        "skip": [
+          "Цель Бездны можно пропустить, если она уводит с маршрута"
+        ],
+        "important": [
+          "Не путать с Кхарийским перевалом: бонусы Кхарийского перевала здесь не закрываются"
+        ],
+        "after": [],
+        "boss_tips": [
+          "На Ворнасе держать дистанцию от опасных огненных окон и не стоять в земле."
+        ],
+        "xp_notes": [],
+        "crafting_tips": [],
+        "navigation": [
+          "После ворот двигаться к Киме."
+        ],
+        "opportunistic": [
+          "Бездну брать только если она рядом и не ломает темп."
+        ],
+        "overlay_speedrun": []
+      },
+      "display": {
+        "wideModeRecommended": true,
+        "showAllChecklist": true
+      },
+      "area_ids": [
+        "C_P2_5",
+        "P2_5"
+      ]
+    },
+    {
+      "id": "i2_kima",
+      "act": 5,
+      "zone_en": "Qimah",
+      "zone_ru": "Кима",
+      "aliases": [
+        "Kima"
+      ],
+      "recommended_level": 52,
+      "recommended_level_label": "52+",
+      "is_good_xp_zone": false,
+      "checklist": [
+        {
+          "id": "i2_kima_task_1",
+          "text": "Налить воды и взять пассивку",
+          "type": "reward",
+          "required": true,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "i2_kima_task_2",
+          "text": "Обычно выбрать все сопротивления",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        }
+      ],
+      "rewards": [
+        "Пассивка / все сопротивления"
+      ],
+      "skip": [],
+      "important": [
+        "Столп Орбалы: выбрать 1 из 7 даров; бонус можно менять позже, вернувшись к столпу."
+      ],
+      "after": [],
+      "boss_tips": [],
+      "xp_notes": [],
+      "crafting_tips": [],
+      "next_zone_ru": "Водохранилище Кима",
+      "details": {
+        "route": [
+          "Налить воды и взять пассивку",
+          "Обычно выбрать все сопротивления"
+        ],
+        "rewards": [
+          "Пассивка / все сопротивления",
+          "Налить воду/активировать колонны и выбрать постоянный бонус; часто берут все сопротивления или нужный полезный бонус."
+        ],
+        "skip": [],
+        "important": [],
+        "after": [],
+        "boss_tips": [],
+        "xp_notes": [],
+        "crafting_tips": [],
+        "opportunistic": [
+          "Выбор можно позже изменить, но на забеге лучше заранее понимать, что берёшь."
+        ],
+        "overlay_speedrun": []
+      },
+      "display": {
+        "wideModeRecommended": true,
+        "showAllChecklist": true
+      },
+      "area_ids": [
+        "C_P2_6",
+        "P2_6"
+      ]
+    },
+    {
+      "id": "i2_kima_reservoir",
+      "act": 5,
+      "zone_en": "Qimah Reservoir",
+      "zone_ru": "Водохранилище Кима",
+      "aliases": [
+        "Kima Reservoir",
+        "Водохранилище Кима"
+      ],
+      "recommended_level": 53,
+      "recommended_level_label": "53+",
+      "is_good_xp_zone": false,
+      "checklist": [
+        {
+          "id": "i2_kima_reservoir_task_1",
+          "text": "Флаконы у колодцев — опционально для высокоуровневой валюты",
+          "type": "route_task",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        },
+        {
+          "id": "i2_kima_reservoir_task_2",
+          "text": "Главное — убить Асмоди",
+          "type": "boss",
+          "required": false,
+          "autoCompleteKeywords": [],
+          "autoCompleteMode": "manual_or_zone_leave_infer"
+        }
+      ],
+      "rewards": [
+        "Возможные экзальты/хаосы из флаконов",
+        "Прогресс"
+      ],
+      "skip": [],
+      "important": [
+        "Священные колодцы с флаконами святой воды — опциональная валюта; Кровавый трюм можно спокойно пропустить, если темп важнее.",
+        "После Водохранилища Кима маршрут идёт в Опушку; финальные +2 пассивных очка забираются у Скрытого только после закрытия всех трёх интерлюдий."
+      ],
+      "after": [],
+      "boss_tips": [],
+      "xp_notes": [],
+      "crafting_tips": [],
+      "next_zone_ru": "Опушка",
+      "details": {
+        "route": [
+          "священные колодцы / флаконы по пути",
+          "Кровавый трюм — только если хочется добычи",
+          "Азмади финальный босс",
+          "После босса забрать главный прогресс/барьер и идти в Опушку",
+          "Финальные +2 у Скрытого — только после всех трёх интерлюдий"
+        ],
+        "rewards": [
+          "Возможные экзальты/хаосы из флаконов",
+          "Прогресс"
+        ],
+        "skip": [],
+        "important": [],
+        "after": [],
+        "boss_tips": [],
+        "xp_notes": [],
+        "crafting_tips": [],
+        "opportunistic": [
+          "флаконы можно использовать на колодцах ради валюты, если попались по пути."
+        ],
+        "navigation": [
+          "После Водохранилища Кима перейти в Опушку, затем идти в Пепельный лес."
+        ],
+        "time_saves": [
+          "Не забыть забрать главный прогресс после босса, затем сразу в Опушку."
+        ],
+        "overlay_speedrun": [
+          "Не забыть забрать главный прогресс после босса, затем сразу в Опушку."
+        ]
+      },
+      "display": {
+        "wideModeRecommended": true,
+        "showAllChecklist": true
+      },
+      "area_ids": [
+        "C_P2_7",
+        "P2_7"
+      ]
+    },
+    {
       "id": "interlude_the_glade",
       "act": 5,
       "zone_en": "The Glade",
@@ -7997,577 +8579,80 @@
       ]
     },
     {
-      "id": "interlude_khari_bazaar",
+      "id": "post_interludes_kingsmarch",
       "act": 5,
-      "zone_en": "Khari Bazaar",
-      "zone_ru": "Кхарийский базар",
-      "aliases": [
-        "Khari Bazaar",
-        "Khari Bazaar Town"
-      ],
+      "zone_en": "Kingsmarch — Interlude Finale",
+      "zone_ru": "Кингсмарш — финал интерлюдий",
+      "aliases": [],
       "recommended_level": null,
-      "recommended_level_label": "52–58 / зависит от порядка",
+      "recommended_level_label": "После трёх интерлюдий",
       "is_good_xp_zone": false,
       "checklist": [
         {
-          "id": "interlude_khari_bazaar_task_1",
-          "text": "Начать вторую страницу акта: идти в Кхарийский перевал",
+          "id": "post_interludes_kingsmarch_task_1",
+          "text": "Поговорить со Скрытым",
           "type": "route_task",
-          "required": false,
-          "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
-        },
-        {
-          "id": "interlude_khari_bazaar_task_2",
-          "text": "Порядок страниц: 2-я страница → 3-я страница → 1-я страница",
-          "type": "route_task",
-          "required": false,
-          "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
-        },
-        {
-          "id": "interlude_khari_bazaar_task_3",
-          "text": "После ветки Опушки и Убежища Куачик вернуться к Пристанищу",
-          "type": "route_task",
-          "required": false,
-          "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
-        }
-      ],
-      "rewards": [],
-      "skip": [],
-      "important": [
-        "Интерлюдии можно проходить в любом порядке; основной маршрут приложения начинается с Кхарийского базара.",
-        "Если билду критично нужен дух, начни с Горы Криар.",
-        "Столп Орбалы в Киме даёт один из 7 даров; выбор можно менять, возвращаясь к столпу."
-      ],
-      "after": [],
-      "boss_tips": [],
-      "xp_notes": [],
-      "crafting_tips": [],
-      "next_zone_ru": "Кхарийский перевал",
-      "details": {
-        "route": [
-          "Кхарийский базар → Кхарийский перевал → Воды Хаталя → Храм Селари",
-          "Дар Расплавленного / Лестница Черепной пасти → +5% максимум здоровья",
-          "Кима → столп Орбалы / 7 даров → Водохранилище Кимы"
-        ],
-        "important": [
-          "Не прыгать сразу в старые/первые локации: порядок страниц нужен, чтобы маршрут в оверлее не вёл назад-вперёд."
-        ],
-        "navigation": [
-          "Кхарийский базар → Кхарийский перевал → Воды Хаталя → Храм Селари → Ворота Галаи."
-        ],
-        "town_plan": [
-          "Хаб-памятка: 2-я страница начинается здесь, 3-я — Опушка, 1-я — Пристанище."
-        ],
-        "overlay_speedrun": []
-      },
-      "display": {
-        "wideModeRecommended": true,
-        "showAllChecklist": true
-      },
-      "area_ids": [
-        "C_P2_Town",
-        "P2_Town"
-      ]
-    },
-    {
-      "id": "interlude_khari_crossing",
-      "act": 5,
-      "zone_en": "The Khari Crossing",
-      "zone_ru": "Кхарийский перевал",
-      "aliases": [
-        "Khari Crossing"
-      ],
-      "recommended_level": null,
-      "recommended_level_label": "52–58 / зависит от порядка",
-      "is_good_xp_zone": false,
-      "checklist": [
-        {
-          "id": "i2_khari_crossing_life_task",
-          "text": "Найти расплавленную святыню и взять +5% максимум здоровья",
-          "type": "reward",
           "required": true,
           "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
         },
         {
-          "id": "i2_khari_crossing_bosses_task",
-          "text": "Убить Актхи и Анундра",
-          "type": "boss",
+          "id": "post_interludes_kingsmarch_task_2",
+          "text": "Получить +2 пассивных очка набора оружия",
+          "type": "permanent_reward",
           "required": true,
           "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
+          "autoCompleteMode": "linked_reward"
         },
         {
-          "id": "i2_khari_crossing_weapon_points_task",
-          "text": "Поговорить с Рису в городе и забрать +2 пассивных очка набора оружия",
-          "type": "reward",
-          "required": true,
+          "id": "post_interludes_kingsmarch_task_3",
+          "text": "Отправиться в Ориат",
+          "type": "route_task",
+          "required": false,
           "autoCompleteKeywords": [],
           "autoCompleteMode": "manual_or_zone_leave_infer"
         }
       ],
       "rewards": [
-        "+5% максимум здоровья",
         "+2 пассивных очка набора оружия"
       ],
       "skip": [],
       "important": [
-        "Актхи и Анундр дают +2 пассивных очка через Рису; Дар Расплавленного / Лестница Черепной пасти даёт +5% максимум здоровья."
+        "Финальный контекст открывается только после завершения всех трёх интерлюдий в любом порядке.",
+        "Скрытый выдаёт награду в Кингсмарше; после разговора маршрут продолжается в Ориат."
       ],
       "after": [],
       "boss_tips": [],
       "xp_notes": [],
       "crafting_tips": [],
-      "next_zone_ru": "Воды Хаталя",
-      "details": {
-        "route": [
-          "Найти расплавленную святыню и взять +5% максимум здоровья.",
-          "Убить Актхи и Анундра.",
-          "Поговорить с Рису в городе и забрать +2 пассивных очка набора оружия."
-        ],
-        "rewards": [
-          "+5% максимум здоровья — расплавленная святыня в Кхарийском перевале.",
-          "+2 пассивных очка набора оружия — Актхи и Анундр, затем Рису в городе."
-        ],
-        "skip": [],
-        "important": [],
-        "after": [],
-        "boss_tips": [],
-        "xp_notes": [],
-        "crafting_tips": [],
-        "navigation": [
-          "После Кхарийского перевала идти в Воды Хаталя, а уже потом в Храм Селари."
-        ],
-        "overlay_speedrun": []
-      },
-      "display": {
-        "wideModeRecommended": true,
-        "showAllChecklist": true
-      },
-      "area_ids": [
-        "C_P2_1",
-        "P2_1"
-      ],
+      "next_zone_ru": "Ориат",
       "campaign_bonus_ids": [
-        "int2_khari_crossing_life_percent",
-        "int2_khari_crossing_aktu_anundr_weapon_points"
-      ]
-    },
-    {
-      "id": "interlude_pools_of_khatal",
-      "act": 5,
-      "zone_en": "Pools of Khatal",
-      "zone_ru": "Воды Хаталя",
-      "aliases": [],
-      "recommended_level": 55,
-      "recommended_level_label": "55+",
-      "is_good_xp_zone": false,
-      "checklist": [
-        {
-          "id": "interlude_pools_khatal_task_1",
-          "text": "Пройти транзитом между Кхарийским перевалом и Храмом Селари",
-          "type": "route_task",
-          "required": false,
-          "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
-        },
-        {
-          "id": "interlude_pools_khatal_task_2",
-          "text": "Не чистить полностью, если нет просадки по опыту",
-          "type": "route_task",
-          "required": false,
-          "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
-        }
+        "int3_final_zolin_zelina_weapon_points"
       ],
-      "rewards": [
-        "Переход по ветке Хаталя / Селари"
-      ],
-      "skip": [
-        "Не разворачивать карту ради полной зачистки"
-      ],
-      "important": [
-        "Воды Хаталя: гарантированная экспедиция и вход в Храм Селари; это не просто транзитная пустая зона."
-      ],
-      "after": [],
-      "boss_tips": [],
-      "xp_notes": [],
-      "crafting_tips": [],
-      "next_zone_ru": "Храм Селари",
       "details": {
         "route": [
-          "Пройти транзитом между Кхарийским перевалом и Храмом Селари",
-          "Не чистить полностью, если нет просадки по опыту"
+          "Кингсмарш → Скрытый → +2 пассивных очка набора оружия → Ориат"
         ],
         "rewards": [
-          "Переход по ветке Хаталя / Селари"
+          "+2 пассивных очка набора оружия"
         ],
-        "skip": [
-          "Не разворачивать карту ради полной зачистки"
-        ],
+        "skip": [],
         "important": [
-          "Проходная зона: главная задача — быстро найти следующий переход"
+          "Не возвращаться на острова Акта 4: после награды отправиться в Ориат."
         ],
         "after": [],
         "boss_tips": [],
         "xp_notes": [],
         "crafting_tips": [],
         "navigation": [
-          "Держать темп и искать переход в Храм Селари."
-        ],
-        "time_saves": [
-          "Если XP в норме — не стопориться на боковых карманах."
+          "Поговорить со Скрытым в Кингсмарше, получить финальные +2 и перейти в Ориат."
         ],
         "overlay_speedrun": []
       },
       "display": {
         "wideModeRecommended": true,
         "showAllChecklist": true
-      },
-      "area_ids": [
-        "C_P2_2",
-        "P2_2"
-      ]
-    },
-    {
-      "id": "interlude_selvari_sanctuary",
-      "act": 5,
-      "zone_en": "Sel Khari Sanctuary",
-      "zone_ru": "Храм Селари",
-      "aliases": [
-        "Selvari Sanctuary",
-        "Святилище Селвари",
-        "Святилище Селхари",
-        "Храм Селари",
-        "Храм Селхари"
-      ],
-      "recommended_level": null,
-      "recommended_level_label": "52–58 / зависит от порядка",
-      "is_good_xp_zone": false,
-      "checklist": [
-        {
-          "id": "i2_selvari_sanctuary_task_1",
-          "text": "Найти 2 барьера и поставить в пьедесталы вдоль внешней стены",
-          "type": "route_task",
-          "required": false,
-          "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
-        },
-        {
-          "id": "i2_selvari_sanctuary_task_2",
-          "text": "Выбрать амулет и кольцо",
-          "type": "route_task",
-          "required": false,
-          "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
-        },
-        {
-          "id": "i2_selvari_sanctuary_task_3",
-          "text": "Убить Альзура за барью 60 уровня",
-          "type": "boss",
-          "required": true,
-          "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
-        }
-      ],
-      "rewards": [
-        "Выбор амулета/кольца",
-        "Барья 60 уровня для третьего восхождения"
-      ],
-      "skip": [],
-      "important": [
-        "Два желания: барьи Юна/Рангин дают два редких украшения на выбор; Эльзара открывает дальнейший прогресс к Асала/Джадо."
-      ],
-      "after": [],
-      "boss_tips": [],
-      "xp_notes": [],
-      "crafting_tips": [],
-      "next_zone_ru": "Ворота Галаи",
-      "details": {
-        "route": [
-          "Найти 2 барьера и поставить в пьедесталы вдоль внешней стены",
-          "Выбрать амулет и кольцо",
-          "Убить Альзура за барью 60 уровня"
-        ],
-        "rewards": [
-          "Выбор амулета/кольца",
-          "Барья 60 уровня для третьего восхождения",
-          "Альзур даёт барьер 60 уровня под третье восхождение."
-        ],
-        "skip": [],
-        "important": [],
-        "after": [],
-        "boss_tips": [],
-        "xp_notes": [],
-        "crafting_tips": [],
-        "navigation": [
-          "Две барьи вставить в пьедесталы по внешней стене, выбрать кольцо/амулет и идти дальше в Ворота Галаи."
-        ],
-        "time_saves": [
-          "После босса поговорить, забрать выбор и двигаться в Ворота Галаи без лишнего фарма."
-        ],
-        "overlay_speedrun": []
-      },
-      "display": {
-        "wideModeRecommended": true,
-        "showAllChecklist": true
-      },
-      "area_ids": [
-        "C_P2_3",
-        "P2_3"
-      ]
-    },
-    {
-      "id": "interlude_galai_gates",
-      "act": 5,
-      "zone_en": "The Galai Gates",
-      "zone_ru": "Ворота Галаи",
-      "aliases": [
-        "Galai Gates",
-        "Ворота Галаи",
-        "Врата Голай",
-        "Ворота Голай",
-        "Врата Галаи"
-      ],
-      "recommended_level": 56,
-      "recommended_level_label": "56+",
-      "is_good_xp_zone": false,
-      "checklist": [
-        {
-          "id": "interlude_galai_gates_task_1",
-          "text": "Пройти через ворота по ветке к Киме",
-          "type": "route_task",
-          "required": false,
-          "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
-        },
-        {
-          "id": "interlude_galai_gates_task_2",
-          "text": "Убить Ворнаса, Падшее пламя",
-          "type": "boss",
-          "required": false,
-          "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
-        },
-        {
-          "id": "interlude_galai_gates_task_3",
-          "text": "Проверить цель Бездны только если она по пути",
-          "type": "route_task",
-          "required": false,
-          "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
-        }
-      ],
-      "rewards": [
-        "Босс Ворнас и дополнительная добыча / цель Бездны по пути"
-      ],
-      "skip": [
-        "Цель Бездны можно пропустить, если она уводит с маршрута"
-      ],
-      "important": [
-        "Ворота Галаи / Расплавленное святилище — северный ориентир по маршруту к Киме; при баге печатей можно сбросить инстанс."
-      ],
-      "after": [],
-      "boss_tips": [
-        "На Ворнасе держать дистанцию от опасных огненных окон и не стоять в земле."
-      ],
-      "xp_notes": [],
-      "crafting_tips": [],
-      "next_zone_ru": "Кима",
-      "details": {
-        "route": [
-          "Пройти через ворота по ветке к Киме",
-          "Убить Ворнаса, Падшее пламя",
-          "Проверить цель Бездны только если она по пути"
-        ],
-        "rewards": [
-          "Босс Ворнас и дополнительная добыча / цель Бездны по пути"
-        ],
-        "skip": [
-          "Цель Бездны можно пропустить, если она уводит с маршрута"
-        ],
-        "important": [
-          "Не путать с Кхарийским перевалом: бонусы Кхарийского перевала здесь не закрываются"
-        ],
-        "after": [],
-        "boss_tips": [
-          "На Ворнасе держать дистанцию от опасных огненных окон и не стоять в земле."
-        ],
-        "xp_notes": [],
-        "crafting_tips": [],
-        "navigation": [
-          "После ворот двигаться к Киме."
-        ],
-        "opportunistic": [
-          "Бездну брать только если она рядом и не ломает темп."
-        ],
-        "overlay_speedrun": []
-      },
-      "display": {
-        "wideModeRecommended": true,
-        "showAllChecklist": true
-      },
-      "area_ids": [
-        "C_P2_5",
-        "P2_5"
-      ]
-    },
-    {
-      "id": "i2_kima",
-      "act": 5,
-      "zone_en": "Qimah",
-      "zone_ru": "Кима",
-      "aliases": [
-        "Kima"
-      ],
-      "recommended_level": 52,
-      "recommended_level_label": "52+",
-      "is_good_xp_zone": false,
-      "checklist": [
-        {
-          "id": "i2_kima_task_1",
-          "text": "Налить воды и взять пассивку",
-          "type": "reward",
-          "required": true,
-          "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
-        },
-        {
-          "id": "i2_kima_task_2",
-          "text": "Обычно выбрать все сопротивления",
-          "type": "route_task",
-          "required": false,
-          "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
-        }
-      ],
-      "rewards": [
-        "Пассивка / все сопротивления"
-      ],
-      "skip": [],
-      "important": [
-        "Столп Орбалы: выбрать 1 из 7 даров; бонус можно менять позже, вернувшись к столпу."
-      ],
-      "after": [],
-      "boss_tips": [],
-      "xp_notes": [],
-      "crafting_tips": [],
-      "next_zone_ru": "Водохранилище Кима",
-      "details": {
-        "route": [
-          "Налить воды и взять пассивку",
-          "Обычно выбрать все сопротивления"
-        ],
-        "rewards": [
-          "Пассивка / все сопротивления",
-          "Налить воду/активировать колонны и выбрать постоянный бонус; часто берут все сопротивления или нужный полезный бонус."
-        ],
-        "skip": [],
-        "important": [],
-        "after": [],
-        "boss_tips": [],
-        "xp_notes": [],
-        "crafting_tips": [],
-        "opportunistic": [
-          "Выбор можно позже изменить, но на забеге лучше заранее понимать, что берёшь."
-        ],
-        "overlay_speedrun": []
-      },
-      "display": {
-        "wideModeRecommended": true,
-        "showAllChecklist": true
-      },
-      "area_ids": [
-        "C_P2_6",
-        "P2_6"
-      ]
-    },
-    {
-      "id": "i2_kima_reservoir",
-      "act": 5,
-      "zone_en": "Qimah Reservoir",
-      "zone_ru": "Водохранилище Кима",
-      "aliases": [
-        "Kima Reservoir",
-        "Водохранилище Кима"
-      ],
-      "recommended_level": 53,
-      "recommended_level_label": "53+",
-      "is_good_xp_zone": false,
-      "checklist": [
-        {
-          "id": "i2_kima_reservoir_task_1",
-          "text": "Флаконы у колодцев — опционально для высокоуровневой валюты",
-          "type": "route_task",
-          "required": false,
-          "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
-        },
-        {
-          "id": "i2_kima_reservoir_task_2",
-          "text": "Главное — убить Асмоди",
-          "type": "boss",
-          "required": false,
-          "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
-        }
-      ],
-      "rewards": [
-        "Возможные экзальты/хаосы из флаконов",
-        "Прогресс"
-      ],
-      "skip": [],
-      "important": [
-        "Священные колодцы с флаконами святой воды — опциональная валюта; Кровавый трюм можно спокойно пропустить, если темп важнее.",
-        "После Водохранилища Кима маршрут идёт в Опушку; финальные +2 пассивных очка забираются у Скрытого только после закрытия всех трёх интерлюдий."
-      ],
-      "after": [],
-      "boss_tips": [],
-      "xp_notes": [],
-      "crafting_tips": [],
-      "next_zone_ru": "Опушка",
-      "details": {
-        "route": [
-          "священные колодцы / флаконы по пути",
-          "Кровавый трюм — только если хочется добычи",
-          "Азмади финальный босс",
-          "После босса забрать главный прогресс/барьер и идти в Опушку",
-          "Финальные +2 у Скрытого — только после всех трёх интерлюдий"
-        ],
-        "rewards": [
-          "Возможные экзальты/хаосы из флаконов",
-          "Прогресс"
-        ],
-        "skip": [],
-        "important": [],
-        "after": [],
-        "boss_tips": [],
-        "xp_notes": [],
-        "crafting_tips": [],
-        "opportunistic": [
-          "флаконы можно использовать на колодцах ради валюты, если попались по пути."
-        ],
-        "navigation": [
-          "После Водохранилища Кима перейти в Опушку, затем идти в Пепельный лес."
-        ],
-        "time_saves": [
-          "Не забыть забрать главный прогресс после босса, затем сразу в Опушку."
-        ],
-        "overlay_speedrun": [
-          "Не забыть забрать главный прогресс после босса, затем сразу в Опушку."
-        ]
-      },
-      "display": {
-        "wideModeRecommended": true,
-        "showAllChecklist": true
-      },
-      "area_ids": [
-        "C_P2_7",
-        "P2_7"
-      ]
+      }
     }
   ],
   "global_reminders": {

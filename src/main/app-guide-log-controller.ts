@@ -15,15 +15,54 @@ import {
   normalizeSceneText
 } from './scene-classifier';
 import { diagnosticInfo } from './diagnostic-logger';
+import type { AppConfig, GuideEntry } from '../shared/types';
 
 type ZoneMatchExtractionContext = {
     zoneMatchExtractor: ZoneMatchExtractor;
 };
 
+export const POST_INTERLUDES_KINGSMARCH_GUIDE_ID = 'post_interludes_kingsmarch';
+export const INTERLUDE_BRANCH_ENDPOINT_GUIDE_IDS = [
+    'i2_kima_reservoir',
+    'interlude_cuachic_vault',
+    'i_final_holten_estate'
+] as const;
+
+type ContextualGuideApp = {
+    config: Pick<AppConfig, 'visitedZones'>;
+    guideService: {
+        findById: (id: string | null | undefined) => GuideEntry | null;
+    };
+};
+
+export function hasCompletedAllInterludeBranches(
+    config: Pick<AppConfig, 'visitedZones'>
+): boolean {
+    const visitedGuideIds = new Set(config.visitedZones.map((entry) => entry.zoneId));
+    return INTERLUDE_BRANCH_ENDPOINT_GUIDE_IDS.every((guideId) => visitedGuideIds.has(guideId));
+}
+
+export function resolveContextualGuide(
+    app: ContextualGuideApp,
+    guide: GuideEntry | null
+): GuideEntry | null {
+    if (guide?.id !== 'a4_kingsmarch' && guide?.id !== POST_INTERLUDES_KINGSMARCH_GUIDE_ID) {
+        return guide;
+    }
+
+    const contextualGuideId = hasCompletedAllInterludeBranches(app.config)
+        ? POST_INTERLUDES_KINGSMARCH_GUIDE_ID
+        : 'a4_kingsmarch';
+    return app.guideService.findById(contextualGuideId) ?? guide;
+}
+
 
 export function runLoadGuide(this: any) {
         try {
             this.guideService.load();
+            this.guideService.setContextResolver(({ guide }: { guide: GuideEntry | null }) => (
+                resolveContextualGuide(this, guide)
+            ));
             this.runtime.guideLoadedAt = this.guideService.getLoadedAt();
         }
         catch (error) {
@@ -38,13 +77,19 @@ export function runRestoreLastZoneFromConfig(this: any) {
         if (!this.config.lastZoneName) {
             return;
         }
+        const guide = resolveContextualGuide(
+            this,
+            this.guideService.findByZoneName(this.config.lastZoneName)
+        );
         this.currentZone = {
             rawZoneName: this.config.lastZoneName,
-            guide: this.guideService.findByZoneName(this.config.lastZoneName),
-            sceneKind: this.guideService.findByZoneName(this.config.lastZoneName)
-                ? 'gameplay'
-                : 'unknown',
-            actHint: this.guideService.findByZoneName(this.config.lastZoneName)?.act ?? null
+            guide,
+            sceneKind: guide && this.isTownSceneWithGuide(this.config.lastZoneName, guide)
+                ? 'town'
+                : guide
+                    ? 'gameplay'
+                    : 'unknown',
+            actHint: guide?.act ?? null
         };
         this.syncRuntimeZoneFields(this.config.lastZoneName, this.currentZone.guide);
         this.runtime.lastZoneSource = 'config';
@@ -52,8 +97,11 @@ export function runRestoreLastZoneFromConfig(this: any) {
 
 export function runRebindCurrentZoneAfterGuideReload(this: any) {
         const currentGuideId = this.currentZone.guide?.id ?? this.runtime.lastMatchedGuideId;
-        const reboundGuide = this.guideService.findById(currentGuideId) ??
-            this.guideService.findByZoneName(this.currentZone.rawZoneName);
+        const reboundGuide = resolveContextualGuide(
+            this,
+            this.guideService.findById(currentGuideId) ??
+                this.guideService.findByZoneName(this.currentZone.rawZoneName)
+        );
         this.currentZone = {
             rawZoneName: this.currentZone.rawZoneName,
             guide: reboundGuide,
@@ -183,6 +231,7 @@ export async function runStartLogWatcher(this: any, filePath: any, skipBootstrap
     }
 
 export function runSetCurrentZone(this: any, rawZoneName: any, source: any, guide: any = this.guideService.findByZoneName(rawZoneName), actHint: any = null) {
+        guide = resolveContextualGuide(this, guide);
         if (!guide) {
             this.setSceneWithoutGuide(rawZoneName, source, 'gameplay', actHint);
             return;
@@ -272,8 +321,11 @@ export function runSetTownScene(this: any, rawZoneName: any, source: any) {
         const previousActHint = this.currentZone.guide?.act ?? this.currentZone.actHint ?? this.runtime.lastGameplayAct ?? null;
         const sceneChanged = this.currentZone.rawZoneName !== rawZoneName ||
             this.currentZone.sceneKind !== 'town';
-        const matchedTownGuide = rawZoneName ? this.guideService.findByZoneName(rawZoneName) : null;
-        const townActHint = inferActHintFromTownScene(rawZoneName);
+        const matchedTownGuide = resolveContextualGuide(
+            this,
+            rawZoneName ? this.guideService.findByZoneName(rawZoneName) : null
+        );
+        const townActHint = matchedTownGuide?.act ?? inferActHintFromTownScene(rawZoneName);
         const shouldClearGuide = townActHint === ENDGAME_T15_ACT ||
             this.normalizeSceneSource(rawZoneName) === 'clearfell encampment';
         const nextTownGuide = matchedTownGuide ??
