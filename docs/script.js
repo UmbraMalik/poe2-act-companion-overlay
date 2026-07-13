@@ -1,5 +1,7 @@
 const LANGUAGE_STORAGE_KEY = 'poe2-act-companion-overlay-site-language';
 const SUPPORTED_LANGUAGES = ['ru', 'en'];
+const THEME_STORAGE_KEY = 'poe2-act-companion-overlay-site-theme';
+const SUPPORTED_THEMES = ['classic', 'dark-fantasy'];
 
 const TEXT_TRANSLATIONS_EN = {
   'POE2 Act Companion Overlay — оверлей для актов POE2': 'POE2 Act Companion Overlay — campaign overlay for POE2',
@@ -161,8 +163,9 @@ const TEXT_TRANSLATIONS_EN = {
   'Неофициальный фанатский инструмент для Path of Exile 2. Проект не связан с Grinding Gear Games, не одобрен и не поддерживается ими.': 'Unofficial fan-made tool for Path of Exile 2. The project is not affiliated with, endorsed by, or supported by Grinding Gear Games.',
   'Path of Exile 2, Path of Exile и связанные названия принадлежат их правообладателям. Сайт и приложение не используют официальные ассеты игры.': 'Path of Exile 2, Path of Exile, and related names belong to their respective rights holders. The site and app do not use official game assets.',
   'POE2 Act Companion Overlay — оверлей для кампании и эндгейма POE2': 'POE2 Act Companion Overlay — campaign and endgame overlay for POE2',
-  'v0.4.0': 'v0.4.0',
-  'v0.4.0 · RU/EN клиент · кампания + До Т15 · работает по логам игры': 'v0.4.0 · RU/EN client · campaign + To T15 · works from game logs',
+  'Overlay · v0.5.0 · RU/EN': 'Overlay · v0.5.0 · RU/EN',
+  'v0.5.0': 'v0.5.0',
+  'v0.5.0 · RU/EN клиент · кампания + Интерлюдии + До Т15 · работает по логам игры': 'v0.5.0 · RU/EN client · campaign + Interludes + To T15 · works from game logs',
   'POE2 Act Companion Overlay читает лог-файл игры, определяет текущую зону и показывает памятку “Что в локации”, следующий переход, скипы, бонусы, статус уровня, таймер забега, время актов, итоги и путь до T15 — без инжекта в клиент игры.': 'POE2 Act Companion Overlay reads the game log file, detects the current zone, and shows a zone checklist, next transition, skips, bonuses, level status, run timer, act splits, summary, and the path to T15 — without injecting into the game client.',
   'До Т15': 'To T15',
   'Вся рутина кампании собирается в один боевой HUD: что важно в зоне, что забрать, что скипнуть, куда идти дальше, когда добрать уровень, сколько времени ушло на акт и как быстро ты дошёл до T15.': 'All campaign routine is gathered into one combat HUD: what matters in the zone, what to pick up, what to skip, where to go next, when to catch up on levels, how long each act took, and how fast you reached T15.',
@@ -176,16 +179,18 @@ const TEXT_TRANSLATIONS_EN = {
   'Оверлей можно свернуть в компактную строку, быстро освободить место под инвентарь или гемы и развернуть обратно.': 'The overlay can collapse into a compact bar, quickly freeing space for inventory or gems, and then expand back.',
   'Размер текста': 'Text size',
   'Размер полезного текста регулируется отдельно от масштаба интерфейса — удобно для широких и высоких разрешений.': 'Useful text size can be adjusted separately from UI scale — handy for ultrawide and high-resolution displays.',
-  'Теперь это не просто подсказки по актам': 'Now it is more than act tips',
-  'Версия 0.4.0 превращает оверлей в полноценную панель забега: хаб-гайды, гибкая настройка блоков, путь до T15, автофиниш, история результатов и аккуратные режимы для игры на любом экране.': 'Version 0.4.0 turns the overlay into a full run dashboard: hub guides, flexible block settings, path to T15, auto-finish, result history, and clean modes for any screen.',
-  'Кампания больше не заканчивается на Актах': 'The campaign no longer ends at Acts',
-  'После входа в эндгейм-хаб запускается отдельный сегмент “До Т15”. Когда в логах появляется карта 79 уровня, таймер останавливается сам, результат сохраняется, а оверлей показывает компактное поздравление.': 'After entering the endgame hub, a separate “To T15” segment starts. When a level 79 map appears in the logs, the timer stops automatically, the result is saved, and the overlay shows a compact congratulations card.',
-  'Хабы': 'Hubs',
-  'Гайды для ключевых городов': 'Guides for key towns',
-  'Добавлены хаб-гайды для Лагеря Клирфелл, Каравана Ардура, Лагеря на зиккурате и Кингсмарша, чтобы порядок прохождения был понятен ещё до выхода в следующую зону.': 'Hub guides were added for Clearfell Encampment, Ardura Caravan, Ziggurat Encampment, and Kingsmarch, so the route order is clear before you leave for the next zone.',
-  'Оверлей под себя': 'Overlay your way',
-  'Можно скрывать отдельные блоки, менять размер полезного текста и быстро сворачивать панель, когда она мешает инвентарю, гемам или интерфейсу игры.': 'You can hide individual blocks, change useful text size, and quickly collapse the panel when it blocks inventory, gems, or the game UI.',
-  'Актуальный вид основного оверлея, подробной панели, бонусов актов, режима “Только таймер” и компактного режима в версии 0.4.0.': 'Current view of the main overlay, detailed panel, act bonuses, Timer Only mode, and compact mode in version 0.4.0.',
+  'Кампания стала точнее, а интерфейс — цельнее': 'The campaign is more accurate and the interface feels more cohesive',
+  'Версия 0.5.0 обновляет маршруты Актов 1–4 и Интерлюдий, разделяет обычный и финальный Кингсмарш, уточняет постоянные и гарантированные награды и доводит RU/EN-распознавание зон до единой системы.': 'Version 0.5.0 updates Acts 1–4 and the Interludes, separates regular and post-Interlude Kingsmarch, clarifies permanent and guaranteed rewards, and brings RU/EN zone detection into one consistent system.',
+  'Маршрут 0.5': '0.5 Route',
+  'Акты и Интерлюдии сверены заново': 'Acts and Interludes reviewed from the ground up',
+  'Обновлены переходы, важные цели, награды, рекомендуемый порядок веток и подсказки по зонам. Неподтверждённые награды больше не выдаются за гарантированные.': 'Transitions, key objectives, rewards, recommended branch order, and zone guidance were updated. Unconfirmed rewards are no longer presented as guaranteed.',
+  'Кингсмарш': 'Kingsmarch',
+  'Один город — два правильных контекста': 'One town, two correct contexts',
+  'Кингсмарш Акта 4 больше не путается с финалом Интерлюдий: приложение учитывает фазу кампании, показывает Скрытого и путь в Ориат только в нужный момент.': 'Act 4 Kingsmarch is no longer confused with the Interlude finale: the app respects campaign phase and only shows the Hooded One and the route to Oriath at the right time.',
+  'RU/EN + UI': 'RU/EN + UI',
+  'Точнее распознавание, чище подача': 'More accurate detection, cleaner presentation',
+  'Расширены internal area mapping и алиасы, исправлены названия зон и наград, а карточки, переключатели и визуальная иерархия стали аккуратнее в Classic и Dark Fantasy.': 'Internal area mapping and aliases were expanded, zone and reward names were corrected, and cards, toggles, and visual hierarchy were refined in both Classic and Dark Fantasy.',
+  'Актуальный вид основного оверлея, подробной панели, бонусов актов, режима “Только таймер” и компактного режима в версии 0.5.0.': 'Current view of the main overlay, detailed panel, act bonuses, Timer Only mode, and compact mode in version 0.5.0.',
   'Текущая зона, памятка “Что в локации”, следующий переход, скипы, важные подсказки, статус уровня и блоки, которые можно включать или скрывать.': 'Current zone, zone checklist, next transition, skips, important notes, level status, and blocks you can show or hide.',
   'Отдельное окно с маршрутом, бонусами, таймером, временем актов, сегментом “До Т15”, напоминаниями, итогами и историей забегов.': 'A separate window with route, bonuses, timer, act splits, the “To T15” segment, reminders, summary, and run history.',
   'Подробная панель · Бонусы': 'Detailed panel · Bonuses',
@@ -280,7 +285,9 @@ const UI_MESSAGES = {
     releaseFallbackOne: 'Не удалось подтянуть данные последнего релиза.',
     releaseFallbackTwo: 'Скачай актуальную сборку вручную через GitHub Releases.',
     languageToggleLabel: 'Переключить язык сайта',
-    languageToggleTitle: 'Переключить язык сайта'
+    languageToggleTitle: 'Переключить язык сайта',
+    themeToggleLabel: 'Переключить тему сайта',
+    themeToggleTitle: (theme) => theme === 'dark-fantasy' ? 'Включить классическую тему' : 'Включить тему Dark Fantasy'
   },
   en: {
     copied: 'Copied',
@@ -293,7 +300,9 @@ const UI_MESSAGES = {
     releaseFallbackOne: 'Could not load latest release data.',
     releaseFallbackTwo: 'Download the current build manually from GitHub Releases.',
     languageToggleLabel: 'Switch site language',
-    languageToggleTitle: 'Switch site language'
+    languageToggleTitle: 'Switch site language',
+    themeToggleLabel: 'Switch site theme',
+    themeToggleTitle: (theme) => theme === 'dark-fantasy' ? 'Switch to Classic theme' : 'Switch to Dark Fantasy theme'
   }
 };
 
@@ -308,6 +317,24 @@ const CIS_TIMEZONES = [
   'Asia/Bishkek', 'Asia/Tashkent', 'Asia/Samarkand', 'Asia/Dushanbe', 'Asia/Ashgabat',
   'Asia/Baku', 'Asia/Yerevan', 'Asia/Tbilisi'
 ];
+
+function normalizeTheme(value) {
+  return SUPPORTED_THEMES.includes(value) ? value : null;
+}
+
+function detectPreferredTheme() {
+  const documentTheme = normalizeTheme(document.documentElement.dataset.theme);
+  if (documentTheme) return documentTheme;
+
+  try {
+    const savedTheme = normalizeTheme(window.localStorage.getItem(THEME_STORAGE_KEY));
+    if (savedTheme) return savedTheme;
+  } catch (error) {
+    // ignore storage issues
+  }
+
+  return 'classic';
+}
 
 function normalizeLanguage(value) {
   return SUPPORTED_LANGUAGES.includes(value) ? value : null;
@@ -406,6 +433,7 @@ function collectLocalizedAttributes() {
 const localizedTextNodes = collectLocalizedTextNodes();
 const localizedAttributes = collectLocalizedAttributes();
 let currentLanguage = detectPreferredLanguage();
+let currentTheme = detectPreferredTheme();
 let latestReleaseCache = null;
 let publicStatsCache = null;
 
@@ -414,6 +442,44 @@ function getUiMessage(key, ...args) {
   return typeof message === 'function' ? message(...args) : message;
 }
 
+function syncThemeToggleAccessibility() {
+  const themeToggle = document.querySelector('[data-theme-toggle]');
+  if (!themeToggle) return;
+
+  themeToggle.setAttribute('aria-label', getUiMessage('themeToggleLabel'));
+  themeToggle.setAttribute('title', getUiMessage('themeToggleTitle', currentTheme));
+  themeToggle.setAttribute('aria-pressed', currentTheme === 'dark-fantasy' ? 'true' : 'false');
+}
+
+function applyTheme(theme, options = {}) {
+  currentTheme = normalizeTheme(theme) || 'classic';
+
+  if (options.persist) {
+    try {
+      window.localStorage.setItem(THEME_STORAGE_KEY, currentTheme);
+    } catch (error) {
+      // ignore storage issues
+    }
+  }
+
+  document.documentElement.dataset.theme = currentTheme;
+
+  const themeColor = document.querySelector('meta[name="theme-color"]');
+  if (themeColor) {
+    themeColor.setAttribute('content', currentTheme === 'dark-fantasy' ? '#09070f' : '#0b0f14');
+  }
+
+  syncThemeToggleAccessibility();
+}
+
+function setupThemeToggle() {
+  const themeToggle = document.querySelector('[data-theme-toggle]');
+  if (!themeToggle) return;
+
+  themeToggle.addEventListener('click', () => {
+    applyTheme(currentTheme === 'classic' ? 'dark-fantasy' : 'classic', { persist: true });
+  });
+}
 
 function syncLocalizedImages() {
   document.querySelectorAll('[data-image-ru][data-image-en]').forEach((element) => {
@@ -477,8 +543,8 @@ function applyLanguage(language, options = {}) {
   });
 
   document.title = currentLanguage === 'ru'
-    ? 'POE2 Act Companion Overlay — оверлей для актов POE2'
-    : 'POE2 Act Companion Overlay — campaign overlay for POE2';
+    ? 'POE2 Act Companion Overlay — оверлей для кампании и эндгейма POE2'
+    : 'POE2 Act Companion Overlay — campaign and endgame overlay for POE2';
 
   const languageToggle = document.querySelector('[data-language-toggle]');
   if (languageToggle) {
@@ -486,6 +552,7 @@ function applyLanguage(language, options = {}) {
     languageToggle.setAttribute('title', getUiMessage('languageToggleTitle'));
   }
 
+  syncThemeToggleAccessibility();
   syncLocalizedImages();
   syncActiveScreenPreview();
   renderKnownReleaseState();
@@ -1031,6 +1098,8 @@ latestDownloadButtons.forEach((button) => {
   });
 });
 
+setupThemeToggle();
+applyTheme(currentTheme);
 setupLanguageToggle();
 applyLanguage(currentLanguage);
 

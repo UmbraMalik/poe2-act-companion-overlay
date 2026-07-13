@@ -10,6 +10,14 @@
   <meta property="og:description" content="POE2 Act Companion Overlay: подсказки по зонам, маршруты, бонусы, таймер актов, итоги забега и трекинг до T15." />
   <meta property="og:type" content="website" />
   <meta name="theme-color" content="#0b0f14" />
+  <script>
+    try {
+      const savedTheme = window.localStorage.getItem('poe2-act-companion-overlay-site-theme');
+      document.documentElement.dataset.theme = savedTheme === 'dark-fantasy' ? 'dark-fantasy' : 'classic';
+    } catch (error) {
+      document.documentElement.dataset.theme = 'classic';
+    }
+  </script>
   <link rel="stylesheet" href="./styles.css" />
   <!-- Yandex.Metrika counter -->
   <script type="text/javascript">
@@ -36,14 +44,14 @@
       <span class="brand-mark">A</span>
       <span>
         <strong>POE2 Act Companion</strong>
-        <small>Overlay · RU/EN beta</small>
+        <small>Overlay · v0.5.0 · RU/EN</small>
       </span>
     </a>
 
     <div class="header-controls">
       <nav class="top-nav" aria-label="Навигация">
         <a href="#features">Что умеет</a>
-        <a href="#v040">v0.4.0</a>
+        <a href="#v050">v0.5.0</a>
         <a href="#demo">Демо</a>
         <a href="#source">Исходники</a>
         <a href="#screens">Скрины</a>
@@ -53,6 +61,12 @@
         <a href="#mentions">Сообщество</a>
         <a href="#support">Поддержать</a>
       </nav>
+
+      <button class="theme-toggle" type="button" data-theme-toggle aria-label="Переключить тему сайта" title="Переключить тему сайта" aria-pressed="false">
+        <span class="theme-toggle-pill" aria-hidden="true"></span>
+        <span class="theme-toggle-option" data-theme-label="classic">CL</span>
+        <span class="theme-toggle-option" data-theme-label="dark-fantasy">DF</span>
+      </button>
 
       <button class="language-toggle" type="button" data-language-toggle aria-label="Switch language" title="Switch language">
         <span class="language-toggle-pill" aria-hidden="true"></span>
@@ -67,7 +81,7 @@
       <div class="hero-copy">
         <div class="eyebrow">
           <span class="dot"></span>
-          v0.4.0 · RU/EN клиент · кампания + До Т15 · работает по логам игры
+          v0.5.0 · RU/EN клиент · кампания + Интерлюдии + До Т15 · работает по логам игры
         </div>
         <h1>Оверлей для быстрого прохождения актов Path of Exile 2</h1>
         <p class="lead">
@@ -202,39 +216,39 @@
       </div>
     </section>
 
-    <section id="v040" class="section release-section">
+    <section id="v050" class="section release-section">
       <div class="section-head">
-        <p class="eyebrow">v0.4.0</p>
-        <h2>Теперь это не просто подсказки по актам</h2>
+        <p class="eyebrow">v0.5.0</p>
+        <h2>Кампания стала точнее, а интерфейс — цельнее</h2>
         <p>
-          Версия 0.4.0 превращает оверлей в полноценную панель забега: хаб-гайды, гибкая настройка блоков,
-          путь до T15, автофиниш, история результатов и аккуратные режимы для игры на любом экране.
+          Версия 0.5.0 обновляет маршруты Актов 1–4 и Интерлюдий, разделяет обычный и финальный Кингсмарш,
+          уточняет постоянные и гарантированные награды и доводит RU/EN-распознавание зон до единой системы.
         </p>
       </div>
 
       <div class="release-grid">
         <article class="release-card release-card-main">
-          <span class="release-tag">До Т15</span>
-          <h3>Кампания больше не заканчивается на Актах</h3>
+          <span class="release-tag">Маршрут 0.5</span>
+          <h3>Акты и Интерлюдии сверены заново</h3>
           <p>
-            После входа в эндгейм-хаб запускается отдельный сегмент “До Т15”. Когда в логах появляется карта 79 уровня,
-            таймер останавливается сам, результат сохраняется, а оверлей показывает компактное поздравление.
+            Обновлены переходы, важные цели, награды, рекомендуемый порядок веток и подсказки по зонам.
+            Неподтверждённые награды больше не выдаются за гарантированные.
           </p>
         </article>
         <article class="release-card">
-          <span class="release-tag">Хабы</span>
-          <h3>Гайды для ключевых городов</h3>
+          <span class="release-tag">Кингсмарш</span>
+          <h3>Один город — два правильных контекста</h3>
           <p>
-            Добавлены хаб-гайды для Лагеря Клирфелл, Каравана Ардура, Лагеря на зиккурате и Кингсмарша,
-            чтобы порядок прохождения был понятен ещё до выхода в следующую зону.
+            Кингсмарш Акта 4 больше не путается с финалом Интерлюдий: приложение учитывает фазу кампании,
+            показывает Скрытого и путь в Ориат только в нужный момент.
           </p>
         </article>
         <article class="release-card">
-          <span class="release-tag">UI</span>
-          <h3>Оверлей под себя</h3>
+          <span class="release-tag">RU/EN + UI</span>
+          <h3>Точнее распознавание, чище подача</h3>
           <p>
-            Можно скрывать отдельные блоки, менять размер полезного текста и быстро сворачивать панель,
-            когда она мешает инвентарю, гемам или интерфейсу игры.
+            Расширены internal area mapping и алиасы, исправлены названия зон и наград, а карточки,
+            переключатели и визуальная иерархия стали аккуратнее в Classic и Dark Fantasy.
           </p>
         </article>
       </div>
@@ -316,7 +330,7 @@
       <div class="section-head">
         <p class="eyebrow">как выглядит</p>
         <h2>Скриншоты приложения</h2>
-        <p>Актуальный вид основного оверлея, подробной панели, бонусов актов, режима “Только таймер” и компактного режима в версии 0.4.0.</p>
+        <p>Актуальный вид основного оверлея, подробной панели, бонусов актов, режима “Только таймер” и компактного режима в версии 0.5.0.</p>
       </div>
 
       <div class="screens-showcase">
