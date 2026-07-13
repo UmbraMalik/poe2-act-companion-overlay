@@ -1,4 +1,5 @@
-import { buildChecklistViewItems } from '../shared/checklist';
+import { buildChecklistDefinition, buildChecklistViewItems } from '../shared/checklist';
+import type { ChecklistItemProgress } from '../shared/types';
 import { BROADCAST_THROTTLE_MS } from './app-environment';
 
 
@@ -66,12 +67,78 @@ export function runMergeLikelyDoneKeywords(this: any, guide: any, matchedKeyword
     }
 
 export function runMarkCurrentChecklistItemDone(this: any) {
-        // Legacy compatibility no-op: old preload/hotkey surfaces may still call this,
-        // but manual checklist completion is disabled and must not mutate progress.
+        const guide = this.currentZone.guide;
+        if (!guide) {
+            return false;
+        }
+        const currentProgress = this.getZoneProgress(guide.id);
+        const item = buildChecklistDefinition(guide).find((entry) => (
+            entry.autoCompleteMode === 'manual' &&
+            currentProgress.itemStates[entry.id]?.state !== 'done'
+        ));
+        if (!item) {
+            return false;
+        }
+        this.config = this.configStore.update({
+            zoneProgress: {
+                ...this.config.zoneProgress,
+                [guide.id]: {
+                    ...currentProgress,
+                    itemStates: {
+                        ...currentProgress.itemStates,
+                        [item.id]: {
+                            state: 'done',
+                            timestamp: new Date().toISOString(),
+                            detectedBy: 'manual',
+                            originalText: item.text
+                        }
+                    },
+                    lastVisitedAt: currentProgress.lastVisitedAt ?? new Date().toISOString()
+                }
+            }
+        });
+        this.broadcastState();
+        return true;
     }
 
 export function runUndoLastChecklistMark(this: any) {
-        // Legacy compatibility no-op: kept so older renderer calls resolve safely.
+        const guide = this.currentZone.guide;
+        if (!guide) {
+            return false;
+        }
+        const currentProgress = this.getZoneProgress(guide.id);
+        const manualItemIds = new Set(
+            buildChecklistDefinition(guide)
+                .filter((item) => item.autoCompleteMode === 'manual')
+                .map((item) => item.id)
+        );
+        const latestManualEntry = Object.entries(
+            currentProgress.itemStates as Record<string, ChecklistItemProgress>
+        )
+            .filter(([itemId, progress]) => (
+                manualItemIds.has(itemId) &&
+                progress.state === 'done' &&
+                progress.detectedBy === 'manual'
+            ))
+            .sort((left, right) => (
+                right[1].timestamp.localeCompare(left[1].timestamp)
+            ))[0];
+        if (!latestManualEntry) {
+            return false;
+        }
+        const nextItemStates = { ...currentProgress.itemStates };
+        delete nextItemStates[latestManualEntry[0]];
+        this.config = this.configStore.update({
+            zoneProgress: {
+                ...this.config.zoneProgress,
+                [guide.id]: {
+                    ...currentProgress,
+                    itemStates: nextItemStates
+                }
+            }
+        });
+        this.broadcastState();
+        return true;
     }
 
 export function runSetLogStatus(this: any, status: any, message: any) {

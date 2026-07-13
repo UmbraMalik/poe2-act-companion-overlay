@@ -5,6 +5,10 @@ import type {
   CampaignBonusEventRule,
   GuideEntry
 } from '../src/shared/types';
+import {
+  INTERLUDE_BRANCH_COMPLETION_RULES,
+  hasCompletedAllInterludeBranches
+} from '../src/shared/interlude-completion';
 import { getCampaignBonuses } from './helpers/bonusTestUtils';
 import { readJson } from './helpers/loadJson';
 import {
@@ -620,6 +624,53 @@ test('final Interlude bonus is global, branch-independent and counted once', () 
     .bonuses.find((bonus) => bonus.id === finalBonus.id);
   assert.ok(rawFinalBonus);
   assert.equal('idCompatibility' in rawFinalBonus, false, 'legacy id rationale belongs in tests, not runtime JSON');
+});
+
+test('Interlude completion rules use one persisted manual final item per branch', () => {
+  const guideById = new Map(getGuideZones().map((zone) => [zone.id, zone]));
+  const branches = new Set<string>();
+  const guideIds = new Set<string>();
+  const checklistItemIds = new Set<string>();
+
+  assert.equal(INTERLUDE_BRANCH_COMPLETION_RULES.length, 3);
+  for (const rule of INTERLUDE_BRANCH_COMPLETION_RULES) {
+    assert.equal(branches.has(rule.branch), false, `duplicate branch ${rule.branch}`);
+    assert.equal(guideIds.has(rule.guideId), false, `duplicate guide ${rule.guideId}`);
+    assert.equal(
+      checklistItemIds.has(rule.completionChecklistItemId),
+      false,
+      `duplicate checklist item ${rule.completionChecklistItemId}`
+    );
+    branches.add(rule.branch);
+    guideIds.add(rule.guideId);
+    checklistItemIds.add(rule.completionChecklistItemId);
+
+    const guide = guideById.get(rule.guideId);
+    assert.ok(guide, `missing completion guide ${rule.guideId}`);
+    const item = guide.checklist?.find((entry) => entry.id === rule.completionChecklistItemId);
+    assert.ok(item, `missing completion item ${rule.completionChecklistItemId}`);
+    assert.equal(item.autoCompleteMode, 'manual');
+    assert.equal(item.required, true);
+    assert.notEqual(item.autoCompleteMode, 'manual_or_zone_leave_infer');
+  }
+
+  const zoneProgress = Object.fromEntries(INTERLUDE_BRANCH_COMPLETION_RULES.map((rule) => [
+    rule.guideId,
+    {
+      itemStates: {
+        [rule.completionChecklistItemId]: {
+          state: 'done' as const,
+          timestamp: '2026-07-13T12:00:00.000Z',
+          detectedBy: 'zone_leave' as const,
+          originalText: 'legacy unsafe completion'
+        }
+      },
+      likelyDoneKeywords: [],
+      lastVisitedAt: '2026-07-13T12:00:00.000Z'
+    }
+  ]));
+
+  assert.equal(hasCompletedAllInterludeBranches({ zoneProgress, campaignBonusProgress: {} }), false);
 });
 
 test('Sacrificial Heart keeps one canonical display name and legacy resolution', () => {

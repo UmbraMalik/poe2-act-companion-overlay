@@ -7269,9 +7269,9 @@
           "id": "i2_kima_reservoir_task_2",
           "text": "Главное — убить Асмоди",
           "type": "boss",
-          "required": false,
+          "required": true,
           "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
+          "autoCompleteMode": "manual"
         }
       ],
       "rewards": [
@@ -7939,9 +7939,9 @@
           "id": "interlude_cuachic_vault_task_2",
           "text": "Убить Зелину и Золина",
           "type": "boss",
-          "required": false,
+          "required": true,
           "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
+          "autoCompleteMode": "manual"
         },
         {
           "id": "interlude_cuachic_vault_task_3",
@@ -8513,11 +8513,11 @@
         },
         {
           "id": "i_final_holten_estate_task_3",
-          "text": "Добить остальных",
-          "type": "route_task",
-          "required": false,
+          "text": "Добить остальных и завершить финальный бой ветки Огам",
+          "type": "boss",
+          "required": true,
           "autoCompleteKeywords": [],
-          "autoCompleteMode": "manual_or_zone_leave_infer"
+          "autoCompleteMode": "manual"
         },
         {
           "id": "i_final_holten_estate_task_4",

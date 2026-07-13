@@ -16,31 +16,32 @@ import {
 } from './scene-classifier';
 import { diagnosticInfo } from './diagnostic-logger';
 import type { AppConfig, GuideEntry } from '../shared/types';
+import {
+    FINAL_INTERLUDE_BONUS_ID,
+    POST_INTERLUDES_REWARD_CHECKLIST_ITEM_ID,
+    hasCompletedAllInterludeBranches
+} from '../shared/interlude-completion';
+
+export {
+    FINAL_INTERLUDE_BONUS_ID,
+    INTERLUDE_BRANCH_COMPLETION_RULES,
+    INTERLUDE_BRANCH_ENDPOINT_GUIDE_IDS,
+    POST_INTERLUDES_REWARD_CHECKLIST_ITEM_ID,
+    hasCompletedAllInterludeBranches
+} from '../shared/interlude-completion';
 
 type ZoneMatchExtractionContext = {
     zoneMatchExtractor: ZoneMatchExtractor;
 };
 
 export const POST_INTERLUDES_KINGSMARCH_GUIDE_ID = 'post_interludes_kingsmarch';
-export const INTERLUDE_BRANCH_ENDPOINT_GUIDE_IDS = [
-    'i2_kima_reservoir',
-    'interlude_cuachic_vault',
-    'i_final_holten_estate'
-] as const;
 
 type ContextualGuideApp = {
-    config: Pick<AppConfig, 'visitedZones'>;
+    config: Pick<AppConfig, 'zoneProgress' | 'campaignBonusProgress'>;
     guideService: {
         findById: (id: string | null | undefined) => GuideEntry | null;
     };
 };
-
-export function hasCompletedAllInterludeBranches(
-    config: Pick<AppConfig, 'visitedZones'>
-): boolean {
-    const visitedGuideIds = new Set(config.visitedZones.map((entry) => entry.zoneId));
-    return INTERLUDE_BRANCH_ENDPOINT_GUIDE_IDS.every((guideId) => visitedGuideIds.has(guideId));
-}
 
 export function resolveContextualGuide(
     app: ContextualGuideApp,
@@ -60,6 +61,21 @@ export function resolveContextualGuide(
 export function runLoadGuide(this: any) {
         try {
             this.guideService.load();
+            const persistedFinalBonus = this.config.campaignBonusProgress[FINAL_INTERLUDE_BONUS_ID];
+            const persistedRewardItem = this.config.zoneProgress[POST_INTERLUDES_KINGSMARCH_GUIDE_ID]
+                ?.itemStates[POST_INTERLUDES_REWARD_CHECKLIST_ITEM_ID];
+            if (persistedFinalBonus?.state === 'done' && persistedRewardItem?.state !== 'done') {
+                const finalBonus = this.campaignBonuses.find((bonus: any) => (
+                    bonus.id === FINAL_INTERLUDE_BONUS_ID
+                ));
+                if (finalBonus) {
+                    this.syncCampaignBonusWithChecklist(
+                        finalBonus,
+                        'linked_reward',
+                        persistedFinalBonus.logLine ?? ''
+                    );
+                }
+            }
             this.guideService.setContextResolver(({ guide }: { guide: GuideEntry | null }) => (
                 resolveContextualGuide(this, guide)
             ));
