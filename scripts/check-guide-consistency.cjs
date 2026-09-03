@@ -19,7 +19,7 @@ const forbidden = [
   },
   {
     pattern: /Мыс\s+грабителя\s+можно\s+пропустить\s+в\s+быстром\s+прохождении|side\s+Expedition\s+reward,\s+not\s+required\s+campaign\s+progress/i,
-    reason: 'Plunder\'s Point is not a plain skip note in the 0.5 guide; it closes Farrow / Ancient Runes after the 4 map pieces.',
+    reason: 'Plunder\'s Point is not a plain skip note in the 0.5.5 guide; it completes the Act 4 Runeseeker quest and unlocks the Verisium Anvil outside Runes of Aldur.',
   },
 ];
 
