@@ -1974,7 +1974,6 @@ export function OverlayPage() {
             <h2>{t('overlay.league')}</h2>
             <ul className="section-list compact-list">
               <li className="league-reward-line">
-                <span className="league-reward-marker">•</span>
                 <span>{t('overlay.leagueHint')}</span>
               </li>
             </ul>
