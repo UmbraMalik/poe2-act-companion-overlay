@@ -3695,6 +3695,10 @@ textarea {
   grid-template-columns: minmax(0, 1fr);
 }
 
+.overlay-setup-choice-grid.is-league {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .overlay-setup-choice-grid button {
   min-width: 0;
   width: 100%;
@@ -3718,6 +3722,10 @@ textarea {
 
 .overlay-setup-choice-grid.is-theme button {
   min-height: 58px;
+}
+
+.overlay-setup-choice-grid.is-league button {
+  min-height: 62px;
 }
 
 .overlay-setup-choice-grid button.is-selected {

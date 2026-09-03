@@ -9,6 +9,7 @@ import {
   INTERLUDE_BRANCH_COMPLETION_RULES,
   hasCompletedAllInterludeBranches
 } from '../src/shared/interlude-completion';
+import { applyCampaignLeagueToGuideEntry } from '../src/shared/league-context';
 import { getCampaignBonuses } from './helpers/bonusTestUtils';
 import { readJson } from './helpers/loadJson';
 import {
@@ -414,7 +415,9 @@ test('all shipped campaign data files parse as JSON', () => {
   for (const relativePath of [
     'src/data/guide.json',
     'src/data/campaign-bonuses.json',
-    'src/data/league-mechanic-rewards.json',
+    'src/data/league-content/runes-of-aldur.json',
+    'src/data/league-content/forbidden-rites.json',
+    'src/data/league-content/core-0.5.5.json',
     'src/data/internal-area-aliases.en.json',
     'src/data/internal-area-aliases.en.conservative.json',
     'src/data/town-scenes.json',
@@ -427,7 +430,7 @@ test('all shipped campaign data files parse as JSON', () => {
 });
 
 test('league rewards are structurally valid, canonical and safe to display', () => {
-  const data = readJson<LeagueMechanicRewardsDataFile>('src/data/league-mechanic-rewards.json');
+  const data = readJson<LeagueMechanicRewardsDataFile>('src/data/league-content/runes-of-aldur.json');
   const guideById = new Map(getGuideZones().map((zone) => [zone.id, zone]));
   const seenIds = new Set<string>();
 
@@ -479,15 +482,17 @@ test('league rewards are structurally valid, canonical and safe to display', () 
 });
 
 test('league reward regressions stay synchronized with guide cards', () => {
-  const rewards = readJson<LeagueMechanicRewardsDataFile>('src/data/league-mechanic-rewards.json').rewards;
+  const rewards = readJson<LeagueMechanicRewardsDataFile>('src/data/league-content/runes-of-aldur.json').rewards;
   const rewardsById = new Map(rewards.map((reward) => [reward.id, reward]));
   const guideById = new Map(getGuideZones().map((zone) => [zone.id, zone]));
 
   const scorchedReward = rewardsById.get('league_interlude1_scorched_farmlands');
-  const scorchedGuide = guideById.get('interlude_scorched_farmlands');
-  assert.ok(scorchedReward && scorchedGuide);
+  const scorchedBaseGuide = guideById.get('interlude_scorched_farmlands');
+  const scorchedGuide = applyCampaignLeagueToGuideEntry(scorchedBaseGuide ?? null, 'runes_of_aldur');
+  assert.ok(scorchedReward && scorchedBaseGuide && scorchedGuide);
   assert.equal(scorchedReward.reward_en, 'Uncut Support Gem (Level 4)');
   assert.equal(scorchedReward.reward_ru, 'Неогранённый камень поддержки, ур. 4');
+  assert.doesNotMatch(JSON.stringify(scorchedBaseGuide), /гарантированную лиг-награду/i);
   assert.match(JSON.stringify(scorchedGuide), /кам(?:ень|ня) поддержки 4 уровня|ур\. 4/i);
   assert.doesNotMatch(JSON.stringify(scorchedGuide), /кам(?:ень|ня) поддержки 5 уровня|ур\. 5|Lv5/i);
 
@@ -719,7 +724,7 @@ test('Act 4 ordinary quest rewards stay in guide cards and separate from permane
   const permanentBonusText = JSON.stringify(getCampaignBonuses());
   assert.doesNotMatch(permanentBonusText, /зелье сульфита|выбор кольца сопротивления|выбор амулета характеристик/i);
 
-  const leagueRewards = readJson<LeagueMechanicRewardsDataFile>('src/data/league-mechanic-rewards.json').rewards;
+  const leagueRewards = readJson<LeagueMechanicRewardsDataFile>('src/data/league-content/runes-of-aldur.json').rewards;
   const whakapanuLeagueReward = leagueRewards.find((reward) => reward.guideZoneId === 'a4_whakapanu_island');
   assert.ok(whakapanuLeagueReward);
   assert.equal(whakapanuLeagueReward.reward_ru, 'Сфера астромантии');

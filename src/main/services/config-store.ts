@@ -33,6 +33,7 @@ import type {
   VisitedZoneEntry,
   ZoneTimeEntry
 } from '../../shared/types';
+import { normalizeCampaignLeague } from '../../shared/league-context';
 import { normalizeHotkeyAccelerator } from '../hotkey-utils';
 
 const OVERLAY_SCALES: OverlayScale[] = [70, 80, 90, 100, 110, 120];
@@ -602,6 +603,7 @@ export function normalizeAppConfig(config: Partial<AppConfig> = {}): AppConfig {
     ...DEFAULT_CONFIG,
     configSchemaVersion: CURRENT_CONFIG_SCHEMA_VERSION,
     appLanguage: rawConfig.appLanguage === 'en' ? 'en' : DEFAULT_CONFIG.appLanguage,
+    campaignLeague: normalizeCampaignLeague(rawConfig.campaignLeague),
     logFilePath: safeString(rawConfig.logFilePath, DEFAULT_CONFIG.logFilePath),
     logFileSelectionMode:
       rawConfig.logFileSelectionMode === 'auto' || rawConfig.logFileSelectionMode === 'manual'
@@ -705,6 +707,9 @@ export class ConfigStore {
     return this.update({
       ...(patch.appLanguage !== undefined
         ? { appLanguage: patch.appLanguage === 'en' ? 'en' : 'ru' }
+        : {}),
+      ...(patch.campaignLeague !== undefined
+        ? { campaignLeague: normalizeCampaignLeague(patch.campaignLeague) }
         : {}),
       ...(patch.overlayOpacity !== undefined
         ? { overlayOpacity: patch.overlayOpacity }

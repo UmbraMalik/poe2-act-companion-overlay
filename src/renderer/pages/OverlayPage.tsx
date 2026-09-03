@@ -28,6 +28,7 @@ import {
 } from '../companion-helpers';
 import { formatDuration, getLevelState } from '../utils';
 import { getOverlayMinimumSize } from '../../shared/overlay-layout';
+import { getLeagueMechanicRewards, type LeagueMechanicRewardEntry } from '../../shared/league-context';
 import { isEndgameT15Act } from '../../shared/timers';
 import { shouldStartOverlayDrag } from '../../shared/overlay-drag';
 import {
@@ -44,12 +45,11 @@ import {
 import { reportOverlayRenderDiagnostics } from '../render-diagnostics';
 import { getAppThemeClassName } from '../theme';
 import { buildOverlayContentPlan } from '../overlay-display-intent';
-import leagueMechanicRewardsData from '../../data/league-mechanic-rewards.json';
 import { getCampaignBonusView, getGuideView, getLevelReminderView, getPowerSpikeView } from '../../i18n/data';
 import { translateSystemText } from '../../i18n/runtime';
 import { translate } from '../../i18n/translations';
 import { getZoneRecognitionView } from '../log-health';
-import { FirstRunWizard } from '../FirstRunWizard';
+import { CampaignLeaguePrompt, FirstRunWizard } from '../FirstRunWizard';
 import { UiIcon, type UiIconName } from '../UiIcon';
 import type {
   AppLanguage,
@@ -114,29 +114,6 @@ interface OverlayUpcomingReminder {
   items: string[];
   source: 'vendor' | 'power';
 }
-
-interface LeagueMechanicRewardEntry {
-  id: string;
-  section: string;
-  actLabel: string;
-  zone_en: string;
-  zone_ru: string;
-  guideZoneId: string | null;
-  guideZoneRu: string | null;
-  aliases_ru?: string[];
-  reward_en: string;
-  reward_ru: string;
-  rewardType: string;
-  hasReward: boolean;
-  displayInOverlay: boolean;
-  oneTimeGuaranteed: boolean;
-  duplicateInCurrentGuide: boolean;
-  uncertain?: boolean;
-}
-
-const LEAGUE_MECHANIC_REWARDS = (
-  leagueMechanicRewardsData as { rewards?: LeagueMechanicRewardEntry[] }
-).rewards ?? [];
 
 function getOverlayUpcomingReminders(
   snapshot: OverlayPageSnapshot,
@@ -283,7 +260,7 @@ function getCurrentZoneLeagueReward(
   addLeagueZoneCandidate(candidates, sceneName);
 
   return (
-    LEAGUE_MECHANIC_REWARDS.find((reward) => {
+    getLeagueMechanicRewards(snapshot.config.campaignLeague).find((reward) => {
       if (reward.uncertain || !reward.displayInOverlay || !reward.hasReward) {
         return false;
       }
@@ -1707,7 +1684,7 @@ export function OverlayPage() {
       {timerPrimaryButton}
     </div>
   );
-  if (!config.setupWizardCompleted) {
+  if (!config.setupWizardCompleted || config.campaignLeague === null) {
     return (
       <main
         ref={overlayPageRef}
@@ -1718,7 +1695,11 @@ export function OverlayPage() {
           className="overlay-shell overlay-hud overlay-setup-shell"
           onPointerDownCapture={beginOverlayDrag}
         >
-          <FirstRunWizard snapshot={snapshot} language={language} />
+          {config.setupWizardCompleted && config.campaignLeague === null ? (
+            <CampaignLeaguePrompt snapshot={snapshot} language={language} />
+          ) : (
+            <FirstRunWizard snapshot={snapshot} language={language} />
+          )}
           <div
             className={getResizeGripClassName(config.overlayMovementLocked)}
             aria-label={config.overlayMovementLocked ? t('overlay.resizeLocked') : t('overlay.resize')}

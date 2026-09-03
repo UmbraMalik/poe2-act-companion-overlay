@@ -61,8 +61,8 @@ export const SETTINGS_SECTIONS: SettingsSectionDefinition[] = [
   {
     id: 'settings-language',
     groupId: 'first_run',
-    label: { ru: 'Язык', en: 'Language' },
-    searchText: { ru: 'русский английский ru en локализация', en: 'russian english ru en localization' }
+    label: { ru: 'Язык и лига', en: 'Language & league' },
+    searchText: { ru: 'русский английский ru en локализация лига кампании forbidden rites runes aldur standard', en: 'russian english ru en localization campaign league forbidden rites runes aldur standard' }
   },
   {
     id: 'settings-updates',

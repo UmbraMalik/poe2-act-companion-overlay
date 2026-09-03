@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { translate } from '../i18n/translations';
-import type { AppLanguage, AppTheme, OverlaySnapshot } from '../shared/types';
+import type { AppLanguage, AppTheme, CampaignLeague, OverlaySnapshot } from '../shared/types';
 import { UiIcon } from './UiIcon';
 
 interface FirstRunWizardProps {
@@ -8,7 +8,105 @@ interface FirstRunWizardProps {
   language: AppLanguage;
 }
 
-const SETUP_WIZARD_STEP_COUNT = 4;
+interface CampaignLeaguePromptProps {
+  snapshot: OverlaySnapshot;
+  language: AppLanguage;
+}
+
+const SETUP_WIZARD_STEP_COUNT = 5;
+const CAMPAIGN_LEAGUE_OPTIONS: CampaignLeague[] = [
+  'forbidden_rites',
+  'runes_of_aldur',
+  'standard'
+];
+
+function getCampaignLeagueLabel(language: AppLanguage, league: CampaignLeague): string {
+  return translate(language, `setupWizard.leagueOptions.${league}`);
+}
+
+function CampaignLeagueChoices({
+  language,
+  selectedLeague,
+  disabled,
+  onChange
+}: {
+  language: AppLanguage;
+  selectedLeague: CampaignLeague | null;
+  disabled?: boolean;
+  onChange: (league: CampaignLeague) => void;
+}) {
+  return (
+    <div className="overlay-setup-choice-grid is-league">
+      {CAMPAIGN_LEAGUE_OPTIONS.map((league) => (
+        <button
+          key={league}
+          type="button"
+          className={selectedLeague === league ? 'is-selected' : ''}
+          aria-pressed={selectedLeague === league}
+          disabled={disabled}
+          onClick={() => onChange(league)}
+        >
+          <strong>{getCampaignLeagueLabel(language, league)}</strong>
+          <small>{translate(language, `setupWizard.leagueDescriptions.${league}`)}</small>
+        </button>
+      ))}
+    </div>
+  );
+}
+
+export function CampaignLeaguePrompt({ snapshot, language }: CampaignLeaguePromptProps) {
+  const [selectedLeague, setSelectedLeague] = useState<CampaignLeague | null>(snapshot.config.campaignLeague);
+  const [busy, setBusy] = useState(false);
+
+  const save = async () => {
+    if (!selectedLeague || busy) {
+      return;
+    }
+
+    try {
+      setBusy(true);
+      await window.poe2Overlay.updateSettings({ campaignLeague: selectedLeague });
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <section className="overlay-setup-wizard" role="dialog" aria-modal="true" aria-labelledby="campaign-league-prompt-title">
+      <div className="overlay-setup-wizard-head">
+        <div>
+          <p className="eyebrow">{translate(language, 'setupWizard.leaguePromptKicker')}</p>
+          <h2 id="campaign-league-prompt-title">{translate(language, 'setupWizard.leaguePromptTitle')}</h2>
+        </div>
+      </div>
+
+      <div className="overlay-setup-wizard-body no-drag">
+        <div className="overlay-setup-choice-stack">
+          <p>{translate(language, 'setupWizard.leaguePromptBody')}</p>
+          <CampaignLeagueChoices
+            language={language}
+            selectedLeague={selectedLeague}
+            disabled={busy}
+            onChange={setSelectedLeague}
+          />
+          <small>{translate(language, 'setupWizard.leagueHint')}</small>
+        </div>
+      </div>
+
+      <div className="overlay-setup-wizard-actions no-drag">
+        <span />
+        <button
+          type="button"
+          className="button-primary"
+          disabled={!selectedLeague || busy}
+          onClick={() => void save()}
+        >
+          {busy ? translate(language, 'common.loading') : translate(language, 'setupWizard.leaguePromptSave')}
+        </button>
+      </div>
+    </section>
+  );
+}
 
 export function FirstRunWizard({ snapshot, language }: FirstRunWizardProps) {
   const [step, setStep] = useState(() => {
@@ -28,6 +126,14 @@ export function FirstRunWizard({ snapshot, language }: FirstRunWizardProps) {
   }, [step]);
 
   const readiness = useMemo(() => [
+    {
+      id: 'league',
+      label: translate(language, 'setupWizard.readyLeague'),
+      ready: config.campaignLeague !== null,
+      detail: config.campaignLeague
+        ? getCampaignLeagueLabel(language, config.campaignLeague)
+        : translate(language, 'setupWizard.readyLeaguePending')
+    },
     {
       id: 'log',
       label: translate(language, 'setupWizard.readyLog'),
@@ -51,6 +157,7 @@ export function FirstRunWizard({ snapshot, language }: FirstRunWizardProps) {
       detail: `${config.hotkeys.openCompanion} · ${config.hotkeys.toggleTimerPause}`
     }
   ], [
+    config.campaignLeague,
     config.hotkeys.openCompanion,
     config.hotkeys.toggleTimerPause,
     config.logFilePath,
@@ -78,6 +185,10 @@ export function FirstRunWizard({ snapshot, language }: FirstRunWizardProps) {
 
   const updateTheme = (theme: AppTheme) => {
     void window.poe2Overlay.updateSettings({ theme, themePreferencePrompted: true });
+  };
+
+  const updateLeague = (campaignLeague: CampaignLeague) => {
+    void window.poe2Overlay.updateSettings({ campaignLeague });
   };
 
   const chooseLogFile = () => runTask('log', () => window.poe2Overlay.chooseLogFile());
@@ -142,6 +253,19 @@ export function FirstRunWizard({ snapshot, language }: FirstRunWizardProps) {
         )}
 
         {step === 1 && (
+          <div className="overlay-setup-choice-stack">
+            <p>{translate(language, 'setupWizard.leagueBody')}</p>
+            <CampaignLeagueChoices
+              language={language}
+              selectedLeague={config.campaignLeague}
+              disabled={busy !== null}
+              onChange={updateLeague}
+            />
+            <small>{translate(language, 'setupWizard.leagueHint')}</small>
+          </div>
+        )}
+
+        {step === 2 && (
           <div className="overlay-setup-log-step">
             <p>{translate(language, 'setupWizard.logBody')}</p>
             <div className={`overlay-setup-status-card ${logReady ? 'is-ready' : 'is-pending'}`}>
@@ -158,7 +282,7 @@ export function FirstRunWizard({ snapshot, language }: FirstRunWizardProps) {
           </div>
         )}
 
-        {step === 2 && (
+        {step === 3 && (
           <div className="overlay-setup-hotkeys">
             <p>{translate(language, 'setupWizard.hotkeysBody')}</p>
             <dl>
@@ -169,7 +293,7 @@ export function FirstRunWizard({ snapshot, language }: FirstRunWizardProps) {
           </div>
         )}
 
-        {step === 3 && (
+        {step === 4 && (
           <div className="overlay-setup-ready-list">
             <p>{translate(language, 'setupWizard.readyBody')}</p>
             {readiness.map((item) => (
@@ -196,11 +320,21 @@ export function FirstRunWizard({ snapshot, language }: FirstRunWizardProps) {
           </button>
         )}
         {step < SETUP_WIZARD_STEP_COUNT - 1 ? (
-          <button type="button" className="button-primary" disabled={busy !== null} onClick={() => setStep((value) => value + 1)}>
+          <button
+            type="button"
+            className="button-primary"
+            disabled={busy !== null || (step === 1 && config.campaignLeague === null)}
+            onClick={() => setStep((value) => value + 1)}
+          >
             {translate(language, 'common.next')}
           </button>
         ) : (
-          <button type="button" className="button-primary" disabled={busy !== null} onClick={() => void finish()}>
+          <button
+            type="button"
+            className="button-primary"
+            disabled={busy !== null || config.campaignLeague === null}
+            onClick={() => void finish()}
+          >
             {busy === 'finish' ? translate(language, 'common.loading') : translate(language, 'setupWizard.finish')}
           </button>
         )}

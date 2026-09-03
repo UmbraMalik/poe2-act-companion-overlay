@@ -6,7 +6,7 @@ import type {
   HotkeySettings
 } from './types';
 
-export const CURRENT_CONFIG_SCHEMA_VERSION = 1;
+export const CURRENT_CONFIG_SCHEMA_VERSION = 2;
 
 export const DEFAULT_OVERLAY_BOUNDS = {
   width: 500,
@@ -74,6 +74,7 @@ export const DEFAULT_RUN_TIMER_SETTINGS: RunTimerSettings = {
 export const DEFAULT_CONFIG: AppConfig = {
   configSchemaVersion: CURRENT_CONFIG_SCHEMA_VERSION,
   appLanguage: 'ru',
+  campaignLeague: null,
   logFilePath: null,
   logFileSelectionMode: null,
   lastZoneName: null,

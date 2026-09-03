@@ -1,0 +1,10 @@
+{
+  "id": "forbidden_rites",
+  "version": "0.5.5",
+  "status": "placeholder",
+  "guidePatches": [],
+  "notes": [
+    "Forbidden Rites campaign content is intentionally empty until live 0.5.5 route and Ritual-chain data are verified.",
+    "Do not infer guaranteed per-zone rewards from the old Runes of Aldur reward table."
+  ]
+}

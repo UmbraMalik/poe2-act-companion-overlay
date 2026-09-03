@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
-import leagueMechanicRewardsData from '../data/league-mechanic-rewards.json';
 import { getCampaignBonusView, getGuideView, translateDataText, type LocalizedGuideEntryView } from '../i18n/data';
 import { translate } from '../i18n/translations';
+import { getLeagueMechanicRewards, type LeagueMechanicRewardEntry } from '../shared/league-context';
 import { isEndgameT15Act } from '../shared/timers';
 import type {
   AppLanguage,
@@ -44,25 +44,6 @@ type PaceView = {
   detail: string;
   tone: 'ahead' | 'behind' | 'even' | 'empty';
 };
-
-interface LeagueMechanicRewardEntry {
-  id: string;
-  zone_en: string;
-  zone_ru: string;
-  guideZoneId: string | null;
-  guideZoneRu: string | null;
-  aliases_ru?: string[];
-  reward_en: string;
-  reward_ru: string;
-  hasReward: boolean;
-  displayInOverlay: boolean;
-  oneTimeGuaranteed: boolean;
-  uncertain?: boolean;
-}
-
-const LEAGUE_MECHANIC_REWARDS = (
-  leagueMechanicRewardsData as { rewards?: LeagueMechanicRewardEntry[] }
-).rewards ?? [];
 
 interface CurrentRunHubProps {
   snapshot: AppSnapshot;
@@ -238,7 +219,7 @@ function getCurrentZoneLeagueReward(
   addLeagueZoneCandidate(candidates, snapshot.runtime.lastMatchedZoneEn);
   addLeagueZoneCandidate(candidates, sceneName);
 
-  return LEAGUE_MECHANIC_REWARDS.find((reward) => {
+  return getLeagueMechanicRewards(snapshot.config.campaignLeague).find((reward) => {
     if (reward.uncertain || !reward.displayInOverlay || !reward.hasReward) {
       return false;
     }

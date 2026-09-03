@@ -36,6 +36,7 @@ import {
 import type {
   AppTheme,
   AppLanguage,
+  CampaignLeague,
   HotkeySettings,
   OverlayDensity,
   OverlayScale,
@@ -762,6 +763,19 @@ export function SettingsPage() {
                   });
                 }}
               />
+            </label>
+            <label className="settings-field">
+              <span>{t('settings.campaignLeagueField')}</span>
+              <SettingsSelect<CampaignLeague | ''>
+                ariaLabel={t('settings.campaignLeagueField')}
+                value={config.campaignLeague ?? ''}
+                options={[
+                  { value: '', label: t('settings.campaignLeagueUnset') }, { value: 'forbidden_rites', label: t('setupWizard.leagueOptions.forbidden_rites') },
+                  { value: 'runes_of_aldur', label: t('setupWizard.leagueOptions.runes_of_aldur') }, { value: 'standard', label: t('setupWizard.leagueOptions.standard') }
+                ]}
+                onChange={(campaignLeague) => { void window.poe2Overlay.updateSettings({ campaignLeague: campaignLeague || null }); }}
+              />
+              <small className="helper-text">{t('settings.campaignLeagueDescription')}</small>
             </label>
           </div>
         </section>
