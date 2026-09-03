@@ -195,20 +195,22 @@ test('settings page memoizes repeated snapshot-derived option lists', () => {
   assert.doesNotMatch(settingsPage, /const settingsQuickLinks = SETTINGS_QUICK_LINKS\.filter/);
 });
 
-test('league reward UI stays generic instead of rendering legacy reward names', () => {
+test('bonus reward UI renders localized reward names without acquisition mechanics', () => {
   const companion = readText('src/renderer/CurrentRunHub.tsx');
   const overlay = readText('src/renderer/pages/OverlayPage.tsx');
+  const resolver = readText('src/renderer/league-content.ts');
   const translations = readText('src/i18n/translations.ts');
 
-  assert.match(translations, /league:\s*'Награда лиги'/);
-  assert.match(translations, /league:\s*'League Reward'/);
-  assert.doesNotMatch(companion, /currentZoneLeagueReward\.reward_(?:ru|en)/);
-  assert.doesNotMatch(overlay, /leagueRewardItem\.reward_(?:ru|en)/);
-  assert.doesNotMatch(overlay, /oneTimeLeagueReward/);
-  assert.doesNotMatch(companion, /league-mechanic-rewards\.json/);
-  assert.doesNotMatch(overlay, /league-mechanic-rewards\.json/);
-  assert.match(companion, /getCampaignLeagueZoneContent/);
-  assert.match(overlay, /getCampaignLeagueZoneContent/);
+  assert.match(translations, /league:\s*'Бонусная награда'/);
+  assert.match(translations, /league:\s*'Bonus Reward'/);
+  assert.match(overlay, /leagueZoneContent\.reward_ru/);
+  assert.match(overlay, /leagueZoneContent\.reward_en/);
+  assert.match(companion, /currentZoneLeagueContent\.reward_ru/);
+  assert.match(companion, /currentZoneLeagueContent\.reward_en/);
+  assert.match(resolver, /campaign-bonus-rewards\.json/);
+  assert.doesNotMatch(resolver, /forbidden-rites-boss-rituals/);
+  assert.doesNotMatch(overlay, /BossRitual|leagueBossRitual|Tribute/);
+  assert.doesNotMatch(companion, /BossRitual|zoneHubBossRitual|Tribute/);
 });
 
 

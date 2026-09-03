@@ -1,52 +1,41 @@
-import forbiddenRitesBossRitualsData from '../data/forbidden-rites-boss-rituals.json';
+import campaignBonusRewardsData from '../data/campaign-bonus-rewards.json';
 import type { GuideEntry, SceneKind } from '../shared/types';
 
 interface LeagueContentSnapshot {
   currentGuideEntry: GuideEntry | null;
   currentZone: {
     sceneKind: SceneKind;
+    rawZoneName?: string | null;
   };
 }
 
-interface BossRitualStepData {
-  guideZoneId: string;
-  step: number;
-}
-
-interface BossRitualChainData {
+interface CampaignBonusRewardEntry {
   id: string;
-  act: number;
-  steps: BossRitualStepData[];
-}
-
-export interface BossRitualProgress {
-  chainId: string;
-  step: number;
-  total: number;
-  final: boolean;
+  guideZoneId: string | null;
+  reward_en: string;
+  reward_ru: string;
+  hasReward: boolean;
+  displayInOverlay: boolean;
+  matchZoneNames?: string[];
 }
 
 export interface CampaignLeagueZoneContent {
-  bossRitual: BossRitualProgress | null;
+  rewardId: string;
+  reward_en: string;
+  reward_ru: string;
 }
 
-const BOSS_RITUAL_CHAINS = (
-  forbiddenRitesBossRitualsData as { chains?: BossRitualChainData[] }
-).chains ?? [];
+const BONUS_REWARDS = (
+  campaignBonusRewardsData as { rewards?: CampaignBonusRewardEntry[] }
+).rewards ?? [];
 
-const BOSS_RITUAL_BY_GUIDE_ID = new Map<string, BossRitualProgress>();
-
-for (const chain of BOSS_RITUAL_CHAINS) {
-  const total = chain.steps.length;
-
-  for (const step of chain.steps) {
-    BOSS_RITUAL_BY_GUIDE_ID.set(step.guideZoneId, {
-      chainId: chain.id,
-      step: step.step,
-      total,
-      final: step.step === total
-    });
-  }
+function normalizeZoneName(value: string | null | undefined): string {
+  return (value ?? '')
+    .trim()
+    .toLocaleLowerCase('ru')
+    .replace(/ё/g, 'е')
+    .replace(/[’'`".,:;!?()[\]{}\/\u2014\u2013-]/g, ' ')
+    .replace(/\s+/g, ' ');
 }
 
 export function getCampaignLeagueZoneContent(
@@ -58,7 +47,30 @@ export function getCampaignLeagueZoneContent(
     return null;
   }
 
+  const rawZoneName = normalizeZoneName(snapshot.currentZone.rawZoneName);
+  const reward = BONUS_REWARDS.find((entry) => {
+    if (
+      entry.guideZoneId !== guide.id ||
+      !entry.hasReward ||
+      !entry.displayInOverlay
+    ) {
+      return false;
+    }
+
+    if (!entry.matchZoneNames?.length) {
+      return true;
+    }
+
+    return entry.matchZoneNames.some((name) => normalizeZoneName(name) === rawZoneName);
+  });
+
+  if (!reward) {
+    return null;
+  }
+
   return {
-    bossRitual: BOSS_RITUAL_BY_GUIDE_ID.get(guide.id) ?? null
+    rewardId: reward.id,
+    reward_en: reward.reward_en,
+    reward_ru: reward.reward_ru
   };
 }

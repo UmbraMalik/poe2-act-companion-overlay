@@ -377,29 +377,9 @@ export function CurrentRunHub({
   const attentionItems = useMemo<AttentionItem[]>(() => {
     const candidates: AttentionItem[] = [
       ...(currentZoneLeagueContent ? [{
-        id: currentZoneLeagueContent.bossRitual
-          ? `league-boss-ritual:${currentZoneLeagueContent.bossRitual.chainId}:${currentZoneLeagueContent.bossRitual.step}`
-          : `league:${guide?.id ?? 'current-zone'}`,
-        text: currentZoneLeagueContent.bossRitual
-          ? translate(
-              language,
-              currentZoneLeagueContent.bossRitual.final
-                ? 'companion.zoneHubBossRitualFinalTitle'
-                : 'companion.zoneHubBossRitualTitle',
-              {
-                step: currentZoneLeagueContent.bossRitual.step,
-                total: currentZoneLeagueContent.bossRitual.total
-              }
-            )
-          : translate(language, 'companion.zoneHubLeagueTitle'),
-        meta: currentZoneLeagueContent.bossRitual
-          ? translate(
-              language,
-              currentZoneLeagueContent.bossRitual.final
-                ? 'companion.zoneHubBossRitualFinalMeta'
-                : 'companion.zoneHubBossRitualMeta'
-            )
-          : translate(language, 'companion.zoneHubLeagueMeta'),
+        id: `bonus-reward:${currentZoneLeagueContent.rewardId}`,
+        text: language === 'ru' ? currentZoneLeagueContent.reward_ru : currentZoneLeagueContent.reward_en,
+        meta: translate(language, 'companion.zoneHubLeagueMeta'),
         tone: 'league' as const
       }] : []),
       ...pendingBonuses.map(({ bonus, bonusView }) => ({

@@ -379,7 +379,7 @@ test('all shipped campaign data files parse as JSON', () => {
   for (const relativePath of [
     'src/data/guide.json',
     'src/data/campaign-bonuses.json',
-    'src/data/forbidden-rites-boss-rituals.json',
+    'src/data/campaign-bonus-rewards.json',
     'src/data/internal-area-aliases.en.json',
     'src/data/internal-area-aliases.en.conservative.json',
     'src/data/town-scenes.json',
@@ -389,6 +389,24 @@ test('all shipped campaign data files parse as JSON', () => {
   ]) {
     assert.doesNotThrow(() => readJson<unknown>(relativePath), `${relativePath} must parse`);
   }
+});
+
+
+test('campaign bonus reward table contains only the supplied Maxroll rows', () => {
+  const data = readJson<{ rewards?: Array<{ guideZoneId?: string; reward_en?: string; reward_ru?: string }> }>(
+    'src/data/campaign-bonus-rewards.json'
+  );
+  const rewards = data.rewards ?? [];
+
+  assert.equal(rewards.length, 25);
+  assert.ok(rewards.every((reward) => reward.guideZoneId && reward.reward_en && reward.reward_ru));
+  assert.equal(existsSync('src/data/forbidden-rites-boss-rituals.json'), false);
+
+  const byGuideId = new Map(rewards.map((reward) => [reward.guideZoneId, reward]));
+  assert.equal(byGuideId.get('a1_grelwood')?.reward_en, 'Lesser Ward Rune');
+  assert.equal(byGuideId.get('a1_grelwood')?.reward_ru, 'Малая руна барьера');
+  assert.equal(byGuideId.get('a3_drowned_city')?.reward_en, "Medved's Crest of the Circle");
+  assert.equal(byGuideId.get('a3_drowned_city')?.reward_ru, 'Знак Круга Медведя');
 });
 
 test('legacy Runes of Aldur reward data is not shipped or embedded in the active guide', () => {

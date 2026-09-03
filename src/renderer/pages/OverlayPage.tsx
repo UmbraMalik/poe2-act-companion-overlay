@@ -1901,23 +1901,9 @@ export function OverlayPage() {
             <h2>{t('overlay.league')}</h2>
             <ul className="section-list compact-list">
               <li className="league-reward-line">
-                <span>
-                  {leagueZoneContent.bossRitual
-                    ? t(leagueZoneContent.bossRitual.final ? 'overlay.leagueBossRitualFinal' : 'overlay.leagueBossRitualStep', {
-                        step: leagueZoneContent.bossRitual.step,
-                        total: leagueZoneContent.bossRitual.total
-                      })
-                    : t('overlay.leagueHint')}
-                </span>
+                <span>{language === 'ru' ? leagueZoneContent.reward_ru : leagueZoneContent.reward_en}</span>
               </li>
             </ul>
-            {leagueZoneContent.bossRitual && (
-              <p className="league-reward-note">
-                {t(leagueZoneContent.bossRitual.final
-                  ? 'overlay.leagueBossRitualFinalHint'
-                  : 'overlay.leagueBossRitualHint')}
-              </p>
-            )}
           </section>
         )}
 

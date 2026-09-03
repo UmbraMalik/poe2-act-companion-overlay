@@ -1,0 +1,294 @@
+{
+  "version": "campaign-bonus-rewards-maxroll-2026-09-03",
+  "feature": "campaignBonusRewards",
+  "source": {
+    "title": "Maxroll — Campaign League Mechanic Rewards Cheat Sheet",
+    "url": "https://maxroll.gg/poe2/resources/campaign-league-mechanic-rewards-cheat-sheet",
+    "note": "The reward rows in this file are limited to the Maxroll table supplied for this update. Acquisition mechanics are intentionally not modeled."
+  },
+  "notes": [
+    "Bonus campaign rewards are separate from permanent campaign bonuses in campaign-bonuses.json.",
+    "The overlay renders only the localized reward name under the Bonus Reward header."
+  ],
+  "rewards": [
+    {
+      "id": "bonus_reward_a1_grelwood",
+      "section": "act1",
+      "guideZoneId": "a1_grelwood",
+      "zone_en": "Grelwood",
+      "zone_ru": "Грельвуд",
+      "reward_en": "Lesser Ward Rune",
+      "reward_ru": "Малая руна барьера",
+      "hasReward": true,
+      "displayInOverlay": true
+    },
+    {
+      "id": "bonus_reward_a1_grim_tangle",
+      "section": "act1",
+      "guideZoneId": "a1_grim_tangle",
+      "zone_en": "Grim Tangle",
+      "zone_ru": "Мрачные заросли",
+      "reward_en": "Uncut Skill Gem (Level 3)",
+      "reward_ru": "Неогранённый камень умения (уровень 3)",
+      "hasReward": true,
+      "displayInOverlay": true
+    },
+    {
+      "id": "bonus_reward_a1_tomb_of_the_consort",
+      "section": "act1",
+      "guideZoneId": "a1_tomb_of_the_consort",
+      "zone_en": "Tomb of the Consort",
+      "zone_ru": "Супружеская гробница",
+      "reward_en": "Artificer's Orb",
+      "reward_ru": "Сфера астромантии",
+      "hasReward": true,
+      "displayInOverlay": true
+    },
+    {
+      "id": "bonus_reward_a1_mausoleum",
+      "section": "act1",
+      "guideZoneId": "a1_mausoleum",
+      "zone_en": "Mausoleum of the Praetor",
+      "zone_ru": "Мавзолей претора",
+      "reward_en": "Regal Orb",
+      "reward_ru": "Сфера царей",
+      "hasReward": true,
+      "displayInOverlay": true
+    },
+    {
+      "id": "bonus_reward_a1_hunting_grounds",
+      "section": "act1",
+      "guideZoneId": "a1_hunting_grounds",
+      "zone_en": "Hunting Grounds",
+      "zone_ru": "Охотничьи угодья",
+      "reward_en": "Exalted Orb",
+      "reward_ru": "Сфера возвышения",
+      "hasReward": true,
+      "displayInOverlay": true
+    },
+    {
+      "id": "bonus_reward_a1_freythorn",
+      "section": "act1",
+      "guideZoneId": "a1_freythorn",
+      "zone_en": "Freythorn",
+      "zone_ru": "Фрейторн",
+      "reward_en": "Uncut Support Gem (Level 1)",
+      "reward_ru": "Неогранённый камень поддержки (уровень 1)",
+      "hasReward": true,
+      "displayInOverlay": true
+    },
+    {
+      "id": "bonus_reward_a1_ogham_village",
+      "section": "act1",
+      "guideZoneId": "a1_ogham_village",
+      "zone_en": "Ogham Village",
+      "zone_ru": "Деревня Огам",
+      "reward_en": "Runic Alloy",
+      "reward_ru": "Рунный сплав",
+      "hasReward": true,
+      "displayInOverlay": true
+    },
+    {
+      "id": "bonus_reward_a1_manor_ramparts",
+      "section": "act1",
+      "guideZoneId": "a1_manor_ramparts",
+      "zone_en": "Manor Ramparts",
+      "zone_ru": "Стены замка",
+      "reward_en": "Uncut Skill Gem (Level 5)",
+      "reward_ru": "Неогранённый камень умения (уровень 5)",
+      "hasReward": true,
+      "displayInOverlay": true
+    },
+    {
+      "id": "bonus_reward_a1_ogham_manor",
+      "section": "act1",
+      "guideZoneId": "a1_ogham_manor",
+      "zone_en": "Ogham Manor",
+      "zone_ru": "Замок Огам",
+      "reward_en": "Orb of Alchemy",
+      "reward_ru": "Сфера алхимии",
+      "hasReward": true,
+      "displayInOverlay": true
+    },
+    {
+      "id": "bonus_reward_a2_vastiri_outskirts",
+      "section": "act2",
+      "guideZoneId": "a2_vastiri_outskirts",
+      "zone_en": "Vastiri Outskirts",
+      "zone_ru": "Окраины Вастири",
+      "reward_en": "Uncut Spirit Gem (Level 5)",
+      "reward_ru": "Неогранённый камень духа (уровень 5)",
+      "hasReward": true,
+      "displayInOverlay": true
+    },
+    {
+      "id": "bonus_reward_a2_mawdun_mine",
+      "section": "act2",
+      "guideZoneId": "a2_mawdun_mine",
+      "zone_en": "Mawdun Mine",
+      "zone_ru": "Шахта Маудун",
+      "reward_en": "Exalted Orb",
+      "reward_ru": "Сфера возвышения",
+      "hasReward": true,
+      "displayInOverlay": true
+    },
+    {
+      "id": "bonus_reward_a2_halani_gates",
+      "section": "act2",
+      "guideZoneId": "a2_halani_gates",
+      "zone_en": "Halani Gates",
+      "zone_ru": "Ворота Халани",
+      "reward_en": "Gemcutter's Prism",
+      "reward_ru": "Призма камнереза",
+      "hasReward": true,
+      "displayInOverlay": true
+    },
+    {
+      "id": "bonus_reward_a2_mastodon_badlands",
+      "section": "act2",
+      "guideZoneId": "a2_mastodon_badlands",
+      "zone_en": "Mastodon Badlands",
+      "zone_ru": "Бесплодные земли мастодонтов",
+      "reward_en": "Lesser Jeweller's Orb",
+      "reward_ru": "Малая сфера златокузнеца",
+      "hasReward": true,
+      "displayInOverlay": true
+    },
+    {
+      "id": "bonus_reward_a2_titan_grotto",
+      "section": "act2",
+      "guideZoneId": "a2_titan_grotto",
+      "zone_en": "Titan Grotto",
+      "zone_ru": "Грот Титанов",
+      "reward_en": "Uncut Support Gem (Level 2)",
+      "reward_ru": "Неогранённый камень поддержки (уровень 2)",
+      "hasReward": true,
+      "displayInOverlay": true
+    },
+    {
+      "id": "bonus_reward_a3_jungle_ruins",
+      "section": "act3",
+      "guideZoneId": "a3_jungle_ruins",
+      "zone_en": "Jungle Ruins",
+      "zone_ru": "Развалины в джунглях",
+      "reward_en": "Uncut Support Gem (Level 3)",
+      "reward_ru": "Неогранённый камень поддержки (уровень 3)",
+      "hasReward": true,
+      "displayInOverlay": true
+    },
+    {
+      "id": "bonus_reward_a3_venom_crypts",
+      "section": "act3",
+      "guideZoneId": "a3_venom_crypts",
+      "zone_en": "Venom Crypts",
+      "zone_ru": "Ядовитые крипты",
+      "reward_en": "Uncut Skill Gem (Level 9)",
+      "reward_ru": "Неогранённый камень умения (уровень 9)",
+      "hasReward": true,
+      "displayInOverlay": true
+    },
+    {
+      "id": "bonus_reward_a3_jiquani_machinarium",
+      "section": "act3",
+      "guideZoneId": "a3_jiquani_machinarium",
+      "zone_en": "Jiquani's Machinarium",
+      "zone_ru": "Машинариум Джиквани",
+      "reward_en": "Artificer's Orb",
+      "reward_ru": "Сфера астромантии",
+      "hasReward": true,
+      "displayInOverlay": true
+    },
+    {
+      "id": "bonus_reward_a3_matlan_waterways",
+      "section": "act3",
+      "guideZoneId": "a3_matlan_waterways",
+      "zone_en": "Matlan Waterways",
+      "zone_ru": "Водные пути Матлана",
+      "reward_en": "Uncut Spirit Gem (Level 10)",
+      "reward_ru": "Неогранённый камень духа (уровень 10)",
+      "hasReward": true,
+      "displayInOverlay": true
+    },
+    {
+      "id": "bonus_reward_a3_drowned_city",
+      "section": "act3",
+      "guideZoneId": "a3_drowned_city",
+      "zone_en": "Drowned City",
+      "zone_ru": "Затопленный город",
+      "reward_en": "Medved's Crest of the Circle",
+      "reward_ru": "Знак Круга Медведя",
+      "hasReward": true,
+      "displayInOverlay": true
+    },
+    {
+      "id": "bonus_reward_a3_temple_kopec",
+      "section": "act3",
+      "guideZoneId": "a3_temple_kopec",
+      "zone_en": "Temple of Kopec",
+      "zone_ru": "Храм Копека",
+      "reward_en": "Uncut Spirit Gem (Level 11)",
+      "reward_ru": "Неогранённый камень духа (уровень 11)",
+      "hasReward": true,
+      "displayInOverlay": true
+    },
+    {
+      "id": "bonus_reward_a3_vaal_heart",
+      "section": "act3",
+      "guideZoneId": "a3_vaal_heart",
+      "zone_en": "Aggorat",
+      "zone_ru": "Аггорат",
+      "reward_en": "Uncut Skill Gem (Level 11)",
+      "reward_ru": "Неогранённый камень умения (уровень 11)",
+      "hasReward": true,
+      "displayInOverlay": true,
+      "matchZoneNames": [
+        "Aggorat",
+        "Аггорат"
+      ]
+    },
+    {
+      "id": "bonus_reward_a4_isle_of_kin",
+      "section": "act4",
+      "guideZoneId": "a4_isle_of_kin",
+      "zone_en": "Isle of Kin",
+      "zone_ru": "Остров Рода",
+      "reward_en": "Gemcutter's Prism",
+      "reward_ru": "Призма камнереза",
+      "hasReward": true,
+      "displayInOverlay": true
+    },
+    {
+      "id": "bonus_reward_a4_kids_bay",
+      "section": "act4",
+      "guideZoneId": "a4_kids_bay",
+      "zone_en": "Kedge Bay",
+      "zone_ru": "Кеджский залив",
+      "reward_en": "Uncut Support Gem (Level 4)",
+      "reward_ru": "Неогранённый камень поддержки (уровень 4)",
+      "hasReward": true,
+      "displayInOverlay": true
+    },
+    {
+      "id": "bonus_reward_a4_eye_hinekora",
+      "section": "act4",
+      "guideZoneId": "a4_eye_hinekora",
+      "zone_en": "Eye of Hinekora",
+      "zone_ru": "Глаз Хинекоры",
+      "reward_en": "Chaos Orb",
+      "reward_ru": "Сфера хаоса",
+      "hasReward": true,
+      "displayInOverlay": true
+    },
+    {
+      "id": "bonus_reward_a4_ngakanu",
+      "section": "act4",
+      "guideZoneId": "a4_ngakanu",
+      "zone_en": "Ngakanu",
+      "zone_ru": "Нгакану",
+      "reward_en": "Greater Jeweller's Orb",
+      "reward_ru": "Большая сфера златокузнеца",
+      "hasReward": true,
+      "displayInOverlay": true
+    }
+  ]
+}
