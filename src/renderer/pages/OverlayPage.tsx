@@ -28,7 +28,6 @@ import {
 } from '../companion-helpers';
 import { formatDuration, getLevelState } from '../utils';
 import { getOverlayMinimumSize } from '../../shared/overlay-layout';
-import { getLeagueMechanicRewards, type LeagueMechanicRewardEntry } from '../../shared/league-context';
 import { isEndgameT15Act } from '../../shared/timers';
 import { shouldStartOverlayDrag } from '../../shared/overlay-drag';
 import {
@@ -45,11 +44,12 @@ import {
 import { reportOverlayRenderDiagnostics } from '../render-diagnostics';
 import { getAppThemeClassName } from '../theme';
 import { buildOverlayContentPlan } from '../overlay-display-intent';
+import leagueMechanicRewardsData from '../../data/league-mechanic-rewards.json';
 import { getCampaignBonusView, getGuideView, getLevelReminderView, getPowerSpikeView } from '../../i18n/data';
 import { translateSystemText } from '../../i18n/runtime';
 import { translate } from '../../i18n/translations';
 import { getZoneRecognitionView } from '../log-health';
-import { CampaignLeaguePrompt, FirstRunWizard } from '../FirstRunWizard';
+import { FirstRunWizard } from '../FirstRunWizard';
 import { UiIcon, type UiIconName } from '../UiIcon';
 import type {
   AppLanguage,
@@ -114,6 +114,24 @@ interface OverlayUpcomingReminder {
   items: string[];
   source: 'vendor' | 'power';
 }
+
+interface LeagueMechanicRewardEntry {
+  id: string;
+  section: string;
+  actLabel: string;
+  zone_en: string;
+  zone_ru: string;
+  guideZoneId: string | null;
+  guideZoneRu: string | null;
+  aliases_ru?: string[];
+  hasReward: boolean;
+  displayInOverlay: boolean;
+  uncertain?: boolean;
+}
+
+const LEAGUE_MECHANIC_REWARDS = (
+  leagueMechanicRewardsData as { rewards?: LeagueMechanicRewardEntry[] }
+).rewards ?? [];
 
 function getOverlayUpcomingReminders(
   snapshot: OverlayPageSnapshot,
@@ -260,7 +278,7 @@ function getCurrentZoneLeagueReward(
   addLeagueZoneCandidate(candidates, sceneName);
 
   return (
-    getLeagueMechanicRewards(snapshot.config.campaignLeague).find((reward) => {
+    LEAGUE_MECHANIC_REWARDS.find((reward) => {
       if (reward.uncertain || !reward.displayInOverlay || !reward.hasReward) {
         return false;
       }
@@ -1684,7 +1702,7 @@ export function OverlayPage() {
       {timerPrimaryButton}
     </div>
   );
-  if (!config.setupWizardCompleted || config.campaignLeague === null) {
+  if (!config.setupWizardCompleted) {
     return (
       <main
         ref={overlayPageRef}
@@ -1695,11 +1713,7 @@ export function OverlayPage() {
           className="overlay-shell overlay-hud overlay-setup-shell"
           onPointerDownCapture={beginOverlayDrag}
         >
-          {config.setupWizardCompleted && config.campaignLeague === null ? (
-            <CampaignLeaguePrompt snapshot={snapshot} language={language} />
-          ) : (
-            <FirstRunWizard snapshot={snapshot} language={language} />
-          )}
+          <FirstRunWizard snapshot={snapshot} language={language} />
           <div
             className={getResizeGripClassName(config.overlayMovementLocked)}
             aria-label={config.overlayMovementLocked ? t('overlay.resizeLocked') : t('overlay.resize')}
@@ -1958,12 +1972,6 @@ export function OverlayPage() {
         {visibleSections.league && !isCompactOverlay && leagueRewardItem && (
           <section className="hud-block league-reward-section" style={{ order: overlayContentPlan.blockOrder.league }}>
             <h2>{t('overlay.league')}</h2>
-            <div className="league-reward-line">
-              <span>{language === 'en' ? leagueRewardItem.reward_en : leagueRewardItem.reward_ru}</span>
-            </div>
-            {leagueRewardItem.oneTimeGuaranteed && (
-              <p className="league-reward-note">{t('overlay.oneTimeLeagueReward')}</p>
-            )}
           </section>
         )}
 

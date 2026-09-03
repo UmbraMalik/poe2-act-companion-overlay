@@ -53,7 +53,6 @@ export type OverlayTextSize = 0 | 1 | 2 | 3;
 export type VisualFxIntensity = 'off' | 'subtle' | 'normal' | 'rich';
 export type OverlayMode = 'full' | 'timer_only';
 export type AppLanguage = 'ru' | 'en';
-export type CampaignLeague = 'standard' | 'runes_of_aldur' | 'forbidden_rites';
 export type AppTheme = 'classic' | 'dark_fantasy';
 
 export interface OverlayVisibleSections {
@@ -389,7 +388,6 @@ export interface SavedRunHistoryEntry {
 export interface AppConfig {
   configSchemaVersion: number;
   appLanguage: AppLanguage;
-  campaignLeague: CampaignLeague | null;
   logFilePath: string | null;
   logFileSelectionMode: 'auto' | 'manual' | null;
   lastZoneName: string | null;
@@ -572,7 +570,6 @@ export interface AutoUpdateState {
 
 export interface SettingsPatch {
   appLanguage?: AppLanguage;
-  campaignLeague?: CampaignLeague | null;
   overlayOpacity?: number;
   overlayMovementLocked?: boolean;
   realtimePriorityEnabled?: boolean;

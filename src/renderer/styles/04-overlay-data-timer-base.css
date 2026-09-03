@@ -46,7 +46,7 @@
   border-color: rgba(95, 165, 255, 0.28);
 }
 
-/* League mechanic reward hints are provided by the active league-content layer. */
+/* League mechanic reward hints synced from league-mechanic-rewards.json. */
 .league-reward-section {
   border-color: rgba(241, 185, 106, 0.34);
   background: linear-gradient(135deg, rgba(65, 39, 15, 0.42), rgba(14, 18, 24, 0.62));

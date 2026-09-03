@@ -1965,5 +1965,21 @@
   "Скрытый выдаёт награду в Кингсмарше; после разговора маршрут продолжается в Ориат.": "The Hooded One grants the reward in Kingsmarch; after the conversation, continue to Oriath.",
   "Кингсмарш → Скрытый → +2 пассивных очка набора оружия → Ориат": "Kingsmarch → Hooded One → +2 weapon set passive points → Oriath",
   "Не возвращаться на острова Акта 4: после награды отправиться в Ориат.": "Do not return to the Act 4 islands: travel to Oriath after receiving the reward.",
-  "Поговорить со Скрытым в Кингсмарше, получить финальные +2 и перейти в Ориат.": "Speak to the Hooded One in Kingsmarch, receive the final +2, and travel to Oriath."
+  "Поговорить со Скрытым в Кингсмарше, получить финальные +2 и перейти в Ориат.": "Speak to the Hooded One in Kingsmarch, receive the final +2, and travel to Oriath.",
+  "Награду лиги брать, если она по пути.": "Take the league reward if it is on the route.",
+  "Награда лиги": "League reward",
+  "Забрать награду лиги": "Take the league reward",
+  "Забрать награду лиги, если она по пути": "Take the league reward if it is on the route.",
+  "Проверить награду лиги или редкого моба, если нужен апгрейд": "Check the league reward or a rare monster reward if you need an upgrade.",
+  "Проверить награду лиги или редкого моба у круга посевов, если нужен апгрейд": "Check the league reward or the rare monster near the crop circle if you need an upgrade.",
+  "Забрать награду лиги, если точка недалеко": "Take the league reward if the encounter is nearby.",
+  "Если уже 14 уровень — обычных мобов почти не трогать; лигу делать только если она по пути.": "If you are already level 14, barely touch normal monsters; only do the league mechanic if it is on the route.",
+  "Награду лиги / редкий пояс с могилы — брать, если по пути или нужен крафт.": "Take the league reward / rare belt from the grave if it is on route or you need crafting.",
+  "Награда лиги, если по пути": "League reward, if it is on the route",
+  "Награду лиги брать только если удобно.": "Take the league reward only if it is convenient.",
+  "Дроп босса, награда за сдачу квеста и награда лиги — три отдельные сущности.": "The boss drop, quest turn-in reward, and league reward are three separate rewards.",
+  "Квестовый камень умения, камень поддержки Клешнехруста и награда лиги учитываются отдельно.": "The quest Skill Gem, Clawcrunch Support Gem, and league reward are tracked separately.",
+  "Обычная награда квеста и награда лиги острова учитываются отдельно.": "The normal quest reward and the island league reward are tracked separately.",
+  "Пустую руну поменять на малую грозовую; руну сохранить под оружие 16 уровня": "Exchange the Blank Rune for a Lesser Storm Rune; save the rune for the level 16 weapon.",
+  "Сундук кузнеца/руна — заготовки под оружие 16 уровня, не тратить впустую.": "Blacksmith chest / rune — materials for the level 16 weapon; do not waste them."
 }

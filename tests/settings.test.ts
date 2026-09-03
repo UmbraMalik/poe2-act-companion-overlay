@@ -49,14 +49,12 @@ test('normalizeAppConfig keeps defaults, custom settings and strips legacy unkno
 test('normalizeAppConfig upgrades legacy configs to the current schema without dropping valid settings', () => {
   const normalized = normalizeAppConfig({
     appLanguage: 'en',
-    campaignLeague: 'runes_of_aldur',
     overlayDensity: 'compact',
     companionAlwaysOnTop: true
   } as never);
 
   assert.equal(normalized.configSchemaVersion, CURRENT_CONFIG_SCHEMA_VERSION);
   assert.equal(normalized.appLanguage, 'en');
-  assert.equal(normalized.campaignLeague, 'runes_of_aldur');
   assert.equal(normalized.overlayDensity, 'compact');
   assert.equal(normalized.companionAlwaysOnTop, true);
 });
@@ -73,7 +71,6 @@ test('normalizeAppConfig keeps the first-run wizard pending when the completion 
 
 test('normalizeAppConfig hardens corrupted user config values', () => {
   const normalized = normalizeAppConfig({
-    campaignLeague: 'legacy-league',
     currentLevel: -42,
     overlayScale: 999,
     overlayDensity: 'gigantic',
@@ -149,7 +146,6 @@ test('normalizeAppConfig hardens corrupted user config values', () => {
     }
   } as never);
 
-  assert.equal(normalized.campaignLeague, null);
   assert.equal(normalized.currentLevel, DEFAULT_CONFIG.currentLevel);
   assert.equal(normalized.overlayScale, 120);
   assert.equal(normalized.overlayDensity, DEFAULT_CONFIG.overlayDensity);

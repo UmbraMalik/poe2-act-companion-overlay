@@ -195,6 +195,18 @@ test('settings page memoizes repeated snapshot-derived option lists', () => {
   assert.doesNotMatch(settingsPage, /const settingsQuickLinks = SETTINGS_QUICK_LINKS\.filter/);
 });
 
+test('league reward UI stays generic instead of rendering legacy reward names', () => {
+  const companion = readText('src/renderer/CurrentRunHub.tsx');
+  const overlay = readText('src/renderer/pages/OverlayPage.tsx');
+  const translations = readText('src/i18n/translations.ts');
+
+  assert.match(translations, /league:\s*'Награда лиги'/);
+  assert.match(translations, /league:\s*'League Reward'/);
+  assert.doesNotMatch(companion, /currentZoneLeagueReward\.reward_(?:ru|en)/);
+  assert.doesNotMatch(overlay, /leagueRewardItem\.reward_(?:ru|en)/);
+  assert.doesNotMatch(overlay, /oneTimeLeagueReward/);
+});
+
 
 test('timer text updates are routed through the shared render scheduler', () => {
   const hooks = readText('src/renderer/hooks.ts');

@@ -1,5 +1,4 @@
 import { buildChecklistDefinition, buildChecklistViewItems } from '../shared/checklist';
-import { applyCampaignLeagueToGuideEntries, applyCampaignLeagueToGuideEntry } from '../shared/league-context';
 import type { ChecklistItemProgress } from '../shared/types';
 import { BROADCAST_THROTTLE_MS } from './app-environment';
 
@@ -68,7 +67,7 @@ export function runMergeLikelyDoneKeywords(this: any, guide: any, matchedKeyword
     }
 
 export function runMarkCurrentChecklistItemDone(this: any) {
-        const guide = applyCampaignLeagueToGuideEntry(this.currentZone.guide, this.config.campaignLeague);
+        const guide = this.currentZone.guide;
         if (!guide) {
             return false;
         }
@@ -103,7 +102,7 @@ export function runMarkCurrentChecklistItemDone(this: any) {
     }
 
 export function runUndoLastChecklistMark(this: any) {
-        const guide = applyCampaignLeagueToGuideEntry(this.currentZone.guide, this.config.campaignLeague);
+        const guide = this.currentZone.guide;
         if (!guide) {
             return false;
         }
@@ -150,26 +149,17 @@ export function runSetLogStatus(this: any, status: any, message: any) {
     }
 
 export function runGetSnapshot(this: any) {
-        const currentGuideEntry = applyCampaignLeagueToGuideEntry(
-            this.currentZone.guide,
-            this.config.campaignLeague
-        );
+        const currentGuideEntry = this.currentZone.guide;
         const currentZoneProgress = currentGuideEntry
             ? this.getZoneProgress(currentGuideEntry.id)
             : null;
         return {
             config: this.config,
-            currentZone: {
-                ...this.currentZone,
-                guide: currentGuideEntry
-            },
+            currentZone: this.currentZone,
             currentGuideEntry,
             currentZoneProgress,
             currentChecklist: buildChecklistViewItems(currentGuideEntry, currentZoneProgress ?? undefined),
-            guideEntries: applyCampaignLeagueToGuideEntries(
-                this.guideService.getAll(),
-                this.config.campaignLeague
-            ),
+            guideEntries: this.guideService.getAll(),
             vendorCheckpoints: this.guideService.getVendorCheckpoints(),
             powerSpikes: this.guideService.getPowerSpikes(),
             campaignBonuses: this.campaignBonuses,
@@ -182,16 +172,10 @@ export function runGetSnapshot(this: any) {
     }
 
 export function runGetOverlaySnapshot(this: any) {
-        const currentGuideEntry = applyCampaignLeagueToGuideEntry(
-            this.currentZone.guide,
-            this.config.campaignLeague
-        );
+        const currentGuideEntry = this.currentZone.guide;
         return {
             config: this.config,
-            currentZone: {
-                ...this.currentZone,
-                guide: currentGuideEntry
-            },
+            currentZone: this.currentZone,
             currentGuideEntry,
             vendorCheckpoints: this.guideService.getVendorCheckpoints(),
             powerSpikes: this.guideService.getPowerSpikes(),

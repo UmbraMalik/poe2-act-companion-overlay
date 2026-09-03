@@ -74,7 +74,6 @@ export const DEFAULT_RUN_TIMER_SETTINGS: RunTimerSettings = {
 export const DEFAULT_CONFIG: AppConfig = {
   configSchemaVersion: CURRENT_CONFIG_SCHEMA_VERSION,
   appLanguage: 'ru',
-  campaignLeague: null,
   logFilePath: null,
   logFileSelectionMode: null,
   lastZoneName: null,

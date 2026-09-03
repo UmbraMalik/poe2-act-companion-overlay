@@ -6,7 +6,7 @@ const root = path.resolve(__dirname, '..');
 const files = [
   'src/data/guide.json',
   'src/data/campaign-bonuses.json',
-  'src/data/league-content/runes-of-aldur.json',
+  'src/data/league-mechanic-rewards.json',
   'src/i18n/clean-data-translations.en.json',
   'src/i18n/data.ts',
   'src/i18n/translations.ts',
