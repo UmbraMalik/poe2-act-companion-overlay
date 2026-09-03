@@ -54,9 +54,13 @@
 .overlay-page strong,
 .companion-page .bonus-title-line strong,
 .companion-page .route-zone-name,
-.companion-page .reminder-title,
-.overlay-page .league-reward-line {
+.companion-page .reminder-title {
   color: var(--ui-text-primary-soft);
+  font-weight: 650 !important;
+}
+
+.overlay-page .league-reward-line {
+  color: #f4ead8;
   font-weight: 650 !important;
 }
 
