@@ -1981,5 +1981,9 @@
   "Квестовый камень умения, камень поддержки Клешнехруста и награда лиги учитываются отдельно.": "The quest Skill Gem, Clawcrunch Support Gem, and league reward are tracked separately.",
   "Обычная награда квеста и награда лиги острова учитываются отдельно.": "The normal quest reward and the island league reward are tracked separately.",
   "Пустую руну поменять на малую грозовую; руну сохранить под оружие 16 уровня": "Exchange the Blank Rune for a Lesser Storm Rune; save the rune for the level 16 weapon.",
-  "Сундук кузнеца/руна — заготовки под оружие 16 уровня, не тратить впустую.": "Blacksmith chest / rune — materials for the level 16 weapon; do not waste them."
+  "Сундук кузнеца/руна — заготовки под оружие 16 уровня, не тратить впустую.": "Blacksmith chest / rune — materials for the level 16 weapon; do not waste them.",
+  "Если нужно вернуться к началу, используй чекпоинт: питание теперь восстанавливается сразу, без прежнего ожидания.": "If you need to return to the start, use the checkpoint: power is now restored immediately without the old wait.",
+  "Слушай направление песни сирены: звук теперь заметнее указывает, куда двигаться к Диаморе.": "Listen for the siren's song: its direction is now clearer and helps guide you toward Diamora.",
+  "У Диаморы теперь только одна фаза окаменения.": "Diamora now has only one petrification phase.",
+  "Объекты с татуировками постоянных бонусов теперь заметнее — их проще находить по ходу трёх тестов.": "The objects with permanent-bonus tattoos are now easier to spot while completing the three tests."
 }
