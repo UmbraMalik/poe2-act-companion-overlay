@@ -37,8 +37,6 @@ const DATA_TRANSLATION_OVERRIDES: Record<string, string> = {
   'Пожирателя удобнее держать в движении и не стоять в земле/ядах.': 'Keep the Devourer moving and do not stand in ground effects or poison.',
   'После Миллера: взять камень у Ренли, продать лут с босса, если не нужен второй сет — взять талисман.':
     'After Miller, take the gem from Renly, sell the boss loot, and grab the talisman if you do not need a second weapon set.',
-  'Лига-награда тут слабая: сфера превращения, делать только по пути':
-    'The league reward here is weak: Orb of Transmutation, so only do it if it is on the way.'
 };
 
 const CURATED_DATA_TRANSLATION_OVERRIDES: Record<string, string> = {
@@ -58,7 +56,6 @@ const CURATED_DATA_TRANSLATION_OVERRIDES: Record<string, string> = {
   "Abyss обычно скипать, если XP хватает; если сильно отстал — можно использовать как догон.": "Usually skip Abyss if XP is fine; if you are far behind, use it to catch up.",
   "Artificer orb вдоль стены и много whetstones/scraps — брать, если по маршруту.": "Artificer\'s Orb along the wall plus lots of Whetstones/Armourer\'s Scraps — take them if they are on the route.",
   "Flame Skin ritual — один из лучших догонов XP: можно чистить, ресаться на чекпоинте и повторять.": "Flame Skin ritual is one of the best XP catch-ups: clear it, respawn at the checkpoint, and repeat.",
-  "Lesser Jeweller из лиги очень полезен — если не нашёл по пути, можно специально забрать.": "Lesser Jeweller\'s Orb from the league mechanic is very useful — if you did not find one on the route, it is worth grabbing deliberately.",
   "Pounce можно использовать через завалы; Herald of Ash включить, если есть spirit gem": "Pounce can be used through rubble; enable Herald of Ash if you have a Spirit Gem.",
   "Арастас / основной маршрут Акта 4": "Arastas / Act 4 main route",
   "Бездны обычно скипать, если XP хватает": "Usually skip Abyss if your XP is fine.",
@@ -68,7 +65,6 @@ const CURATED_DATA_TRANSLATION_OVERRIDES: Record<string, string> = {
   "В центре найти Душу Паромщика": "Find the Ferryman's Soul in the center.",
   "Вернуться и пройти Делириум": "Return and clear Delirium.",
   "Взять чекпоинт у тьмы; убить двух боссов, нажать 6 камней и идти к Сеоре.": "Take the checkpoint near the darkness; kill the two bosses, activate the six stones, and go to Seore.",
-  "Взять экзальт из лиги, если точка недалеко": "Take the league Exalted Orb if the encounter is nearby.",
   "Вход из Топей химеридов; после проверки возвращаться к основному маршруту Акта 3.": "Enter from the Chimeral Wetlands; after checking it, return to the Act 3 main route.",
   "Главная цель — найти переход в Убежище Куачик.": "Main goal: find the transition to The Cuachic Vault.",
   "Делириум-валюту сохранить под амулет из Поющих пещер": "Save Delirium currency for the amulet from the Singing Caves.",
@@ -90,7 +86,6 @@ const CURATED_DATA_TRANSLATION_OVERRIDES: Record<string, string> = {
   "Если нужный переход найден — не добирать лишние круги по озеру.": "If the required transition is found, do not run extra loops around the lake.",
   "Если просел по XP — бездна здесь даёт почти уровень": "If you are behind on XP, Abyss here gives almost a full level.",
   "Если реликвию не нашёл — проверить пропущенные стаи, не reset": "If you did not find the relic, check missed packs; do not reset.",
-  "Если уже 14 уровень — обычных мобов почти не трогать; максимум лига ради экзальта.": "If you are already level 14, barely touch normal mobs; at most, do the league encounter for the Exalted Orb.",
   "Если хватает золота, взять руны под финальное оружие/экипировку перед Вольфенхолдом.": "If you have enough gold, buy runes for final weapon and gear upgrades before Wolvenholt.",
   "Зомби чистить так, чтобы задевать Миллера": "Clear zombies while also hitting Miller.",
   "Зона ведёт к Колодцу душ; после проверки возвращаться в основной маршрут Акта 2.": "This zone leads to the Well of Souls; after checking it, return to the Act 2 main route.",
@@ -163,7 +158,6 @@ const CURATED_DATA_TRANSLATION_OVERRIDES: Record<string, string> = {
   "Руны с обелисков": "Runes from obelisks",
   "Самое время купить/найти базу оружия 16 уровня и скрафтить основной апгрейд до ~33 уровня.": "This is the time to buy/find a level 16 weapon base and craft the main upgrade that should carry you to about level 33.",
   "Саппорт забрал — дальше по маршруту, лишние тупики и пачки не чистить.": "Once you have the support gem, keep following the route; do not clear extra dead ends or packs.",
-  "Сделать лигу за экзальт, если по пути": "Do the league encounter for an Exalted Orb if it is on the route.",
   "Сильное кольцо не скипать, это одна из лучших optional-наград акта.": "Do not skip the strong ring; it is one of the best optional rewards in the act.",
   "Скипать, если не нужен Abyss, осквернение вещей или дополнительный опыт": "Skip it if you do not need Abyss, corrupted items, or extra XP.",
   "Скрытый всё равно откроется в конце Акта 1; кольцо запускает длинную сцену": "The Hooded One unlocks at the end of Act 1 anyway; the ring starts a long scene.",
@@ -185,11 +179,9 @@ const CURATED_DATA_TRANSLATION_OVERRIDES: Record<string, string> = {
   "Цена каждой: 2000 золота.": "Each costs 2000 gold.",
   "Через город поговорить с Уной и пройти блокировку": "Go through town, talk to Una, and clear the blocker.",
   "Чистить тотемы с волнами монстров": "Clear the totems and monster waves.",
-  "Экзальт из лиги": "Exalted Orb from the league encounter",
   "Это боковой заход из Бесплодных земель мастодонтов, не основной маршрут акта": "This is a side route from the Mastodon Badlands, not the act's main route.",
   "Это опциональное испытание, а не обязательный маршрут Акта 2": "This is an optional trial, not a required Act 2 route.",
   "уже есть в guide.json/campaign-bonuses: большие руны уже упомянуты": "Already exists in guide.json/campaign-bonuses: greater runes are already mentioned.",
-  "уже есть в guide.json: чеклист/награды — экзальт из лиги": "Already exists in guide.json: checklist/rewards — league Exalted Orb.",
   "экзальт": "Exalted Orb",
   "Верстак для разборки": "Salvage bench",
   "Верстак разборки": "Salvage bench",

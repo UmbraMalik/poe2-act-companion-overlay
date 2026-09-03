@@ -21,8 +21,6 @@ const GUIDE_UPDATE_MARKERS = [
   'kaom',
   'rakiata',
   'farrow',
-  'runes of aldur',
-  'runeforging',
   'ancient beacons',
   'fate of the vaal',
   'маяк',

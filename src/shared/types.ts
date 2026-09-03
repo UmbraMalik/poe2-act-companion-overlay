@@ -62,7 +62,7 @@ export interface OverlayVisibleSections {
   zoneInfo: boolean;
   /** Campaign bonus card for the current zone. */
   zoneBonuses: boolean;
-  /** Guaranteed league reward card for the current zone. */
+  /** Current campaign league-content card for the zone. */
   league: boolean;
   /** Next-zone card. */
   next: boolean;

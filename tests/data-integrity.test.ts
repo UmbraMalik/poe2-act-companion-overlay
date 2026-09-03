@@ -1,4 +1,5 @@
 import test from 'node:test';
+import { existsSync } from 'node:fs';
 import assert from 'node:assert/strict';
 import type {
   CampaignBonusDefinition,
@@ -53,42 +54,6 @@ const USER_TEXT_MOJIBAKE_RE = /[ÐÑÃÂâ€]/;
 type GuideEntryWithDisplay = GuideEntry & {
   display?: Record<string, unknown>;
 };
-
-interface LeagueMechanicRewardEntry {
-  id: string;
-  zone_en: string;
-  zone_ru: string;
-  guideZoneId: string | null;
-  guideZoneRu: string | null;
-  reward_en: string;
-  reward_ru: string;
-  rewardType: string;
-  hasReward: boolean;
-  displayInOverlay: boolean;
-  oneTimeGuaranteed: boolean;
-  coverageNote: string | null;
-  uncertain: boolean;
-  source: string;
-}
-
-interface LeagueMechanicRewardsDataFile {
-  version: string;
-  source: {
-    title: string;
-    official: boolean;
-    verified: string;
-    primary: {
-      title: string;
-      updated: string;
-    };
-    crossCheck: {
-      title: string;
-      published: string;
-    };
-    note: string;
-  };
-  rewards: LeagueMechanicRewardEntry[];
-}
 
 interface InternalAreaAliasesDataFile {
   areaToGuideId: Record<string, string>;
@@ -414,7 +379,7 @@ test('all shipped campaign data files parse as JSON', () => {
   for (const relativePath of [
     'src/data/guide.json',
     'src/data/campaign-bonuses.json',
-    'src/data/league-mechanic-rewards.json',
+    'src/data/forbidden-rites-boss-rituals.json',
     'src/data/internal-area-aliases.en.json',
     'src/data/internal-area-aliases.en.conservative.json',
     'src/data/town-scenes.json',
@@ -426,99 +391,17 @@ test('all shipped campaign data files parse as JSON', () => {
   }
 });
 
-test('league rewards are structurally valid, canonical and safe to display', () => {
-  const data = readJson<LeagueMechanicRewardsDataFile>('src/data/league-mechanic-rewards.json');
-  const guideById = new Map(getGuideZones().map((zone) => [zone.id, zone]));
-  const seenIds = new Set<string>();
+test('legacy Runes of Aldur reward data is not shipped or embedded in the active guide', () => {
+  assert.equal(existsSync('src/data/league-mechanic-rewards.json'), false);
 
-  assert.match(data.version, /0\.5.*2026-07-13/);
-  assert.match(data.source.title, /project 0\.5 recheck/i);
-  assert.equal(data.source.official, false, 'community reward tables must not be labelled official');
-  assert.equal(data.source.verified, '2026-07-13');
-  assert.match(data.source.primary.title, /Mobalytics \[0\.4\]/);
-  assert.equal(data.source.primary.updated, '2026-05-24');
-  assert.match(data.source.crossCheck.title, /VULKK/);
-  assert.equal(data.source.crossCheck.published, '2026-05-18');
-  assert.match(data.source.note, /community sources, not official GGG data/i);
-  assert.match(data.source.note, /legacy Mobalytics \[0\.4\]/i);
-  assert.ok(Array.isArray(data.rewards) && data.rewards.length > 0);
+  const guideText = JSON.stringify(getGuideData());
+  assert.doesNotMatch(guideText, /Runes of Aldur|Runestone|cem_league_regal/i);
+  assert.doesNotMatch(guideText, /(?:награда|награду) лиги|лига-награда|лиг-награда/i);
 
-  for (const reward of data.rewards) {
-    assertValidText(reward.id, 'leagueReward.id');
-    assert.equal(seenIds.has(reward.id), false, `duplicate league reward id: ${reward.id}`);
-    seenIds.add(reward.id);
-    assertValidText(reward.zone_en, `${reward.id}.zone_en`);
-    assertValidText(reward.zone_ru, `${reward.id}.zone_ru`);
-    assertValidText(reward.reward_en, `${reward.id}.reward_en`);
-    assertValidText(reward.reward_ru, `${reward.id}.reward_ru`);
-    assertValidText(reward.rewardType, `${reward.id}.rewardType`);
-    assert.equal(typeof reward.hasReward, 'boolean', `${reward.id}.hasReward must be boolean`);
-    assert.equal(typeof reward.displayInOverlay, 'boolean', `${reward.id}.displayInOverlay must be boolean`);
-    assert.equal(typeof reward.oneTimeGuaranteed, 'boolean', `${reward.id}.oneTimeGuaranteed must be boolean`);
-    assert.equal(typeof reward.uncertain, 'boolean', `${reward.id}.uncertain must be boolean`);
-    assert.doesNotMatch(reward.source, /2026-04-06|\[0\.4\].*updated/i, `${reward.id}: stale source`);
-
-    if (reward.guideZoneId) {
-      const guide = guideById.get(reward.guideZoneId);
-      assert.ok(guide, `${reward.id}: missing guideZoneId ${reward.guideZoneId}`);
-      assert.equal(reward.guideZoneRu, guide.zone_ru, `${reward.id}: guideZoneRu must be canonical`);
-      assert.doesNotMatch(
-        reward.coverageNote ?? '',
-        /no guide zone|no guide zone card/i,
-        `${reward.id}: linked card cannot be described as missing`
-      );
-    }
-
-    if (reward.uncertain) {
-      assert.equal(reward.hasReward, false, `${reward.id}: uncertain reward cannot be confirmed`);
-      assert.equal(reward.displayInOverlay, false, `${reward.id}: uncertain reward cannot be displayed`);
-      assert.equal(reward.oneTimeGuaranteed, false, `${reward.id}: uncertain reward cannot be guaranteed`);
-      assert.match(reward.coverageNote ?? '', /unconfirmed|verification/i);
-    }
-  }
-});
-
-test('league reward markers stay synchronized with guide cards without exposing concrete reward names', () => {
-  const rewards = readJson<LeagueMechanicRewardsDataFile>('src/data/league-mechanic-rewards.json').rewards;
-  const rewardsById = new Map(rewards.map((reward) => [reward.id, reward]));
-  const guideById = new Map(getGuideZones().map((zone) => [zone.id, zone]));
-
-  const scorchedReward = rewardsById.get('league_interlude1_scorched_farmlands');
-  const scorchedGuide = guideById.get('interlude_scorched_farmlands');
-  assert.ok(scorchedReward && scorchedGuide);
-  assert.equal(scorchedReward.reward_en, 'Uncut Support Gem (Level 4)');
-  assert.equal(scorchedReward.reward_ru, 'Неогранённый камень поддержки, ур. 4');
-  assert.match(JSON.stringify(scorchedGuide), /награда лиги/i);
-  assert.doesNotMatch(JSON.stringify(scorchedGuide), /кам(?:ень|ня) поддержки 4 уровня|ур\. 4|Lv4/i);
-
-  const mudBurrow = rewardsById.get('league_act1_mud_burrow');
-  assert.ok(mudBurrow);
-  assert.equal(mudBurrow.guideZoneId, 'a1_mud_burrow');
-  assert.equal(mudBurrow.guideZoneRu, 'Грязевая нора');
-  assert.equal(mudBurrow.reward_ru, 'Сфера усиления');
-  assert.equal(mudBurrow.displayInOverlay, true);
-
-  const kopec = rewardsById.get('league_act3_temple_of_kopec');
-  assert.ok(kopec);
-  assert.equal(kopec.zone_ru, 'Храм Копека');
-  assert.equal(kopec.guideZoneRu, 'Храм Копека');
-
-  const etchedRavine = rewardsById.get('league_interlude3_etched_ravine');
-  const ashenForest = rewardsById.get('league_interlude3_ashen_forest');
-  assert.ok(etchedRavine && ashenForest);
-  assert.equal(etchedRavine.reward_en, 'Exalted Orb');
-  assert.equal(etchedRavine.reward_ru, 'Сфера возвышения');
-  assert.equal(etchedRavine.coverageNote, null);
-  assert.equal(etchedRavine.uncertain, false);
-  assert.equal(etchedRavine.hasReward, true);
-  assert.equal(etchedRavine.displayInOverlay, true);
-  assert.equal(etchedRavine.oneTimeGuaranteed, true);
-  assert.doesNotMatch(JSON.stringify(etchedRavine), /Rare Belt|Редкий пояс/i);
-  assert.equal(ashenForest.uncertain, true);
-  assert.equal(ashenForest.hasReward, false);
-  assert.equal(ashenForest.displayInOverlay, false);
-  assert.equal(ashenForest.oneTimeGuaranteed, false);
-  assert.match(ashenForest.coverageNote ?? '', /Rare Belt|unconfirmed/i);
+  const dataTranslations = JSON.stringify(
+    readJson<Record<string, string>>('src/i18n/clean-data-translations.en.json')
+  );
+  assert.doesNotMatch(dataTranslations, /Runes of Aldur|Runestone|league Exalted Orb|league reward —/i);
 });
 
 test('both internal area alias tables target real cards without case conflicts', () => {
@@ -700,7 +583,7 @@ test('Sacrificial Heart keeps one canonical display name and legacy resolution',
   })?.guide?.id, heart.id);
 });
 
-test('Act 4 ordinary quest rewards stay in guide cards and separate from permanent or league rewards', () => {
+test('Act 4 ordinary quest rewards stay in guide cards and separate from permanent bonuses', () => {
   const guideById = new Map(getGuideZones().map((zone) => [zone.id, zone]));
   const expectedText = new Map<string, RegExp[]>([
     ['a4_isle_of_kin', [/зелье сульфита/i, /Неогранённый камень умения/i, /Большая пустая руна/i]],
@@ -718,14 +601,9 @@ test('Act 4 ordinary quest rewards stay in guide cards and separate from permane
 
   const permanentBonusText = JSON.stringify(getCampaignBonuses());
   assert.doesNotMatch(permanentBonusText, /зелье сульфита|выбор кольца сопротивления|выбор амулета характеристик/i);
-
-  const leagueRewards = readJson<LeagueMechanicRewardsDataFile>('src/data/league-mechanic-rewards.json').rewards;
-  const whakapanuLeagueReward = leagueRewards.find((reward) => reward.guideZoneId === 'a4_whakapanu_island');
-  assert.ok(whakapanuLeagueReward);
-  assert.equal(whakapanuLeagueReward.reward_ru, 'Сфера астромантии');
 });
 
-test('Great White permanent reward is required and distinct from the Whakapanu league reward', () => {
+test('Great White permanent reward remains required alongside Whakapanu quest rewards', () => {
   const whakapanu = getGuideZones().find((zone) => zone.id === 'a4_whakapanu_island');
   assert.ok(whakapanu);
   const requiredIds = new Set((whakapanu.checklist ?? []).filter((item) => item.required).map((item) => item.id));

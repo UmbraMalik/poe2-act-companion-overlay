@@ -6,7 +6,6 @@ const root = path.resolve(__dirname, '..');
 const files = [
   'src/data/guide.json',
   'src/data/campaign-bonuses.json',
-  'src/data/league-mechanic-rewards.json',
   'src/i18n/clean-data-translations.en.json',
   'src/i18n/data.ts',
   'src/i18n/translations.ts',
@@ -19,7 +18,7 @@ const forbidden = [
   },
   {
     pattern: /Мыс\s+грабителя\s+можно\s+пропустить\s+в\s+быстром\s+прохождении|side\s+Expedition\s+reward,\s+not\s+required\s+campaign\s+progress/i,
-    reason: 'Plunder\'s Point is not a plain skip note in the 0.5.5 guide; it completes the Act 4 Runeseeker quest and unlocks the Verisium Anvil outside Runes of Aldur.',
+    reason: 'Plunder\'s Point is not a plain skip note in the 0.5.5 guide; it completes the Act 4 Runeseeker quest and unlocks the Verisium Anvil.',
   },
 ];
 
