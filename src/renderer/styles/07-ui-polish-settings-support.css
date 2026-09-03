@@ -909,6 +909,11 @@
   display: none !important;
 }
 
+.overlay-page:not(.overlay-page-timer-only) .league-reward-line::before {
+  content: none !important;
+  display: none !important;
+}
+
 .overlay-page:not(.overlay-page-timer-only) .league-reward-note {
   margin: 6px 0 0 !important;
   text-align: center;
