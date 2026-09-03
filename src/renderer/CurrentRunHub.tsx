@@ -447,7 +447,7 @@ export function CurrentRunHub({
     const candidates: AttentionItem[] = [
       ...(currentZoneLeagueReward ? [{
         id: `league:${currentZoneLeagueReward.id}`,
-        text: translate(language, 'overlay.league'),
+        text: translate(language, 'companion.zoneHubLeagueTitle'),
         meta: translate(language, 'companion.zoneHubLeagueMeta'),
         tone: 'league' as const
       }] : []),

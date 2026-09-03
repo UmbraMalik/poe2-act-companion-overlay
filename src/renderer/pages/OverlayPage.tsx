@@ -1972,6 +1972,12 @@ export function OverlayPage() {
         {visibleSections.league && !isCompactOverlay && leagueRewardItem && (
           <section className="hud-block league-reward-section" style={{ order: overlayContentPlan.blockOrder.league }}>
             <h2>{t('overlay.league')}</h2>
+            <ul className="section-list compact-list">
+              <li className="league-reward-line">
+                <span className="league-reward-marker">•</span>
+                <span>{t('overlay.leagueHint')}</span>
+              </li>
+            </ul>
           </section>
         )}
 
