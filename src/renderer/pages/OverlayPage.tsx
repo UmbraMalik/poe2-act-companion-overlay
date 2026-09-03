@@ -44,7 +44,7 @@ import {
 import { reportOverlayRenderDiagnostics } from '../render-diagnostics';
 import { getAppThemeClassName } from '../theme';
 import { buildOverlayContentPlan } from '../overlay-display-intent';
-import leagueMechanicRewardsData from '../../data/league-mechanic-rewards.json';
+import { getCampaignLeagueZoneContent } from '../league-content';
 import { getCampaignBonusView, getGuideView, getLevelReminderView, getPowerSpikeView } from '../../i18n/data';
 import { translateSystemText } from '../../i18n/runtime';
 import { translate } from '../../i18n/translations';
@@ -114,24 +114,6 @@ interface OverlayUpcomingReminder {
   items: string[];
   source: 'vendor' | 'power';
 }
-
-interface LeagueMechanicRewardEntry {
-  id: string;
-  section: string;
-  actLabel: string;
-  zone_en: string;
-  zone_ru: string;
-  guideZoneId: string | null;
-  guideZoneRu: string | null;
-  aliases_ru?: string[];
-  hasReward: boolean;
-  displayInOverlay: boolean;
-  uncertain?: boolean;
-}
-
-const LEAGUE_MECHANIC_REWARDS = (
-  leagueMechanicRewardsData as { rewards?: LeagueMechanicRewardEntry[] }
-).rewards ?? [];
 
 function getOverlayUpcomingReminders(
   snapshot: OverlayPageSnapshot,
@@ -242,61 +224,6 @@ function normalizeZoneBonusName(value: string | null | undefined): string {
     .replace(/[’']/g, '')
     .replace(/\s+/g, ' ')
     .trim();
-}
-
-function normalizeLeagueZoneName(value: string | null | undefined): string {
-  return (value ?? '')
-    .toLowerCase()
-    .replace(/ё/g, 'е')
-    .replace(/[’'`".,:;!?()[\]{}\/\u2014\u2013-]/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim()
-    .replace(/^the\s+/, '');
-}
-
-function addLeagueZoneCandidate(candidates: Set<string>, value: string | null | undefined): void {
-  const normalized = normalizeLeagueZoneName(value);
-  if (normalized) {
-    candidates.add(normalized);
-  }
-}
-
-function getCurrentZoneLeagueReward(
-  snapshot: OverlayPageSnapshot,
-  sceneName: string
-): LeagueMechanicRewardEntry | null {
-  const guide = snapshot.currentGuideEntry;
-  const guideId = guide?.id ?? null;
-  const candidates = new Set<string>();
-
-  addLeagueZoneCandidate(candidates, guide?.zone_ru);
-  addLeagueZoneCandidate(candidates, guide?.zone_en);
-  addLeagueZoneCandidate(candidates, snapshot.currentZone.rawZoneName);
-  addLeagueZoneCandidate(candidates, snapshot.runtime.lastRawZoneName);
-  addLeagueZoneCandidate(candidates, snapshot.runtime.lastMatchedZoneRu);
-  addLeagueZoneCandidate(candidates, snapshot.runtime.lastMatchedZoneEn);
-  addLeagueZoneCandidate(candidates, sceneName);
-
-  return (
-    LEAGUE_MECHANIC_REWARDS.find((reward) => {
-      if (reward.uncertain || !reward.displayInOverlay || !reward.hasReward) {
-        return false;
-      }
-
-      if (guideId && reward.guideZoneId === guideId) {
-        return true;
-      }
-
-      const rewardNames = [
-        reward.zone_ru,
-        reward.zone_en,
-        reward.guideZoneRu,
-        ...(reward.aliases_ru ?? [])
-      ];
-
-      return rewardNames.some((name) => candidates.has(normalizeLeagueZoneName(name)));
-    }) ?? null
-  );
 }
 
 function getGuideCampaignBonusIds(guide: GuideEntry | null): Set<string> {
@@ -1253,7 +1180,7 @@ export function OverlayPage() {
           : null;
     const importantLines = getImportantOverlayLines(snapshot, language);
     const zoneBonusItems = getCurrentZoneCampaignBonuses(snapshot);
-    const leagueRewardItem = getCurrentZoneLeagueReward(snapshot, sceneName);
+    const leagueZoneContent = getCampaignLeagueZoneContent(snapshot);
     const upcomingOverlayReminders = getOverlayUpcomingReminders(snapshot, language);
     const overlayContentPlan = buildOverlayContentPlan({
       config,
@@ -1282,7 +1209,7 @@ export function OverlayPage() {
       currentActTimerLabel,
       importantLines,
       zoneBonusItems,
-      leagueRewardItem,
+      leagueZoneContent,
       upcomingOverlayReminders,
       visibleSections,
       overlayContentPlan,
@@ -1318,7 +1245,7 @@ export function OverlayPage() {
     currentActTimerLabel,
     importantLines,
     zoneBonusItems,
-    leagueRewardItem,
+    leagueZoneContent,
     upcomingOverlayReminders,
     visibleSections,
     overlayContentPlan,
@@ -1969,14 +1896,28 @@ export function OverlayPage() {
             </ul>
           </section>
         )}
-        {visibleSections.league && !isCompactOverlay && leagueRewardItem && (
+        {visibleSections.league && !isCompactOverlay && leagueZoneContent && (
           <section className="hud-block league-reward-section" style={{ order: overlayContentPlan.blockOrder.league }}>
             <h2>{t('overlay.league')}</h2>
             <ul className="section-list compact-list">
               <li className="league-reward-line">
-                <span>{t('overlay.leagueHint')}</span>
+                <span>
+                  {leagueZoneContent.bossRitual
+                    ? t(leagueZoneContent.bossRitual.final ? 'overlay.leagueBossRitualFinal' : 'overlay.leagueBossRitualStep', {
+                        step: leagueZoneContent.bossRitual.step,
+                        total: leagueZoneContent.bossRitual.total
+                      })
+                    : t('overlay.leagueHint')}
+                </span>
               </li>
             </ul>
+            {leagueZoneContent.bossRitual && (
+              <p className="league-reward-note">
+                {t(leagueZoneContent.bossRitual.final
+                  ? 'overlay.leagueBossRitualFinalHint'
+                  : 'overlay.leagueBossRitualHint')}
+              </p>
+            )}
           </section>
         )}
 

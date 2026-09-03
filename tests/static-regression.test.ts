@@ -205,6 +205,10 @@ test('league reward UI stays generic instead of rendering legacy reward names', 
   assert.doesNotMatch(companion, /currentZoneLeagueReward\.reward_(?:ru|en)/);
   assert.doesNotMatch(overlay, /leagueRewardItem\.reward_(?:ru|en)/);
   assert.doesNotMatch(overlay, /oneTimeLeagueReward/);
+  assert.doesNotMatch(companion, /league-mechanic-rewards\.json/);
+  assert.doesNotMatch(overlay, /league-mechanic-rewards\.json/);
+  assert.match(companion, /getCampaignLeagueZoneContent/);
+  assert.match(overlay, /getCampaignLeagueZoneContent/);
 });
 
 

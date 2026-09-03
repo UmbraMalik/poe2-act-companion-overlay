@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react';
-import leagueMechanicRewardsData from '../data/league-mechanic-rewards.json';
 import { getCampaignBonusView, getGuideView, translateDataText, type LocalizedGuideEntryView } from '../i18n/data';
 import { translate } from '../i18n/translations';
 import { isEndgameT15Act } from '../shared/timers';
@@ -19,6 +18,7 @@ import {
 } from './companion-helpers';
 import { getGuideUpdateClassName } from './guide-update-highlights';
 import { getZoneRecognitionView } from './log-health';
+import { getCampaignLeagueZoneContent } from './league-content';
 import { formatSignedPaceDuration, getRunPaceSnapshot } from './run-pace';
 import { formatDuration } from './utils';
 import { UiIcon } from './UiIcon';
@@ -44,22 +44,6 @@ type PaceView = {
   detail: string;
   tone: 'ahead' | 'behind' | 'even' | 'empty';
 };
-
-interface LeagueMechanicRewardEntry {
-  id: string;
-  zone_en: string;
-  zone_ru: string;
-  guideZoneId: string | null;
-  guideZoneRu: string | null;
-  aliases_ru?: string[];
-  hasReward: boolean;
-  displayInOverlay: boolean;
-  uncertain?: boolean;
-}
-
-const LEAGUE_MECHANIC_REWARDS = (
-  leagueMechanicRewardsData as { rewards?: LeagueMechanicRewardEntry[] }
-).rewards ?? [];
 
 interface CurrentRunHubProps {
   snapshot: AppSnapshot;
@@ -200,59 +184,6 @@ function normalizeZoneBonusName(value: string | null | undefined): string {
     .replace(/ё/g, 'е')
     .replace(/[’'`]/g, '')
     .replace(/\s+/g, ' ');
-}
-
-function normalizeLeagueZoneName(value: string | null | undefined): string {
-  return (value ?? '')
-    .toLocaleLowerCase('ru')
-    .replace(/ё/g, 'е')
-    .replace(/[’'`".,:;!?()[\]{}\/\u2014\u2013-]/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim()
-    .replace(/^the\s+/, '');
-}
-
-function addLeagueZoneCandidate(candidates: Set<string>, value: string | null | undefined): void {
-  const normalized = normalizeLeagueZoneName(value);
-  if (normalized) {
-    candidates.add(normalized);
-  }
-}
-
-function getCurrentZoneLeagueReward(
-  snapshot: AppSnapshot,
-  sceneName: string
-): LeagueMechanicRewardEntry | null {
-  const guide = snapshot.currentGuideEntry;
-  const guideId = guide?.id ?? null;
-  const candidates = new Set<string>();
-
-  addLeagueZoneCandidate(candidates, guide?.zone_ru);
-  addLeagueZoneCandidate(candidates, guide?.zone_en);
-  addLeagueZoneCandidate(candidates, snapshot.currentZone.rawZoneName);
-  addLeagueZoneCandidate(candidates, snapshot.runtime.lastRawZoneName);
-  addLeagueZoneCandidate(candidates, snapshot.runtime.lastMatchedZoneRu);
-  addLeagueZoneCandidate(candidates, snapshot.runtime.lastMatchedZoneEn);
-  addLeagueZoneCandidate(candidates, sceneName);
-
-  return LEAGUE_MECHANIC_REWARDS.find((reward) => {
-    if (reward.uncertain || !reward.displayInOverlay || !reward.hasReward) {
-      return false;
-    }
-
-    if (guideId && reward.guideZoneId === guideId) {
-      return true;
-    }
-
-    const rewardNames = [
-      reward.zone_ru,
-      reward.zone_en,
-      reward.guideZoneRu,
-      ...(reward.aliases_ru ?? [])
-    ];
-
-    return rewardNames.some((name) => candidates.has(normalizeLeagueZoneName(name)));
-  }) ?? null;
 }
 
 function normalizeCommandText(value: string): string {
@@ -411,9 +342,9 @@ export function CurrentRunHub({
       language
     ]
   );
-  const currentZoneLeagueReward = useMemo(
-    () => getCurrentZoneLeagueReward(snapshot, sceneName),
-    [snapshot, sceneName]
+  const currentZoneLeagueContent = useMemo(
+    () => getCampaignLeagueZoneContent(snapshot),
+    [snapshot]
   );
   const currentActMissedItems = useMemo(
     () => currentActRouteZones.flatMap((entry) => entry.missedItems.map((item) => ({
@@ -445,10 +376,30 @@ export function CurrentRunHub({
   );
   const attentionItems = useMemo<AttentionItem[]>(() => {
     const candidates: AttentionItem[] = [
-      ...(currentZoneLeagueReward ? [{
-        id: `league:${currentZoneLeagueReward.id}`,
-        text: translate(language, 'companion.zoneHubLeagueTitle'),
-        meta: translate(language, 'companion.zoneHubLeagueMeta'),
+      ...(currentZoneLeagueContent ? [{
+        id: currentZoneLeagueContent.bossRitual
+          ? `league-boss-ritual:${currentZoneLeagueContent.bossRitual.chainId}:${currentZoneLeagueContent.bossRitual.step}`
+          : `league:${guide?.id ?? 'current-zone'}`,
+        text: currentZoneLeagueContent.bossRitual
+          ? translate(
+              language,
+              currentZoneLeagueContent.bossRitual.final
+                ? 'companion.zoneHubBossRitualFinalTitle'
+                : 'companion.zoneHubBossRitualTitle',
+              {
+                step: currentZoneLeagueContent.bossRitual.step,
+                total: currentZoneLeagueContent.bossRitual.total
+              }
+            )
+          : translate(language, 'companion.zoneHubLeagueTitle'),
+        meta: currentZoneLeagueContent.bossRitual
+          ? translate(
+              language,
+              currentZoneLeagueContent.bossRitual.final
+                ? 'companion.zoneHubBossRitualFinalMeta'
+                : 'companion.zoneHubBossRitualMeta'
+            )
+          : translate(language, 'companion.zoneHubLeagueMeta'),
         tone: 'league' as const
       }] : []),
       ...pendingBonuses.map(({ bonus, bonusView }) => ({
@@ -506,7 +457,7 @@ export function CurrentRunHub({
     activeXpStatus.longLabel,
     activeXpStatus.variant,
     currentActMissedItems,
-    currentZoneLeagueReward,
+    currentZoneLeagueContent,
     currentZoneRequiredItems,
     guide?.recommended_level,
     guideChecklist,
