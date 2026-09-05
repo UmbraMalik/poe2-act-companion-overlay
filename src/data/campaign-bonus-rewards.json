@@ -1,11 +1,18 @@
 {
-  "version": "campaign-bonus-rewards-maxroll-2026-09-03",
+  "version": "campaign-bonus-rewards-live-0.5.5-2026-09-05",
   "feature": "campaignBonusRewards",
   "source": {
     "title": "Maxroll — Campaign League Mechanic Rewards Cheat Sheet",
     "url": "https://maxroll.gg/poe2/resources/campaign-league-mechanic-rewards-cheat-sheet",
-    "note": "The reward rows in this file are limited to the Maxroll table supplied for this update. Acquisition mechanics are intentionally not modeled."
+    "note": "Base reward rows came from the supplied Maxroll cheat sheet. Live 0.5.5 corrections are additionally validated against current leveling guides; acquisition mechanics are intentionally not modeled."
   },
+  "liveValidation": [
+    {
+      "title": "Fubgun — 0.5 Ice Shot Deadeye Leveling Guide",
+      "url": "https://mobalytics.gg/poe-2/profile/fubgun/builds/0-5-ice-shot-deadeye-leveling-guide",
+      "note": "Used for live 0.5.5 confirmations of Cemetery, Tomb of the Consort, Vastiri Outskirts, Valley of the Titans, Mastodon Badlands and Ngakanu rewards."
+    }
+  ],
   "notes": [
     "Bonus campaign rewards are separate from permanent campaign bonuses in campaign-bonuses.json.",
     "The overlay renders only the localized reward name under the Bonus Reward header."
@@ -34,13 +41,24 @@
       "displayInOverlay": true
     },
     {
+      "id": "bonus_reward_a1_cemetery",
+      "section": "act1",
+      "guideZoneId": "a1_cemetery",
+      "zone_en": "Cemetery of the Eternals",
+      "zone_ru": "Кладбище Вечных",
+      "reward_en": "Regal Orb",
+      "reward_ru": "Сфера царей",
+      "hasReward": true,
+      "displayInOverlay": true
+    },
+    {
       "id": "bonus_reward_a1_tomb_of_the_consort",
       "section": "act1",
       "guideZoneId": "a1_tomb_of_the_consort",
       "zone_en": "Tomb of the Consort",
       "zone_ru": "Супружеская гробница",
-      "reward_en": "Artificer's Orb",
-      "reward_ru": "Сфера астромантии",
+      "reward_en": "Random Amulet",
+      "reward_ru": "Случайный амулет",
       "hasReward": true,
       "displayInOverlay": true
     },
@@ -116,8 +134,8 @@
       "guideZoneId": "a2_vastiri_outskirts",
       "zone_en": "Vastiri Outskirts",
       "zone_ru": "Окраины Вастири",
-      "reward_en": "Uncut Spirit Gem (Level 5)",
-      "reward_ru": "Неогранённый камень духа (уровень 5)",
+      "reward_en": "Exalted Orb",
+      "reward_ru": "Сфера возвышения",
       "hasReward": true,
       "displayInOverlay": true
     },
@@ -151,6 +169,17 @@
       "zone_ru": "Бесплодные земли мастодонтов",
       "reward_en": "Lesser Jeweller's Orb",
       "reward_ru": "Малая сфера златокузнеца",
+      "hasReward": true,
+      "displayInOverlay": true
+    },
+    {
+      "id": "bonus_reward_a2_valley_titans",
+      "section": "act2",
+      "guideZoneId": "a2_valley_titans",
+      "zone_en": "Valley of the Titans",
+      "zone_ru": "Долина Титанов",
+      "reward_en": "Random Unique",
+      "reward_ru": "Случайный уникальный предмет",
       "hasReward": true,
       "displayInOverlay": true
     },

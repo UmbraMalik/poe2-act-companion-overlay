@@ -14,7 +14,7 @@ function makeSnapshot(
   };
 }
 
-test('Maxroll bonus rewards expose RU and EN labels for mapped campaign zones', () => {
+test('bonus rewards expose RU and EN labels for mapped campaign zones', () => {
   const huntingGrounds = getCampaignLeagueZoneContent(makeSnapshot('a1_hunting_grounds'));
   assert.deepEqual(huntingGrounds, {
     rewardId: 'bonus_reward_a1_hunting_grounds',
@@ -28,9 +28,14 @@ test('Maxroll bonus rewards expose RU and EN labels for mapped campaign zones', 
     reward_en: "Greater Jeweller's Orb",
     reward_ru: 'Большая сфера златокузнеца'
   });
+
+  assert.equal(getCampaignLeagueZoneContent(makeSnapshot('a1_cemetery'))?.reward_en, 'Regal Orb');
+  assert.equal(getCampaignLeagueZoneContent(makeSnapshot('a1_tomb_of_the_consort'))?.reward_en, 'Random Amulet');
+  assert.equal(getCampaignLeagueZoneContent(makeSnapshot('a2_vastiri_outskirts'))?.reward_en, 'Exalted Orb');
+  assert.equal(getCampaignLeagueZoneContent(makeSnapshot('a2_valley_titans'))?.reward_en, 'Random Unique');
 });
 
-test('zones not present in the supplied Maxroll table do not render a bonus reward', () => {
+test('zones not present in the current bonus reward table do not render a bonus reward', () => {
   assert.equal(getCampaignLeagueZoneContent(makeSnapshot('a1_clearfell')), null);
   assert.equal(getCampaignLeagueZoneContent(makeSnapshot('a2_keth')), null);
 });

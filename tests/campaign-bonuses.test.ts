@@ -49,6 +49,15 @@ test('campaign bonus data covers every act from Act 1 through Act 5', () => {
   }
 });
 
+test('Ancient Vows records the +1 Charm Slot granted by both choices', () => {
+  const ancientVows = getCampaignBonuses().find(
+    (bonus) => bonus.id === 'act2_valley_titans_ancient_vows_choice'
+  );
+  assert.ok(ancientVows);
+  assert.match(ancientVows.title, /\+1 ячейка оберега/);
+  assert.ok(ancientVows.details.some((detail) => detail.includes('+1 ячейку оберега')));
+});
+
 test('ordinary passive points never auto-complete weapon-set bonuses', () => {
   const app = createTestAppInstance();
   applyAppLogLine(app as never, '2026/05/16 22:10:10 123 [DEBUG Client] Generating level 11 area "G1_11" with seed 1');

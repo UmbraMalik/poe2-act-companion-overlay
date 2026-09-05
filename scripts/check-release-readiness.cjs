@@ -36,9 +36,9 @@ function requireAsset(relativePath, minimumBytes) {
 requireContent('README.md', 1_500);
 requireContent('CHANGELOG.md', 1_000);
 requireContent('RELEASE_SMOKE.md', 2_500);
-requireAsset('assets/screens/overlay-real-reference-full.png', 40_000);
-requireAsset('assets/screens/panel-current-zone-ru.png', 40_000);
-requireAsset('assets/screens/timer-mode-reference.png', 20_000);
+requireAsset('docs/assets/screens/overlay-real-reference-full.png', 40_000);
+requireAsset('docs/assets/screens/panel-current-zone-ru.png', 40_000);
+requireAsset('docs/assets/screens/timer-mode-reference.png', 20_000);
 
 const packageJson = JSON.parse(read('package.json'));
 const regressionScript = String(packageJson.scripts?.['test:regression'] ?? '');

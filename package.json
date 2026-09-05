@@ -55,7 +55,7 @@
           ]
         }
       ],
-      "icon": "assets/app-icon.ico"
+      "icon": "favicon.ico"
     },
     "asar": false,
     "publish": [
@@ -72,10 +72,6 @@
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
       "shortcutName": "POE2 Act Companion Overlay",
-      "installerIcon": "assets/installer/icon.ico",
-      "uninstallerIcon": "assets/installer/icon.ico",
-      "installerHeader": "assets/installer/installer-header.bmp",
-      "installerSidebar": "assets/installer/installer-sidebar.bmp",
       "uninstallDisplayName": "POE2 Act Companion Overlay"
     },
     "artifactName": "POE2-Act-Companion-Overlay-Setup-${version}.${ext}"
