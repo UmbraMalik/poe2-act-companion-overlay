@@ -324,6 +324,24 @@ function getRouteZoneStatus(
 }
 
 
+function orderActFiveForRecommendedPowerRoute(zones: RouteZoneStatus[]): RouteZoneStatus[] {
+  const khariStart = zones.findIndex((entry) => entry.guide.id === 'interlude_khari_bazaar');
+  const kriarStart = zones.findIndex((entry) => entry.guide.id === 'interlude_the_glade');
+  const oghamStart = zones.findIndex((entry) => entry.guide.id === 'interlude_refuge');
+  const finaleStart = zones.findIndex((entry) => entry.guide.id === 'post_interludes_kingsmarch');
+
+  if (khariStart < 0 || kriarStart <= khariStart || oghamStart <= kriarStart || finaleStart <= oghamStart) {
+    return zones;
+  }
+
+  return [
+    ...zones.slice(kriarStart, oghamStart),
+    ...zones.slice(oghamStart, finaleStart),
+    ...zones.slice(khariStart, kriarStart),
+    ...zones.slice(finaleStart)
+  ];
+}
+
 export function getRouteActs(
   snapshot: AppSnapshot,
   language: AppLanguage = 'ru'
@@ -347,6 +365,11 @@ export function getRouteActs(
     }
 
     grouped.get(key)!.zones.push(getRouteZoneStatus(guide, snapshot, visitedZoneIds));
+  }
+
+  const actFive = grouped.get('act-5');
+  if (actFive) {
+    actFive.zones = orderActFiveForRecommendedPowerRoute(actFive.zones);
   }
 
   return [...grouped.values()].sort((left, right) => {

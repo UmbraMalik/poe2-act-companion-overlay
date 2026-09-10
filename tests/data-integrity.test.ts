@@ -45,7 +45,7 @@ const GUIDE_TERMINAL_NEXT_REFERENCES = new Set([
 ]);
 
 const GUIDE_DOCUMENTED_RETURN_TRANSITIONS = new Set([
-  'i_final_holten_estate->a4_kingsmarch'
+  'i2_kima_reservoir->a4_kingsmarch'
 ]);
 
 const USER_TEXT_GARBAGE_RE = /\b(?:undefined|null|nan|\[object object\])\b/i;
@@ -635,7 +635,7 @@ test('Great White permanent reward remains required alongside Whakapanu quest re
   assert.ok(getCampaignBonuses().some((bonus) => bonus.id === 'act4_whakapanu_shark_fin_choice'));
 });
 
-test('Interlude guidance avoids stale levels and preserves both route strategies', () => {
+test('Interlude guidance avoids stale levels and uses the recommended power route', () => {
   const guideById = new Map(getGuideZones().map((zone) => [zone.id, zone]));
   for (const guideId of [
     'interlude_khari_bazaar',
@@ -649,9 +649,9 @@ test('Interlude guidance avoids stale levels and preserves both route strategies
     assert.match(guide.recommended_level_label, /зависит от порядка/);
   }
 
-  assert.equal(guideById.get('a4_heart_of_the_tribe')?.next_zone_ru, 'Кхарийский базар');
+  assert.equal(guideById.get('a4_heart_of_the_tribe')?.next_zone_ru, 'Опушка');
   const interludeText = JSON.stringify(readJson<Record<string, unknown>>('src/data/guide.json'));
-  assert.match(interludeText, /Кхарийский базар → Гора Криар → (?:Пристанище )?Огам/);
-  assert.match(interludeText, /Если билду критично нужен дух, начни с Горы Криар/);
+  assert.match(interludeText, /Гора Криар → (?:Пристанище )?Огам → Кхарийский базар/);
+  assert.match(interludeText, /Гора Криар идёт первой ради (?:ранних )?\+40 духа/);
   assert.match(interludeText, /Уровни зон, камней и части наград интерлюдий могут зависеть от порядка/);
 });

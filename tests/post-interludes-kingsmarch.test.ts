@@ -354,7 +354,7 @@ test('persisted final bonus is trusted without migrating visited endpoints to co
   );
 });
 
-test('route overview and progress use Khari, Kriar, Ogham, then final Kingsmarch order', () => {
+test('route overview and progress use Kriar, Ogham, Khari, then final Kingsmarch order', () => {
   const app = createTestAppInstance();
   visitGuide(app, 'interlude_the_glade');
 
@@ -365,9 +365,9 @@ test('route overview and progress use Khari, Kriar, Ogham, then final Kingsmarch
   const oghamIndex = routeIds.indexOf('interlude_refuge');
   const finalKingsmarchIndex = routeIds.indexOf(POST_INTERLUDES_KINGSMARCH_ID);
 
-  assert.ok(khariIndex >= 0 && khariIndex < kriarIndex);
-  assert.ok(kriarIndex < oghamIndex);
-  assert.ok(oghamIndex < finalKingsmarchIndex);
+  assert.ok(kriarIndex >= 0 && kriarIndex < oghamIndex);
+  assert.ok(oghamIndex < khariIndex);
+  assert.ok(khariIndex < finalKingsmarchIndex);
   assert.equal(finalKingsmarchIndex, route.length - 1);
 
   const currentIndex = route.findIndex((entry) => entry.status === 'current');

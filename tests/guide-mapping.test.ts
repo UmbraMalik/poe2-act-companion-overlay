@@ -254,12 +254,10 @@ test('automatically detected similar zones still resolve correctly by exact area
 });
 
 
-test('Interlude route keeps audited page order', () => {
+test('Interlude route keeps the recommended Kriar -> Ogham -> Khari order', () => {
   const zonesById = new Map(getGuideZones().map((zone) => [zone.id, zone]));
   const route = [
-    ['a4_heart_of_the_tribe', 'Кхарийский базар'],
-    ['interlude_khari_bazaar', 'Кхарийский перевал'],
-    ['i2_kima_reservoir', 'Опушка'],
+    ['a4_heart_of_the_tribe', 'Опушка'],
     ['interlude_the_glade', 'Пепельный лес'],
     ['interlude_ashen_forest', 'Деревня Криар'],
     ['i2_mount_cryer', 'Ледниковое озеро'],
@@ -269,7 +267,9 @@ test('Interlude route keeps audited page order', () => {
     ['interlude_etched_ravine', 'Убежище Куачик'],
     ['interlude_cuachic_vault', 'Пристанище'],
     ['interlude_refuge', 'Выжженные фермерские земли'],
-    ['i_final_holten_estate', 'Кингсмарш']
+    ['i_final_holten_estate', 'Кхарийский базар'],
+    ['interlude_khari_bazaar', 'Кхарийский перевал'],
+    ['i2_kima_reservoir', 'Кингсмарш']
   ] as const;
 
   for (const [guideId, nextZoneRu] of route) {

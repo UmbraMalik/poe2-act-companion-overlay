@@ -58,8 +58,8 @@ if (fs.existsSync(guidePath)) {
     {
       id: 'a4_heart_of_the_tribe',
       field: 'next_zone_ru',
-      expected: 'Кхарийский базар',
-      reason: 'Act 4 must enter the audited Interlude page order through Khari Bazaar.',
+      expected: 'Опушка',
+      reason: 'Act 4 must enter the recommended Interlude power route through Mount Kriar.',
     },
   ];
 
