@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "totalDownloads": 1025,
   "latestVersion": "0.5.5c",
-  "updatedAt": "2026-10-04T21:17:45.704Z",
+  "updatedAt": "2026-10-04T23:58:56.992Z",
   "source": "monotonic-github-releases-snapshot",
   "countsOnly": "installer .exe assets; latest.yml, .blockmap and source archives are excluded",
   "currentInstallerDownloads": 38,
@@ -61,7 +61,7 @@
       "version": "0.4.1",
       "file": "POE2-Act-Companion-Overlay-Setup-0.4.1.exe",
       "countedDownloads": 0,
-      "detectedAt": "2026-10-04T21:17:45.704Z"
+      "detectedAt": "2026-10-04T23:58:56.992Z"
     }
   ]
 }
