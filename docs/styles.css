@@ -1305,6 +1305,12 @@ h3 {
 }
 
 
+.release-availability-note {
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
 .release-section {
   padding-top: 46px;
 }

@@ -2,7 +2,7 @@ const LANGUAGE_STORAGE_KEY = 'poe2-act-companion-overlay-site-language';
 const SUPPORTED_LANGUAGES = ['ru', 'en'];
 const THEME_STORAGE_KEY = 'poe2-act-companion-overlay-site-theme';
 const SUPPORTED_THEMES = ['classic', 'dark-fantasy'];
-const SITE_ASSET_VERSION = '0.5.0-4';
+const SITE_ASSET_VERSION = '0.6.0-1';
 
 function withAssetVersion(path) {
   if (!path || /^(?:data:|blob:|https?:)/i.test(path) || /[?&]v=/.test(path)) return path;
@@ -238,6 +238,44 @@ const TEXT_TRANSLATIONS_EN = {
   'Подробная панель · Напоминания': 'Detailed panel · Reminders',
   'Ближайшие проверки торговцев, базы оружия/брони, фласки, камни и важные power-spike подсказки по уровню.': 'Upcoming vendor checks, weapon/armour bases, flasks, gems, and important level-based power-spike reminders.',
   'Финальное время, сравнение с личным рекордом, самые долгие зоны, история забегов и сохранённые результаты.': 'Final time, personal-best comparison, longest zones, run history, and saved results.',
+  // 0.6.0 website copy (RU/EN).
+  "v0.6.0 · RU/EN клиент · кампания + Интерлюдии + До Т15 · работает по логам игры": "v0.6.0 · RU/EN client · campaign + Interludes + To T15 · reads game logs",
+  "Что нового в 0.6.0": "What’s new in 0.6.0",
+  "POE2 Act Companion Overlay читает лог-файл игры, определяет текущую зону и показывает маршрут, постоянные бонусы, таймер и время актов. В 0.6.0 появились улучшенный интерфейс, поиск по кампании, гибкая настройка блоков и сравнение темпа забега — без инжекта в клиент игры.": "POE2 Act Companion Overlay reads the game log, detects your current zone, and displays the route, permanent bonuses, timer and act splits. Version 0.6.0 brings a refreshed interface, campaign search, configurable blocks and pace comparison — without injecting into the game client.",
+  "Выбирай видимые разделы, меняй порядок групп, сохраняй собственные макеты и переключайся между ними.": "Choose visible sections, reorder block groups, save custom layouts, and switch between them.",
+  "Маршрут, бонусы, напоминания и статистика забегов собраны в разделы с удобной боковой навигацией.": "Route, bonuses, reminders and run statistics are organized into sections with handy sidebar navigation.",
+  "Ghost Pace": "Ghost Pace",
+  "Сравнение темпа с лучшим сопоставимым забегом. Индикатор в оверлее появляется, когда есть подходящая история.": "Compare your pace with your best comparable run. The overlay indicator appears when matching run history is available.",
+  "Поиск по кампании": "Campaign search",
+  "Поиск по зонам, заданиям, боссам и постоянным наградам всех актов и Интерлюдий с учётом RU/EN.": "Search zones, quests, bosses, and permanent rewards across all acts and Interludes in RU/EN.",
+  "Горячие клавиши чек-листа": "Checklist hotkeys",
+  "Ручная отметка и отмена отметки задач через F6/F7. Включаются и настраиваются отдельно.": "Mark and unmark checklist items with F6/F7. These hotkeys can be enabled and customized separately.",
+  "Run Recap": "Run Recap",
+  "Итоги забега дополняются проверкой заданий и наград, где подтверждённые пропуски отделены от непроверенных отметок.": "Run summaries now include quest and reward checks, separating confirmed misses from items whose completion is unverified.",
+  "v0.6.0 · обновление интерфейса и возможностей": "v0.6.0 · interface and feature update",
+  "Новый интерфейс. Больше контроля над забегом.": "A new interface. More control over every run.",
+  "В 0.6.0 мы обновили подробную панель и оверлей для узких окон, улучшили русские и английские подсказки, а также добавили пять экспериментальных улучшений для маршрута, управления и статистики.": "In 0.6.0, we refreshed the companion panel and narrow-window overlay, improved RU/EN guidance, and introduced five experimental enhancements for routes, controls, and run statistics.",
+  "Кнопки скачивания ведут на последний реально опубликованный установщик в GitHub Releases.": "Download buttons always lead to the latest actually published installer on GitHub Releases.",
+  "Интерфейс 0.6.0": "Interface 0.6.0",
+  "Боковая навигация и удобная структура": "Sidebar navigation and a cleaner structure",
+  "Подробная панель и настройки получили боковое меню. Вкладки, подсказки и элементы управления стали лучше сгруппированы.": "The companion panel and settings now have sidebar navigation. Tabs, tips, and controls are grouped more clearly.",
+  "Узкие окна · RU/EN": "Narrow windows · RU/EN",
+  "Оверлей подстраивается под экран": "An overlay that fits your screen",
+  "Переработана шапка с кнопками, переносы подсказок и компактный режим. Длинный текст в RU/EN читается аккуратнее.": "The header controls, tip wrapping, and compact mode have been refined. Longer RU/EN text fits more neatly.",
+  "Сравнение с личным рекордом": "Compare with your personal best",
+  "В игровом оверлее появился индикатор темпа относительно лучшего сопоставимого забега, если есть подходящая история.": "The in-game overlay now shows a pace indicator against your best comparable run when matching history exists.",
+  "Макеты": "Layouts",
+  "Свой порядок блоков": "Your own block order",
+  "Меняй порядок групп оверлея кнопками вверх/вниз и сохраняй до восьми собственных вариантов расположения.": "Reorder overlay groups with up/down buttons and save up to eight custom layouts.",
+  "Поиск + F6/F7": "Search + F6/F7",
+  "Меньше кликов во время игры": "Fewer clicks during gameplay",
+  "Поиск по кампании на RU/EN и настраиваемые ручные горячие клавиши для отметки задач чек-листа.": "RU/EN campaign search plus customizable manual hotkeys for marking checklist items.",
+  "Итоги · Локализация": "Recap · Localization",
+  "Понятнее отчёты и подсказки": "Clearer reports and guidance",
+  "Run Recap различает подтверждённые пропуски и неподтверждённые задачи. Русские гайды очищены от лишних английских вставок.": "Run Recap distinguishes confirmed misses from unverified objectives. Russian guides have been cleaned up to avoid unnecessary English words.",
+  "Примеры интерфейса: основной оверлей, подробная панель, режим “Только таймер” и компактный режим. Некоторые скриншоты сделаны до обновления 0.6.0.": "Interface examples: the main overlay, companion panel, Timer Only, and Compact modes. Some screenshots were taken before the 0.6.0 update.",
+  "Короткая видео-демонстрация POE2 Act Companion Overlay: основной оверлей, таймер, компактный режим и подробная панель. Интерфейс в ролике может отличаться от версии 0.6.0.": "A short demo of POE2 Act Companion Overlay: main overlay, timer, compact mode, and companion panel. The interface in this video may differ from version 0.6.0.",
+  "Видеообзор приложения": "App video overview",
 };
 
 const ATTRIBUTE_TRANSLATIONS_EN = {
@@ -681,7 +719,7 @@ const SCREEN_GALLERIES = {
       labelEn: 'Now',
       imageRu: './assets/screens/panel-current-zone-ru.png',
       imageEn: './assets/screens/panel-current-zone-en.png',
-      fallbackRu: './assets/screens/companion-panel-reference.png',
+      fallbackRu: './assets/screens/panel-current-zone-ru.png',
       fallbackEn: './assets/screens/en-companion-panel.png',
       alt: 'Подробная панель: Сейчас — текущая зона',
       altEn: 'Detailed panel: Now — current zone',
@@ -698,7 +736,7 @@ const SCREEN_GALLERIES = {
       labelEn: 'Route',
       imageRu: './assets/screens/panel-route-ru.png',
       imageEn: './assets/screens/panel-route-en.png',
-      fallbackRu: './assets/screens/companion-panel-reference.png',
+      fallbackRu: './assets/screens/panel-current-zone-ru.png',
       fallbackEn: './assets/screens/en-companion-panel.png',
       alt: 'Подробная панель: Маршрут — маршрут кампании',
       altEn: 'Detailed panel: Route — campaign route',
@@ -732,7 +770,7 @@ const SCREEN_GALLERIES = {
       labelEn: 'Reminders',
       imageRu: './assets/screens/panel-reminders-ru.png',
       imageEn: './assets/screens/panel-reminders-en.png',
-      fallbackRu: './assets/screens/companion-panel-reference.png',
+      fallbackRu: './assets/screens/panel-current-zone-ru.png',
       fallbackEn: './assets/screens/en-companion-panel.png',
       alt: 'Подробная панель: Прогресс — Напоминания',
       altEn: 'Detailed panel: Progress — Reminders',
@@ -749,7 +787,7 @@ const SCREEN_GALLERIES = {
       labelEn: 'Timer',
       imageRu: './assets/screens/panel-timer-ru.png',
       imageEn: './assets/screens/panel-timer-en.png',
-      fallbackRu: './assets/screens/companion-panel-reference.png',
+      fallbackRu: './assets/screens/panel-current-zone-ru.png',
       fallbackEn: './assets/screens/en-companion-panel.png',
       alt: 'Подробная панель: Забег — Таймер',
       altEn: 'Detailed panel: Run — Timer',
@@ -766,7 +804,7 @@ const SCREEN_GALLERIES = {
       labelEn: 'Act Times',
       imageRu: './assets/screens/panel-act-times-ru.png',
       imageEn: './assets/screens/panel-act-times-en.png',
-      fallbackRu: './assets/screens/companion-panel-reference.png',
+      fallbackRu: './assets/screens/panel-current-zone-ru.png',
       fallbackEn: './assets/screens/en-companion-panel.png',
       alt: 'Подробная панель: Забег — Время актов',
       altEn: 'Detailed panel: Run — Act Times',
@@ -1070,27 +1108,37 @@ function normalizeReleaseLine(line) {
 }
 
 function extractReleaseNoteLines(markdown, maxLines = 4) {
-  const raw = String(markdown || '')
+  const allLines = String(markdown || '')
     .replace(/```[\s\S]*?```/g, ' ')
-    .replace(/\r/g, '');
+    .replace(/\r/g, '')
+    .split('\n');
 
-  const lines = raw
-    .split('\n')
+  // Release notes can contain separate RU and EN parts. Show only the user's
+  // selected language in the preview instead of mixing both descriptions.
+  const headingLanguage = (line) => {
+    const heading = line.trim();
+    if (/^#{1,6}\s*(?:Что изменено|Что изменилось|Изменения)\s*(?:[—–-]\s*RU)?\s*$/i.test(heading)) return 'ru';
+    if (/^#{1,6}\s*(?:What(?:'s| is) Changed|Changes)\s*(?:[—–-]\s*EN)?\s*$/i.test(heading)) return 'en';
+    return null;
+  };
+  const languageSections = allLines
+    .map((line, index) => ({ index, language: headingLanguage(line) }))
+    .filter(({ language }) => language !== null);
+  const start = languageSections.find(({ language }) => language === currentLanguage);
+  const following = start && languageSections.find(({ index }) => index > start.index);
+  const selectedLines = start
+    ? allLines.slice(start.index + 1, following?.index ?? allLines.length)
+    : allLines;
+
+  // Prefer changes themselves over Markdown section headings.
+  const bullets = selectedLines.filter((line) => /^\s*(?:[-*]\s+|—\s+)/.test(line));
+  const candidates = bullets.length ? bullets : selectedLines;
+  const lines = candidates
     .map(normalizeReleaseLine)
     .filter(Boolean)
-    .filter((line) => !/^исправлено:?$/i.test(line))
-    .filter((line) => !/^добавлено:?$/i.test(line))
-    .filter((line) => !/^важно:?$/i.test(line))
-    .filter((line) => !/^en[- ]?клиент:?$/i.test(line))
-    .filter((line) => !/^fixed:?$/i.test(line))
-    .filter((line) => !/^added:?$/i.test(line))
-    .filter((line) => !/^important:?$/i.test(line));
+    .filter((line) => !/^(?:Что изменено|Что изменилось|What's Changed|Changes)(?:\s*[—–-]\s*(?:RU|EN))?:?$/i.test(line));
 
-  if (lines.length === 0) {
-    return [getUiMessage('releaseEmpty')];
-  }
-
-  return lines.slice(0, maxLines);
+  return lines.length ? lines.slice(0, maxLines) : [getUiMessage('releaseEmpty')];
 }
 
 function renderReleaseNotes(elements, notes) {
