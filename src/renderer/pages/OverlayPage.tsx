@@ -1649,8 +1649,6 @@ export function OverlayPage() {
     );
   }
 
-  const primaryChecklistItem = visibleChecklist[0] ?? null;
-  const secondaryChecklist = primaryChecklistItem ? visibleChecklist.slice(1) : visibleChecklist;
   const hasZoneBonusesSection = visibleSections.zoneBonuses && !isCompactOverlay && zoneBonusItems.length > 0;
   const hasNextSection = visibleSections.next;
   const overviewGroupOrder = Math.min(
@@ -1855,32 +1853,18 @@ export function OverlayPage() {
         )}
 
         {visibleSections.zoneInfo && (
-          <section className="hud-block checklist-section overlay-structure-primary" style={{ order: overlayContentPlan.blockOrder.zoneInfo }}>
+          <section className="hud-block checklist-section" style={{ order: overlayContentPlan.blockOrder.zoneInfo }}>
             <h2>{t('overlay.inThisZone')}</h2>
             {guide ? (
               guideChecklist.length > 0 ? (
                 <>
-                  {primaryChecklistItem ? (
-                    <div className="overlay-focus-card">
-                      <div className="overlay-focus-kicker">{t('overlay.importantNow')}</div>
-                      <p className={`overlay-focus-line${getChecklistItemTone(primaryChecklistItem)}`}>
-                        {primaryChecklistItem.text}
-                      </p>
-                    </div>
-                  ) : null}
-
-                  {secondaryChecklist.length > 0 ? (
-                    <div className="overlay-zone-details">
-                      <ul className="checklist-list overlay-checklist-list overlay-checklist-secondary">
-                        {secondaryChecklist.map((item) => (
-                          <li key={item.id} className={`checklist-item${getChecklistItemTone(item)}`}>
-                            {item.text}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ) : null}
-
+                  <ul className="checklist-list overlay-checklist-list">
+                    {visibleChecklist.map((item) => (
+                      <li key={item.id} className={`checklist-item${getChecklistItemTone(item)}`}>
+                        {item.text}
+                      </li>
+                    ))}
+                  </ul>
                   {hiddenChecklistCount > 0 && (
                     <p className="helper-text checklist-more-note">
                       {t('overlay.compactMore', { count: hiddenChecklistCount })}
