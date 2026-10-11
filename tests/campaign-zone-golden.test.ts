@@ -506,7 +506,7 @@ const LOCKED_CAMPAIGN_ZONES: LockedCampaignZone[] = [
     "id": "a3_temple_kopec",
     "act": 3,
     "zoneRu": "Храм Копека",
-    "zoneEn": "Temple of Kopek",
+    "zoneEn": "Temple of Kopec",
     "areaIds": [
       "C_G3_12",
       "G3_12"
@@ -548,7 +548,7 @@ const LOCKED_CAMPAIGN_ZONES: LockedCampaignZone[] = [
     "id": "a4_kids_bay",
     "act": 4,
     "zoneRu": "Кеджский залив",
-    "zoneEn": "Kid's Bay",
+    "zoneEn": "Kedge Bay",
     "areaIds": [
       "C_G4_2_1",
       "G4_2_1"

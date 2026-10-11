@@ -1,3 +1,4 @@
+import { QIMAH_BONUS_ID, QIMAH_CHOICE_OPTIONS, getQimahResistanceContribution } from '../../shared/campaign-bonus-choice';
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useAppSnapshot, useLiveRunTimer } from '../hooks';
 import { useDocumentTitle, useI18n } from '../useI18n';
@@ -796,6 +797,14 @@ function getCampaignBonusTotals(
     }
 
     totals.done += 1;
+    // A marked choice does not imply that the player selected resistances.
+    // Only count Qimah resistances if that specific permanent boon was recorded.
+    if (bonus.id === QIMAH_BONUS_ID) {
+      const chosenResistance = getQimahResistanceContribution(progress[bonus.id]);
+      totals.coldResistance += chosenResistance;
+      totals.fireResistance += chosenResistance;
+      totals.lightningResistance += chosenResistance;
+    }
     const value = Number(bonus.reward.value) || 0;
 
     switch (bonus.reward.type) {
@@ -1821,15 +1830,15 @@ export function CompanionPage() {
           </div>
           <div className="info-cell">
             <dt>{t('common.cold')}</dt>
-            <dd>{campaignBonusTotals.coldResistance} / 20%</dd>
+            <dd>{campaignBonusTotals.coldResistance}%</dd>
           </div>
           <div className="info-cell">
             <dt>{t('common.fire')}</dt>
-            <dd>{campaignBonusTotals.fireResistance} / 20%</dd>
+            <dd>{campaignBonusTotals.fireResistance}%</dd>
           </div>
           <div className="info-cell">
             <dt>{t('common.lightning')}</dt>
-            <dd>{campaignBonusTotals.lightningResistance} / 20%</dd>
+            <dd>{campaignBonusTotals.lightningResistance}%</dd>
           </div>
           <div className="info-cell">
             <dt>{t('companion.bonusCategories.spirit')}</dt>
@@ -1910,6 +1919,28 @@ export function CompanionPage() {
                                 {bonusDetails.slice(0, 2).map((detail) => (
                                   <li key={`${bonus.id}-${detail}`}>{detail}</li>))}
                               </ul>
+                            )}
+                            {done && bonus.id === QIMAH_BONUS_ID && (
+                              <label className="bonus-choice-control">
+                                <span>{t('companion.qimahChoiceLabel')}</span>
+                                <select
+                                  value={progress?.selectedChoice ?? ''}
+                                  disabled={busy !== null}
+                                  onChange={(event) => {
+                                    const choice = event.currentTarget.value;
+                                    runTask(`campaign-choice-${bonus.id}`, async () => {
+                                      await window.poe2Overlay.setCampaignBonusChoice(bonus.id, choice);
+                                    });
+                                  }}
+                                >
+                                  <option value="" disabled>{t('companion.qimahChoiceUnknown')}</option>
+                                  {QIMAH_CHOICE_OPTIONS.map((option) => (
+                                    <option key={option.value} value={option.value}>
+                                      {language === 'ru' ? option.ru : option.en}
+                                    </option>
+                                  ))}
+                                </select>
+                              </label>
                             )}
                             {provenance && <p className={`bonus-detected-line is-${provenance.source}`}>{provenance.line}</p>}
                           </div>

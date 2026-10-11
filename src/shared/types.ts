@@ -236,6 +236,7 @@ export interface CampaignBonusProgress {
   timestamp: string;
   detectedBy: 'log' | 'manual' | 'context' | 'unknown';
   logLine?: string;
+  selectedChoice?: string;
 }
 
 export interface CampaignBonusesDataFile {
@@ -682,6 +683,7 @@ export interface ElectronApi {
   resetProgress: () => Promise<AppSnapshot>;
   resetLevelReminders: () => Promise<AppSnapshot>;
   setCampaignBonusDone: (bonusId: string, done: boolean) => Promise<AppSnapshot>;
+  setCampaignBonusChoice: (bonusId: string, choice: string) => Promise<AppSnapshot>;
   resetCampaignBonuses: () => Promise<AppSnapshot>;
   dismissActiveLevelReminder: () => Promise<AppSnapshot>;
   appendDevLogLine: (line: string) => Promise<AppSnapshot>;

@@ -1,3 +1,4 @@
+import { QIMAH_BONUS_ID, isQimahChoice } from '../shared/campaign-bonus-choice';
 import { appendFile, writeFile } from 'node:fs/promises';
 import {
   app,
@@ -425,6 +426,23 @@ export function runRegisterIpc(this: any) {
         });
         ipcMain.handle('app:set-campaign-bonus-done', async (_event: any, bonusId: any, done: any) => {
             this.setCampaignBonusDone(bonusId, done ? 'manual' : null, null);
+            return this.getSnapshot();
+        });
+        ipcMain.handle('app:set-campaign-bonus-choice', async (_event: any, bonusId: any, choice: any) => {
+            if (bonusId !== QIMAH_BONUS_ID || !isQimahChoice(choice)) {
+                throw new Error('Invalid permanent bonus choice');
+            }
+            const existing = this.config.campaignBonusProgress[bonusId];
+            if (!existing) {
+                throw new Error('Mark the permanent bonus as completed before selecting a boon');
+            }
+            this.config = this.configStore.update({
+                campaignBonusProgress: {
+                    ...this.config.campaignBonusProgress,
+                    [bonusId]: { ...existing, selectedChoice: choice }
+                }
+            });
+            this.broadcastState();
             return this.getSnapshot();
         });
         ipcMain.handle('app:reset-campaign-bonuses', async () => {

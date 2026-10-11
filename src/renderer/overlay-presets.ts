@@ -106,7 +106,7 @@ export const OVERLAY_PRESET_PATCHES: Record<OverlayPresetId, OverlayPresetPatch>
       nearby: true,
       zoneInfo: true,
       zoneBonuses: true,
-      league: true,
+      league: false,
       next: true,
       skip: true,
       speedrun: false,

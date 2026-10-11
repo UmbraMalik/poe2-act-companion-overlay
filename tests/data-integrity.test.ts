@@ -379,7 +379,6 @@ test('all shipped campaign data files parse as JSON', () => {
   for (const relativePath of [
     'src/data/guide.json',
     'src/data/campaign-bonuses.json',
-    'src/data/campaign-bonus-rewards.json',
     'src/data/internal-area-aliases.en.json',
     'src/data/internal-area-aliases.en.conservative.json',
     'src/data/town-scenes.json',
@@ -392,25 +391,12 @@ test('all shipped campaign data files parse as JSON', () => {
 });
 
 
-test('campaign bonus reward table includes the supplied Maxroll rows plus live 0.5.5 corrections', () => {
-  const data = readJson<{ rewards?: Array<{ guideZoneId?: string; reward_en?: string; reward_ru?: string }> }>(
-    'src/data/campaign-bonus-rewards.json'
-  );
-  const rewards = data.rewards ?? [];
-
-  assert.equal(rewards.length, 27);
-  assert.ok(rewards.every((reward) => reward.guideZoneId && reward.reward_en && reward.reward_ru));
-  assert.equal(existsSync('src/data/forbidden-rites-boss-rituals.json'), false);
-
-  const byGuideId = new Map(rewards.map((reward) => [reward.guideZoneId, reward]));
-  assert.equal(byGuideId.get('a1_grelwood')?.reward_en, 'Lesser Ward Rune');
-  assert.equal(byGuideId.get('a1_grelwood')?.reward_ru, 'Малая руна барьера');
-  assert.equal(byGuideId.get('a3_drowned_city')?.reward_en, "Medved's Crest of the Circle");
-  assert.equal(byGuideId.get('a3_drowned_city')?.reward_ru, 'Знак Круга Медведя');
-  assert.equal(byGuideId.get('a1_cemetery')?.reward_en, 'Regal Orb');
-  assert.equal(byGuideId.get('a1_tomb_of_the_consort')?.reward_en, 'Random Amulet');
-  assert.equal(byGuideId.get('a2_vastiri_outskirts')?.reward_en, 'Exalted Orb');
-  assert.equal(byGuideId.get('a2_valley_titans')?.reward_en, 'Random Unique');
+test('league-only reward data is excluded while permanent campaign bonuses remain', () => {
+  assert.equal(existsSync('src/data/campaign-bonus-rewards.json'), false);
+  const bonuses = readJson<{ bonuses: Array<{ id: string; category: string; reward: { type: string } }> }>('src/data/campaign-bonuses.json');
+  const qimah = bonuses.bonuses.find((bonus) => bonus.id === 'int2_kima_pillar_choice');
+  assert.equal(qimah?.category, 'choice');
+  assert.equal(qimah?.reward.type, 'choice', 'Qimah completion alone cannot award resistances');
 });
 
 test('legacy Runes of Aldur reward data is not shipped or embedded in the active guide', () => {
@@ -481,9 +467,9 @@ test('campaign bonus references and summary totals remain complete', () => {
   const allResistance = totals.all_elemental_resistance ?? 0;
   assert.equal(totals.weapon_set_passive_points, 24);
   assert.equal(totals.spirit, 100);
-  assert.equal((totals.cold_resistance ?? 0) + allResistance, 20);
-  assert.equal((totals.fire_resistance ?? 0) + allResistance, 20);
-  assert.equal((totals.lightning_resistance ?? 0) + allResistance, 20);
+  assert.equal((totals.cold_resistance ?? 0) + allResistance, 15);
+  assert.equal((totals.fire_resistance ?? 0) + allResistance, 15);
+  assert.equal((totals.lightning_resistance ?? 0) + allResistance, 15);
   assert.equal(totals.flat_life, 20);
   assert.equal(totals.increased_life, 5);
   assert.equal(totals.increased_mana, 5);

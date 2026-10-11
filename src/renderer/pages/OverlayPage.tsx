@@ -44,7 +44,6 @@ import {
 import { reportOverlayRenderDiagnostics } from '../render-diagnostics';
 import { getAppThemeClassName } from '../theme';
 import { buildOverlayContentPlan } from '../overlay-display-intent';
-import { getCampaignLeagueZoneContent } from '../league-content';
 import { getCampaignBonusView, getGuideView, getLevelReminderView, getPowerSpikeView } from '../../i18n/data';
 import { translateSystemText } from '../../i18n/runtime';
 import { translate } from '../../i18n/translations';
@@ -1180,7 +1179,6 @@ export function OverlayPage() {
           : null;
     const importantLines = getImportantOverlayLines(snapshot, language);
     const zoneBonusItems = getCurrentZoneCampaignBonuses(snapshot);
-    const leagueZoneContent = getCampaignLeagueZoneContent(snapshot);
     const upcomingOverlayReminders = getOverlayUpcomingReminders(snapshot, language);
     const overlayContentPlan = buildOverlayContentPlan({
       config,
@@ -1209,7 +1207,6 @@ export function OverlayPage() {
       currentActTimerLabel,
       importantLines,
       zoneBonusItems,
-      leagueZoneContent,
       upcomingOverlayReminders,
       visibleSections,
       overlayContentPlan,
@@ -1245,7 +1242,6 @@ export function OverlayPage() {
     currentActTimerLabel,
     importantLines,
     zoneBonusItems,
-    leagueZoneContent,
     upcomingOverlayReminders,
     visibleSections,
     overlayContentPlan,
@@ -1896,17 +1892,6 @@ export function OverlayPage() {
             </ul>
           </section>
         )}
-        {visibleSections.league && !isCompactOverlay && leagueZoneContent && (
-          <section className="hud-block league-reward-section" style={{ order: overlayContentPlan.blockOrder.league }}>
-            <h2>{t('overlay.league')}</h2>
-            <ul className="section-list compact-list">
-              <li className="league-reward-line">
-                <span>{language === 'ru' ? leagueZoneContent.reward_ru : leagueZoneContent.reward_en}</span>
-              </li>
-            </ul>
-          </section>
-        )}
-
         {visibleSections.next && (
           <section className="hud-block hud-next-block" style={{ order: overlayContentPlan.blockOrder.next }}>
             <h2>{t('overlay.next')}</h2>

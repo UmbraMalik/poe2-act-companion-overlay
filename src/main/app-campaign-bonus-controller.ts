@@ -1,3 +1,4 @@
+import { QIMAH_BONUS_ID } from '../shared/campaign-bonus-choice';
 import {
   normalizeText,
   parsePermanentReward
@@ -102,7 +103,10 @@ export function runSetCampaignBonusDone(
                 state: 'done',
                 timestamp: new Date().toISOString(),
                 detectedBy,
-                ...(line ? { logLine: line } : {})
+                ...(line ? { logLine: line } : {}),
+                ...(bonusId === QIMAH_BONUS_ID && line && /\+5/.test(line) && /сопротивлен|resistan/i.test(line)
+                  ? { selectedChoice: 'resistances' }
+                  : existing?.selectedChoice ? { selectedChoice: existing.selectedChoice } : {})
             };
         }
         app.config = app.configStore.update({
@@ -249,6 +253,10 @@ export function runCampaignBonusRewardMatchesParsedReward(this: any, bonus: any,
             case 'fireResistance10':
                 return bonus.reward.type === 'fire_resistance' && value === amount;
             case 'resistance5':
+                if (bonus.id === QIMAH_BONUS_ID && amount === 5 &&
+                    (element.includes('всем') || element.includes('стих') || element.includes('all') || element.includes('elemental'))) {
+                    return true;
+                }
                 if (element.includes('всем') || element.includes('стих')) {
                     return bonus.reward.type === 'all_elemental_resistance' && value === amount;
                 }

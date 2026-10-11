@@ -216,9 +216,9 @@ const TEXT_TRANSLATIONS_EN = {
   'Бонусы': 'Bonuses',
   'Итоги': 'Summary',
   'Подробная панель · Текущая зона': 'Detailed panel · Current Zone',
-  'Карточка текущей зоны с подсказками, ближайшими уровнями, бонусами, лигой, следующим переходом и важными заметками.': 'Current zone card with tips, nearest level reminders, bonuses, league reward, next transition, and important notes.',
+  'Карточка текущей зоны с подсказками, ближайшими уровнями, постоянными бонусами, следующим переходом и важными заметками.': 'Current zone card with tips, nearest level reminders, permanent bonuses, next transition, and important notes.',
   'Подробная панель · Сейчас': 'Detailed panel · Now',
-  'Вкладка “Сейчас”: карточка текущей зоны с подсказками, ближайшими уровнями, бонусами, лигой, следующим переходом и важными заметками.': 'The Now tab: current zone card with tips, nearby level reminders, bonuses, league content, the next transition, and important notes.',
+  'Вкладка “Сейчас”: карточка текущей зоны с подсказками, ближайшими уровнями, постоянными бонусами, следующим переходом и важными заметками.': 'The Now tab: current zone card with tips, nearby level reminders, permanent bonuses, the next transition, and important notes.',
   'Подробная панель · Маршрут': 'Detailed panel · Route',
   'Вкладка “Маршрут”: полный путь по актам и интерлюдиям — порядок зон, опциональные точки, хабы и переходы между страницами.': 'The Route tab: the full path through acts and Interludes, including zone order, optional stops, hubs, and transitions between pages.',
   'Подробная панель · Прогресс · Бонусы': 'Detailed panel · Progress · Bonuses',
@@ -687,8 +687,8 @@ const SCREEN_GALLERIES = {
       altEn: 'Detailed panel: Now — current zone',
       title: 'Подробная панель · Сейчас',
       titleEn: 'Detailed panel · Now',
-      text: 'Вкладка “Сейчас”: карточка текущей зоны с подсказками, ближайшими уровнями, бонусами, лигой, следующим переходом и важными заметками.',
-      textEn: 'The Now tab shows the current zone, nearby level reminders, bonuses, league content, the next transition, and important notes.'
+      text: 'Вкладка “Сейчас”: карточка текущей зоны с подсказками, ближайшими уровнями, постоянными бонусами, следующим переходом и важными заметками.',
+      textEn: 'The Now tab shows the current zone, nearby level reminders, permanent bonuses, the next transition, and important notes.'
     },
     {
       groupKey: 'route',

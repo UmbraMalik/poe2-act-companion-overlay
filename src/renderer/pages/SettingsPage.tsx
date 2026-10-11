@@ -80,7 +80,6 @@ const OVERLAY_SECTION_VISIBILITY_LABELS = [
   ['nearby', 'settings.overlayShowNearby'],
   ['zoneInfo', 'settings.overlayShowZoneInfo'],
   ['zoneBonuses', 'settings.overlayShowZoneBonuses'],
-  ['league', 'settings.overlayShowLeague'],
   ['next', 'settings.overlayShowNext'],
   ['skip', 'settings.overlayShowSkip'],
   ['speedrun', 'settings.overlayShowSpeedrun'],

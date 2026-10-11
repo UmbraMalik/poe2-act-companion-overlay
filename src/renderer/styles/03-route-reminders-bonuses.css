@@ -971,3 +971,8 @@
     grid-row: auto;
   }
 }
+
+/* Permanent Qimah choice selector (RU and EN labels are supplied by the app). */
+.bonus-choice-control { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; margin: 10px 0 4px; font-size: 12px; }
+.bonus-choice-control select { max-width: min(100%, 370px); min-height: 34px; padding: 6px 10px; border: 1px solid var(--border-color, #756454); border-radius: 7px; background: #17191f; color: #f0e6d6; }
+.bonus-choice-control select:disabled { opacity: .6; }

@@ -195,22 +195,13 @@ test('settings page memoizes repeated snapshot-derived option lists', () => {
   assert.doesNotMatch(settingsPage, /const settingsQuickLinks = SETTINGS_QUICK_LINKS\.filter/);
 });
 
-test('bonus reward UI renders localized reward names without acquisition mechanics', () => {
+test('seasonal reward cards are absent from overlay and companion', () => {
   const companion = readText('src/renderer/CurrentRunHub.tsx');
   const overlay = readText('src/renderer/pages/OverlayPage.tsx');
-  const resolver = readText('src/renderer/league-content.ts');
-  const translations = readText('src/i18n/translations.ts');
-
-  assert.match(translations, /league:\s*'Бонусная награда'/);
-  assert.match(translations, /league:\s*'Bonus Reward'/);
-  assert.match(overlay, /leagueZoneContent\.reward_ru/);
-  assert.match(overlay, /leagueZoneContent\.reward_en/);
-  assert.match(companion, /currentZoneLeagueContent\.reward_ru/);
-  assert.match(companion, /currentZoneLeagueContent\.reward_en/);
-  assert.match(resolver, /campaign-bonus-rewards\.json/);
-  assert.doesNotMatch(resolver, /forbidden-rites-boss-rituals/);
-  assert.doesNotMatch(overlay, /BossRitual|leagueBossRitual|Tribute/);
-  assert.doesNotMatch(companion, /BossRitual|zoneHubBossRitual|Tribute/);
+  const settings = readText('src/renderer/pages/SettingsPage.tsx');
+  assert.doesNotMatch(overlay, /leagueZoneContent|getCampaignLeagueZoneContent|league-reward-section/);
+  assert.doesNotMatch(companion, /currentZoneLeagueContent|getCampaignLeagueZoneContent/);
+  assert.doesNotMatch(settings, /overlayShowLeague.*\],/);
 });
 
 

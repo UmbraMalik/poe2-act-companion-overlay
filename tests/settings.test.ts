@@ -459,3 +459,15 @@ test('settings defaults keep safe overlay bounds and hotkeys visible in user set
     assert.match(settingsPage, new RegExp(`\\{ value: ${scale}, label: '${scale}%' \\}`));
   }
 });
+
+test('saved Qimah permanent choice survives config normalization; invalid value is stripped', () => {
+  const row = { state: 'done', timestamp: '2026-10-11T10:00:00.000Z', detectedBy: 'manual' };
+  const saved = normalizeAppConfig({ campaignBonusProgress: {
+    int2_kima_pillar_choice: { ...row, selectedChoice: 'resistances' }
+  }} as never);
+  assert.equal(saved.campaignBonusProgress.int2_kima_pillar_choice?.selectedChoice, 'resistances');
+  const invalid = normalizeAppConfig({ campaignBonusProgress: {
+    int2_kima_pillar_choice: { ...row, selectedChoice: 'untrusted-value' }
+  }} as never);
+  assert.equal(invalid.campaignBonusProgress.int2_kima_pillar_choice?.selectedChoice, undefined);
+});

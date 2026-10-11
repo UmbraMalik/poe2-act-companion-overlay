@@ -18,7 +18,6 @@ import {
 } from './companion-helpers';
 import { getGuideUpdateClassName } from './guide-update-highlights';
 import { getZoneRecognitionView } from './log-health';
-import { getCampaignLeagueZoneContent } from './league-content';
 import { formatSignedPaceDuration, getRunPaceSnapshot } from './run-pace';
 import { formatDuration } from './utils';
 import { UiIcon } from './UiIcon';
@@ -36,7 +35,7 @@ type AttentionItem = {
   id: string;
   text: string;
   meta: string;
-  tone: 'danger' | 'required' | 'bonus' | 'league' | 'important' | 'xp';
+  tone: 'danger' | 'required' | 'bonus' | 'important' | 'xp';
 };
 
 type PaceView = {
@@ -342,10 +341,6 @@ export function CurrentRunHub({
       language
     ]
   );
-  const currentZoneLeagueContent = useMemo(
-    () => getCampaignLeagueZoneContent(snapshot),
-    [snapshot]
-  );
   const currentActMissedItems = useMemo(
     () => currentActRouteZones.flatMap((entry) => entry.missedItems.map((item) => ({
       id: `${entry.guide.id}:${item.id}`,
@@ -376,12 +371,6 @@ export function CurrentRunHub({
   );
   const attentionItems = useMemo<AttentionItem[]>(() => {
     const candidates: AttentionItem[] = [
-      ...(currentZoneLeagueContent ? [{
-        id: `bonus-reward:${currentZoneLeagueContent.rewardId}`,
-        text: language === 'ru' ? currentZoneLeagueContent.reward_ru : currentZoneLeagueContent.reward_en,
-        meta: translate(language, 'companion.zoneHubLeagueMeta'),
-        tone: 'league' as const
-      }] : []),
       ...pendingBonuses.map(({ bonus, bonusView }) => ({
         id: `bonus:${bonus.id}`,
         text: bonusView?.displayTitle ?? bonus.title,
@@ -437,7 +426,6 @@ export function CurrentRunHub({
     activeXpStatus.longLabel,
     activeXpStatus.variant,
     currentActMissedItems,
-    currentZoneLeagueContent,
     currentZoneRequiredItems,
     guide?.recommended_level,
     guideChecklist,

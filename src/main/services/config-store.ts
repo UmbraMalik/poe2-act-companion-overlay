@@ -1,3 +1,4 @@
+import { isQimahChoice } from '../../shared/campaign-bonus-choice';
 import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { basename, dirname, extname, join } from 'node:path';
 import {
@@ -331,7 +332,8 @@ function normalizeCampaignBonusProgressEntry(value: unknown): CampaignBonusProgr
     state: 'done',
     timestamp,
     detectedBy,
-    ...(typeof value.logLine === 'string' ? { logLine: value.logLine } : {})
+    ...(typeof value.logLine === 'string' ? { logLine: value.logLine } : {}),
+    ...(isQimahChoice(value.selectedChoice) ? { selectedChoice: value.selectedChoice } : {})
   };
 }
 

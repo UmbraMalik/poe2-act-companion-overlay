@@ -39,6 +39,8 @@ const api: ElectronApi = {
   resetLevelReminders: () => ipcRenderer.invoke('app:reset-level-reminders'),
   setCampaignBonusDone: (bonusId: string, done: boolean) =>
     ipcRenderer.invoke('app:set-campaign-bonus-done', bonusId, done),
+  setCampaignBonusChoice: (bonusId: string, choice: string) =>
+    ipcRenderer.invoke('app:set-campaign-bonus-choice', bonusId, choice),
   resetCampaignBonuses: () => ipcRenderer.invoke('app:reset-campaign-bonuses'),
   dismissActiveLevelReminder: () =>
     ipcRenderer.invoke('app:dismiss-active-level-reminder'),

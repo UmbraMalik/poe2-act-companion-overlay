@@ -201,7 +201,7 @@ const TEXT_TRANSLATIONS_EN = {
   'Бонусы': 'Bonuses',
   'Итоги': 'Summary',
   'Подробная панель · Текущая зона': 'Detailed panel · Current Zone',
-  'Карточка текущей зоны с подсказками, ближайшими уровнями, бонусами, лигой, следующим переходом и важными заметками.': 'Current zone card with tips, nearest level reminders, bonuses, league reward, next transition, and important notes.',
+  'Карточка текущей зоны с подсказками, ближайшими уровнями, постоянными бонусами, следующим переходом и важными заметками.': 'Current zone card with tips, nearest level reminders, permanent bonuses, next transition, and important notes.',
   'Подробная панель · Маршрут': 'Detailed panel · Route',
   'Полный маршрут по актам и interlude-частям: порядок зон, опциональные точки, хабы и переходы между страницами.': 'Full act and interlude route: zone order, optional stops, hubs, and transitions between pages.',
   'Подробная панель · Таймер': 'Detailed panel · Timer',
@@ -581,7 +581,7 @@ const SCREEN_GALLERIES = {
       fallbackEn: './assets/screens/en-companion-panel.png',
       alt: 'Подробная панель: вкладка текущей зоны',
       title: 'Подробная панель · Текущая зона',
-      text: 'Карточка текущей зоны с подсказками, ближайшими уровнями, бонусами, лигой, следующим переходом и важными заметками.'
+      text: 'Карточка текущей зоны с подсказками, ближайшими уровнями, постоянными бонусами, следующим переходом и важными заметками.'
     },
     {
       label: 'Маршрут',

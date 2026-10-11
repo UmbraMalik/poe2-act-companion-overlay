@@ -98,7 +98,7 @@ export const DEFAULT_CONFIG: AppConfig = {
     nearby: true,
     zoneInfo: true,
     zoneBonuses: true,
-    league: true,
+    league: false,
     next: true,
     skip: true,
     speedrun: true,
