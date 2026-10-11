@@ -97,6 +97,7 @@ const expected = [
   '41-typography-readability-test.css',
   '42-overlay-structure-v3-test.css',
   '43-settings-sidebar-test.css',
+  '44-companion-sidebar-test.css',
 ];
 const expectedCssFiles = [...expected, ...trackedNonNumberedPartials].sort();
 const expectedImports = [

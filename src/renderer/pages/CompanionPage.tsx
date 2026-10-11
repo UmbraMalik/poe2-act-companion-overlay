@@ -2127,18 +2127,15 @@ export function CompanionPage() {
     progress: t('companion.sections.progress'),
     run: t('companion.sections.run')
   };
-  const subTabs = activeSection === 'progress'
-    ? [
-      { id: 'bonuses' as const, label: t('companion.tabs.bonuses') },
-      { id: 'reminders' as const, label: t('companion.tabs.reminders') }
-    ]
-    : activeSection === 'run'
-      ? [
-        { id: 'timer' as const, label: t('companion.tabs.timer') },
-        { id: 'actTimes' as const, label: t('companion.tabs.actTimes') },
-        { id: 'summary' as const, label: t('companion.tabs.summary') }
-      ]
-      : [];
+  const tabLabels: Record<CompanionTab, string> = {
+    zone: t('companion.tabs.zone'),
+    route: t('companion.tabs.route'),
+    bonuses: t('companion.tabs.bonuses'),
+    reminders: t('companion.tabs.reminders'),
+    timer: t('companion.tabs.timer'),
+    actTimes: t('companion.tabs.actTimes'),
+    summary: t('companion.tabs.summary')
+  };
 
   const tabContent = {
     zone: zoneTab,
@@ -2192,7 +2189,7 @@ export function CompanionPage() {
           activeSection={activeSection}
           activeTab={activeTab}
           sectionLabels={sectionLabels}
-          subTabs={subTabs}
+          tabLabels={tabLabels}
           onSectionChange={selectSection}
           onTabChange={selectTab}
         >

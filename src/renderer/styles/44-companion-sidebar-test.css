@@ -1,0 +1,200 @@
+/* Experimental detailed-panel sidebar. Only the navigation structure changes.
+ * The current tab, last-used tab per section, RU/EN labels and content panes
+ * all come from the existing companion navigation state. */
+
+.companion-page .companion-card.companion-sidebar-layout {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 202px minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  align-items: stretch;
+  gap: 12px;
+  padding: 12px;
+}
+
+.companion-page .companion-sidebar {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  gap: 14px;
+  padding: 12px 9px;
+  border: 1px solid var(--companion-panel-line-soft, var(--companion-border));
+  border-radius: 13px;
+  background:
+    radial-gradient(circle at 12% 0, var(--companion-panel-highlight), transparent 48%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.024), rgba(0, 0, 0, 0.035)),
+    var(--companion-surface);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(214, 162, 84, 0.42) transparent;
+}
+
+.companion-page .companion-sidebar-group {
+  display: grid;
+  gap: 5px;
+  flex: 0 0 auto;
+  min-width: 0;
+}
+
+.companion-page .companion-sidebar-heading {
+  display: block;
+  min-height: 24px;
+  width: 100%;
+  padding: 3px 9px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--companion-muted);
+  text-align: left;
+  font-size: 10px;
+  line-height: 1.4;
+  font-weight: 850;
+  letter-spacing: 0.095em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.companion-page .companion-sidebar-heading.is-section-active,
+.companion-page .companion-sidebar-heading:hover {
+  color: var(--companion-title);
+}
+
+.companion-page .companion-sidebar-heading:focus-visible,
+.companion-page .companion-sidebar-link:focus-visible {
+  outline: 2px solid var(--companion-gold);
+  outline-offset: 2px;
+}
+
+.companion-page .companion-sidebar-links {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.companion-page .companion-sidebar-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  min-width: 0;
+  min-height: 36px;
+  padding: 8px 12px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.014);
+  color: var(--companion-text);
+  text-align: left;
+  overflow-wrap: anywhere;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  line-height: 1.28;
+  font-weight: 680;
+  cursor: pointer;
+  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+}
+
+.companion-page .companion-sidebar-link:hover:not(.is-active) {
+  background: var(--companion-panel-hover);
+  border-color: var(--companion-panel-line-soft, var(--companion-border));
+  color: var(--companion-title);
+}
+
+.companion-page .companion-sidebar-link.is-active {
+  border-color: var(--companion-border-strong);
+  background:
+    radial-gradient(circle at 0 0, var(--companion-gold-soft), transparent 86%),
+    linear-gradient(90deg, var(--companion-gold-soft), rgba(255, 255, 255, 0.016));
+  box-shadow: inset 2px 0 0 var(--companion-gold);
+  color: var(--companion-title);
+  font-weight: 800;
+}
+
+.companion-page .companion-content-pane {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.companion-page .companion-content-pane > .companion-tab-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  height: 100%;
+  transform: none;
+}
+
+.theme-dark-fantasy.companion-page .companion-sidebar {
+  border-color: rgba(190, 162, 255, 0.19);
+  background:
+    radial-gradient(circle at 12% 0, rgba(167, 123, 255, 0.12), transparent 52%),
+    linear-gradient(180deg, rgba(25, 16, 42, 0.86), rgba(11, 7, 19, 0.85));
+}
+
+.theme-dark-fantasy.companion-page .companion-sidebar-link.is-active {
+  border-color: rgba(217, 167, 95, 0.42);
+  background:
+    radial-gradient(circle at 0 0, rgba(217, 167, 95, 0.18), transparent 90%),
+    linear-gradient(90deg, rgba(126, 84, 214, 0.18), rgba(255, 255, 255, 0.010));
+}
+
+/* In a narrow window the sidebar becomes a single scrollable navigation row;
+ * the content retains its height instead of being squeezed offscreen. */
+@media (max-width: 780px) {
+  .companion-page .companion-card.companion-sidebar-layout {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 9px;
+    padding: 9px;
+  }
+
+  .companion-page .companion-sidebar {
+    flex-direction: row;
+    align-items: flex-start;
+    width: 100%;
+    max-height: 92px;
+    padding: 8px;
+    gap: 12px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
+  }
+
+  .companion-page .companion-sidebar-group {
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 auto;
+    gap: 3px;
+  }
+
+  .companion-page .companion-sidebar-heading {
+    min-height: 17px;
+    padding: 0 5px;
+  }
+
+  .companion-page .companion-sidebar-links {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+  }
+
+  .companion-page .companion-sidebar-link {
+    width: auto;
+    min-height: 32px;
+    padding: 7px 11px;
+    white-space: nowrap;
+    font-size: 11px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .companion-page .companion-sidebar-link {
+    transition: none;
+  }
+}
