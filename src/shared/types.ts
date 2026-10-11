@@ -47,6 +47,13 @@ export interface ChecklistViewItem extends ChecklistItemDefinition {
   originalIndex: number;
 }
 
+export type OverlayLayoutSection = 'zoneInfo' | 'route' | 'nearby' | 'tips';
+export interface OverlayLayoutPreset {
+  name: string;
+  order: OverlayLayoutSection[];
+  visibleSections: OverlayVisibleSections;
+}
+
 export type OverlayDensity = 'compact' | 'normal' | 'detailed';
 export type OverlayScale = 70 | 80 | 90 | 100 | 110 | 120;
 export type OverlayTextSize = 0 | 1 | 2 | 3;
@@ -410,6 +417,8 @@ export interface AppConfig {
   setupWizardCompleted: boolean;
   overlayDebugLayoutEnabled: boolean;
   overlayVisibleSections: OverlayVisibleSections;
+  overlayLayoutOrder: OverlayLayoutSection[];
+  overlaySavedLayouts: OverlayLayoutPreset[];
   mainOverlaySettings: MainOverlaySettings;
   devPanelEnabled: boolean;
   manualHotkeysEnabled: boolean;
@@ -584,6 +593,8 @@ export interface SettingsPatch {
   setupWizardCompleted?: boolean;
   overlayDebugLayoutEnabled?: boolean;
   overlayVisibleSections?: Partial<OverlayVisibleSections>;
+  overlayLayoutOrder?: OverlayLayoutSection[];
+  overlaySavedLayouts?: OverlayLayoutPreset[];
   mainOverlaySettings?: Partial<MainOverlaySettings>;
   devPanelEnabled?: boolean;
   manualHotkeysEnabled?: boolean;

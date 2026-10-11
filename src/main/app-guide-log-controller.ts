@@ -16,6 +16,7 @@ import {
 } from './scene-classifier';
 import { diagnosticInfo } from './diagnostic-logger';
 import type { AppConfig, GuideEntry } from '../shared/types';
+import { buildChecklistDefinition } from '../shared/checklist';
 import {
     FINAL_INTERLUDE_BONUS_ID,
     POST_INTERLUDES_REWARD_CHECKLIST_ITEM_ID,
@@ -493,16 +494,39 @@ export function runBuildRunSummary(this: any, runTimer: any, totalElapsedMs: any
             .slice(0, 5);
         const previousPb = this.config.bestRun;
         const isNewPb = previousPb === null || totalElapsedMs < previousPb.totalElapsedMs;
+        // Only recorded zones are considered. An absent log event is not proof that
+        // a player skipped a quest or permanent bonus.
+        const visitedIds = new Set(this.config.visitedZones.map((zone: any) => zone.zoneId));
+        if (this.currentZone.guide?.id) {
+            visitedIds.add(this.currentZone.guide.id);
+        }
+        const missedRequiredRewards: string[] = [];
+        const unfinishedChecklistItems: string[] = [];
+        for (const guide of this.guideService.getAll()) {
+            if (!visitedIds.has(guide.id)) continue;
+            const progress = this.config.zoneProgress[guide.id]?.itemStates ?? {};
+            for (const item of buildChecklistDefinition(guide)) {
+                if (!item.required) continue;
+                const state = progress[item.id]?.state;
+                const label = `${guide.id}::${item.id}`; // Stable IDs; localize when displaying the recap.
+                if (state === 'missed') {
+                    missedRequiredRewards.push(label);
+                } else if (state !== 'done') {
+                    // "Not confirmed" rather than "missed": game logs are incomplete.
+                    unfinishedChecklistItems.push(label);
+                }
+            }
+        }
         return {
             totalElapsedMs,
             finishedAt,
             actSplits: [...runTimer.actSplits],
-            missedRequiredRewards: [],
-            skippedRequiredItems: [],
-            unfinishedChecklistItems: [],
+            missedRequiredRewards: missedRequiredRewards.slice(0, 60),
+            skippedRequiredItems: [], // No reliable skip telemetry exists.
+            unfinishedChecklistItems: unfinishedChecklistItems.slice(0, 80),
             pauseCount: runTimer.pauseCount,
             longestZones,
-            townTimeTotalMs: 0,
+            townTimeTotalMs: 0, // Separate town timing is deliberately disabled.
             isNewPb
         };
     }

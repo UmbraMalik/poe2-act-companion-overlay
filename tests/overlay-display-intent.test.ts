@@ -35,8 +35,11 @@ function applyPatchToConfig(patch: SettingsPatch): AppConfig {
 }
 
 function assertPresetDoesNotReorderOverlayContent(plan: ReturnType<typeof buildOverlayContentPlan>): void {
+  // UI-V2 supplies one shared layout order for every visibility preset.
+  const expected = { nearby: 30, zoneInfo: 10, zoneBonuses: 20, league: 0,
+    next: 20, skip: 40, speedrun: 40, important: 40 };
   for (const block of OVERLAY_CONTENT_BLOCKS) {
-    assert.equal(plan.blockOrder[block], 0, `${block} should keep DOM order`);
+    assert.equal(plan.blockOrder[block], expected[block], `${block} should keep its configured position`);
   }
 }
 
@@ -125,4 +128,20 @@ test('custom display intent preserves manual section visibility and existing ord
   assert.equal(plan.visibleSections.skip, DEFAULT_CONFIG.overlayVisibleSections.skip);
   assertPresetDoesNotReorderOverlayContent(plan);
   assert.equal(plan.maxChecklistItems, null);
+});
+
+
+test('custom overlay layout order changes grouped blocks without reordering individual bonus cards', () => {
+  const config: AppConfig = {
+    ...DEFAULT_CONFIG,
+    overlayLayoutOrder: ['tips', 'nearby', 'zoneInfo', 'route']
+  };
+  const plan = buildOverlayContentPlan({ config, runtimeOverlayMode: 'full' });
+  assert.equal(plan.blockOrder.skip, 10);
+  assert.equal(plan.blockOrder.speedrun, 10);
+  assert.equal(plan.blockOrder.important, 10);
+  assert.equal(plan.blockOrder.nearby, 20);
+  assert.equal(plan.blockOrder.zoneInfo, 30);
+  assert.equal(plan.blockOrder.next, 40);
+  assert.equal(plan.blockOrder.zoneBonuses, 40);
 });

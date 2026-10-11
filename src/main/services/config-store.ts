@@ -23,6 +23,8 @@ import type {
   OverlayScale,
   OverlayTextSize,
   OverlayVisibleSections,
+  OverlayLayoutSection,
+  OverlayLayoutPreset,
   RunTimerActSplit,
   RunTimerState,
   RunTimerStatus,
@@ -219,6 +221,27 @@ function normalizeOverlayVisibleSections(value: unknown): OverlayVisibleSections
       safeBoolean(source[key], fallback)
     ])
   ) as unknown as OverlayVisibleSections;
+}
+
+const OVERLAY_LAYOUT_SECTIONS: OverlayLayoutSection[] = ['zoneInfo', 'route', 'nearby', 'tips'];
+
+function normalizeOverlayLayoutOrder(value: unknown): OverlayLayoutSection[] {
+  const entries = Array.isArray(value) ? value.filter((entry): entry is OverlayLayoutSection =>
+    typeof entry === 'string' && OVERLAY_LAYOUT_SECTIONS.includes(entry as OverlayLayoutSection)) : [];
+  return [...new Set([...entries, ...OVERLAY_LAYOUT_SECTIONS])];
+}
+
+function normalizeOverlaySavedLayouts(value: unknown): OverlayLayoutPreset[] {
+  if (!Array.isArray(value)) return [];
+  const names = new Set<string>();
+  return value.flatMap((entry): OverlayLayoutPreset[] => {
+    if (!isRecord(entry) || typeof entry.name !== 'string') return [];
+    const name = entry.name.trim().slice(0, 48);
+    if (!name || names.has(name.toLocaleLowerCase())) return [];
+    names.add(name.toLocaleLowerCase());
+    return [{ name, order: normalizeOverlayLayoutOrder(entry.order),
+      visibleSections: normalizeOverlayVisibleSections(entry.visibleSections) }];
+  }).slice(0, 8);
 }
 
 function normalizeMainOverlaySettings(value: unknown): MainOverlaySettings {
@@ -637,6 +660,8 @@ export function normalizeAppConfig(config: Partial<AppConfig> = {}): AppConfig {
       DEFAULT_CONFIG.overlayDebugLayoutEnabled
     ),
     overlayVisibleSections: normalizeOverlayVisibleSections(rawConfig.overlayVisibleSections),
+    overlayLayoutOrder: normalizeOverlayLayoutOrder(rawConfig.overlayLayoutOrder),
+    overlaySavedLayouts: normalizeOverlaySavedLayouts(rawConfig.overlaySavedLayouts),
     mainOverlaySettings: normalizeMainOverlaySettings(rawConfig.mainOverlaySettings),
     devPanelEnabled: safeBoolean(rawConfig.devPanelEnabled, DEFAULT_CONFIG.devPanelEnabled),
     manualHotkeysEnabled: safeBoolean(rawConfig.manualHotkeysEnabled, DEFAULT_CONFIG.manualHotkeysEnabled),
@@ -751,6 +776,12 @@ export class ConfigStore {
               ...patch.overlayVisibleSections
             }
           }
+        : {}),
+      ...(patch.overlayLayoutOrder !== undefined
+        ? { overlayLayoutOrder: patch.overlayLayoutOrder }
+        : {}),
+      ...(patch.overlaySavedLayouts !== undefined
+        ? { overlaySavedLayouts: patch.overlaySavedLayouts }
         : {}),
       ...(patch.mainOverlaySettings !== undefined
         ? {

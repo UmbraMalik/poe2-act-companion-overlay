@@ -35,3 +35,5 @@ Those used to exist as duplicate sources and made it too easy to edit a CSS file
 45. `45-overlay-narrow-ru-en-test.css` — reversible narrow-overlay wrapping/layout for RU/EN and all four overlay modes.
 
 46. `46-overlay-narrow-header-toolbar-fix.css` — reversible fix for narrow full overlay headers so the quick-action toolbar stays beside the zone title when width still allows it, with stacked fallback only at smaller widths.
+
+47. `47-five-features-test.css` — ghost pace, layout editor and run recap visual support.

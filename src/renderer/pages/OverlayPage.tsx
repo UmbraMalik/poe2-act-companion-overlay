@@ -44,6 +44,7 @@ import {
 import { reportOverlayRenderDiagnostics } from '../render-diagnostics';
 import { getAppThemeClassName } from '../theme';
 import { buildOverlayContentPlan } from '../overlay-display-intent';
+import { formatSignedPaceDuration, getRunPaceSnapshot } from '../run-pace';
 import { getCampaignBonusView, getGuideView, getLevelReminderView, getPowerSpikeView } from '../../i18n/data';
 import { translateSystemText } from '../../i18n/runtime';
 import { translate } from '../../i18n/translations';
@@ -1282,6 +1283,18 @@ export function OverlayPage() {
   const timerOnlyShowsCountdown =
     displayRunTimer.status === 'armed' &&
     typeof config.runTimerSettings.leagueStartAt === 'number';
+  // Use the same pace computation as the detailed panel; never manufacture
+  // a delta if no comparable visited checkpoint exists in the run history.
+  const ghostPace = getRunPaceSnapshot({
+    runHistory: config.runHistory,
+    zoneId: guide?.id ?? null,
+    currentRunElapsedMs: getRunElapsedMs(displayRunTimer, runtime.timerNowMs),
+    currentAct: currentActTimerAct,
+    currentActElapsedMs: currentActTimerAct === null ? null
+      : getCurrentActElapsedMsForAct(displayRunTimer, currentActTimerAct, runtime.timerNowMs),
+    targetRunTimeMs: config.runTimerSettings.targetRunTimeMs,
+    timerStatus: displayRunTimer.status
+  });
   const minimumSize = getOverlayMinimumSize(
     runtime.overlayMode,
     config.overlayDensity,
@@ -1826,6 +1839,13 @@ export function OverlayPage() {
               statusLabel={levelState.label}
             />
           </p>
+          {ghostPace.checkpointDeltaMs !== null && (
+            <div className={`overlay-ghost-pace is-${ghostPace.tone}`} role="status"
+              title={language === 'ru' ? 'Сравнение с лучшим сохранённым забегом на входе в эту локацию' : 'Compared to the best saved run at this zone checkpoint'}>
+              <span>{language === 'ru' ? 'Темп к рекорду' : 'Pace vs best'}</span>
+              <strong>{formatSignedPaceDuration(ghostPace.checkpointDeltaMs)}</strong>
+            </div>
+          )}
         </header>
 
         {endgameT15CompletionBlock}
@@ -1924,7 +1944,7 @@ export function OverlayPage() {
         )}
 
         {showGuidanceStack && (
-          <div className="overlay-guidance-stack">
+          <div className="overlay-guidance-stack" style={{ order: overlayContentPlan.blockOrder.skip }}>
             {showSkipNotes && (
               <section className="hud-block skip-section">
                 <h2>{t('common.skip')}</h2>

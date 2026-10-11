@@ -1,5 +1,6 @@
 import { QIMAH_BONUS_ID, QIMAH_CHOICE_OPTIONS, getQimahResistanceContribution } from '../../shared/campaign-bonus-choice';
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { buildChecklistDefinition } from '../../shared/checklist';
 import { useAppSnapshot, useLiveRunTimer } from '../hooks';
 import { useDocumentTitle, useI18n } from '../useI18n';
 import { getAppThemeClassName } from '../theme';
@@ -196,10 +197,22 @@ function getRouteCardModels(
     const recommendedLevelLabel = routeGuideView?.recommendedLevelLabel ?? formatRecommendedLevelLabel(entry.guide, language);
     const bonusRewards = getRouteCampaignBonusModels(entry.guide, snapshot, language);
     const hasBonusRewards = bonusRewards.length > 0;
+    const guideRu = getGuideView(entry.guide, 'ru');
+    const guideEn = getGuideView(entry.guide, 'en');
+    const detailValues = (details: unknown): string[] => {
+      if (!details || typeof details !== 'object' || Array.isArray(details)) return [];
+      return Object.values(details).flatMap((value) => Array.isArray(value) ? value.filter((line): line is string => typeof line === 'string') : []);
+    };
     const searchText = [
       entry.guide.id, entry.guide.zone_ru, entry.guide.zone_en, ...(entry.guide.aliases ?? []),
-      formatActTitle(entry.guide.act, language), routeCardTitle, recommendedLevelLabel,
-      ...routeLabels, ...missedItemTexts,
+      ...(entry.guide.aliases_en ?? []), ...(entry.guide.zone_aliases ?? []),
+      formatActTitle(entry.guide.act, 'ru'), formatActTitle(entry.guide.act, 'en'), routeCardTitle,
+      recommendedLevelLabel, ...routeLabels, ...missedItemTexts,
+      ...entry.guide.priority, ...entry.guide.rewards, ...entry.guide.important,
+      ...entry.guide.boss_tips ?? [], ...detailValues(entry.guide.details),
+      ...guideRu?.checklist?.map((item) => item.text) ?? [],
+      ...guideEn?.checklist?.map((item) => item.text) ?? [],
+      ...guideRu?.important ?? [], ...guideEn?.important ?? [],
       ...bonusRewards.flatMap((bonus) => [bonus.title, bonus.source, bonus.categoryLabel])
     ].join(' ');
 
@@ -886,7 +899,7 @@ function renderLiveSummary(
   );
 }
 
-function renderFinishedResults(summary: RunSummary | null, bestRun: SavedRunHistoryEntry | null, language: AppLanguage) {
+function renderFinishedResults(summary: RunSummary | null, bestRun: SavedRunHistoryEntry | null, language: AppLanguage, guides: GuideEntry[]) {
   if (!summary) {
     return <p className="helper-text">{translate(language, 'companion.summaryEmpty')}</p>;
   }
@@ -896,6 +909,13 @@ function renderFinishedResults(summary: RunSummary | null, bestRun: SavedRunHist
   const slowestAct = getSlowestActRow(actTimeRows);
   const bestRows = bestRun ? getSavedRunActRows(bestRun) : [];
   const totalDelta = bestRun ? summary.totalElapsedMs - bestRun.totalElapsedMs : null;
+  const displayEvidence = (value: string): string => {
+    const [zoneId, itemId] = value.split('::');
+    const guide = guides.find((entry) => entry.id === zoneId);
+    const item = guide ? buildChecklistDefinition(guide).find((entry) => entry.id === itemId) : null;
+    if (!guide || !item) return translateDataText(value, language); // Legacy summaries.
+    return `${language === 'en' ? guide.zone_en : guide.zone_ru}: ${translateDataText(item.text, language)}`;
+  };
 
   return (
     <div className="summary-results-dashboard">
@@ -918,6 +938,21 @@ function renderFinishedResults(summary: RunSummary | null, bestRun: SavedRunHist
           {totalDelta !== null
             ? renderSummaryStat(translate(language, 'companion.delta'), formatBestDeltaLabel(totalDelta, language), undefined, getDeltaClass(totalDelta))
             : renderSummaryStat(translate(language, 'companion.delta'), '—', translate(language, 'companion.runCompareEmpty'), 'is-muted')}
+        </div>
+      </section>
+
+      <section className="companion-block run-recap-verification">
+        <h3>{language === 'ru' ? 'Проверка наград и заданий' : 'Rewards and quest verification'}</h3>
+        <p className="helper-text">{language === 'ru'
+          ? 'По отмеченным локациям. Отсутствие отметки не доказывает пропуск: игровые логи неполные. Время в городах не отслеживается.'
+          : 'Based on visited zones. No checkmark does not prove an item was missed: game logs are incomplete. Town time is not tracked.'}</p>
+        <div className="run-recap-verification-grid">
+          <div><strong>{language === 'ru' ? 'Помечено пропущенным' : 'Marked as missed'}</strong>
+            {summary.missedRequiredRewards.length ? <ul>{summary.missedRequiredRewards.map((value, index) => <li key={`${index}-${value}`}>{displayEvidence(value)}</li>)}</ul> : <p className="helper-text">{language === 'ru' ? 'Не зафиксированы' : 'None recorded'}</p>}
+          </div>
+          <div><strong>{language === 'ru' ? 'Не подтверждено получение' : 'Completion not confirmed'}</strong>
+            {summary.unfinishedChecklistItems.length ? <ul>{summary.unfinishedChecklistItems.map((value, index) => <li key={`${index}-${value}`}>{displayEvidence(value)}</li>)}</ul> : <p className="helper-text">{language === 'ru' ? 'Нет записей' : 'No entries'}</p>}
+          </div>
         </div>
       </section>
 
@@ -1040,17 +1075,22 @@ export function CompanionPage() {
     ]
   );
   const selectedRouteAct = routeFilterMode === 'current_act' || routeFilterMode === 'current_zone' ? nowAct : selectedAct ?? nowAct;
+  // A non-empty route query searches ALL acts and interludes, regardless
+  // of the act currently selected in the navigation toolbar.
+  const globalRouteSearch = routeSearchQuery.trim().length > 0;
   const routeZones = useMemo(
-    () => getRouteOverviewFromActs(routeActs, selectedRouteAct),
-    [routeActs, selectedRouteAct]
+    () => globalRouteSearch
+      ? routeActs.flatMap((act) => act.zones)
+      : getRouteOverviewFromActs(routeActs, selectedRouteAct),
+    [routeActs, selectedRouteAct, globalRouteSearch]
   );
   const routeCardModels = useMemo(
     () => snapshot ? getRouteCardModels(routeZones, snapshot, language) : [],
     [routeZones, snapshot?.campaignBonuses, snapshot?.config.campaignBonusProgress, snapshot?.config.zoneProgress, language]
   );
   const visibleRouteCardModels = useMemo(() => (
-    filterRouteCards(routeCardModels, { filterMode: routeFilterMode, query: routeSearchQuery })
-  ), [routeCardModels, routeFilterMode, routeSearchQuery]);
+    filterRouteCards(routeCardModels, { filterMode: globalRouteSearch ? 'all' : routeFilterMode, query: routeSearchQuery })
+  ), [routeCardModels, routeFilterMode, routeSearchQuery, globalRouteSearch]);
   const toggleRouteCardExpanded = useCallback((guideId: string) => {
     setExpandedRouteCards((current) => ({
       ...current,
@@ -1518,7 +1558,7 @@ export function CompanionPage() {
             </span>
           </div>
         </div>
-        <RouteTabControls language={language} filterMode={routeFilterMode} searchQuery={routeSearchQuery}
+        <RouteTabControls language={language} filterMode={globalRouteSearch ? 'all' : routeFilterMode} searchQuery={routeSearchQuery}
           resultState={{ shownCount: visibleRouteCardModels.length, totalCount: routeCardModels.length, hasCurrentCard: routeCardModels.some((model) => model.entry.status === 'current') }}
           canJumpCurrent={Boolean(snapshot.currentGuideEntry?.id && routeActs.some((entry) => entry.zones.some((zone) => zone.guide.id === snapshot.currentGuideEntry?.id)))}
           onFilterChange={setRouteFilterMode} onSearchChange={setRouteSearchQuery} onJumpCurrent={focusCurrentZone} />
@@ -1545,7 +1585,7 @@ export function CompanionPage() {
       </section>
 
       <section className="companion-block companion-route-list-card">
-        <h3>{formatActTitle(selectedRouteAct, language)}</h3>
+        <h3>{globalRouteSearch ? (language === 'ru' ? 'Результаты по всей кампании' : 'Results across the campaign') : formatActTitle(selectedRouteAct, language)}</h3>
         <div className="route-overview-list route-overview-grid">
           {visibleRouteCardModels.map((model) => {
             const { entry } = model;
@@ -1562,6 +1602,7 @@ export function CompanionPage() {
                 <div className="route-overview-header">
                   <span className="route-step-index">{model.indexLabel}</span>
                   <strong className="route-zone-name">{model.routeCardTitle}</strong>
+                  {globalRouteSearch && <small className="route-search-act">{formatActTitle(entry.guide.act, language)}</small>}
                   <span className="route-rec-badge">{t('companion.routeCardLevel', { level: model.recommendedLevelLabel })}</span>
                   {model.statusLabel && <span className="route-state-pill">{model.statusLabel}</span>}
                 </div>
@@ -1982,7 +2023,7 @@ export function CompanionPage() {
   ) : null;
 
   const summaryContent = activeTab === 'summary' && activeDisplayRunTimer.status === 'finished' ? (
-    renderFinishedResults(config.lastRunSummary, bestSavedRun, language)
+    renderFinishedResults(config.lastRunSummary, bestSavedRun, language, snapshot.guideEntries)
   ) : activeTab === 'summary' ? (
     <div className="summary-results-dashboard">
       {renderLiveSummary(

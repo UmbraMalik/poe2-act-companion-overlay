@@ -109,6 +109,8 @@ export const DEFAULT_CONFIG: AppConfig = {
     crafting_tips: true,
     after: false
   },
+  overlayLayoutOrder: ['zoneInfo', 'route', 'nearby', 'tips'],
+  overlaySavedLayouts: [],
   mainOverlaySettings: {
     showOverlaySkip: true,
     showOverlayCriticalImportant: true,

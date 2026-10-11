@@ -312,7 +312,7 @@ test('dev log append IPC accepts bounded strings only and is gated outside dev m
   assert.match(appendHandler, /appendFile\(targetPath, payload, 'utf8'\)/);
 });
 
-test('manual checklist IPC persists only explicit manual items without restoring global shortcuts', () => {
+test('manual checklist IPC exposes gated global F6/F7 hotkeys for manual items', () => {
   const main = readMainProcessSource();
   const preload = readText('src/main/preload.ts');
   const stateController = readText('src/main/app-state-controller.ts');
@@ -338,11 +338,14 @@ test('manual checklist IPC persists only explicit manual items without restoring
   assert.match(manualBodies, /configStore\.update/);
   assert.match(manualBodies, /broadcastState/);
   assert.match(manualBodies, /zoneProgress/);
-  assert.doesNotMatch(appWindow, /shortcuts\.push\(\['markChecklistDone'/);
-  assert.doesNotMatch(appWindow, /matches\(hotkeys\.(markChecklistDone|undoChecklistMark)\)/);
-  assert.doesNotMatch(appWindow, /hotkeys\.(markChecklistDone|undoChecklistMark)/);
-  assert.doesNotMatch(settingsPage, /key: '(markChecklistDone|undoChecklistMark)'/);
-  assert.doesNotMatch(hotkeyUtils, /(markChecklistDone|undoChecklistMark):/);
+  assert.match(appWindow, /this\.config\.manualHotkeysEnabled/);
+  assert.match(appWindow, /matches\(hotkeys\.markChecklistDone\)/);
+  assert.match(appWindow, /matches\(hotkeys\.undoChecklistMark\)/);
+  assert.match(settingsPage, /key: 'markChecklistDone'/);
+  assert.match(settingsPage, /key: 'undoChecklistMark'/);
+  assert.match(settingsPage, /manualHotkeysEnabled/);
+  assert.match(hotkeyUtils, /markChecklistDone:/);
+  assert.match(hotkeyUtils, /undoChecklistMark:/);
 });
 
 test('default saved run labels use the configured app language outside timer controller', () => {

@@ -140,6 +140,8 @@ export function runCreateOverlayWindow(this: any) {
 
 export function runGetConfiguredHotkeys(this: any) {
         return {
+            markChecklistDone: formatConfiguredHotkey(this.config.hotkeys.markChecklistDone, DEFAULT_HOTKEYS.markChecklistDone),
+            undoChecklistMark: formatConfiguredHotkey(this.config.hotkeys.undoChecklistMark, DEFAULT_HOTKEYS.undoChecklistMark),
             toggleTimerPause: formatConfiguredHotkey(this.config.hotkeys.toggleTimerPause, DEFAULT_HOTKEYS.toggleTimerPause),
             openCompanion: formatConfiguredHotkey(this.config.hotkeys.openCompanion, DEFAULT_HOTKEYS.openCompanion),
             toggleOverlayMode: formatConfiguredHotkey(this.config.hotkeys.toggleOverlayMode, DEFAULT_HOTKEYS.toggleOverlayMode)
@@ -152,6 +154,10 @@ export function runRegisterGlobalHotkeys(this: any) {
         this.globalHotkeysRegistered = false;
         const hotkeys = this.getConfiguredHotkeys();
         const shortcuts: Array<[string, string, () => void]> = [
+            ...(this.config.manualHotkeysEnabled ? [
+                ['markChecklistDone', hotkeys.markChecklistDone, () => this.markCurrentChecklistItemDone()],
+                ['undoChecklistMark', hotkeys.undoChecklistMark, () => this.undoLastChecklistMark()]
+            ] as Array<[string, string, () => void]> : []),
             [
                 'toggleTimerPause',
                 hotkeys.toggleTimerPause,
@@ -227,6 +233,16 @@ export function runAttachManualHotkeys(this: any, window: any) {
             }
             const hotkeys = this.getConfiguredHotkeys();
             const matches = (value: any) => normalizeHotkeyAccelerator(value) === inputAccelerator;
+            if (this.config.manualHotkeysEnabled && matches(hotkeys.markChecklistDone)) {
+                event.preventDefault();
+                this.markCurrentChecklistItemDone();
+                return;
+            }
+            if (this.config.manualHotkeysEnabled && matches(hotkeys.undoChecklistMark)) {
+                event.preventDefault();
+                this.undoLastChecklistMark();
+                return;
+            }
             if (matches(hotkeys.openCompanion)) {
                 event.preventDefault();
                 this.toggleCompanionWindow();

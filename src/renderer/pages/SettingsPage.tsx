@@ -8,6 +8,7 @@ import { formatZoneMatcherReason, translateSystemText } from '../../i18n/runtime
 import { translate } from '../../i18n/translations';
 import { getAppThemeClassName } from '../theme';
 import { SettingsSelect } from '../settings/SettingsSelect';
+import { OverlayLayoutEditor } from '../settings/OverlayLayoutEditor';
 import { SettingsWindowResizeGrip } from '../settings/SettingsWindowResizeGrip';
 import { SettingsWindowShellEffects } from '../settings/SettingsWindowShellEffects';
 import { TimerTargetField } from '../settings/TimerTargetField';
@@ -71,6 +72,8 @@ const DEFAULT_HOTKEYS: HotkeySettings = {
 };
 
 const HOTKEY_LABELS: Array<{ key: keyof HotkeySettings; labelKey: string; noteKey: string }> = [
+  { key: 'markChecklistDone', labelKey: 'settings.hotkeyMarkChecklist', noteKey: 'settings.hotkeyManual' },
+  { key: 'undoChecklistMark', labelKey: 'settings.hotkeyUndoChecklist', noteKey: 'settings.hotkeyManual' },
   { key: 'toggleTimerPause', labelKey: 'settings.hotkeyPause', noteKey: 'settings.hotkeyAlways' },
   { key: 'openCompanion', labelKey: 'settings.hotkeyCompanion', noteKey: 'settings.hotkeyAlways' },
   { key: 'toggleOverlayMode', labelKey: 'settings.hotkeyOverlayMode', noteKey: 'settings.hotkeyAlways' }
@@ -1181,6 +1184,8 @@ export function SettingsPage() {
             </div>
           </div>
 
+          <OverlayLayoutEditor config={config} language={appLanguage} />
+
           <div className="settings-grid">
             <label className="settings-field settings-field-full">
               <span>{t('settings.overlayOpacity', { value: Math.round(config.overlayOpacity * 100) })}</span>
@@ -1383,6 +1388,11 @@ export function SettingsPage() {
               </div>
             </div>
 
+            <label className="toggle-card">
+              <input type="checkbox" checked={config.manualHotkeysEnabled}
+                onChange={(event) => void window.poe2Overlay.updateSettings({ manualHotkeysEnabled: event.target.checked })} />
+              <span>{t('settings.manualChecklistHotkeys')}</span>
+            </label>
             <div className="hotkey-grid">
               {HOTKEY_LABELS.map((item) => (
                 <label className="hotkey-field" key={item.key}>

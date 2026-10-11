@@ -1,4 +1,5 @@
 import type {
+  OverlayLayoutSection,
   AppConfig,
   OverlayMode,
   OverlayVisibleSections
@@ -61,8 +62,21 @@ function cloneVisibleSections(sections: OverlayVisibleSections): OverlayVisibleS
   return { ...sections };
 }
 
-function buildBlockOrder(_intent: OverlayDisplayIntent): Record<OverlayContentBlock, number> {
-  return STABLE_BLOCK_ORDER;
+function buildBlockOrder(config: AppConfig): Record<OverlayContentBlock, number> {
+  const sections: OverlayLayoutSection[] = ['zoneInfo', 'route', 'nearby', 'tips'];
+  const selected = Array.isArray(config.overlayLayoutOrder) ? config.overlayLayoutOrder : sections;
+  const order = [...new Set([...selected, ...sections])];
+  const position = (section: OverlayLayoutSection) => 10 + 10 * order.indexOf(section);
+  return {
+    ...STABLE_BLOCK_ORDER,
+    zoneInfo: position('zoneInfo'),
+    next: position('route'),
+    zoneBonuses: position('route'),
+    nearby: position('nearby'),
+    skip: position('tips'),
+    speedrun: position('tips'),
+    important: position('tips')
+  };
 }
 
 function getIntentFromPreset(presetId: OverlayPresetId | null): OverlayDisplayIntent | null {
@@ -155,7 +169,7 @@ export function buildOverlayContentPlan(params: {
     intent,
     presetId,
     visibleSections,
-    blockOrder: buildBlockOrder(intent),
+    blockOrder: buildBlockOrder(params.config),
     copyDensity: COPY_DENSITY_BY_INTENT[intent],
     maxChecklistItems: MAX_CHECKLIST_ITEMS_BY_INTENT[intent]
   };

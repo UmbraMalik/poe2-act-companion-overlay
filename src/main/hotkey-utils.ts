@@ -1,4 +1,6 @@
 export const HOTKEY_ACTION_LABELS = {
+  markChecklistDone: 'отметить текущую задачу',
+  undoChecklistMark: 'отменить отметку задачи',
   toggleTimerPause: 'пауза/продолжить таймер',
   openCompanion: 'подробная панель',
   toggleOverlayMode: 'режим оверлея'

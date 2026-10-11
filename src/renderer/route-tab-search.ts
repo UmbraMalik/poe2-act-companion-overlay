@@ -37,8 +37,8 @@ const FILTER_LABELS: Record<RouteFilterMode, Record<AppLanguage, string>> = {
 };
 
 const ROUTE_SEARCH_TEXT = {
-  label: { ru: 'Поиск маршрута', en: 'Route search' },
-  placeholder: { ru: 'Зона, акт, награда...', en: 'Zone, act, reward...' },
+  label: { ru: 'Поиск по всей кампании', en: 'Campaign-wide search' },
+  placeholder: { ru: 'Зона, босс, бонус, задание...', en: 'Zone, boss, bonus, quest...' },
   empty: { ru: 'Поиск ничего не нашёл.', en: 'Search found no route zones.' },
   emptyBonuses: { ru: 'В этом списке нет зон с бонусами.', en: 'No zones with bonuses in this view.' },
   emptyCurrent: { ru: 'Текущая зона не найдена в маршруте.', en: 'Current zone was not found in the route.' },

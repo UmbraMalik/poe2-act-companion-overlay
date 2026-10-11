@@ -1,0 +1,22 @@
+/* Five-feature test pass, scoped to existing dark fantasy/standard themes. */
+.overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .hud-footer-row { order: 90; }
+.overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .hud-header { order: 0; }
+.overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-ghost-pace {
+  display:flex; align-items:center; justify-content:space-between; gap:8px;
+  min-width:0; font-size:var(--font-meta); border:1px solid rgba(191,203,219,.18);
+  border-radius:9px; padding:5px 9px; background:rgba(6,9,12,.3); color:#d8e0ea;
+}
+.overlay-ghost-pace strong { font-family:var(--font-mono); font-variant-numeric:tabular-nums; }
+.overlay-ghost-pace.is-ahead strong { color:#88d9b0; }
+.overlay-ghost-pace.is-behind strong { color:#f5b59d; }
+.overlay-ghost-pace.is-even strong { color:#e9c580; }
+.overlay-layout-editor { margin: 12px 0; padding:12px; border:1px solid rgba(215,182,128,.2); border-radius:12px; }
+.overlay-layout-rows { display:grid; gap:5px; }
+.overlay-layout-row { display:flex; align-items:center; gap:6px; min-width:0; margin:4px 0; }
+.overlay-layout-row span { flex:1 1 auto; min-width:0; overflow-wrap:anywhere; }
+.overlay-layout-row button { flex:0 0 auto; min-height:30px; padding:4px 10px; }
+.overlay-layout-save { display:flex; flex-wrap:wrap; gap:6px; margin:12px 0; }
+.overlay-layout-save input { min-width:120px; flex:1 1 160px; }
+.run-recap-verification { margin:10px 0; }
+.run-recap-verification-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:14px; }
+.run-recap-verification ul { max-height:170px; overflow-y:auto; padding-left:20px; overflow-wrap:anywhere; }
