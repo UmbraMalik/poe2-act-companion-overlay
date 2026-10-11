@@ -198,3 +198,191 @@
     transition: none;
   }
 }
+
+/* Follow-up test: give sidebar items a readable resting state and reclaim
+ * space for route controls without changing navigation or selected state. */
+.companion-page .companion-card.companion-sidebar-layout {
+  grid-template-columns: 184px minmax(0, 1fr);
+  gap: 10px;
+  padding: 10px;
+}
+
+.companion-page .companion-sidebar {
+  align-self: start;
+  height: auto;
+  max-height: 100%;
+  gap: 11px;
+  padding: 11px 8px;
+  border-color: rgba(190, 201, 214, 0.18);
+}
+
+.companion-page .companion-sidebar-group + .companion-sidebar-group {
+  padding-top: 7px;
+  border-top: 1px solid rgba(190, 201, 214, 0.075);
+}
+
+.companion-page .companion-sidebar-heading {
+  color: var(--companion-muted);
+  font-size: 10.5px;
+}
+
+.companion-page .companion-sidebar-heading.is-section-active {
+  color: var(--companion-gold);
+}
+
+.companion-page .companion-sidebar-link {
+  min-height: 38px;
+  border-color: rgba(190, 201, 214, 0.19);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.060), rgba(255, 255, 255, 0.022)),
+    rgba(15, 19, 24, 0.46);
+  color: var(--companion-text);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.045);
+}
+
+.companion-page .companion-sidebar-link:hover:not(.is-active) {
+  border-color: rgba(241, 185, 106, 0.38);
+  background:
+    linear-gradient(180deg, rgba(241, 185, 106, 0.105), rgba(255, 255, 255, 0.025)),
+    rgba(15, 19, 24, 0.68);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+.companion-page .companion-sidebar-link.is-active {
+  border-color: rgba(241, 185, 106, 0.54);
+  background:
+    radial-gradient(circle at 0 0, rgba(241, 185, 106, 0.18), transparent 85%),
+    linear-gradient(90deg, rgba(241, 185, 106, 0.14), rgba(255, 255, 255, 0.045));
+  box-shadow:
+    inset 3px 0 0 var(--companion-gold),
+    inset 0 1px 0 rgba(255, 255, 255, 0.075);
+}
+
+.theme-dark-fantasy.companion-page .companion-sidebar {
+  border-color: rgba(190, 162, 255, 0.22);
+}
+
+.theme-dark-fantasy.companion-page .companion-sidebar-group + .companion-sidebar-group {
+  border-top-color: rgba(190, 162, 255, 0.10);
+}
+
+.theme-dark-fantasy.companion-page .companion-sidebar-link {
+  border-color: rgba(190, 162, 255, 0.22);
+  background:
+    linear-gradient(180deg, rgba(190, 162, 255, 0.095), rgba(255, 255, 255, 0.012)),
+    rgba(12, 9, 24, 0.72);
+}
+
+.theme-dark-fantasy.companion-page .companion-sidebar-link:hover:not(.is-active) {
+  border-color: rgba(190, 162, 255, 0.43);
+  background:
+    linear-gradient(180deg, rgba(167, 123, 255, 0.16), rgba(255, 255, 255, 0.025)),
+    rgba(17, 12, 31, 0.84);
+}
+
+.theme-dark-fantasy.companion-page .companion-sidebar-link.is-active {
+  border-color: rgba(217, 167, 95, 0.58);
+  background:
+    radial-gradient(circle at 0 0, rgba(217, 167, 95, 0.20), transparent 88%),
+    linear-gradient(90deg, rgba(126, 84, 214, 0.23), rgba(255, 255, 255, 0.018));
+  box-shadow:
+    inset 3px 0 0 var(--companion-gold),
+    inset 0 1px 0 rgba(255, 255, 255, 0.065);
+}
+
+/* Use the actual width of the content pane, not the full Electron window,
+ * for the route toolbar breakpoint. The sidebar reduces usable width. */
+.companion-page .companion-content-pane {
+  container: companion-route-pane / inline-size;
+}
+
+@container companion-route-pane (max-width: 1100px) {
+  .companion-page .route-polish-layout .companion-route-toolbar {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 9px !important;
+  }
+
+  .companion-page .route-polish-layout .companion-route-toolbar .companion-tab-row {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 105px), 1fr)) !important;
+    gap: 6px !important;
+  }
+
+  .companion-page .route-polish-layout .companion-route-toolbar .companion-tab-row button {
+    min-width: 0;
+    width: 100%;
+    padding-inline: 4px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .companion-page .route-polish-layout .route-tab-tools {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) minmax(260px, 1.1fr);
+    grid-template-areas: "route-search route-filters" "route-footer route-filters";
+    align-items: start;
+    gap: 7px 11px !important;
+  }
+
+  .companion-page .route-polish-layout .route-search-field {
+    grid-area: route-search;
+  }
+
+  .companion-page .route-polish-layout .route-filter-row {
+    grid-area: route-filters;
+    align-self: center;
+  }
+
+  .companion-page .route-polish-layout .route-tools-footer {
+    grid-area: route-footer;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .companion-page .route-polish-layout .route-overview-list.route-overview-grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 235px), 1fr)) !important;
+  }
+}
+
+@container companion-route-pane (max-width: 620px) {
+  .companion-page .route-polish-layout .route-tab-tools {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "route-search" "route-filters" "route-footer";
+  }
+
+  .companion-page .route-polish-layout .route-toolbar-context {
+    gap: 5px;
+  }
+
+  .companion-page .route-polish-layout .route-toolbar-context span {
+    padding: 7px;
+  }
+}
+
+/* Preserve the original horizontal sidebar fallback at narrow window sizes. */
+@media (max-width: 780px) {
+  .companion-page .companion-card.companion-sidebar-layout {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 9px;
+    padding: 9px;
+  }
+
+  .companion-page .companion-sidebar {
+    align-self: stretch;
+    width: 100%;
+    max-height: 92px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    gap: 12px;
+    padding: 8px;
+  }
+
+  .companion-page .companion-sidebar-group + .companion-sidebar-group {
+    padding-top: 0;
+    border-top: 0;
+  }
+}
