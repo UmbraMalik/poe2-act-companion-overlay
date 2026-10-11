@@ -1,0 +1,162 @@
+/* UI-V2 overlay responsive test (45).
+ * Narrow Electron overlay windows (roughly 270–380 CSS px), RU and EN.
+ * Visual palette, content visibility, language toggle, and overlays are unchanged.
+ * Scope all layout changes to overlay-page only; companion/settings are untouched.
+ */
+
+/* Long translated zone names, boss tips, and bonus titles may wrap without
+ * widening the Electron surface or clipping past the section border. */
+@media (max-width: 400px) {
+  .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .hud-zone-name,
+  .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .checklist-item,
+  .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .section-list li,
+  .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .hud-next-zone,
+  .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .bonus-line > span:last-child,
+  .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-upcoming-title,
+  .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-upcoming-note {
+    min-width: 0;
+    max-width: 100%;
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+    word-break: normal !important;
+  }
+
+  .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .hud-block h2 {
+    min-width: 0;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .hud-meta {
+    min-width: 0;
+    white-space: normal;
+    overflow-wrap: break-word;
+    border-radius: 11px;
+  }
+
+  .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-overview-grid,
+  .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-guidance-stack {
+    min-width: 0;
+    width: 100%;
+  }
+}
+
+/* At compact widths keep the level and reminder title on the first line, but
+ * move the NOW badge to its own row when present. Nothing is hidden. */
+@media (max-width: 360px) {
+  .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-upcoming-line {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 3px 6px;
+    align-items: start;
+  }
+
+  .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-upcoming-badge {
+    grid-column: 2;
+    justify-self: start;
+  }
+
+  .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-hud {
+    --space-card-x: 8px;
+    --space-section: 6px;
+  }
+
+  .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .hud-header .hud-title-row h1.hud-zone-name {
+    line-height: 1.12 !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .hud-footer-actions {
+    gap: 6px !important;
+  }
+}
+
+/* The narrowest legal compact sizes leave too little room for the ACT chip
+ * and all header controls on the same line. Put the controls below the title,
+ * not on top of translated headings; preserve every button and RU/EN switch. */
+@media (max-width: 335px) {
+  .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .hud-header .hud-title-row {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 5px !important;
+    min-height: 0 !important;
+  }
+
+  .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .hud-header .hud-zone-title-card {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .hud-header .hud-zone-kicker-row {
+    padding-right: 0 !important;
+  }
+
+  .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .hud-header .hud-title-actions {
+    position: static !important;
+    grid-column: 1;
+    grid-row: 2;
+    justify-self: end;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .hud-header .overlay-quick-actions {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    justify-content: flex-end !important;
+    flex-wrap: wrap !important;
+    row-gap: 4px !important;
+  }
+
+  .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .hud-header .hud-title-row h1.hud-zone-name {
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: clamp(17px, calc(var(--font-title) * 0.96), 22px) !important;
+  }
+}
+
+/* In the timer-only card the time stays large and legible, while translated
+ * labels and the quick actions stop colliding at very small widths. */
+@media (max-width: 310px) {
+  .overlay-page.overlay-page-timer-only .overlay-timer-only-card .timer-only-header {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 6px;
+  }
+
+  .overlay-page.overlay-page-timer-only .timer-only-top-control-row {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .overlay-page.overlay-page-timer-only .timer-only-top-control-row .overlay-quick-actions {
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    justify-content: flex-end !important;
+    flex-wrap: wrap !important;
+    row-gap: 4px !important;
+  }
+
+  .overlay-page.overlay-page-timer-only .timer-only-heading,
+  .overlay-page.overlay-page-timer-only .timer-only-state-row,
+  .overlay-page.overlay-page-timer-only .timer-only-info-grid {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+}
+
+/* Collapsed mode intentionally uses ellipsis for the zone name so the buttons
+ * remain reachable. Keep its single-row design and prevent flex overflow. */
+@media (max-width: 335px) {
+  .overlay-page.is-overlay-collapsed .hud-collapsed-main {
+    min-width: 0;
+    flex: 1 1 0;
+  }
+
+  .overlay-page.is-overlay-collapsed .hud-collapsed-zone-name {
+    min-width: 0;
+    flex: 1 1 0;
+    text-overflow: ellipsis;
+  }
+}

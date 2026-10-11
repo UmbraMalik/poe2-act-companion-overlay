@@ -32,3 +32,4 @@ Those used to exist as duplicate sources and made it too easy to edit a CSS file
 42. `42-overlay-structure-v3-test.css` — reversible reading order and grouped secondary tips in the full overlay; preserves RU/EN and core gameplay list.
 43. `43-settings-sidebar-test.css` — reversible settings navigation sidebar, scrollable content and responsive compact layout.
 44. `44-companion-sidebar-test.css` — reversible companion navigation sidebar; all seven tabs remain available in RU/EN, with compact horizontal navigation in narrow windows.
+45. `45-overlay-narrow-ru-en-test.css` — reversible narrow-overlay wrapping/layout for RU/EN and all four overlay modes.
