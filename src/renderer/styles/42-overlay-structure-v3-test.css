@@ -1,0 +1,79 @@
+/* Overlay structure experiment (42): no "Important Now" callout.
+ * Keep the ordinary checklist, next-zone title centered and all theme accents.
+ * The detailed-mode reading order is: zone -> next/bonuses -> upcoming -> advice.
+ * No game data, visibility preferences, translations or timer-only UI changed.
+ */
+
+/* Separate the optional tips from the immediate route actions, without three
+ * nested glowing card borders and without another visual heading. */
+.overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-guidance-stack {
+  display: grid;
+  gap: 0;
+  min-width: 0;
+  padding: 4px 7px;
+  border: 1px solid rgba(190, 201, 214, 0.14);
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.027), rgba(0, 0, 0, 0.045));
+}
+
+.overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-guidance-stack .hud-block {
+  min-width: 0;
+  margin: 0;
+  padding: 8px 8px;
+  border: 0 !important;
+  border-left: 2px solid var(--overlay-section-border, rgba(215, 182, 128, 0.25)) !important;
+  border-radius: 0;
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+.overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-guidance-stack .hud-block::after {
+  display: none !important;
+  animation: none !important;
+}
+
+.overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-guidance-stack .hud-block + .hud-block {
+  margin-top: 1px;
+  border-top: 1px solid rgba(205, 220, 237, 0.095) !important;
+}
+
+/* Keep labels in the established category colors. Tighten only excess heading
+ * spacing: every instruction remains visible without disclosure clicks. */
+.overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-guidance-stack .hud-block h2 {
+  margin-bottom: 5px;
+}
+
+.overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-guidance-stack .section-list {
+  min-width: 0;
+}
+
+/* The upcoming list is now after current tasks and zone rewards. Allow long
+ * RU/EN vendor names to wrap instead of forcing horizontal expansion. */
+.overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .upcoming-overlay-section .overlay-upcoming-line,
+.overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .upcoming-overlay-section .overlay-upcoming-title,
+.overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-guidance-stack li {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* Do not modify the normal list markers or turn its first item into a callout.
+ * Keep its visual rank ahead of auxiliary hints with a little breathing room. */
+.overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .checklist-section .overlay-checklist-list {
+  row-gap: 6px;
+}
+
+@media (max-width: 350px) {
+  .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-guidance-stack {
+    padding: 3px 5px;
+  }
+  .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-guidance-stack .hud-block {
+    padding: 7px 6px;
+  }
+}
+
+/* Dark fantasy theme keeps the same black-violet surface, not a new palette. */
+.theme-dark-fantasy.overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-guidance-stack {
+  border-color: rgba(190, 162, 255, 0.15);
+  background: linear-gradient(180deg, rgba(167, 123, 255, 0.045), rgba(8, 6, 15, 0.08));
+}

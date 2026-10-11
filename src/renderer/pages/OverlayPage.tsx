@@ -1656,6 +1656,11 @@ export function OverlayPage() {
     hasNextSection ? overlayContentPlan.blockOrder.next : Number.POSITIVE_INFINITY
   );
 
+  const showSkipNotes = visibleSections.skip && !isCompactOverlay && skipLines.length > 0;
+  const showSpeedrunNotes = visibleSections.speedrun && !isCompactOverlay && speedrunLines.length > 0;
+  const showImportantNotes = visibleSections.important && !isCompactOverlay && importantLines.length > 0;
+  const showGuidanceStack = showSkipNotes || showSpeedrunNotes || showImportantNotes;
+
   const endgameT15CompletionBlock = showEndgameT15CompletionNotice ? (
     <section className="hud-block overlay-endgame-completion-card no-drag" role="status" aria-live="polite">
       <div className="overlay-endgame-completion-copy">
@@ -1824,34 +1829,6 @@ export function OverlayPage() {
           </section>
         )}
 
-        {visibleSections.nearby && !isCompactOverlay && upcomingOverlayReminders.length > 0 && (
-          <section className="hud-block reminder-section upcoming-overlay-section" style={{ order: overlayContentPlan.blockOrder.nearby }}>
-            <div className="reminder-header-row">
-              <h2>{t('overlay.nearby')}</h2>
-              <span className="overlay-upcoming-range">{t('overlay.upcomingRange')}</span>
-            </div>
-            <ul className="overlay-upcoming-list">
-              {upcomingOverlayReminders.map((entry) => (
-                <li
-                  key={entry.id}
-                  className={`overlay-upcoming-item ${entry.level === config.currentLevel ? 'is-current-level' : ''}`}
-                >
-                  <div className="overlay-upcoming-line">
-                    <span className="overlay-upcoming-level">{t('common.level')} {entry.level}</span>
-                    <span className="overlay-upcoming-title">{entry.title}</span>
-                    {entry.level === config.currentLevel && (
-                      <span className="overlay-upcoming-badge">{t('overlay.currentBadge')}</span>
-                    )}
-                  </div>
-                  {entry.items.length > 0 && (
-                    <p className="overlay-upcoming-note">{entry.items.slice(0, 2).join(' · ')}</p>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
-
         {visibleSections.zoneInfo && (
           <section className="hud-block checklist-section" style={{ order: overlayContentPlan.blockOrder.zoneInfo }}>
             <h2>{t('overlay.inThisZone')}</h2>
@@ -1911,37 +1888,69 @@ export function OverlayPage() {
           </div>
         )}
 
-        {visibleSections.skip && !isCompactOverlay && skipLines.length > 0 && (
-          <section className="hud-block skip-section" style={{ order: overlayContentPlan.blockOrder.skip }}>
-            <h2>{t('common.skip')}</h2>
-            <ul className="section-list compact-list">
-              {skipLines.map((item) => (
-                <li key={item}>{item}</li>
+        {visibleSections.nearby && !isCompactOverlay && upcomingOverlayReminders.length > 0 && (
+          <section className="hud-block reminder-section upcoming-overlay-section" style={{ order: overlayContentPlan.blockOrder.nearby }}>
+            <div className="reminder-header-row">
+              <h2>{t('overlay.nearby')}</h2>
+              <span className="overlay-upcoming-range">{t('overlay.upcomingRange')}</span>
+            </div>
+            <ul className="overlay-upcoming-list">
+              {upcomingOverlayReminders.map((entry) => (
+                <li
+                  key={entry.id}
+                  className={`overlay-upcoming-item ${entry.level === config.currentLevel ? 'is-current-level' : ''}`}
+                >
+                  <div className="overlay-upcoming-line">
+                    <span className="overlay-upcoming-level">{t('common.level')} {entry.level}</span>
+                    <span className="overlay-upcoming-title">{entry.title}</span>
+                    {entry.level === config.currentLevel && (
+                      <span className="overlay-upcoming-badge">{t('overlay.currentBadge')}</span>
+                    )}
+                  </div>
+                  {entry.items.length > 0 && (
+                    <p className="overlay-upcoming-note">{entry.items.slice(0, 2).join(' · ')}</p>
+                  )}
+                </li>
               ))}
             </ul>
           </section>
         )}
 
-        {visibleSections.speedrun && !isCompactOverlay && speedrunLines.length > 0 && (
-          <section className="hud-block speedrun-section" style={{ order: overlayContentPlan.blockOrder.speedrun }}>
-            <h2>{t('overlay.speedrun')}</h2>
-            <ul className="section-list compact-list">
-              {speedrunLines.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-          </section>
-        )}
+        {showGuidanceStack && (
+          <div className="overlay-guidance-stack">
+            {showSkipNotes && (
+              <section className="hud-block skip-section">
+                <h2>{t('common.skip')}</h2>
+                <ul className="section-list compact-list">
+                  {skipLines.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </section>
+            )}
 
-        {visibleSections.important && !isCompactOverlay && importantLines.length > 0 && (
-          <section className="hud-block info-section" style={{ order: overlayContentPlan.blockOrder.important }}>
-            <h2>{t('common.important')}</h2>
-            <ul className="section-list compact-list">
-              {importantLines.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-          </section>
+            {showSpeedrunNotes && (
+              <section className="hud-block speedrun-section">
+                <h2>{t('overlay.speedrun')}</h2>
+                <ul className="section-list compact-list">
+                  {speedrunLines.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </section>
+            )}
+
+            {showImportantNotes && (
+              <section className="hud-block info-section">
+                <h2>{t('common.important')}</h2>
+                <ul className="section-list compact-list">
+                  {importantLines.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </section>
+            )}
+          </div>
         )}
 
         <div className="hud-footer-row">

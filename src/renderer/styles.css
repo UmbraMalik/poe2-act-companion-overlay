@@ -49,3 +49,4 @@
 @import './styles/39-overlay-mode-stability.css'; /* Flicker-free transparent-window mode changes */
 @import './styles/40-ui-test-structure-pass.css'; /* Test pass: overlay structure refinement and select chevron alignment */
 @import './styles/41-typography-readability-test.css'; /* Reversible typography and readability experiment */
+@import './styles/42-overlay-structure-v3-test.css'; /* Test overlay reading order and grouped secondary tips */

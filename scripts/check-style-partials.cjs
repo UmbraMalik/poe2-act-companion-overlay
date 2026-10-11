@@ -95,6 +95,7 @@ const expected = [
   '39-overlay-mode-stability.css',
   '40-ui-test-structure-pass.css',
   '41-typography-readability-test.css',
+  '42-overlay-structure-v3-test.css',
 ];
 const expectedCssFiles = [...expected, ...trackedNonNumberedPartials].sort();
 const expectedImports = [
