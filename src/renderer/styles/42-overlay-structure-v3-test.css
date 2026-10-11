@@ -10,7 +10,7 @@
   display: grid;
   gap: 0;
   min-width: 0;
-  padding: 4px 7px;
+  padding: 0 7px;
   border: 1px solid rgba(190, 201, 214, 0.14);
   border-radius: 12px;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.027), rgba(0, 0, 0, 0.045));
@@ -65,7 +65,7 @@
 
 @media (max-width: 350px) {
   .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-guidance-stack {
-    padding: 3px 5px;
+    padding: 0 5px;
   }
   .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-guidance-stack .hud-block {
     padding: 7px 6px;
