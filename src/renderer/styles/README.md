@@ -28,3 +28,4 @@ Do not add parallel folder copies like `styles/base/*`, `styles/overlay/*`, `sty
 Those used to exist as duplicate sources and made it too easy to edit a CSS file that the app never imported.
 
 40. `40-ui-test-structure-pass.css` — test pass for overlay structure refinement and select chevron alignment.
+41. `41-typography-readability-test.css` — reversible readability experiment: Segoe UI Variable body copy on Windows, Geist headings, size and weight polish for RU/EN.

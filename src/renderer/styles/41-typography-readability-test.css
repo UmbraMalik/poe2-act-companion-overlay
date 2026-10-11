@@ -1,0 +1,137 @@
+/* UI typography experiment (41): readable copy with the existing PoE2 look.
+ * Windows uses Segoe UI Variable Text for long body copy; bundled Geist stays
+ * the fallback. Headlines, act chips, timers, colors and layout are unchanged.
+ * No new font download or dependency; RU and EN share these styles.
+ */
+:root {
+  --font-reading:
+    "Segoe UI Variable Text",
+    "Segoe UI",
+    "Geist Variable",
+    system-ui,
+    sans-serif;
+}
+
+/* Honor the overlay's existing text-size preference while giving its normal
+ * sizes just a small readability boost. The 110/120% scales stay untouched. */
+.overlay-page.scale-70 {
+  --font-body-base: 11.5px;
+  --font-meta-base: 10.5px;
+  --font-heading-base: 9.5px;
+}
+
+.overlay-page.scale-80 {
+  --font-body-base: 12.5px;
+  --font-meta-base: 11.5px;
+  --font-heading-base: 10.5px;
+}
+
+.overlay-page.scale-90 {
+  --font-body-base: 13px;
+  --font-meta-base: 11.5px;
+  --font-heading-base: 10.5px;
+}
+
+.overlay-page.scale-100 {
+  --font-body-base: 13.5px;
+  --font-meta-base: 12.5px;
+  --font-heading-base: 11.5px;
+}
+
+/* Real gameplay instructions: slightly firmer weight and calmer line-height.
+ * Keep the original bullet colors and semantic status styling intact. */
+.overlay-page:not(.overlay-page-timer-only) .checklist-item,
+.overlay-page:not(.overlay-page-timer-only) .section-list li,
+.overlay-page:not(.overlay-page-timer-only) .hud-next-zone,
+.overlay-page:not(.overlay-page-timer-only) .hud-empty,
+.overlay-page:not(.overlay-page-timer-only) .overlay-upcoming-note,
+.overlay-page:not(.overlay-page-timer-only) .bonus-line {
+  font-family: var(--font-reading) !important;
+  font-weight: 550 !important;
+  line-height: 1.47 !important;
+  letter-spacing: 0.005em;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+/* Maintain the smaller compact layout, without squeezing line spacing. */
+.overlay-page.density-compact:not(.overlay-page-timer-only) .checklist-item,
+.overlay-page.density-compact:not(.overlay-page-timer-only) .section-list li {
+  line-height: 1.38 !important;
+}
+
+/* The most easily missed information is currently light and very thin. */
+.overlay-page:not(.overlay-page-timer-only) .hud-meta,
+.overlay-page:not(.overlay-page-timer-only) .overlay-upcoming-range,
+.overlay-page:not(.overlay-page-timer-only) .checklist-more-note,
+.overlay-page-timer-only .timer-only-meta,
+.overlay-page-timer-only .timer-only-next {
+  font-family: var(--font-reading) !important;
+  font-weight: 570 !important;
+  line-height: 1.4;
+}
+
+/* Section headers and timer numbers deliberately retain the existing Geist
+ * display typography (and existing accent colors). */
+
+/* Settings: 11px descriptions were hard to scan on a desktop monitor. */
+.settings-page:not(.companion-page) .settings-header-copy .settings-intro,
+.settings-page:not(.companion-page) .helper-text,
+.settings-page:not(.companion-page) .settings-card p,
+.settings-page:not(.companion-page) .settings-card small {
+  font-family: var(--font-reading) !important;
+  font-size: 12px;
+  line-height: 1.55;
+  font-weight: 500;
+  overflow-wrap: break-word;
+}
+
+.settings-page:not(.companion-page) .settings-field > span,
+.settings-page:not(.companion-page) .select-field > span,
+.settings-page:not(.companion-page) .slider-field > span,
+.settings-page:not(.companion-page) .settings-inline-grid label > span,
+.settings-page:not(.companion-page) .toggle-card span,
+.settings-page:not(.companion-page) .hotkey-field-title {
+  font-family: var(--font-reading) !important;
+  font-size: 13px;
+  line-height: 1.35;
+  font-weight: 610;
+  overflow-wrap: break-word;
+}
+
+/* Menu choice text is now the same readable size in one- and two-line values;
+ * no geometry changes to the circular chevron or Qimah's native select. */
+.settings-page:not(.companion-page) .settings-select-value,
+.settings-page:not(.companion-page) .settings-select-option {
+  font-family: var(--font-reading) !important;
+  font-size: 13px;
+  line-height: 1.4;
+  font-weight: 600;
+  overflow-wrap: break-word;
+}
+
+/* Detailed companion panel: improve paragraphs and the small reward hints,
+ * leaving bold zone titles and tab labels in the original display font. */
+.companion-page .companion-checklist-list .checklist-item,
+.companion-page .details-checklist li,
+.companion-page .details-list li,
+.companion-page .section-list li,
+.companion-page .reminder-sublist li,
+.companion-page .bonus-details-list li,
+.companion-page .route-card-preview {
+  font-family: var(--font-reading) !important;
+  font-weight: 520 !important;
+  line-height: 1.53 !important;
+  overflow-wrap: break-word;
+}
+
+.companion-page .bonus-meta,
+.companion-page .bonus-detected-line,
+.companion-page .helper-text,
+.companion-page .route-more-note {
+  font-family: var(--font-reading) !important;
+  font-size: max(12px, 0.75rem) !important;
+  font-weight: 510 !important;
+  line-height: 1.42 !important;
+  overflow-wrap: break-word;
+}
