@@ -99,6 +99,7 @@ const expected = [
   '43-settings-sidebar-test.css',
   '44-companion-sidebar-test.css',
   '45-overlay-narrow-ru-en-test.css',
+  '46-overlay-narrow-header-toolbar-fix.css',
 ];
 const expectedCssFiles = [...expected, ...trackedNonNumberedPartials].sort();
 const expectedImports = [

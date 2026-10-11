@@ -53,3 +53,4 @@
 @import './styles/43-settings-sidebar-test.css'; /* Reversible settings sidebar navigation experiment */
 @import './styles/44-companion-sidebar-test.css'; /* Reversible detailed companion panel sidebar */
 @import './styles/45-overlay-narrow-ru-en-test.css'; /* Narrow-window overlay RU/EN responsiveness test */
+@import './styles/46-overlay-narrow-header-toolbar-fix.css'; /* Keep the top control row in the header for narrow overlays when width still allows it */

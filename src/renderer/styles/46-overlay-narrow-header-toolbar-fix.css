@@ -1,0 +1,58 @@
+/* UI-V2 overlay narrow-header toolbar fix (46).
+ * Follow-up to the narrow RU/EN overlay test.
+ * Keep the quick-action toolbar in the header row when the overlay is still wide
+ * enough, and only fall back to a stacked toolbar on truly tiny widths.
+ */
+
+@media (min-width: 296px) and (max-width: 335px) {
+  .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .hud-header .hud-title-row {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: start !important;
+    gap: 6px !important;
+    min-height: 0 !important;
+  }
+
+  .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .hud-header .hud-zone-title-card {
+    grid-column: 1;
+    grid-row: 1;
+    min-width: 0;
+  }
+
+  .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .hud-header .hud-title-actions {
+    position: static !important;
+    display: block !important;
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+    align-self: start;
+    width: auto !important;
+    min-width: max-content !important;
+    max-width: none !important;
+  }
+
+  .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .hud-header .overlay-quick-actions {
+    width: max-content !important;
+    min-width: max-content !important;
+    max-width: none !important;
+    justify-content: flex-end !important;
+    flex-wrap: nowrap !important;
+    gap: 4px !important;
+  }
+
+  .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .hud-header .overlay-quick-actions > .overlay-icon-button,
+  .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .hud-header .overlay-quick-actions > .overlay-timer-icon-control,
+  .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .hud-header .overlay-language-toggle {
+    width: 24px !important;
+    min-width: 24px !important;
+    max-width: 24px !important;
+    height: 24px !important;
+    min-height: 24px !important;
+    max-height: 24px !important;
+  }
+
+  .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .hud-header .hud-title-row h1.hud-zone-name {
+    font-size: clamp(16px, calc(var(--font-title) * 0.94), 20px) !important;
+    line-height: 1.08 !important;
+  }
+}

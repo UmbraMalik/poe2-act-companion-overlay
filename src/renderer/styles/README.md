@@ -33,3 +33,5 @@ Those used to exist as duplicate sources and made it too easy to edit a CSS file
 43. `43-settings-sidebar-test.css` — reversible settings navigation sidebar, scrollable content and responsive compact layout.
 44. `44-companion-sidebar-test.css` — reversible companion navigation sidebar; all seven tabs remain available in RU/EN, with compact horizontal navigation in narrow windows.
 45. `45-overlay-narrow-ru-en-test.css` — reversible narrow-overlay wrapping/layout for RU/EN and all four overlay modes.
+
+46. `46-overlay-narrow-header-toolbar-fix.css` — reversible fix for narrow full overlay headers so the quick-action toolbar stays beside the zone title when width still allows it, with stacked fallback only at smaller widths.
