@@ -2,9 +2,9 @@
 
 Desktop-компаньон для прохождения кампании **Path of Exile 2**. Приложение читает локальный клиентский лог, распознаёт текущую зону и показывает маршрут, важные действия, постоянные бонусы и таймер забега поверх игры.
 
-![Основной оверлей](assets/screens/overlay-real-reference-full.png)
+![Основной оверлей](docs/assets/screens/overlay-real-reference-full.png)
 
-![Подробная панель — экран «Сейчас»](assets/screens/panel-current-zone-ru.png)
+![Подробная панель — экран «Сейчас»](docs/assets/screens/panel-current-zone-ru.png)
 
 ## Что умеет приложение
 
