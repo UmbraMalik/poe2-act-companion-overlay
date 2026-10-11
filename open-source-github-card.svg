@@ -1,0 +1,89 @@
+<svg width="1120" height="640" viewBox="0 0 1120 640" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="g1" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(900 80) rotate(136) scale(620 420)">
+      <stop stop-color="#D7A85A" stop-opacity="0.42"/>
+      <stop offset="0.46" stop-color="#1B2633" stop-opacity="0.24"/>
+      <stop offset="1" stop-color="#05080B" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="g2" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(180 120) rotate(48) scale(500 360)">
+      <stop stop-color="#9FC4FF" stop-opacity="0.26"/>
+      <stop offset="1" stop-color="#05080B" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="panel" x1="120" y1="80" x2="1000" y2="560" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#20262D"/>
+      <stop offset="1" stop-color="#070A0F"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#F5C46B"/>
+      <stop offset="1" stop-color="#C99034"/>
+    </linearGradient>
+    <filter id="shadow" x="40" y="20" width="1040" height="600" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="24" stdDeviation="34" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+    <filter id="glow" x="-40" y="-40" width="1200" height="720" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="10" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="1 0 0 0 0.843 0 1 0 0 0.659 0 0 1 0 0.353 0 0 0 0.55 0"/>
+      <feBlend in="SourceGraphic" mode="screen"/>
+    </filter>
+  </defs>
+
+  <rect width="1120" height="640" rx="30" fill="#05080B"/>
+  <rect width="1120" height="640" rx="30" fill="url(#g1)"/>
+  <rect width="1120" height="640" rx="30" fill="url(#g2)"/>
+
+  <g opacity="0.28">
+    <path d="M68 86H1052" stroke="#D7A85A" stroke-opacity="0.32"/>
+    <path d="M68 556H1052" stroke="#D7A85A" stroke-opacity="0.22"/>
+    <path d="M180 32V608" stroke="#FFFFFF" stroke-opacity="0.04"/>
+    <path d="M400 32V608" stroke="#FFFFFF" stroke-opacity="0.04"/>
+    <path d="M620 32V608" stroke="#FFFFFF" stroke-opacity="0.04"/>
+    <path d="M840 32V608" stroke="#FFFFFF" stroke-opacity="0.04"/>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="82" y="72" width="956" height="496" rx="28" fill="url(#panel)" stroke="#D7A85A" stroke-opacity="0.42"/>
+    <rect x="110" y="106" width="900" height="64" rx="18" fill="#111820" stroke="#FFFFFF" stroke-opacity="0.08"/>
+    <circle cx="144" cy="138" r="8" fill="#D7A85A" fill-opacity="0.72"/>
+    <circle cx="168" cy="138" r="8" fill="#D7A85A" fill-opacity="0.48"/>
+    <circle cx="192" cy="138" r="8" fill="#D7A85A" fill-opacity="0.32"/>
+    <text x="830" y="144" text-anchor="middle" fill="#B5BDC9" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="17" font-weight="800" letter-spacing="3">PUBLIC SOURCE</text>
+
+    <g transform="translate(146 218)">
+      <text x="0" y="0" fill="#D7A85A" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="18" font-weight="900" letter-spacing="4">OPEN SOURCE</text>
+      <text x="0" y="70" fill="#F2EAD9" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="62" font-weight="900" letter-spacing="-2">Код открыт</text>
+      <text x="0" y="112" fill="#B5BDC9" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="24" font-weight="700">POE2 Act Companion Overlay</text>
+      <text x="0" y="164" fill="#7AD690" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="22" font-weight="800">✓ без чтения памяти</text>
+      <text x="0" y="202" fill="#7AD690" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="22" font-weight="800">✓ без инжекта</text>
+      <text x="0" y="240" fill="#7AD690" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="22" font-weight="800">✓ работает по логам игры</text>
+    </g>
+
+    <g transform="translate(690 210)" filter="url(#glow)">
+      <rect x="0" y="0" width="230" height="230" rx="40" fill="#0B1016" stroke="#D7A85A" stroke-opacity="0.55" stroke-width="2"/>
+      <circle cx="115" cy="112" r="68" fill="#F2EAD9" fill-opacity="0.96"/>
+      <path d="M78 116C78 96 94 80 115 80C136 80 152 96 152 116C152 132 142 146 128 152C130 157 133 163 139 170C128 171 119 168 113 162C107 168 98 171 87 170C93 163 96 157 98 152C86 146 78 132 78 116Z" fill="#0B1016"/>
+      <circle cx="94" cy="104" r="9" fill="#0B1016"/>
+      <circle cx="136" cy="104" r="9" fill="#0B1016"/>
+      <rect x="84" y="184" width="62" height="12" rx="6" fill="#D7A85A"/>
+      <rect x="65" y="207" width="100" height="10" rx="5" fill="#9FC4FF" fill-opacity="0.78"/>
+    </g>
+
+    <g transform="translate(146 500)">
+      <rect x="0" y="0" width="298" height="48" rx="16" fill="url(#gold)"/>
+      <text x="149" y="31" text-anchor="middle" fill="#1B1308" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="18" font-weight="900">Открыть GitHub →</text>
+    </g>
+
+    <g opacity="0.72" transform="translate(480 430)">
+      <text x="0" y="0" fill="#B5BDC9" font-family="Consolas, monospace" font-size="20">src/renderer</text>
+      <text x="0" y="34" fill="#D7A85A" font-family="Consolas, monospace" font-size="20">guide.json</text>
+      <text x="0" y="68" fill="#9FC4FF" font-family="Consolas, monospace" font-size="20">LatestClient.txt</text>
+    </g>
+  </g>
+
+  <g opacity="0.8">
+    <circle cx="1000" cy="108" r="3" fill="#F5C46B"/>
+    <circle cx="1018" cy="520" r="2" fill="#F5C46B"/>
+    <circle cx="80" cy="500" r="2" fill="#D86B5C"/>
+    <circle cx="936" cy="72" r="2" fill="#D86B5C"/>
+    <circle cx="252" cy="588" r="3" fill="#F5C46B"/>
+  </g>
+</svg>
