@@ -47,3 +47,4 @@
 @import './styles/37-icon-system.css'; /* Unified SVG icons for controls, navigation and status markers */
 @import './styles/38-close-confirm-polish.css'; /* Fixed-window close confirmation geometry and clipping guard */
 @import './styles/39-overlay-mode-stability.css'; /* Flicker-free transparent-window mode changes */
+@import './styles/40-ui-test-structure-pass.css'; /* Test pass: overlay structure refinement and select chevron alignment */

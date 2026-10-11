@@ -1649,6 +1649,15 @@ export function OverlayPage() {
     );
   }
 
+  const primaryChecklistItem = visibleChecklist[0] ?? null;
+  const secondaryChecklist = primaryChecklistItem ? visibleChecklist.slice(1) : visibleChecklist;
+  const hasZoneBonusesSection = visibleSections.zoneBonuses && !isCompactOverlay && zoneBonusItems.length > 0;
+  const hasNextSection = visibleSections.next;
+  const overviewGroupOrder = Math.min(
+    hasZoneBonusesSection ? overlayContentPlan.blockOrder.zoneBonuses : Number.POSITIVE_INFINITY,
+    hasNextSection ? overlayContentPlan.blockOrder.next : Number.POSITIVE_INFINITY
+  );
+
   const endgameT15CompletionBlock = showEndgameT15CompletionNotice ? (
     <section className="hud-block overlay-endgame-completion-card no-drag" role="status" aria-live="polite">
       <div className="overlay-endgame-completion-copy">
@@ -1846,57 +1855,76 @@ export function OverlayPage() {
         )}
 
         {visibleSections.zoneInfo && (
-          <section className="hud-block checklist-section" style={{ order: overlayContentPlan.blockOrder.zoneInfo }}>
-          <h2>{t('overlay.inThisZone')}</h2>
-          {guide ? (
-            guideChecklist.length > 0 ? (
-              <>
-                <ul className="checklist-list overlay-checklist-list">
-                  {visibleChecklist.map((item) => (
-                    <li key={item.id} className={`checklist-item${getChecklistItemTone(item)}`}>
-                      {item.text}
-                    </li>
-                  ))}
-                </ul>
-                {hiddenChecklistCount > 0 && (
-                  <p className="helper-text checklist-more-note">
-                    {t('overlay.compactMore', { count: hiddenChecklistCount })}
-                  </p>
-                )}
-              </>
+          <section className="hud-block checklist-section overlay-structure-primary" style={{ order: overlayContentPlan.blockOrder.zoneInfo }}>
+            <h2>{t('overlay.inThisZone')}</h2>
+            {guide ? (
+              guideChecklist.length > 0 ? (
+                <>
+                  {primaryChecklistItem ? (
+                    <div className="overlay-focus-card">
+                      <div className="overlay-focus-kicker">{t('overlay.importantNow')}</div>
+                      <p className={`overlay-focus-line${getChecklistItemTone(primaryChecklistItem)}`}>
+                        {primaryChecklistItem.text}
+                      </p>
+                    </div>
+                  ) : null}
+
+                  {secondaryChecklist.length > 0 ? (
+                    <div className="overlay-zone-details">
+                      <ul className="checklist-list overlay-checklist-list overlay-checklist-secondary">
+                        {secondaryChecklist.map((item) => (
+                          <li key={item.id} className={`checklist-item${getChecklistItemTone(item)}`}>
+                            {item.text}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ) : null}
+
+                  {hiddenChecklistCount > 0 && (
+                    <p className="helper-text checklist-more-note">
+                      {t('overlay.compactMore', { count: hiddenChecklistCount })}
+                    </p>
+                  )}
+                </>
+              ) : (
+                <p className="hud-empty">{t('overlay.emptyZoneNotes')}</p>
+              )
             ) : (
-              <p className="hud-empty">{t('overlay.emptyZoneNotes')}</p>
-            )
-          ) : (
-            shouldShowNoGuideForZone ? overlayNoGuideBlock : overlayOnboardingBlock
-          )}
+              shouldShowNoGuideForZone ? overlayNoGuideBlock : overlayOnboardingBlock
+            )}
           </section>
         )}
 
-        {visibleSections.zoneBonuses && !isCompactOverlay && zoneBonusItems.length > 0 && (
-          <section className="hud-block zone-bonuses-section" style={{ order: overlayContentPlan.blockOrder.zoneBonuses }}>
-            <h2>{t('overlay.zoneBonuses')}</h2>
-            <ul className="section-list compact-list overlay-bonus-list">
-              {zoneBonusItems.map(({ bonus, done }) => {
-                const bonusTitle = getCampaignBonusView(bonus, language)?.displayTitle ?? bonus.title;
+        {(hasNextSection || hasZoneBonusesSection) && (
+          <div className="overlay-overview-grid" style={{ order: overviewGroupOrder }}>
+            {hasNextSection && (
+              <section className="hud-block hud-next-block overlay-secondary-card">
+                <h2>{t('overlay.next')}</h2>
+                <p className="hud-next-zone">{guideView?.nextZoneName || t('common.notAvailable')}</p>
+              </section>
+            )}
 
-                return (
-                  <li key={bonus.id} className={done ? 'bonus-line is-done' : 'bonus-line'}>
-                    <span className="bonus-state-marker">
-                      <UiIcon name={done ? 'check' : 'circle'} className="ui-status-icon" />
-                    </span>
-                    <span>{bonusTitle}</span>
-                  </li>
-                );
-              })}
-            </ul>
-          </section>
-        )}
-        {visibleSections.next && (
-          <section className="hud-block hud-next-block" style={{ order: overlayContentPlan.blockOrder.next }}>
-            <h2>{t('overlay.next')}</h2>
-            <p className="hud-next-zone">{guideView?.nextZoneName || t('common.notAvailable')}</p>
-          </section>
+            {hasZoneBonusesSection && (
+              <section className="hud-block zone-bonuses-section overlay-secondary-card">
+                <h2>{t('overlay.zoneBonuses')}</h2>
+                <ul className="section-list compact-list overlay-bonus-list">
+                  {zoneBonusItems.map(({ bonus, done }) => {
+                    const bonusTitle = getCampaignBonusView(bonus, language)?.displayTitle ?? bonus.title;
+
+                    return (
+                      <li key={bonus.id} className={done ? 'bonus-line is-done' : 'bonus-line'}>
+                        <span className="bonus-state-marker">
+                          <UiIcon name={done ? 'check' : 'circle'} className="ui-status-icon" />
+                        </span>
+                        <span>{bonusTitle}</span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </section>
+            )}
+          </div>
         )}
 
         {visibleSections.skip && !isCompactOverlay && skipLines.length > 0 && (
