@@ -18,7 +18,7 @@
       document.documentElement.dataset.theme = 'classic';
     }
   </script>
-  <link rel="stylesheet" href="./styles.css?v=0.5.0-4" />
+  <link rel="stylesheet" href="./styles.css?v=0.6.0-1" />
   <!-- Yandex.Metrika counter -->
   <script type="text/javascript">
       (function(m,e,t,r,i,k,a){
@@ -44,14 +44,14 @@
       <span class="brand-mark">A</span>
       <span>
         <strong>POE2 Act Companion</strong>
-        <small>Overlay · v0.5.5с · RU/EN</small>
+        <small>Overlay · v0.6.0 · RU/EN</small>
       </span>
     </a>
 
     <div class="header-controls">
       <nav class="top-nav" aria-label="Навигация">
         <a href="#features">Что умеет</a>
-        <a href="#v050">v0.5.5с</a>
+        <a href="#v060">v0.6.0</a>
         <a href="#demo">Демо</a>
         <a href="#source">Исходники</a>
         <a href="#screens">Скрины</a>
@@ -90,18 +90,19 @@
       <div class="hero-copy">
         <div class="eyebrow">
           <span class="dot"></span>
-          v0.5.5с · RU/EN клиент · кампания + Интерлюдии + До Т15 · работает по логам игры
+          v0.6.0 · RU/EN клиент · кампания + Интерлюдии + До Т15 · работает по логам игры
         </div>
         <h1>Оверлей для быстрого прохождения актов Path of Exile 2</h1>
         <p class="lead">
-          POE2 Act Companion Overlay читает лог-файл игры, определяет текущую зону и показывает памятку “Что в локации”,
-          следующий переход, скипы, бонусы, статус уровня, таймер забега, время актов, итоги и путь до T15 — без инжекта в клиент игры.
+          POE2 Act Companion Overlay читает лог-файл игры, определяет текущую зону и показывает маршрут,
+          постоянные бонусы, таймер и время актов. В 0.6.0 появились улучшенный интерфейс, поиск по кампании,
+          гибкая настройка блоков и сравнение темпа забега — без инжекта в клиент игры.
         </p>
 
         <div class="hero-actions">
           <a class="button primary" href="https://github.com/UmbraMalik/poe2-act-companion-overlay/releases/latest" target="_blank" rel="noopener noreferrer" data-latest-download data-fallback-text="Скачать через GitHub">Скачать через GitHub</a>
           <a class="button secondary" href="#install">Как установить</a>
-          <a class="button ghost" href="#support">Поддержать</a>
+          <a class="button ghost" href="#v060">Что нового в 0.6.0</a>
         </div>
 
         <div class="hero-release-card" aria-label="Статистика скачиваний и актуального релиза">
@@ -190,7 +191,7 @@
         <article class="feature-card">
           <span class="icon">☑</span>
           <h3>Настраиваемые блоки</h3>
-          <p>Можно включать и выключать отдельные карточки оверлея: ближайшее, бонусы, лигу, маршрут, скипы, спидран и важные подсказки.</p>
+          <p>Выбирай видимые разделы, меняй порядок групп, сохраняй собственные макеты и переключайся между ними.</p>
         </article>
         <article class="feature-card">
           <span class="icon">⇡</span>
@@ -205,7 +206,27 @@
         <article class="feature-card">
           <span class="icon">▣</span>
           <h3>Подробная панель</h3>
-          <p>Отдельное окно с маршрутом, бонусами, таймером, временем актов, напоминаниями, итогами забега и историей результатов.</p>
+          <p>Маршрут, бонусы, напоминания и статистика забегов собраны в разделы с удобной боковой навигацией.</p>
+        </article>
+        <article class="feature-card">
+          <span class="icon">±</span>
+          <h3>Ghost Pace</h3>
+          <p>Сравнение темпа с лучшим сопоставимым забегом. Индикатор в оверлее появляется, когда есть подходящая история.</p>
+        </article>
+        <article class="feature-card">
+          <span class="icon">⌕</span>
+          <h3>Поиск по кампании</h3>
+          <p>Поиск по зонам, заданиям, боссам и постоянным наградам всех актов и Интерлюдий с учётом RU/EN.</p>
+        </article>
+        <article class="feature-card">
+          <span class="icon">F6</span>
+          <h3>Горячие клавиши чек-листа</h3>
+          <p>Ручная отметка и отмена отметки задач через F6/F7. Включаются и настраиваются отдельно.</p>
+        </article>
+        <article class="feature-card">
+          <span class="icon">▤</span>
+          <h3>Run Recap</h3>
+          <p>Итоги забега дополняются проверкой заданий и наград, где подтверждённые пропуски отделены от непроверенных отметок.</p>
         </article>
         <article class="feature-card">
           <span class="icon">↧</span>
@@ -225,40 +246,47 @@
       </div>
     </section>
 
-    <section id="v050" class="section release-section">
+    <section id="v060" class="section release-section">
       <div class="section-head">
-        <p class="eyebrow">v0.5.5с</p>
-        <h2>Кампания стала точнее, а интерфейс — цельнее</h2>
+        <p class="eyebrow">v0.6.0 · обновление интерфейса и возможностей</p>
+        <h2>Новый интерфейс. Больше контроля над забегом.</h2>
         <p>
-          Версия 0.5.5с обновляет маршруты Актов 1–4 и Интерлюдий, разделяет обычный и финальный Кингсмарш,
-          уточняет постоянные и гарантированные награды и доводит RU/EN-распознавание зон до единой системы.
+          В 0.6.0 мы обновили подробную панель и оверлей для узких окон, улучшили русские и английские подсказки,
+          а также добавили пять экспериментальных улучшений для маршрута, управления и статистики.
         </p>
+        <p class="release-availability-note">Кнопки скачивания ведут на последний реально опубликованный установщик в GitHub Releases.</p>
       </div>
 
       <div class="release-grid">
         <article class="release-card release-card-main">
-          <span class="release-tag">Маршрут 0.5</span>
-          <h3>Акты и Интерлюдии сверены заново</h3>
-          <p>
-            Обновлены переходы, важные цели, награды, рекомендуемый порядок веток и подсказки по зонам.
-            Неподтверждённые награды больше не выдаются за гарантированные.
-          </p>
+          <span class="release-tag">Интерфейс 0.6.0</span>
+          <h3>Боковая навигация и удобная структура</h3>
+          <p>Подробная панель и настройки получили боковое меню. Вкладки, подсказки и элементы управления стали лучше сгруппированы.</p>
         </article>
         <article class="release-card">
-          <span class="release-tag">Кингсмарш</span>
-          <h3>Один город — два правильных контекста</h3>
-          <p>
-            Кингсмарш Акта 4 больше не путается с финалом Интерлюдий: приложение учитывает фазу кампании,
-            показывает Скрытого и путь в Ориат только в нужный момент.
-          </p>
+          <span class="release-tag">Узкие окна · RU/EN</span>
+          <h3>Оверлей подстраивается под экран</h3>
+          <p>Переработана шапка с кнопками, переносы подсказок и компактный режим. Длинный текст в RU/EN читается аккуратнее.</p>
         </article>
         <article class="release-card">
-          <span class="release-tag">RU/EN + UI</span>
-          <h3>Точнее распознавание, чище подача</h3>
-          <p>
-            Расширены internal area mapping и алиасы, исправлены названия зон и наград, а карточки,
-            переключатели и визуальная иерархия стали аккуратнее в Classic и Dark Fantasy.
-          </p>
+          <span class="release-tag">Ghost Pace</span>
+          <h3>Сравнение с личным рекордом</h3>
+          <p>В игровом оверлее появился индикатор темпа относительно лучшего сопоставимого забега, если есть подходящая история.</p>
+        </article>
+        <article class="release-card">
+          <span class="release-tag">Макеты</span>
+          <h3>Свой порядок блоков</h3>
+          <p>Меняй порядок групп оверлея кнопками вверх/вниз и сохраняй до восьми собственных вариантов расположения.</p>
+        </article>
+        <article class="release-card">
+          <span class="release-tag">Поиск + F6/F7</span>
+          <h3>Меньше кликов во время игры</h3>
+          <p>Поиск по кампании на RU/EN и настраиваемые ручные горячие клавиши для отметки задач чек-листа.</p>
+        </article>
+        <article class="release-card">
+          <span class="release-tag">Итоги · Локализация</span>
+          <h3>Понятнее отчёты и подсказки</h3>
+          <p>Run Recap различает подтверждённые пропуски и неподтверждённые задачи. Русские гайды очищены от лишних английских вставок.</p>
         </article>
       </div>
     </section>
@@ -267,7 +295,7 @@
       <div class="section-head">
         <p class="eyebrow">демонстрация</p>
         <h2>Посмотреть оверлей в действии</h2>
-        <p>Короткая видео-демонстрация текущей версии POE2 Act Companion Overlay: как выглядит основной overlay, таймер, компактный режим и подробная панель прямо в работе.</p>
+        <p>Короткая видео-демонстрация POE2 Act Companion Overlay: основной оверлей, таймер, компактный режим и подробная панель. Интерфейс в ролике может отличаться от версии 0.6.0.</p>
       </div>
 
       <div class="demo-card">
@@ -275,7 +303,7 @@
           <div class="demo-card-title-wrap">
             <span class="demo-badge">Демонстрация</span>
             <div>
-              <h3>Видеообзор текущей beta-версии</h3>
+              <h3>Видеообзор приложения</h3>
               <p>Смотри прямо на сайте или открой ролик на YouTube.</p>
             </div>
           </div>
@@ -339,7 +367,7 @@
       <div class="section-head">
         <p class="eyebrow">как выглядит</p>
         <h2>Скриншоты приложения</h2>
-        <p>Актуальный вид версии 0.5.5с: основной оверлей, подробная панель с вкладками “Сейчас”, “Маршрут”, “Прогресс” и “Забег”, режим “Только таймер” и компактный режим.</p>
+        <p>Примеры интерфейса: основной оверлей, подробная панель, режим “Только таймер” и компактный режим. Некоторые скриншоты сделаны до обновления 0.6.0.</p>
       </div>
 
       <div class="screens-showcase">
@@ -349,9 +377,9 @@
             type="button"
             role="tab"
             aria-selected="true"
-            data-screen-image="./assets/screens/overlay-real-reference.png?v=0.5.0-4"
-            data-screen-image-ru="./assets/screens/overlay-real-reference.png?v=0.5.0-4"
-            data-screen-image-en="./assets/screens/en-overlay-main.png?v=0.5.0-4"
+            data-screen-image="./assets/screens/overlay-real-reference.png?v=0.6.0-1"
+            data-screen-image-ru="./assets/screens/overlay-real-reference.png?v=0.6.0-1"
+            data-screen-image-en="./assets/screens/en-overlay-main.png?v=0.6.0-1"
             data-screen-alt="Основной overlay: текущая зона, памятка, следующий переход, скипы, статус уровня и настраиваемые блоки"
             data-screen-title="Основной overlay"
             data-screen-key="main-overlay"
@@ -365,9 +393,9 @@
             type="button"
             role="tab"
             aria-selected="false"
-            data-screen-image="./assets/screens/companion-panel-reference.png?v=0.5.0-4"
-            data-screen-image-ru="./assets/screens/companion-panel-reference.png?v=0.5.0-4"
-            data-screen-image-en="./assets/screens/en-companion-panel.png?v=0.5.0-4"
+            data-screen-image="./assets/screens/panel-current-zone-ru.png?v=0.6.0-1"
+            data-screen-image-ru="./assets/screens/panel-current-zone-ru.png?v=0.6.0-1"
+            data-screen-image-en="./assets/screens/panel-current-zone-en.png?v=0.6.0-1"
             data-screen-alt="Подробная панель с вкладками Сейчас, Маршрут, Прогресс и Забег"
             data-screen-title="Подробная панель · Сейчас / Маршрут / Прогресс / Забег"
             data-screen-key="companion-panel"
@@ -381,9 +409,9 @@
             type="button"
             role="tab"
             aria-selected="false"
-            data-screen-image="./assets/screens/timer-mode-reference.png?v=0.5.0-4"
-            data-screen-image-ru="./assets/screens/timer-mode-reference.png?v=0.5.0-4"
-            data-screen-image-en="./assets/screens/en-timer-mode.png?v=0.5.0-4"
+            data-screen-image="./assets/screens/timer-mode-reference.png?v=0.6.0-1"
+            data-screen-image-ru="./assets/screens/timer-mode-reference.png?v=0.6.0-1"
+            data-screen-image-en="./assets/screens/en-timer-mode.png?v=0.6.0-1"
             data-screen-alt="Режим только таймер: вид с таймером, уровнем и следующим переходом"
             data-screen-title="Режим “только таймер”"
             data-screen-key="timer-mode"
@@ -397,9 +425,9 @@
             type="button"
             role="tab"
             aria-selected="false"
-            data-screen-image="./assets/screens/compact-mode-reference.png?v=0.5.0-4"
-            data-screen-image-ru="./assets/screens/compact-mode-reference.png?v=0.5.0-4"
-            data-screen-image-en="./assets/screens/en-compact-mode.png?v=0.5.0-4"
+            data-screen-image="./assets/screens/compact-mode-reference.png?v=0.6.0-1"
+            data-screen-image-ru="./assets/screens/compact-mode-reference.png?v=0.6.0-1"
+            data-screen-image-en="./assets/screens/en-compact-mode.png?v=0.6.0-1"
             data-screen-alt="Компактный режим: узкая панель с общим временем, актом, уровнем и рекомендацией"
             data-screen-title="Компактный режим"
             data-screen-key="compact-mode"
@@ -423,9 +451,9 @@
                 <img
                   id="screen-preview-image"
                   class="screen-preview-image"
-                  src="./assets/screens/overlay-real-reference.png?v=0.5.0-4"
-                  data-image-ru="./assets/screens/overlay-real-reference.png?v=0.5.0-4"
-                  data-image-en="./assets/screens/en-overlay-main.png?v=0.5.0-4"
+                  src="./assets/screens/overlay-real-reference.png?v=0.6.0-1"
+                  data-image-ru="./assets/screens/overlay-real-reference.png?v=0.6.0-1"
+                  data-image-en="./assets/screens/en-overlay-main.png?v=0.6.0-1"
                   alt="Основной overlay: текущая зона, памятка, следующий переход, скипы, статус уровня и настраиваемые блоки"
                   loading="lazy"
                 />
@@ -838,6 +866,6 @@
   </p>
 </footer>
 
-  <script src="./script.js?v=0.5.0-4"></script>
+  <script src="./script.js?v=0.6.0-1"></script>
 </body>
 </html>
