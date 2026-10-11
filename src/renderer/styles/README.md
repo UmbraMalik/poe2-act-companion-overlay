@@ -30,3 +30,4 @@ Those used to exist as duplicate sources and made it too easy to edit a CSS file
 40. `40-ui-test-structure-pass.css` — test pass for overlay structure refinement and select chevron alignment.
 41. `41-typography-readability-test.css` — reversible readability experiment: Segoe UI Variable body copy on Windows, Geist headings, size and weight polish for RU/EN.
 42. `42-overlay-structure-v3-test.css` — reversible reading order and grouped secondary tips in the full overlay; preserves RU/EN and core gameplay list.
+43. `43-settings-sidebar-test.css` — reversible settings navigation sidebar, scrollable content and responsive compact layout.

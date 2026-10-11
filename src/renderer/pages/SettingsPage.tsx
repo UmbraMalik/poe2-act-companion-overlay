@@ -716,6 +716,7 @@ export function SettingsPage() {
           onSearchQueryChange={setSettingsSearchQuery}
         />
 
+        <div className="settings-content">
         {settingsSearch.isFiltering && settingsSearch.visibleSectionIds.size === 0 && (
           <section className="settings-card settings-search-empty">
             <p className="helper-text">{getSettingsSearchEmptyText(appLanguage)}</p>
@@ -1575,6 +1576,7 @@ export function SettingsPage() {
             )}
           </section>
         )}
+        </div>
       </section>
       <SettingsWindowShellEffects />
       <SettingsWindowResizeGrip />
