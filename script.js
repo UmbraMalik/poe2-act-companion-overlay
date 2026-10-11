@@ -1,5 +1,14 @@
 const LANGUAGE_STORAGE_KEY = 'poe2-act-companion-overlay-site-language';
 const SUPPORTED_LANGUAGES = ['ru', 'en'];
+const THEME_STORAGE_KEY = 'poe2-act-companion-overlay-site-theme';
+const SUPPORTED_THEMES = ['classic', 'dark-fantasy'];
+const SITE_ASSET_VERSION = '0.6.0-1';
+
+function withAssetVersion(path) {
+  if (!path || /^(?:data:|blob:|https?:)/i.test(path) || /[?&]v=/.test(path)) return path;
+  const separator = path.includes('?') ? '&' : '?';
+  return `${path}${separator}v=${encodeURIComponent(SITE_ASSET_VERSION)}`;
+}
 
 const TEXT_TRANSLATIONS_EN = {
   'POE2 Act Companion Overlay — оверлей для актов POE2': 'POE2 Act Companion Overlay — campaign overlay for POE2',
@@ -161,8 +170,9 @@ const TEXT_TRANSLATIONS_EN = {
   'Неофициальный фанатский инструмент для Path of Exile 2. Проект не связан с Grinding Gear Games, не одобрен и не поддерживается ими.': 'Unofficial fan-made tool for Path of Exile 2. The project is not affiliated with, endorsed by, or supported by Grinding Gear Games.',
   'Path of Exile 2, Path of Exile и связанные названия принадлежат их правообладателям. Сайт и приложение не используют официальные ассеты игры.': 'Path of Exile 2, Path of Exile, and related names belong to their respective rights holders. The site and app do not use official game assets.',
   'POE2 Act Companion Overlay — оверлей для кампании и эндгейма POE2': 'POE2 Act Companion Overlay — campaign and endgame overlay for POE2',
-  'v0.4.0': 'v0.4.0',
-  'v0.4.0 · RU/EN клиент · кампания + До Т15 · работает по логам игры': 'v0.4.0 · RU/EN client · campaign + To T15 · works from game logs',
+  'Overlay · v0.5.0 · RU/EN': 'Overlay · v0.5.0 · RU/EN',
+  'v0.5.0': 'v0.5.0',
+  'v0.5.0 · RU/EN клиент · кампания + Интерлюдии + До Т15 · работает по логам игры': 'v0.5.0 · RU/EN client · campaign + Interludes + To T15 · works from game logs',
   'POE2 Act Companion Overlay читает лог-файл игры, определяет текущую зону и показывает памятку “Что в локации”, следующий переход, скипы, бонусы, статус уровня, таймер забега, время актов, итоги и путь до T15 — без инжекта в клиент игры.': 'POE2 Act Companion Overlay reads the game log file, detects the current zone, and shows a zone checklist, next transition, skips, bonuses, level status, run timer, act splits, summary, and the path to T15 — without injecting into the game client.',
   'До Т15': 'To T15',
   'Вся рутина кампании собирается в один боевой HUD: что важно в зоне, что забрать, что скипнуть, куда идти дальше, когда добрать уровень, сколько времени ушло на акт и как быстро ты дошёл до T15.': 'All campaign routine is gathered into one combat HUD: what matters in the zone, what to pick up, what to skip, where to go next, when to catch up on levels, how long each act took, and how fast you reached T15.',
@@ -176,18 +186,21 @@ const TEXT_TRANSLATIONS_EN = {
   'Оверлей можно свернуть в компактную строку, быстро освободить место под инвентарь или гемы и развернуть обратно.': 'The overlay can collapse into a compact bar, quickly freeing space for inventory or gems, and then expand back.',
   'Размер текста': 'Text size',
   'Размер полезного текста регулируется отдельно от масштаба интерфейса — удобно для широких и высоких разрешений.': 'Useful text size can be adjusted separately from UI scale — handy for ultrawide and high-resolution displays.',
-  'Теперь это не просто подсказки по актам': 'Now it is more than act tips',
-  'Версия 0.4.0 превращает оверлей в полноценную панель забега: хаб-гайды, гибкая настройка блоков, путь до T15, автофиниш, история результатов и аккуратные режимы для игры на любом экране.': 'Version 0.4.0 turns the overlay into a full run dashboard: hub guides, flexible block settings, path to T15, auto-finish, result history, and clean modes for any screen.',
-  'Кампания больше не заканчивается на Актах': 'The campaign no longer ends at Acts',
-  'После входа в эндгейм-хаб запускается отдельный сегмент “До Т15”. Когда в логах появляется карта 79 уровня, таймер останавливается сам, результат сохраняется, а оверлей показывает компактное поздравление.': 'After entering the endgame hub, a separate “To T15” segment starts. When a level 79 map appears in the logs, the timer stops automatically, the result is saved, and the overlay shows a compact congratulations card.',
-  'Хабы': 'Hubs',
-  'Гайды для ключевых городов': 'Guides for key towns',
-  'Добавлены хаб-гайды для Лагеря Клирфелл, Каравана Ардура, Лагеря на зиккурате и Кингсмарша, чтобы порядок прохождения был понятен ещё до выхода в следующую зону.': 'Hub guides were added for Clearfell Encampment, Ardura Caravan, Ziggurat Encampment, and Kingsmarch, so the route order is clear before you leave for the next zone.',
-  'Оверлей под себя': 'Overlay your way',
-  'Можно скрывать отдельные блоки, менять размер полезного текста и быстро сворачивать панель, когда она мешает инвентарю, гемам или интерфейсу игры.': 'You can hide individual blocks, change useful text size, and quickly collapse the panel when it blocks inventory, gems, or the game UI.',
-  'Актуальный вид основного оверлея, подробной панели, бонусов актов, режима “Только таймер” и компактного режима в версии 0.4.0.': 'Current view of the main overlay, detailed panel, act bonuses, Timer Only mode, and compact mode in version 0.4.0.',
+  'Кампания стала точнее, а интерфейс — цельнее': 'The campaign is more accurate and the interface feels more cohesive',
+  'Версия 0.5.0 обновляет маршруты Актов 1–4 и Интерлюдий, разделяет обычный и финальный Кингсмарш, уточняет постоянные и гарантированные награды и доводит RU/EN-распознавание зон до единой системы.': 'Version 0.5.0 updates Acts 1–4 and the Interludes, separates regular and post-Interlude Kingsmarch, clarifies permanent and guaranteed rewards, and brings RU/EN zone detection into one consistent system.',
+  'Маршрут 0.5': '0.5 Route',
+  'Акты и Интерлюдии сверены заново': 'Acts and Interludes reviewed from the ground up',
+  'Обновлены переходы, важные цели, награды, рекомендуемый порядок веток и подсказки по зонам. Неподтверждённые награды больше не выдаются за гарантированные.': 'Transitions, key objectives, rewards, recommended branch order, and zone guidance were updated. Unconfirmed rewards are no longer presented as guaranteed.',
+  'Кингсмарш': 'Kingsmarch',
+  'Один город — два правильных контекста': 'One town, two correct contexts',
+  'Кингсмарш Акта 4 больше не путается с финалом Интерлюдий: приложение учитывает фазу кампании, показывает Скрытого и путь в Ориат только в нужный момент.': 'Act 4 Kingsmarch is no longer confused with the Interlude finale: the app respects campaign phase and only shows the Hooded One and the route to Oriath at the right time.',
+  'RU/EN + UI': 'RU/EN + UI',
+  'Точнее распознавание, чище подача': 'More accurate detection, cleaner presentation',
+  'Расширены internal area mapping и алиасы, исправлены названия зон и наград, а карточки, переключатели и визуальная иерархия стали аккуратнее в Classic и Dark Fantasy.': 'Internal area mapping and aliases were expanded, zone and reward names were corrected, and cards, toggles, and visual hierarchy were refined in both Classic and Dark Fantasy.',
+  'Актуальный вид версии 0.5.0: основной оверлей, подробная панель с вкладками “Сейчас”, “Маршрут”, “Прогресс” и “Забег”, режим “Только таймер” и компактный режим.': 'Current version 0.5.0 view: the main overlay, the detailed panel with Now, Route, Progress, and Run tabs, Timer Only mode, and compact mode.',
   'Текущая зона, памятка “Что в локации”, следующий переход, скипы, важные подсказки, статус уровня и блоки, которые можно включать или скрывать.': 'Current zone, zone checklist, next transition, skips, important notes, level status, and blocks you can show or hide.',
-  'Отдельное окно с маршрутом, бонусами, таймером, временем актов, сегментом “До Т15”, напоминаниями, итогами и историей забегов.': 'A separate window with route, bonuses, timer, act splits, the “To T15” segment, reminders, summary, and run history.',
+  'Отдельное окно с вкладками “Сейчас”, “Маршрут”, “Прогресс” и “Забег”: текущая зона, маршрут кампании, бонусы, напоминания, таймер, время актов, итоги и история забегов.': 'A separate window with Now, Route, Progress, and Run tabs for the current zone, campaign route, bonuses, reminders, timer, act times, summary, and run history.',
+  'Сейчас': 'Now',
   'Подробная панель · Бонусы': 'Detailed panel · Bonuses',
   'Постоянные награды кампании: пассивки оружия, резисты, дух, здоровье, мана, выборные бонусы и ручные отметки.': 'Permanent campaign rewards: weapon passives, resistances, spirit, life, mana, selectable bonuses, and manual marks.',
   'Подробная панель · Награды': 'Detailed panel · Rewards',
@@ -195,6 +208,8 @@ const TEXT_TRANSLATIONS_EN = {
   'Зоны RU/EN клиента, уровень, маршрут, подсказки, бонусы, таймер, время актов и “До Т15” — всё в одном месте.': 'RU/EN client zones, level, route, tips, bonuses, timer, act splits, and “To T15” — all in one place.',
   'Текущая зона': 'Current Zone',
   'Маршрут': 'Route',
+  'Прогресс': 'Progress',
+  'Забег': 'Run',
   'Таймер': 'Timer',
   'Время актов': 'Act Times',
   'Напоминания': 'Reminders',
@@ -203,7 +218,17 @@ const TEXT_TRANSLATIONS_EN = {
   'Подробная панель · Текущая зона': 'Detailed panel · Current Zone',
   'Карточка текущей зоны с подсказками, ближайшими уровнями, постоянными бонусами, следующим переходом и важными заметками.': 'Current zone card with tips, nearest level reminders, permanent bonuses, next transition, and important notes.',
   'Подробная панель · Маршрут': 'Detailed panel · Route',
-  'Полный маршрут по актам и interlude-частям: порядок зон, опциональные точки, хабы и переходы между страницами.': 'Full act and interlude route: zone order, optional stops, hubs, and transitions between pages.',
+  'Вкладка “Маршрут”: полный путь по актам и интерлюдиям — порядок зон, опциональные точки, хабы и переходы между страницами.': 'The Route tab: the full path through acts and Interludes, including zone order, optional stops, hubs, and transitions between pages.',
+  'Подробная панель · Прогресс · Бонусы': 'Detailed panel · Progress · Bonuses',
+  'Вкладка “Прогресс” → “Бонусы”: постоянные награды кампании, пассивки оружия, резисты, дух, здоровье, мана, выборные бонусы и ручные отметки.': 'The Progress → Bonuses tab: permanent campaign rewards, weapon passives, resistances, spirit, life, mana, selectable bonuses, and manual marks.',
+  'Подробная панель · Прогресс · Напоминания': 'Detailed panel · Progress · Reminders',
+  'Вкладка “Прогресс” → “Напоминания”: проверки торговцев, базы оружия и брони, фласки, камни и важные power-spike подсказки по уровню.': 'The Progress → Reminders tab: vendor checks, weapon and armour bases, flasks, gems, and important level-based power-spike reminders.',
+  'Подробная панель · Забег · Таймер': 'Detailed panel · Run · Timer',
+  'Вкладка “Забег” → “Таймер”: общее время, текущий акт, статус, паузы, сброс и управление прохождением.': 'The Run → Timer tab: total time, current act, status, pauses, reset, and run controls.',
+  'Подробная панель · Забег · Время актов': 'Detailed panel · Run · Act Times',
+  'Вкладка “Забег” → “Время актов”: сплиты, общий прогресс, завершённые акты и отдельный сегмент эндгейма “До Т15”.': 'The Run → Act Times tab: splits, overall progress, completed acts, and the separate endgame To T15 segment.',
+  'Подробная панель · Забег · Итоги': 'Detailed panel · Run · Summary',
+  'Вкладка “Забег” → “Итоги”: финальное время, сравнение с личным рекордом, самые долгие зоны, история забегов и сохранённые результаты.': 'The Run → Summary tab: final time, personal-best comparison, longest zones, run history, and saved results.',
   'Подробная панель · Таймер': 'Detailed panel · Timer',
   'Общее время забега, время текущего акта, статус, паузы, сброс и управление текущим прохождением.': 'Total run time, current act time, status, pauses, reset, and run controls.',
   'Подробная панель · Время актов': 'Detailed panel · Act Times',
@@ -211,6 +236,44 @@ const TEXT_TRANSLATIONS_EN = {
   'Подробная панель · Напоминания': 'Detailed panel · Reminders',
   'Ближайшие проверки торговцев, базы оружия/брони, фласки, камни и важные power-spike подсказки по уровню.': 'Upcoming vendor checks, weapon/armour bases, flasks, gems, and important level-based power-spike reminders.',
   'Финальное время, сравнение с личным рекордом, самые долгие зоны, история забегов и сохранённые результаты.': 'Final time, personal-best comparison, longest zones, run history, and saved results.',
+  // 0.6.0 website copy (RU/EN).
+  "v0.6.0 · RU/EN клиент · кампания + Интерлюдии + До Т15 · работает по логам игры": "v0.6.0 · RU/EN client · campaign + Interludes + To T15 · reads game logs",
+  "Что нового в 0.6.0": "What’s new in 0.6.0",
+  "POE2 Act Companion Overlay читает лог-файл игры, определяет текущую зону и показывает маршрут, постоянные бонусы, таймер и время актов. В 0.6.0 появились улучшенный интерфейс, поиск по кампании, гибкая настройка блоков и сравнение темпа забега — без инжекта в клиент игры.": "POE2 Act Companion Overlay reads the game log, detects your current zone, and displays the route, permanent bonuses, timer and act splits. Version 0.6.0 brings a refreshed interface, campaign search, configurable blocks and pace comparison — without injecting into the game client.",
+  "Выбирай видимые разделы, меняй порядок групп, сохраняй собственные макеты и переключайся между ними.": "Choose visible sections, reorder block groups, save custom layouts, and switch between them.",
+  "Маршрут, бонусы, напоминания и статистика забегов собраны в разделы с удобной боковой навигацией.": "Route, bonuses, reminders and run statistics are organized into sections with handy sidebar navigation.",
+  "Ghost Pace": "Ghost Pace",
+  "Сравнение темпа с лучшим сопоставимым забегом. Индикатор в оверлее появляется, когда есть подходящая история.": "Compare your pace with your best comparable run. The overlay indicator appears when matching run history is available.",
+  "Поиск по кампании": "Campaign search",
+  "Поиск по зонам, заданиям, боссам и постоянным наградам всех актов и Интерлюдий с учётом RU/EN.": "Search zones, quests, bosses, and permanent rewards across all acts and Interludes in RU/EN.",
+  "Горячие клавиши чек-листа": "Checklist hotkeys",
+  "Ручная отметка и отмена отметки задач через F6/F7. Включаются и настраиваются отдельно.": "Mark and unmark checklist items with F6/F7. These hotkeys can be enabled and customized separately.",
+  "Run Recap": "Run Recap",
+  "Итоги забега дополняются проверкой заданий и наград, где подтверждённые пропуски отделены от непроверенных отметок.": "Run summaries now include quest and reward checks, separating confirmed misses from items whose completion is unverified.",
+  "v0.6.0 · обновление интерфейса и возможностей": "v0.6.0 · interface and feature update",
+  "Новый интерфейс. Больше контроля над забегом.": "A new interface. More control over every run.",
+  "В 0.6.0 мы обновили подробную панель и оверлей для узких окон, улучшили русские и английские подсказки, а также добавили пять экспериментальных улучшений для маршрута, управления и статистики.": "In 0.6.0, we refreshed the companion panel and narrow-window overlay, improved RU/EN guidance, and introduced five experimental enhancements for routes, controls, and run statistics.",
+  "Кнопки скачивания ведут на последний реально опубликованный установщик в GitHub Releases.": "Download buttons always lead to the latest actually published installer on GitHub Releases.",
+  "Интерфейс 0.6.0": "Interface 0.6.0",
+  "Боковая навигация и удобная структура": "Sidebar navigation and a cleaner structure",
+  "Подробная панель и настройки получили боковое меню. Вкладки, подсказки и элементы управления стали лучше сгруппированы.": "The companion panel and settings now have sidebar navigation. Tabs, tips, and controls are grouped more clearly.",
+  "Узкие окна · RU/EN": "Narrow windows · RU/EN",
+  "Оверлей подстраивается под экран": "An overlay that fits your screen",
+  "Переработана шапка с кнопками, переносы подсказок и компактный режим. Длинный текст в RU/EN читается аккуратнее.": "The header controls, tip wrapping, and compact mode have been refined. Longer RU/EN text fits more neatly.",
+  "Сравнение с личным рекордом": "Compare with your personal best",
+  "В игровом оверлее появился индикатор темпа относительно лучшего сопоставимого забега, если есть подходящая история.": "The in-game overlay now shows a pace indicator against your best comparable run when matching history exists.",
+  "Макеты": "Layouts",
+  "Свой порядок блоков": "Your own block order",
+  "Меняй порядок групп оверлея кнопками вверх/вниз и сохраняй до восьми собственных вариантов расположения.": "Reorder overlay groups with up/down buttons and save up to eight custom layouts.",
+  "Поиск + F6/F7": "Search + F6/F7",
+  "Меньше кликов во время игры": "Fewer clicks during gameplay",
+  "Поиск по кампании на RU/EN и настраиваемые ручные горячие клавиши для отметки задач чек-листа.": "RU/EN campaign search plus customizable manual hotkeys for marking checklist items.",
+  "Итоги · Локализация": "Recap · Localization",
+  "Понятнее отчёты и подсказки": "Clearer reports and guidance",
+  "Run Recap различает подтверждённые пропуски и неподтверждённые задачи. Русские гайды очищены от лишних английских вставок.": "Run Recap distinguishes confirmed misses from unverified objectives. Russian guides have been cleaned up to avoid unnecessary English words.",
+  "Примеры интерфейса: основной оверлей, подробная панель, режим “Только таймер” и компактный режим. Некоторые скриншоты сделаны до обновления 0.6.0.": "Interface examples: the main overlay, companion panel, Timer Only, and Compact modes. Some screenshots were taken before the 0.6.0 update.",
+  "Короткая видео-демонстрация POE2 Act Companion Overlay: основной оверлей, таймер, компактный режим и подробная панель. Интерфейс в ролике может отличаться от версии 0.6.0.": "A short demo of POE2 Act Companion Overlay: main overlay, timer, compact mode, and companion panel. The interface in this video may differ from version 0.6.0.",
+  "Видеообзор приложения": "App video overview",
 };
 
 const ATTRIBUTE_TRANSLATIONS_EN = {
@@ -230,8 +293,8 @@ const ATTRIBUTE_TRANSLATIONS_EN = {
   'Основной overlay: текущая зона, памятка Что в локации, следующий переход, скипы и статус уровня': 'Main overlay: current zone, zone checklist, next transition, skips, and level status',
   'Основной overlay': 'Main overlay',
   'Текущая зона, памятка “Что в локации”, следующий переход, скипы, важные подсказки и статус уровня прямо поверх игры.': 'Current zone, zone checklist, next transition, skips, important notes, and level status right over the game.',
-  'Подробная панель: маршрут, бонусы, таймер, напоминания и итоги забега': 'Detailed panel: route, bonuses, timer, reminders, and run summary',
-  'Подробная панель': 'Detailed panel',
+  'Подробная панель с вкладками Сейчас, Маршрут, Прогресс и Забег': 'Detailed panel with Now, Route, Progress, and Run tabs',
+  'Подробная панель · Сейчас / Маршрут / Прогресс / Забег': 'Detailed panel · Now / Route / Progress / Run',
   'Отдельное окно с маршрутом, бонусами, таймером, временем актов, напоминаниями и итогами забега — когда нужен весь контекст сразу.': 'A separate window with the route, bonuses, timer, act splits, reminders, and run summary — when you need full context at once.',
   'Режим только таймер: вид с таймером, уровнем и следующим переходом': 'Timer Only mode: timer, level, and next transition view',
   'Режим “только таймер”': 'Timer Only mode',
@@ -263,9 +326,18 @@ const ATTRIBUTE_TRANSLATIONS_EN = {
   'Подробная панель: вкладка времени актов и До Т15': 'Detailed panel: act times and To T15 tab',
   'Подробная панель: вкладка напоминаний': 'Detailed panel: reminders tab',
   'Подробная панель: вкладка итогов забега': 'Detailed panel: run summary tab',
+  'Подробная панель: Сейчас — текущая зона': 'Detailed panel: Now — current zone',
+  'Подробная панель: Маршрут — маршрут кампании': 'Detailed panel: Route — campaign route',
+  'Подробная панель: Прогресс — Бонусы': 'Detailed panel: Progress — Bonuses',
+  'Подробная панель: Прогресс — Напоминания': 'Detailed panel: Progress — Reminders',
+  'Подробная панель: Забег — Таймер': 'Detailed panel: Run — Timer',
+  'Подробная панель: Забег — Время актов': 'Detailed panel: Run — Act Times',
+  'Подробная панель: Забег — Итоги': 'Detailed panel: Run — Summary',
+  'Основные вкладки подробной панели': 'Detailed panel primary tabs',
+  'Подвкладки подробной панели': 'Detailed panel subtabs',
   'Основной overlay: текущая зона, памятка, следующий переход, скипы, статус уровня и настраиваемые блоки': 'Main overlay: current zone, checklist, next transition, skips, level status, and configurable blocks',
   'Текущая зона, памятка “Что в локации”, следующий переход, скипы, важные подсказки, статус уровня и блоки, которые можно включать или скрывать.': 'Current zone, zone checklist, next transition, skips, important notes, level status, and blocks you can show or hide.',
-  'Отдельное окно с маршрутом, бонусами, таймером, временем актов, сегментом “До Т15”, напоминаниями, итогами и историей забегов.': 'A separate window with route, bonuses, timer, act splits, the “To T15” segment, reminders, summary, and run history.',
+  'Отдельное окно с вкладками “Сейчас”, “Маршрут”, “Прогресс” и “Забег”: текущая зона, маршрут кампании, бонусы, напоминания, таймер, время актов, итоги и история забегов.': 'A separate window with Now, Route, Progress, and Run tabs for the current zone, campaign route, bonuses, reminders, timer, act times, summary, and run history.',
 };
 
 const UI_MESSAGES = {
@@ -280,7 +352,9 @@ const UI_MESSAGES = {
     releaseFallbackOne: 'Не удалось подтянуть данные последнего релиза.',
     releaseFallbackTwo: 'Скачай актуальную сборку вручную через GitHub Releases.',
     languageToggleLabel: 'Переключить язык сайта',
-    languageToggleTitle: 'Переключить язык сайта'
+    languageToggleTitle: 'Переключить язык сайта',
+    themeToggleLabel: 'Переключить тему сайта',
+    themeToggleTitle: (theme) => theme === 'dark-fantasy' ? 'Включить классическую тему' : 'Включить тему Dark Fantasy'
   },
   en: {
     copied: 'Copied',
@@ -293,7 +367,9 @@ const UI_MESSAGES = {
     releaseFallbackOne: 'Could not load latest release data.',
     releaseFallbackTwo: 'Download the current build manually from GitHub Releases.',
     languageToggleLabel: 'Switch site language',
-    languageToggleTitle: 'Switch site language'
+    languageToggleTitle: 'Switch site language',
+    themeToggleLabel: 'Switch site theme',
+    themeToggleTitle: (theme) => theme === 'dark-fantasy' ? 'Switch to Classic theme' : 'Switch to Dark Fantasy theme'
   }
 };
 
@@ -308,6 +384,24 @@ const CIS_TIMEZONES = [
   'Asia/Bishkek', 'Asia/Tashkent', 'Asia/Samarkand', 'Asia/Dushanbe', 'Asia/Ashgabat',
   'Asia/Baku', 'Asia/Yerevan', 'Asia/Tbilisi'
 ];
+
+function normalizeTheme(value) {
+  return SUPPORTED_THEMES.includes(value) ? value : null;
+}
+
+function detectPreferredTheme() {
+  const documentTheme = normalizeTheme(document.documentElement.dataset.theme);
+  if (documentTheme) return documentTheme;
+
+  try {
+    const savedTheme = normalizeTheme(window.localStorage.getItem(THEME_STORAGE_KEY));
+    if (savedTheme) return savedTheme;
+  } catch (error) {
+    // ignore storage issues
+  }
+
+  return 'classic';
+}
 
 function normalizeLanguage(value) {
   return SUPPORTED_LANGUAGES.includes(value) ? value : null;
@@ -406,6 +500,7 @@ function collectLocalizedAttributes() {
 const localizedTextNodes = collectLocalizedTextNodes();
 const localizedAttributes = collectLocalizedAttributes();
 let currentLanguage = detectPreferredLanguage();
+let currentTheme = detectPreferredTheme();
 let latestReleaseCache = null;
 let publicStatsCache = null;
 
@@ -414,6 +509,44 @@ function getUiMessage(key, ...args) {
   return typeof message === 'function' ? message(...args) : message;
 }
 
+function syncThemeToggleAccessibility() {
+  const themeToggle = document.querySelector('[data-theme-toggle]');
+  if (!themeToggle) return;
+
+  themeToggle.setAttribute('aria-label', getUiMessage('themeToggleLabel'));
+  themeToggle.setAttribute('title', getUiMessage('themeToggleTitle', currentTheme));
+  themeToggle.setAttribute('aria-pressed', currentTheme === 'dark-fantasy' ? 'true' : 'false');
+}
+
+function applyTheme(theme, options = {}) {
+  currentTheme = normalizeTheme(theme) || 'classic';
+
+  if (options.persist) {
+    try {
+      window.localStorage.setItem(THEME_STORAGE_KEY, currentTheme);
+    } catch (error) {
+      // ignore storage issues
+    }
+  }
+
+  document.documentElement.dataset.theme = currentTheme;
+
+  const themeColor = document.querySelector('meta[name="theme-color"]');
+  if (themeColor) {
+    themeColor.setAttribute('content', currentTheme === 'dark-fantasy' ? '#09070f' : '#0b0f14');
+  }
+
+  syncThemeToggleAccessibility();
+}
+
+function setupThemeToggle() {
+  const themeToggle = document.querySelector('[data-theme-toggle]');
+  if (!themeToggle) return;
+
+  themeToggle.addEventListener('click', () => {
+    applyTheme(currentTheme === 'classic' ? 'dark-fantasy' : 'classic', { persist: true });
+  });
+}
 
 function syncLocalizedImages() {
   document.querySelectorAll('[data-image-ru][data-image-en]').forEach((element) => {
@@ -432,7 +565,8 @@ function syncLocalizedImages() {
 }
 
 function getLocalizedScreenImage(tab) {
-  return tab.getAttribute(`data-screen-image-${currentLanguage}`) || tab.getAttribute('data-screen-image');
+  const image = tab.getAttribute(`data-screen-image-${currentLanguage}`) || tab.getAttribute('data-screen-image');
+  return withAssetVersion(image);
 }
 
 function syncActiveScreenPreview() {
@@ -477,8 +611,8 @@ function applyLanguage(language, options = {}) {
   });
 
   document.title = currentLanguage === 'ru'
-    ? 'POE2 Act Companion Overlay — оверлей для актов POE2'
-    : 'POE2 Act Companion Overlay — campaign overlay for POE2';
+    ? 'POE2 Act Companion Overlay — оверлей для кампании и эндгейма POE2'
+    : 'POE2 Act Companion Overlay — campaign and endgame overlay for POE2';
 
   const languageToggle = document.querySelector('[data-language-toggle]');
   if (languageToggle) {
@@ -486,6 +620,7 @@ function applyLanguage(language, options = {}) {
     languageToggle.setAttribute('title', getUiMessage('languageToggleTitle'));
   }
 
+  syncThemeToggleAccessibility();
   syncLocalizedImages();
   syncActiveScreenPreview();
   renderKnownReleaseState();
@@ -569,79 +704,126 @@ const screenGalleryPrevButton = document.querySelector('[data-screen-gallery-pre
 const screenGalleryNextButton = document.querySelector('[data-screen-gallery-next]');
 const screenGalleryMeta = document.querySelector('[data-screen-gallery-meta]');
 const screenGalleryLabel = document.querySelector('[data-screen-gallery-label]');
-const screenGalleryTabs = document.querySelector('[data-screen-gallery-tabs]');
+const screenGalleryPrimaryTabs = document.querySelector('[data-screen-gallery-primary-tabs]');
+const screenGallerySecondaryTabs = document.querySelector('[data-screen-gallery-secondary-tabs]');
 
 const SCREEN_GALLERIES = {
   'companion-panel': [
     {
-      label: 'Текущая зона',
+      groupKey: 'now',
+      groupLabel: 'Сейчас',
+      groupLabelEn: 'Now',
+      label: 'Сейчас',
+      labelEn: 'Now',
       imageRu: './assets/screens/panel-current-zone-ru.png',
       imageEn: './assets/screens/panel-current-zone-en.png',
-      fallbackRu: './assets/screens/companion-panel-reference.png',
+      fallbackRu: './assets/screens/panel-current-zone-ru.png',
       fallbackEn: './assets/screens/en-companion-panel.png',
       alt: 'Подробная панель: вкладка текущей зоны',
       title: 'Подробная панель · Текущая зона',
       text: 'Карточка текущей зоны с подсказками, ближайшими уровнями, постоянными бонусами, следующим переходом и важными заметками.'
     },
     {
+      groupKey: 'route',
+      groupLabel: 'Маршрут',
+      groupLabelEn: 'Route',
       label: 'Маршрут',
+      labelEn: 'Route',
       imageRu: './assets/screens/panel-route-ru.png',
       imageEn: './assets/screens/panel-route-en.png',
-      fallbackRu: './assets/screens/companion-panel-reference.png',
+      fallbackRu: './assets/screens/panel-current-zone-ru.png',
       fallbackEn: './assets/screens/en-companion-panel.png',
-      alt: 'Подробная панель: вкладка маршрута кампании',
+      alt: 'Подробная панель: Маршрут — маршрут кампании',
+      altEn: 'Detailed panel: Route — campaign route',
       title: 'Подробная панель · Маршрут',
-      text: 'Полный маршрут по актам и interlude-частям: порядок зон, опциональные точки, хабы и переходы между страницами.'
+      titleEn: 'Detailed panel · Route',
+      text: 'Вкладка “Маршрут”: полный путь по актам и интерлюдиям — порядок зон, опциональные точки, хабы и переходы между страницами.',
+      textEn: 'The Route tab shows the full path through acts and Interludes, including zone order, optional stops, hubs, and transitions.'
     },
     {
-      label: 'Таймер',
-      imageRu: './assets/screens/panel-timer-ru.png',
-      imageEn: './assets/screens/panel-timer-en.png',
-      fallbackRu: './assets/screens/companion-panel-reference.png',
-      fallbackEn: './assets/screens/en-companion-panel.png',
-      alt: 'Подробная панель: вкладка таймера забега',
-      title: 'Подробная панель · Таймер',
-      text: 'Общее время забега, время текущего акта, статус, паузы, сброс и управление текущим прохождением.'
-    },
-    {
-      label: 'Время актов',
-      imageRu: './assets/screens/panel-act-times-ru.png',
-      imageEn: './assets/screens/panel-act-times-en.png',
-      fallbackRu: './assets/screens/companion-panel-reference.png',
-      fallbackEn: './assets/screens/en-companion-panel.png',
-      alt: 'Подробная панель: вкладка времени актов и До Т15',
-      title: 'Подробная панель · Время актов',
-      text: 'Сплиты по актам, общий прогресс, завершённые акты и отдельный сегмент эндгейма “До Т15”.'
-    },
-    {
-      label: 'Напоминания',
-      imageRu: './assets/screens/panel-reminders-ru.png',
-      imageEn: './assets/screens/panel-reminders-en.png',
-      fallbackRu: './assets/screens/companion-panel-reference.png',
-      fallbackEn: './assets/screens/en-companion-panel.png',
-      alt: 'Подробная панель: вкладка напоминаний',
-      title: 'Подробная панель · Напоминания',
-      text: 'Ближайшие проверки торговцев, базы оружия/брони, фласки, камни и важные power-spike подсказки по уровню.'
-    },
-    {
+      groupKey: 'progress',
+      groupLabel: 'Прогресс',
+      groupLabelEn: 'Progress',
       label: 'Бонусы',
+      labelEn: 'Bonuses',
       imageRu: './assets/screens/panel-bonuses-ru.png',
       imageEn: './assets/screens/panel-bonuses-en.png',
       fallbackRu: './assets/screens/act-bonuses-reference.png',
       fallbackEn: './assets/screens/en-companion-panel.png',
-      alt: 'Подробная панель: вкладка бонусов с наградами по актам',
-      title: 'Подробная панель · Бонусы',
-      text: 'Постоянные награды кампании: пассивки оружия, резисты, дух, здоровье, мана, выборные бонусы и ручные отметки.'
+      alt: 'Подробная панель: Прогресс — Бонусы',
+      altEn: 'Detailed panel: Progress — Bonuses',
+      title: 'Подробная панель · Прогресс · Бонусы',
+      titleEn: 'Detailed panel · Progress · Bonuses',
+      text: 'Вкладка “Прогресс” → “Бонусы”: постоянные награды кампании, пассивки оружия, резисты, дух, здоровье, мана, выборные бонусы и ручные отметки.',
+      textEn: 'Progress → Bonuses tracks permanent campaign rewards, weapon passives, resistances, spirit, life, mana, selectable bonuses, and manual marks.'
     },
     {
+      groupKey: 'progress',
+      groupLabel: 'Прогресс',
+      groupLabelEn: 'Progress',
+      label: 'Напоминания',
+      labelEn: 'Reminders',
+      imageRu: './assets/screens/panel-reminders-ru.png',
+      imageEn: './assets/screens/panel-reminders-en.png',
+      fallbackRu: './assets/screens/panel-current-zone-ru.png',
+      fallbackEn: './assets/screens/en-companion-panel.png',
+      alt: 'Подробная панель: Прогресс — Напоминания',
+      altEn: 'Detailed panel: Progress — Reminders',
+      title: 'Подробная панель · Прогресс · Напоминания',
+      titleEn: 'Detailed panel · Progress · Reminders',
+      text: 'Вкладка “Прогресс” → “Напоминания”: проверки торговцев, базы оружия и брони, фласки, камни и важные power-spike подсказки по уровню.',
+      textEn: 'Progress → Reminders shows vendor checks, weapon and armour bases, flasks, gems, and important level-based power-spike reminders.'
+    },
+    {
+      groupKey: 'run',
+      groupLabel: 'Забег',
+      groupLabelEn: 'Run',
+      label: 'Таймер',
+      labelEn: 'Timer',
+      imageRu: './assets/screens/panel-timer-ru.png',
+      imageEn: './assets/screens/panel-timer-en.png',
+      fallbackRu: './assets/screens/panel-current-zone-ru.png',
+      fallbackEn: './assets/screens/en-companion-panel.png',
+      alt: 'Подробная панель: Забег — Таймер',
+      altEn: 'Detailed panel: Run — Timer',
+      title: 'Подробная панель · Забег · Таймер',
+      titleEn: 'Detailed panel · Run · Timer',
+      text: 'Вкладка “Забег” → “Таймер”: общее время, текущий акт, статус, паузы, сброс и управление прохождением.',
+      textEn: 'Run → Timer shows total time, the current act, status, pauses, reset, and run controls.'
+    },
+    {
+      groupKey: 'run',
+      groupLabel: 'Забег',
+      groupLabelEn: 'Run',
+      label: 'Время актов',
+      labelEn: 'Act Times',
+      imageRu: './assets/screens/panel-act-times-ru.png',
+      imageEn: './assets/screens/panel-act-times-en.png',
+      fallbackRu: './assets/screens/panel-current-zone-ru.png',
+      fallbackEn: './assets/screens/en-companion-panel.png',
+      alt: 'Подробная панель: Забег — Время актов',
+      altEn: 'Detailed panel: Run — Act Times',
+      title: 'Подробная панель · Забег · Время актов',
+      titleEn: 'Detailed panel · Run · Act Times',
+      text: 'Вкладка “Забег” → “Время актов”: сплиты, общий прогресс, завершённые акты и отдельный сегмент эндгейма “До Т15”.',
+      textEn: 'Run → Act Times shows splits, overall progress, completed acts, and the separate To T15 endgame segment.'
+    },
+    {
+      groupKey: 'run',
+      groupLabel: 'Забег',
+      groupLabelEn: 'Run',
       label: 'Итоги',
+      labelEn: 'Summary',
       imageRu: './assets/screens/panel-summary-ru.png',
       imageEn: './assets/screens/panel-summary-en.png',
       fallbackRu: './assets/screens/act-bonuses-reference.png',
       fallbackEn: './assets/screens/en-companion-panel.png',
-      alt: 'Подробная панель: вкладка итогов забега',
-      title: 'Подробная панель · Итоги',
-      text: 'Финальное время, сравнение с личным рекордом, самые долгие зоны, история забегов и сохранённые результаты.'
+      alt: 'Подробная панель: Забег — Итоги',
+      altEn: 'Detailed panel: Run — Summary',
+      title: 'Подробная панель · Забег · Итоги',
+      titleEn: 'Detailed panel · Run · Summary',
+      text: 'Вкладка “Забег” → “Итоги”: финальное время, сравнение с личным рекордом, самые долгие зоны, история забегов и сохранённые результаты.',
+      textEn: 'Run → Summary shows final time, personal-best comparison, longest zones, run history, and saved results.'
     }
   ]
 };
@@ -659,33 +841,83 @@ function getScreenGalleryForTab(tab) {
   return Array.isArray(gallery) && gallery.length > 0 ? { key, gallery } : null;
 }
 
+function getLocalizedGalleryField(item, field) {
+  if (currentLanguage === 'en') {
+    return item[`${field}En`] || translateText(item[field], 'en') || item[field];
+  }
+  return item[field];
+}
+
 function getLocalizedGalleryImage(item) {
-  return currentLanguage === 'en'
+  const image = currentLanguage === 'en'
     ? item.imageEn || item.imageRu || item.image
     : item.imageRu || item.imageEn || item.image;
+  return withAssetVersion(image);
 }
 
 function getLocalizedGalleryFallbackImage(item) {
-  return currentLanguage === 'en'
+  const image = currentLanguage === 'en'
     ? item.fallbackEn || item.fallbackRu || item.fallbackImage
     : item.fallbackRu || item.fallbackEn || item.fallbackImage;
+  return withAssetVersion(image);
+}
+
+function getGalleryGroups(gallery) {
+  const groups = [];
+  gallery.forEach((item, itemIndex) => {
+    const key = item.groupKey || `screen-${itemIndex}`;
+    if (!groups.some((group) => group.key === key)) {
+      groups.push({
+        key,
+        label: item.groupLabel || item.label || item.title || `#${itemIndex + 1}`,
+        labelEn: item.groupLabelEn || item.labelEn || item.titleEn,
+        firstIndex: itemIndex
+      });
+    }
+  });
+  return groups;
 }
 
 function renderScreenGalleryTabs(gallery = null, index = 0) {
-  if (!screenGalleryTabs) return;
+  const containers = [screenGalleryPrimaryTabs, screenGallerySecondaryTabs];
 
   if (!Array.isArray(gallery) || gallery.length <= 1) {
-    screenGalleryTabs.hidden = true;
-    screenGalleryTabs.innerHTML = '';
+    containers.forEach((container) => {
+      if (!container) return;
+      container.hidden = true;
+      container.innerHTML = '';
+    });
     return;
   }
 
-  screenGalleryTabs.hidden = false;
-  screenGalleryTabs.innerHTML = gallery.map((item, itemIndex) => {
-    const label = translateText(item.label || item.title || `#${itemIndex + 1}`, currentLanguage);
-    const selected = itemIndex === index;
-    return `<button class="screen-gallery-tab${selected ? ' is-active' : ''}" type="button" data-screen-gallery-index="${itemIndex}" aria-selected="${selected ? 'true' : 'false'}">${label}</button>`;
-  }).join('');
+  const activeItem = gallery[index] || gallery[0];
+  const activeGroupKey = activeItem.groupKey || `screen-${index}`;
+  const groups = getGalleryGroups(gallery);
+
+  if (screenGalleryPrimaryTabs) {
+    screenGalleryPrimaryTabs.hidden = false;
+    screenGalleryPrimaryTabs.innerHTML = groups.map((group) => {
+      const label = currentLanguage === 'en' ? group.labelEn || translateText(group.label, 'en') : group.label;
+      const selected = group.key === activeGroupKey;
+      return `<button class="screen-gallery-tab screen-gallery-tab-primary${selected ? ' is-active' : ''}" type="button" role="tab" data-screen-gallery-index="${group.firstIndex}" aria-selected="${selected ? 'true' : 'false'}">${label}</button>`;
+    }).join('');
+  }
+
+  const activeGroupItems = gallery
+    .map((item, itemIndex) => ({ item, itemIndex }))
+    .filter(({ item, itemIndex }) => (item.groupKey || `screen-${itemIndex}`) === activeGroupKey);
+
+  if (screenGallerySecondaryTabs) {
+    const showSecondary = activeGroupItems.length > 1;
+    screenGallerySecondaryTabs.hidden = !showSecondary;
+    screenGallerySecondaryTabs.innerHTML = showSecondary
+      ? activeGroupItems.map(({ item, itemIndex }) => {
+          const label = getLocalizedGalleryField(item, 'label');
+          const selected = itemIndex === index;
+          return `<button class="screen-gallery-tab screen-gallery-tab-secondary${selected ? ' is-active' : ''}" type="button" role="tab" data-screen-gallery-index="${itemIndex}" aria-selected="${selected ? 'true' : 'false'}">${label}</button>`;
+        }).join('')
+      : '';
+  }
 }
 
 function setScreenGalleryControls(isVisible, index = 0, total = 0, gallery = null) {
@@ -709,9 +941,9 @@ function renderScreenPreviewFromData(data, options = {}) {
   if (!data || !screenPreviewImage || !screenPreviewTitle || !screenPreviewText) return;
 
   const nextImage = data.image || getLocalizedGalleryImage(data);
-  const nextAlt = data.alt;
-  const nextTitle = data.title;
-  const nextText = data.text;
+  const nextAlt = getLocalizedGalleryField(data, 'alt');
+  const nextTitle = getLocalizedGalleryField(data, 'title');
+  const nextText = getLocalizedGalleryField(data, 'text');
   const nextVariant = data.variant || 'landscape';
 
   if (nextImage) {
@@ -724,13 +956,12 @@ function renderScreenPreviewFromData(data, options = {}) {
       : null;
     screenPreviewImage.src = nextImage;
   }
-  if (nextAlt) screenPreviewImage.alt = translateAttr(nextAlt, currentLanguage);
+  if (nextAlt) screenPreviewImage.alt = nextAlt;
   if (nextTitle) {
-    const localizedTitle = translateText(nextTitle, currentLanguage);
-    screenPreviewTitle.textContent = localizedTitle;
-    if (screenWindowLabel) screenWindowLabel.textContent = localizedTitle;
+    screenPreviewTitle.textContent = nextTitle;
+    if (screenWindowLabel) screenWindowLabel.textContent = nextTitle;
   }
-  if (nextText) screenPreviewText.textContent = translateText(nextText, currentLanguage);
+  if (nextText) screenPreviewText.textContent = nextText;
   if (screenWindow) screenWindow.dataset.variant = nextVariant;
 
   setScreenGalleryControls(Boolean(options.galleryTotal), options.galleryIndex || 0, options.galleryTotal || 0, options.gallery || null);
@@ -792,7 +1023,7 @@ function moveScreenGallery(direction) {
 screenGalleryPrevButton?.addEventListener('click', () => moveScreenGallery(-1));
 screenGalleryNextButton?.addEventListener('click', () => moveScreenGallery(1));
 
-screenGalleryTabs?.addEventListener('click', (event) => {
+function handleScreenGalleryTabClick(event) {
   const button = event.target.closest('[data-screen-gallery-index]');
   if (!button) return;
 
@@ -806,7 +1037,10 @@ screenGalleryTabs?.addEventListener('click', (event) => {
   activeScreenGalleryKey = galleryContext.key;
   activeScreenGalleryIndex = nextIndex;
   renderActiveScreenPreview();
-});
+}
+
+screenGalleryPrimaryTabs?.addEventListener('click', handleScreenGalleryTabClick);
+screenGallerySecondaryTabs?.addEventListener('click', handleScreenGalleryTabClick);
 
 const RELEASES_REPO = "UmbraMalik/poe2-act-companion-overlay";
 const DOWNLOAD_STATS_URL = './stats/downloads.json';
@@ -869,27 +1103,37 @@ function normalizeReleaseLine(line) {
 }
 
 function extractReleaseNoteLines(markdown, maxLines = 4) {
-  const raw = String(markdown || '')
+  const allLines = String(markdown || '')
     .replace(/```[\s\S]*?```/g, ' ')
-    .replace(/\r/g, '');
+    .replace(/\r/g, '')
+    .split('\n');
 
-  const lines = raw
-    .split('\n')
+  // Release notes can contain separate RU and EN parts. Show only the user's
+  // selected language in the preview instead of mixing both descriptions.
+  const headingLanguage = (line) => {
+    const heading = line.trim();
+    if (/^#{1,6}\s*(?:Что изменено|Что изменилось|Изменения)\s*(?:[—–-]\s*RU)?\s*$/i.test(heading)) return 'ru';
+    if (/^#{1,6}\s*(?:What(?:'s| is) Changed|Changes)\s*(?:[—–-]\s*EN)?\s*$/i.test(heading)) return 'en';
+    return null;
+  };
+  const languageSections = allLines
+    .map((line, index) => ({ index, language: headingLanguage(line) }))
+    .filter(({ language }) => language !== null);
+  const start = languageSections.find(({ language }) => language === currentLanguage);
+  const following = start && languageSections.find(({ index }) => index > start.index);
+  const selectedLines = start
+    ? allLines.slice(start.index + 1, following?.index ?? allLines.length)
+    : allLines;
+
+  // Prefer changes themselves over Markdown section headings.
+  const bullets = selectedLines.filter((line) => /^\s*(?:[-*]\s+|—\s+)/.test(line));
+  const candidates = bullets.length ? bullets : selectedLines;
+  const lines = candidates
     .map(normalizeReleaseLine)
     .filter(Boolean)
-    .filter((line) => !/^исправлено:?$/i.test(line))
-    .filter((line) => !/^добавлено:?$/i.test(line))
-    .filter((line) => !/^важно:?$/i.test(line))
-    .filter((line) => !/^en[- ]?клиент:?$/i.test(line))
-    .filter((line) => !/^fixed:?$/i.test(line))
-    .filter((line) => !/^added:?$/i.test(line))
-    .filter((line) => !/^important:?$/i.test(line));
+    .filter((line) => !/^(?:Что изменено|Что изменилось|What's Changed|Changes)(?:\s*[—–-]\s*(?:RU|EN))?:?$/i.test(line));
 
-  if (lines.length === 0) {
-    return [getUiMessage('releaseEmpty')];
-  }
-
-  return lines.slice(0, maxLines);
+  return lines.length ? lines.slice(0, maxLines) : [getUiMessage('releaseEmpty')];
 }
 
 function renderReleaseNotes(elements, notes) {
@@ -1031,6 +1275,8 @@ latestDownloadButtons.forEach((button) => {
   });
 });
 
+setupThemeToggle();
+applyTheme(currentTheme);
 setupLanguageToggle();
 applyLanguage(currentLanguage);
 
