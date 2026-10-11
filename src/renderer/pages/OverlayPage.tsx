@@ -992,6 +992,7 @@ export function OverlayPage() {
     };
   }, [
     scheduleAdaptiveOverlayHeight,
+    language,
     snapshot?.runtime.overlayMode,
     snapshot?.currentGuideEntry?.id,
     snapshot?.currentGuideEntry?.checklist?.length,
@@ -1015,6 +1016,12 @@ export function OverlayPage() {
     snapshot?.config.mainOverlaySettings.showOverlayPowerSpike,
     snapshot?.runtime.endgameT15CompletionNotice?.completedAt
   ]);
+
+  // A locale switch can wrap the compact checklist without changing its
+  // number of items. Request a fresh native height after the new text renders.
+  useEffect(() => {
+    scheduleAdaptiveOverlayHeight({ force: true });
+  }, [language, scheduleAdaptiveOverlayHeight]);
 
   const beginOverlayDrag = useCallback((event: ReactPointerEvent<HTMLElement>) => {
     const api = window.poe2Overlay;
@@ -1797,7 +1804,7 @@ export function OverlayPage() {
               <div className="hud-zone-kicker-row">
                 <span className="hud-zone-act-pill">{overlayActLabel}</span>
               </div>
-              <h1 className="hud-zone-name">{overlayZoneName}</h1>
+              <h1 className="hud-zone-name" title={overlayZoneName}>{overlayZoneName}</h1>
             </div>
             <div className="hud-title-actions no-drag">
               {overlayQuickActions}

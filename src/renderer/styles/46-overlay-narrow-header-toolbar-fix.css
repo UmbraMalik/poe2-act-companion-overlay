@@ -1,58 +1,128 @@
-/* UI-V2 overlay narrow-header toolbar fix (46).
- * Follow-up to the narrow RU/EN overlay test.
- * Keep the quick-action toolbar in the header row when the overlay is still wide
- * enough, and only fall back to a stacked toolbar on truly tiny widths.
+/* UI-V2 overlay narrow RU/EN correction (46).
+ * Head controls and ACT pill share one row; the zone title takes its own
+ * single line. Avoid collision at the compact minimum window width.
+ * Keep category colors, theme and normal / timer-only / collapsed layouts.
  */
 
-@media (min-width: 296px) and (max-width: 335px) {
+@media (max-width: 400px) {
   .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .hud-header .hud-title-row {
     display: grid !important;
-    grid-template-columns: minmax(0, 1fr) auto !important;
-    align-items: start !important;
-    gap: 6px !important;
+    grid-template-columns: minmax(0, 1fr) max-content !important;
+    grid-template-rows: auto auto !important;
+    gap: 3px 4px !important;
     min-height: 0 !important;
+    align-items: center !important;
   }
 
+  /* The ACT pill and the zone title remain siblings in the layout grid,
+     though their DOM wrapper stays intact for all other widths. */
   .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .hud-header .hud-zone-title-card {
+    display: contents !important;
+  }
+
+  .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .hud-header .hud-zone-kicker-row {
     grid-column: 1;
     grid-row: 1;
     min-width: 0;
+    min-height: 22px !important;
+    padding-right: 0 !important;
+    align-self: center;
   }
 
   .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .hud-header .hud-title-actions {
     position: static !important;
-    display: block !important;
+    display: inline-flex !important;
     grid-column: 2;
     grid-row: 1;
     justify-self: end;
-    align-self: start;
-    width: auto !important;
-    min-width: max-content !important;
+    align-self: center;
+    width: max-content !important;
+    min-width: 0 !important;
     max-width: none !important;
+    margin: 0 !important;
   }
 
   .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .hud-header .overlay-quick-actions {
+    display: inline-flex !important;
     width: max-content !important;
     min-width: max-content !important;
     max-width: none !important;
-    justify-content: flex-end !important;
     flex-wrap: nowrap !important;
-    gap: 4px !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 3px !important;
   }
 
   .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .hud-header .overlay-quick-actions > .overlay-icon-button,
-  .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .hud-header .overlay-quick-actions > .overlay-timer-icon-control,
-  .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .hud-header .overlay-language-toggle {
-    width: 24px !important;
-    min-width: 24px !important;
-    max-width: 24px !important;
-    height: 24px !important;
-    min-height: 24px !important;
-    max-height: 24px !important;
+  .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .hud-header .overlay-quick-actions > .overlay-timer-icon-control {
+    flex: 0 0 22px !important;
+    width: 22px !important;
+    min-width: 22px !important;
+    max-width: 22px !important;
+    height: 22px !important;
+    min-height: 22px !important;
+    max-height: 22px !important;
+  }
+
+  .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .hud-header .overlay-language-toggle,
+  .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .hud-header .overlay-language-toggle-hitarea {
+    flex: 0 0 48px !important;
+    width: 48px !important;
+    min-width: 48px !important;
+    max-width: 48px !important;
+    height: 22px !important;
+    min-height: 22px !important;
+    max-height: 22px !important;
   }
 
   .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .hud-header .hud-title-row h1.hud-zone-name {
-    font-size: clamp(16px, calc(var(--font-title) * 0.94), 20px) !important;
-    line-height: 1.08 !important;
+    display: block !important;
+    grid-column: 1 / -1;
+    grid-row: 2;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    margin: 2px 0 0 !important;
+    padding: 0 !important;
+    white-space: nowrap !important;
+    text-wrap: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    overflow-wrap: normal !important;
+    word-break: normal !important;
+    hyphens: none !important;
+    font-size: clamp(17px, calc(var(--font-title) * 0.96), 22px) !important;
+    line-height: 1.12 !important;
   }
+}
+
+/* Below the supported compact width, never put controls on top of the ACT
+   pill. Keep the controls as an independent (scrollable if necessary) row. */
+@media (max-width: 265px) {
+  .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .hud-header .hud-title-row {
+    grid-template-columns: minmax(0, 1fr) !important;
+    grid-template-rows: auto auto auto !important;
+  }
+  .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .hud-header .hud-title-actions {
+    grid-column: 1;
+    grid-row: 2;
+    max-width: 100% !important;
+    justify-self: start;
+    overflow-x: auto;
+  }
+  .overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .hud-header .hud-title-row h1.hud-zone-name {
+    grid-row: 3;
+  }
+}
+
+/* When switching from RU to the longer EN descriptions, keep compact cards
+   at their natural content height. The shell may scroll if the native window
+   can't grow further, rather than hiding the final checklist lines. */
+.overlay-page.density-compact:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-hud > :not(.resize-grip) {
+  flex-shrink: 0 !important;
+}
+
+.overlay-page.density-compact:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-hud {
+  overflow-y: auto !important;
+  overscroll-behavior-y: contain;
 }
