@@ -218,6 +218,33 @@
   stroke: #ffcd82;
 }
 
+/* Act 4: island voyages, basalt coasts and the Kingsmarch shipping hub.
+   This only changes the illustration/route colors; markers and tooltips
+   remain the same tested components used by Acts 1–3. */
+.companion-page .act-atlas.is-act-four .act-atlas-scroll {
+  --atlas-line: rgba(118, 190, 183, .48);
+  background: #13292b;
+}
+.companion-page .act-atlas.is-act-four .act-atlas-canvas {
+  background-image:
+    linear-gradient(0deg, rgba(4, 10, 14, .20), rgba(5, 13, 17, .02) 52%, rgba(5, 11, 15, .18)),
+    url('../assets/act4-campaign-schematic.svg');
+  background-position: center;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+.companion-page .act-atlas.is-act-four .act-atlas-edge {
+  stroke: rgba(167, 214, 205, .57);
+}
+.companion-page .act-atlas.is-act-four .act-atlas-edge.is-voyage {
+  stroke: rgba(158, 209, 215, .72);
+  stroke-width: 2.6px;
+  stroke-dasharray: 4 13;
+}
+.companion-page .act-atlas.is-act-four .act-atlas-edge.is-recommended {
+  stroke: #f5c887;
+}
+
 .companion-page .act-atlas-canvas::after {
   position: absolute; inset: 0; content: ''; pointer-events: none;
   background: radial-gradient(ellipse at 50% 45%, transparent 45%, rgba(0,0,0,.31) 100%);

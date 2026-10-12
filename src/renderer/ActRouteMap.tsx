@@ -16,7 +16,7 @@ export interface RouteMapZone {
 
 interface ActRouteMapProps {
   language: AppLanguage;
-  act: 1 | 2 | 3;
+  act: 1 | 2 | 3 | 4;
   zones: RouteMapZone[];
   currentGuideId: string | null;
   matchingIds: string[];
@@ -93,6 +93,30 @@ const ACT_THREE_POSITIONS: Record<string, readonly [number, number]> = {
   a3_black_chambers: [74, 13]
 };
 
+/* Act 4 archipelago: the islands are grouped as a PROGRESSION diagram,
+ * not a geographic reproduction of the in-game chart. The port of
+ * Kingsmarch is the return hub between voyages. */
+const ACT_FOUR_POSITIONS: Record<string, readonly [number, number]> = {
+  a4_kingsmarch: [48, 84],
+  a4_whakapanu_island: [30, 81],
+  a4_singing_caverns: [20, 69],
+  a4_isle_of_screams: [20, 49],
+  a4_abandoned_prison: [32, 44],
+  a4_solitary_chambers: [43, 55],
+  a4_isle_of_kin: [58, 69],
+  a4_volcanic_warrens: [73, 81],
+  a4_eye_hinekora: [80, 64],
+  a4_halls_of_the_dead: [86, 50],
+  a4_trial_of_ancestors: [74, 39],
+  a4_kids_bay: [62, 29],
+  a4_journeys_end: [51, 17],
+  a4_plunders_point: [37, 17],
+  a4_arastas: [24, 25],
+  a4_excavation: [37, 32],
+  a4_ngakanu: [50, 41],
+  a4_heart_of_the_tribe: [62, 51]
+};
+
 function mapLabel(language: AppLanguage, ru: string, en: string) {
   return language === 'ru' ? ru : en;
 }
@@ -127,7 +151,7 @@ function getMapGuideList(guide: GuideEntry, language: AppLanguage, key: string):
 }
 
 export function ActRouteMap({ language, act, zones, currentGuideId, matchingIds, onShowList }: ActRouteMapProps) {
-  const mapPositions = act === 3 ? ACT_THREE_POSITIONS : act === 2 ? ACT_TWO_POSITIONS : ACT_ONE_POSITIONS;
+  const mapPositions = act === 4 ? ACT_FOUR_POSITIONS : act === 3 ? ACT_THREE_POSITIONS : act === 2 ? ACT_TWO_POSITIONS : ACT_ONE_POSITIONS;
   const activeZone = zones.find(({ entry }) => entry.guide.id === currentGuideId)
     ?? zones.find(({ entry }) => entry.status === 'current')
     ?? null;
@@ -148,7 +172,7 @@ export function ActRouteMap({ language, act, zones, currentGuideId, matchingIds,
   const nextId = nextActive?.entry.guide.id ?? null;
 
   const connections = useMemo(() => {
-    const edges: { from: string; to: string; kind: 'route' | 'side' }[] = [];
+    const edges: { from: string; to: string; kind: 'route' | 'side' | 'voyage' }[] = [];
     const uniqueEdges = new Set<string>();
     for (const zone of zones) {
       // The Temple of Chaos returns to the wetlands; render its optional
@@ -186,6 +210,12 @@ export function ActRouteMap({ language, act, zones, currentGuideId, matchingIds,
     if (act === 3 && byId.has('a3_chimera_wetlands') && byId.has('a3_temple_of_chaos')) {
       edges.push({ from: 'a3_chimera_wetlands', to: 'a3_temple_of_chaos', kind: 'side' });
     }
+    // The Act 4 guide sends players back to Kingsmarch after Singing Caverns,
+    // and then onward to Isle of Screams. This dashed sea leg is a route
+    // diagram link, NOT a claim about direct geographic adjacency.
+    if (act === 4 && byId.has('a4_kingsmarch') && byId.has('a4_isle_of_screams')) {
+      edges.push({ from: 'a4_kingsmarch', to: 'a4_isle_of_screams', kind: 'voyage' });
+    }
     return edges;
   }, [act, zones, byId, byName]);
 
@@ -203,7 +233,7 @@ export function ActRouteMap({ language, act, zones, currentGuideId, matchingIds,
   const selectedIsNext = Boolean(selected && selected.entry.guide.id === nextId);
 
   return (
-    <section className={`companion-block act-atlas ${act === 3 ? 'is-act-three' : act === 2 ? 'is-act-two' : 'is-act-one'}`} aria-label={mapLabel(language, `Схема маршрута Акта ${act}`, `Act ${act} route diagram`)}>
+    <section className={`companion-block act-atlas ${act === 4 ? 'is-act-four' : act === 3 ? 'is-act-three' : act === 2 ? 'is-act-two' : 'is-act-one'}`} aria-label={mapLabel(language, `Схема маршрута Акта ${act}`, `Act ${act} route diagram`)}>
       <div className="act-atlas-header">
         <div>
           <strong>{mapLabel(language, `Карта маршрута · Акт ${act}`, `Route map · Act ${act}`)}</strong>
@@ -235,7 +265,7 @@ export function ActRouteMap({ language, act, zones, currentGuideId, matchingIds,
                 const b = mapPositions[edge.to];
                 if (!a || !b) return null;
                 const isRecommendedNext = edge.from === liveId && edge.to === nextId;
-                return <path key={`${edge.from}:${edge.to}`} className={`act-atlas-edge ${edge.kind === 'side' ? 'is-side' : ''}${isRecommendedNext ? ' is-recommended' : ''}`} d={buildRoutePath(a, b)} markerEnd={isRecommendedNext ? 'url(#act-atlas-next-arrow)' : undefined} />;
+                return <path key={`${edge.from}:${edge.to}`} className={`act-atlas-edge ${edge.kind === 'side' ? ' is-side' : edge.kind === 'voyage' ? ' is-voyage' : ''}${isRecommendedNext ? ' is-recommended' : ''}`} d={buildRoutePath(a, b)} markerEnd={isRecommendedNext ? 'url(#act-atlas-next-arrow)' : undefined} />;
               })}
             </svg>
             {zones.map((zone) => {
