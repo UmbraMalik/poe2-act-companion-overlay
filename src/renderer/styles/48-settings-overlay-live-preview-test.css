@@ -1,0 +1,34 @@
+/* UI-V2 live overlay preview: actual renderer, demo snapshot, not a screenshot.
+ * Scoped to settings section only; never changes the overlay window or other pages.
+ */
+#settings-overlay { container-type: inline-size; min-width: 0; }
+#settings-overlay .settings-overlay-live-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; align-items: start; min-width: 0; margin-top: 10px; }
+#settings-overlay .settings-overlay-live-controls { min-width: 0; }
+#settings-overlay .settings-overlay-preview { min-width: 0; border: 1px solid rgba(211,167,99,.28); background: linear-gradient(135deg,rgba(236,183,103,.06),rgba(15,20,26,.55)); border-radius: 14px; padding: 11px; display: grid; gap: 11px; }
+#settings-overlay .settings-overlay-preview-title-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+#settings-overlay .settings-overlay-preview-title-row h3 { margin: 0 0 4px; color: #eed19e; font-size: 14px; }
+#settings-overlay .settings-overlay-preview-title-row .helper-text { margin: 0; font-size: 11px; line-height: 1.4; }
+#settings-overlay .settings-overlay-preview-demo { font-size: 10px; font-weight: 800; color: #f5c77d; border: 1px solid rgba(245,199,125,.35); border-radius: 5px; padding: 3px 6px; }
+#settings-overlay .settings-overlay-preview-controls { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 9px; }
+#settings-overlay .settings-overlay-preview-control { display: grid; gap: 4px; min-width: 0; }
+#settings-overlay .settings-overlay-preview-control > span { color: rgba(219,226,234,.72); font-size: 11px; font-weight: 750; }
+#settings-overlay .settings-overlay-preview-control-wide { grid-column: 1/-1; }
+#settings-overlay .settings-overlay-preview-choice { display: flex; flex-wrap: wrap; gap: 4px; }
+#settings-overlay .settings-overlay-preview-choice button { display: inline-flex; align-items: center; justify-content: center; flex: 1 1 auto; min-height: 29px; padding: 4px 6px; border-radius: 7px; background: rgba(255,255,255,.045); color: #b7c0cb; border: 1px solid rgba(177,191,207,.2); font-size: 11px; font-weight: 750; cursor: pointer; }
+#settings-overlay .settings-overlay-preview-choice button.is-active { color: #f8d8a3; background: linear-gradient(130deg,rgba(180,134,61,.24),rgba(120,93,52,.13)); border-color: rgba(238,180,93,.6); }
+#settings-overlay .settings-overlay-preview-choice button:focus-visible { outline: 2px solid #e5b979; outline-offset: 2px; }
+#settings-overlay .settings-overlay-preview-zone { grid-column: 1/-1; }
+#settings-overlay .settings-overlay-preview-zone select { width: 100%; min-width: 0; padding: 7px 8px; border: 1px solid rgba(177,191,207,.25); border-radius: 8px; color: #e0e7ef; background: #191e26; }
+#settings-overlay .settings-overlay-preview-stage { padding: 10px 0; border-radius: 11px; background: radial-gradient(ellipse at 50% 25%,rgba(207,171,99,.10),transparent 70%),rgba(0,0,0,.35); border: 1px solid rgba(187,201,219,.13); overflow-x: auto; overflow-y: hidden; text-align: center; max-width: 100%; }
+#settings-overlay .settings-overlay-preview-stage iframe { display: block; margin: 0 auto; max-width: none; background: transparent; border: 0; pointer-events: none; /* read-only: cannot trigger real Electron actions */ }
+#settings-overlay .settings-overlay-preview-help { margin: 0; line-height: 1.45; }
+@container (min-width: 850px) {
+  #settings-overlay .settings-overlay-live-layout { grid-template-columns: minmax(0,1fr) minmax(350px,400px); }
+  #settings-overlay .settings-overlay-preview { position: sticky; top: 0; }
+}
+@media (max-width: 560px) {
+  #settings-overlay .settings-overlay-preview { padding: 8px; }
+  #settings-overlay .settings-overlay-preview-controls { grid-template-columns: minmax(0,1fr); }
+  #settings-overlay .settings-overlay-preview-control-wide,
+  #settings-overlay .settings-overlay-preview-zone { grid-column: auto; }
+}

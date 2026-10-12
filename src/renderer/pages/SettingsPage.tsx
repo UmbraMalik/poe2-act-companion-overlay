@@ -9,6 +9,7 @@ import { translate } from '../../i18n/translations';
 import { getAppThemeClassName } from '../theme';
 import { SettingsSelect } from '../settings/SettingsSelect';
 import { OverlayLayoutEditor } from '../settings/OverlayLayoutEditor';
+import { OverlayLivePreview } from '../settings/OverlayLivePreview';
 import { SettingsWindowResizeGrip } from '../settings/SettingsWindowResizeGrip';
 import { SettingsWindowShellEffects } from '../settings/SettingsWindowShellEffects';
 import { TimerTargetField } from '../settings/TimerTargetField';
@@ -1154,7 +1155,8 @@ export function SettingsPage() {
         <section id="settings-overlay" className="settings-card" hidden={!isSettingsSectionVisible('settings-overlay')}>
           <h2 className="settings-section-title">{t('settings.overlayTitle')}</h2>
           <p className="helper-text">{t('settings.overlayDescription')}</p>
-
+          <div className="settings-overlay-live-layout">
+            <div className="settings-overlay-live-controls">
           <div className="settings-subsection overlay-presets-subsection">
             <div className="settings-card-header settings-card-header-compact">
               <div>
@@ -1419,8 +1421,10 @@ export function SettingsPage() {
               ))}
             </div>
           </div>
+            </div>
+            <OverlayLivePreview config={config} settingsLanguage={appLanguage} />
+          </div>
         </section>
-
         <section id="settings-detail-panel" className="settings-card" hidden={!isSettingsSectionVisible('settings-detail-panel')}>
           <h2 className="settings-section-title">{t('settings.detailPanelTitle')}</h2>
           <p className="helper-text">{t('settings.detailPanelDescription')}</p>

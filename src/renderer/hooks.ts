@@ -372,8 +372,14 @@ function shouldPublishTimerTick(
   return getDisplaySecond(previousCountdown) !== getDisplaySecond(nextCountdown);
 }
 
+function isEmbeddedOverlayPreview(): boolean {
+  return typeof window !== 'undefined' &&
+    new URLSearchParams(window.location.search).get('embeddedPreview') === '1';
+}
+
 function hasRunTimerElectronApi(): boolean {
   return (
+    !isEmbeddedOverlayPreview() &&
     typeof window !== 'undefined' &&
     typeof window.poe2Overlay !== 'undefined' &&
     typeof window.poe2Overlay.getRunTimerState === 'function' &&
@@ -383,6 +389,7 @@ function hasRunTimerElectronApi(): boolean {
 
 function hasTimerVisualTickElectronApi(): boolean {
   return (
+    !isEmbeddedOverlayPreview() &&
     typeof window !== 'undefined' &&
     typeof window.poe2Overlay !== 'undefined' &&
     typeof window.poe2Overlay.onTimerVisualTick === 'function'
@@ -391,6 +398,7 @@ function hasTimerVisualTickElectronApi(): boolean {
 
 function hasTimerDiagnosticsElectronApi(): boolean {
   return (
+    !isEmbeddedOverlayPreview() &&
     typeof window !== 'undefined' &&
     typeof window.poe2Overlay !== 'undefined' &&
     typeof window.poe2Overlay.isTimerDiagnosticsEnabled === 'function' &&

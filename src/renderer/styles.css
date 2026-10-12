@@ -55,3 +55,4 @@
 @import './styles/45-overlay-narrow-ru-en-test.css'; /* Narrow-window overlay RU/EN responsiveness test */
 @import './styles/46-overlay-narrow-header-toolbar-fix.css'; /* Keep the top control row in the header for narrow overlays when width still allows it */
 @import './styles/47-five-features-test.css'; /* UI-V2 functional experiments: configurable overlay and pace */
+@import './styles/48-settings-overlay-live-preview-test.css'; /* Read-only real-overlay responsive preview in settings */

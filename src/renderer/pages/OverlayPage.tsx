@@ -770,6 +770,7 @@ function getRendererViewportHeight(): number {
 }
 
 export function OverlayPage() {
+  const isEmbeddedPreview = new URLSearchParams(window.location.search).get('embeddedPreview') === '1';
   const snapshot = useAppSnapshot({ initialSnapshot: 'overlay' });
   const { t, language } = useI18n(snapshot?.config.appLanguage);
   const syncedRunTimer = useRunTimerState(snapshot?.config.runTimer);
@@ -885,6 +886,9 @@ export function OverlayPage() {
   }, [clearOverlayModeTransitionTimers]);
 
   const scheduleAdaptiveOverlayHeight = useCallback((options?: AdaptiveOverlayHeightOptions) => {
+    // The settings iframe is not an Electron overlay window. Never send
+    // native window-resize requests from its demonstration content.
+    if (isEmbeddedPreview) return;
     const allowDuringManualResize = Boolean(options?.allowDuringManualResize);
     const force = Boolean(options?.force);
     const allowBelowMinimum = Boolean(options?.allowBelowMinimum ?? isOverlayCollapsed);
@@ -962,7 +966,7 @@ export function OverlayPage() {
       void api.resizeOverlayHeight(nextHeight, { force, allowBelowMinimum }).catch(() => false);
       }
     });
-  }, [autoResizeMinimumHeight, isAdaptiveOverlayHeightSuspended, isOverlayCollapsed]);
+  }, [autoResizeMinimumHeight, isAdaptiveOverlayHeightSuspended, isOverlayCollapsed, isEmbeddedPreview]);
   scheduleAdaptiveOverlayHeightRef.current = scheduleAdaptiveOverlayHeight;
 
   useEffect(() => {

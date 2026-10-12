@@ -100,6 +100,35 @@ function buildPreviewProgress(
 export function getPreviewSnapshot(): AppSnapshot {
   const source = getGuideSource();
   const params = new URLSearchParams(window.location.search);
+  // The embedded settings preview uses the real overlay renderer, but a demo
+  // snapshot. Whitelist URL overrides so it never reads or modifies live state.
+  const embedded = params.get('embeddedPreview') === '1';
+  const previewLanguage = params.get('previewLanguage') === 'en' ? 'en' : 'ru';
+  const previewTheme = params.get('previewTheme') === 'dark_fantasy' ? 'dark_fantasy' : 'classic';
+  const previewDensity = params.get('previewDensity') === 'compact' ? 'compact' :
+    params.get('previewDensity') === 'detailed' ? 'detailed' : 'normal';
+  const rawScale = Number(params.get('previewScale'));
+  const previewScale = ([70, 80, 90, 100, 110, 120] as const).find((value) => value === rawScale) ?? 90;
+  const rawTextSize = Number(params.get('previewTextSize'));
+  const previewTextSize = ([0, 1, 2, 3] as const).find((value) => value === rawTextSize) ?? 0;
+  const previewFx = params.get('previewFx');
+  const effectsEnabled = params.get('previewEffects') === '1';
+  const enabledMainFlags = params.get('previewMainFlags');
+  const mainFlagOverrides = enabledMainFlags === null ? {} : Object.fromEntries(
+    Object.keys(DEFAULT_CONFIG.mainOverlaySettings)
+      .filter((key) => typeof DEFAULT_CONFIG.mainOverlaySettings[key as keyof typeof DEFAULT_CONFIG.mainOverlaySettings] === 'boolean')
+      .map((key) => [key, enabledMainFlags.split(',').includes(key)])
+  );
+  const enabledSections = params.get('previewSections');
+  const sectionOverrides = enabledSections === null ? {} : Object.fromEntries(
+    Object.keys(DEFAULT_CONFIG.overlayVisibleSections).map((key) => [key, enabledSections.split(',').includes(key)])
+  );
+  const requestedOrder = (params.get('previewOrder') ?? '').split(',');
+  const previewOrder = requestedOrder.length === DEFAULT_CONFIG.overlayLayoutOrder.length &&
+    requestedOrder.every((value) => DEFAULT_CONFIG.overlayLayoutOrder.includes(value as typeof DEFAULT_CONFIG.overlayLayoutOrder[number])) &&
+    new Set(requestedOrder).size === requestedOrder.length
+      ? requestedOrder as typeof DEFAULT_CONFIG.overlayLayoutOrder
+      : DEFAULT_CONFIG.overlayLayoutOrder;
   const zoneKey = normalizeKey(
     params.get('zoneId') ?? params.get('zone') ?? 'a2_maudun_quarry'
   );
@@ -136,6 +165,21 @@ export function getPreviewSnapshot(): AppSnapshot {
   return {
     config: {
       ...DEFAULT_CONFIG,
+      // Parent settings are only reflected visually. The embedded frame has
+      // no ability to change the host settings, timer or checklist.
+      ...(embedded ? {
+        appLanguage: previewLanguage,
+        theme: previewTheme,
+        overlayDensity: previewDensity,
+        overlayScale: previewScale,
+        overlayTextSize: previewTextSize,
+        overlayVisibleSections: { ...DEFAULT_CONFIG.overlayVisibleSections, ...sectionOverrides },
+        overlayLayoutOrder: previewOrder,
+        mainOverlaySettings: { ...DEFAULT_CONFIG.mainOverlaySettings, ...mainFlagOverrides, overlayTimerOnlyMode: false },
+        setupWizardCompleted: true,
+        overlayEffectsEnabled: effectsEnabled,
+        visualFxIntensity: previewFx === 'subtle' || previewFx === 'normal' || previewFx === 'rich' ? previewFx : 'off' as const
+      } : {}),
       currentLevel,
       levelRemindersState: {
         shown: reminder ? [reminder.id] : [],
