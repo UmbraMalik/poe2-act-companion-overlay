@@ -39,3 +39,4 @@ Those used to exist as duplicate sources and made it too easy to edit a CSS file
 47. `47-five-features-test.css` — ghost pace, layout editor and run recap visual support.
 48. `48-settings-overlay-live-preview-test.css` — actual overlay renderer preview embedded in settings with RU/EN, width and density controls.
 49. `49-overlay-preview-width-border-fix.css` — live width preset feedback and restored masked edge orbit without animating the Electron shell.
+50. `50-act-route-atlas-test.css` — responsive Act 1 route map with fixed marker anchors, route states, bonus badges and the details panel.

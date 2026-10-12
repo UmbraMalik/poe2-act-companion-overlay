@@ -1,6 +1,10 @@
 /* Act 1 route atlas — isolated from the gameplay overlay and the existing card view. */
 .companion-page .route-polish-layout.is-map-view {
-  grid-template-rows: auto auto minmax(0, 1fr) !important;
+  grid-template-rows: auto auto auto !important;
+  align-content: start !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  scrollbar-gutter: stable;
 }
 .companion-page .route-polish-layout.is-list-view {
   grid-template-rows: auto auto auto minmax(0, 1fr) !important;
@@ -53,7 +57,7 @@
   flex-direction: column;
   gap: 9px;
   min-width: 0;
-  min-height: 0;
+  min-height: max-content;
   padding: 11px;
   overflow: hidden;
   isolation: isolate;
@@ -137,8 +141,10 @@
   position: relative;
   display: block;
   width: 100%;
+  max-width: 100%;
   height: auto;
   aspect-ratio: 1000 / 740;
+  box-sizing: border-box;
   min-width: 0;
   min-height: 0;
   overflow: hidden;
@@ -197,13 +203,16 @@
   align-items: center;
   justify-content: center;
   gap: 1px;
+  box-sizing: border-box;
   width: 38px;
   height: 38px;
+  min-width: 0;
   min-height: 0;
   padding: 0;
   transform: translate(-50%, -50%);
   overflow: visible;
   border: 0;
+  border-radius: 50%;
   background: none;
   color: #ddd5bd;
   font: inherit;
@@ -212,16 +221,22 @@
 }
 .companion-page .act-atlas-node::before,
 .companion-page .act-atlas-node::after { content: none; }
-.companion-page .act-atlas-node:hover,
-.companion-page .act-atlas-node:focus-visible,
 .companion-page .act-atlas-node.is-selected { z-index: 5; }
-.companion-page .act-atlas-node:focus-visible { outline: 2px solid var(--atlas-gold); outline-offset: 3px; border-radius: 6px; }
+.companion-page .act-atlas-node:hover,
+.companion-page .act-atlas-node:focus-visible { z-index: 6; }
+.companion-page .act-atlas-node:focus-visible {
+  outline: 2px solid var(--atlas-gold);
+  outline-offset: 3px;
+  border-radius: 50%;
+  box-shadow: none;
+}
 .companion-page .act-atlas-node.is-filtered:not(.is-live) { opacity: .37; }
 .companion-page .act-atlas-node-ring {
   position: relative;
   display: grid;
   place-items: center;
   flex: 0 0 auto;
+  box-sizing: border-box;
   width: 29px; height: 29px;
   border-radius: 50%;
   border: 2px solid #8d8c77;
@@ -382,8 +397,8 @@
 .companion-page .act-atlas-compass span { position: absolute; top: -12px; font-size: 10px; }
 .companion-page .act-atlas-info {
   display: flex; flex-direction: column;
-  height: 100%;
-  min-width: 0; min-height: 0;
+  height: 0;
+  min-width: 0; min-height: 100%; max-height: 100%;
   border: 1px solid var(--atlas-line);
   border-radius: 10px;
   background: linear-gradient(155deg, rgba(36,39,37,.96), rgba(12,17,22,.98) 36%, rgba(11,14,19,.99));
@@ -481,7 +496,6 @@
   .companion-page .act-atlas-bonus { top: -5px; left: calc(50% + 8px); }
 }
 @media (max-width: 970px) {
-  .companion-page .route-polish-layout.is-map-view { overflow-y: auto !important; }
   .companion-page .act-atlas { overflow: visible; min-height: 0; height: auto; }
   .companion-page .act-atlas-layout {
     flex: 0 0 auto;

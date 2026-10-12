@@ -367,7 +367,7 @@ Search the directory and filter with ripgrep glob flags, for example `rg -g '*.t
 
 **Logged**: 2026-07-13T01:29:49+03:00
 **Priority**: medium
-**Status**: pending
+**Status**: resolved
 **Area**: frontend
 
 ### Summary
@@ -388,6 +388,10 @@ Skip the subscription when the preload bridge or callback is unavailable, matchi
 ### Metadata
 - Reproducible: yes
 - Related Files: src/renderer/pages/CompanionPage.tsx, src/renderer/hooks.ts
+
+### Resolution
+- **Resolved**: 2026-10-12T17:18:00+03:00
+- **Notes**: Guarded the reset-confirmation subscription when the Electron preload API is unavailable and added a static regression.
 
 ---
 
@@ -522,5 +526,222 @@ Apply source changes independently, then patch documentation using stable ASCII-
 ### Resolution
 - **Resolved**: 2026-07-13T02:06:00+03:00
 - **Notes**: Split implementation and documentation into separate patches.
+
+---
+
+## [ERR-20261012-001] ripgrep-combined-button-regex
+
+**Logged**: 2026-10-12T16:48:00+03:00
+**Priority**: low
+**Status**: resolved
+**Area**: tooling
+
+### Summary
+A combined ripgrep pattern for global button selectors contained an invalid character-class range.
+
+### Error
+```text
+rg: regex parse error: invalid character class range
+```
+
+### Suggested Fix
+Use several simple literal/regex searches instead of one dense selector regex.
+
+### Resolution
+- **Resolved**: 2026-10-12T16:48:00+03:00
+- **Notes**: Continued with targeted searches for button and click-feedback rules.
+
+---
+
+## [ERR-20261012-002] powershell-rg-wildcard-path-recurrence
+
+**Logged**: 2026-10-12T16:49:00+03:00
+**Priority**: low
+**Status**: resolved
+**Area**: tooling
+
+### Summary
+PowerShell passed bracketed stylesheet globs to ripgrep as literal invalid Windows paths.
+
+### Error
+```text
+rg: src\\renderer\\styles\\2[5-9]*.css: invalid filename syntax
+```
+
+### Suggested Fix
+Search the styles directory and filter filenames with `rg -g` globs.
+
+### Resolution
+- **Resolved**: 2026-10-12T16:49:00+03:00
+- **Notes**: Replaced the failed inventory with directory-scoped searches.
+
+---
+
+## [ERR-20261012-003] browser-data-url-policy
+
+**Logged**: 2026-10-12T16:50:00+03:00
+**Priority**: low
+**Status**: resolved
+**Area**: tests
+
+### Summary
+The in-app browser correctly rejected a `data:` URL proposed for an isolated CSS fixture.
+
+### Error
+```text
+Browser URL policy allows only http: and https: targets.
+```
+
+### Suggested Fix
+Use the existing localhost Vite preview and make its Electron-only subscription preview-safe.
+
+### Resolution
+- **Resolved**: 2026-10-12T16:50:00+03:00
+- **Notes**: Switched to the real localhost Companion page; no URL-policy workaround was attempted.
+
+---
+
+## [ERR-20261012-004] browser-strict-route-locator
+
+**Logged**: 2026-10-12T16:55:00+03:00
+**Priority**: low
+**Status**: resolved
+**Area**: tests
+
+### Summary
+The route button locator matched both the sidebar section heading and the route link.
+
+### Error
+```text
+strict mode violation: getByRole('button', { name: 'Маршрут', exact: true }) resolved to 2 elements
+```
+
+### Suggested Fix
+Count matching controls first and select the visible sidebar heading deliberately.
+
+### Resolution
+- **Resolved**: 2026-10-12T16:55:00+03:00
+- **Notes**: Selected the first known route control, opened the real map, and captured computed styles.
+
+---
+
+## [ERR-20261012-005] browser-sidebar-toggle-label
+
+**Logged**: 2026-10-12T17:04:00+03:00
+**Priority**: low
+**Status**: resolved
+**Area**: tests
+
+### Summary
+The sidebar toggle's accessible name includes "боковое меню", so an exact short-label lookup found no element.
+
+### Error
+```text
+Playwright selector deadline exceeded: button name "Свернуть" had no exact match
+```
+
+### Suggested Fix
+Use the stable `.companion-sidebar-toggle` class or its full accessible name.
+
+### Resolution
+- **Resolved**: 2026-10-12T17:04:00+03:00
+- **Notes**: Used the stable component class and verified the collapsed layout.
+
+---
+
+## [ERR-20261012-006] browser-audit-expression-errors
+
+**Logged**: 2026-10-12T17:05:00+03:00
+**Priority**: low
+**Status**: resolved
+**Area**: tests
+
+### Summary
+Two exploratory responsive-audit expressions failed: one had an unmatched parenthesis and one resolved a shadowed `parseFloat` binding.
+
+### Error
+```text
+Expected ')'
+TypeError: parseFloat is not a function
+```
+
+### Suggested Fix
+Keep browser audit expressions simple and use `Number.parseFloat` explicitly.
+
+### Resolution
+- **Resolved**: 2026-10-12T17:05:00+03:00
+- **Notes**: Re-ran the audit successfully; marker center error stayed below 0.001 px.
+
+---
+
+## [ERR-20261012-007] iab-viewport-override-no-effect
+
+**Logged**: 2026-10-12T17:08:00+03:00
+**Priority**: low
+**Status**: pending
+**Area**: tests
+
+### Summary
+The in-app browser viewport capability accepted 900 px and 640 px overrides but the tab remained at 1280 px after reflow and reload.
+
+### Error
+```text
+Requested viewport widths: 900, 640; observed window.innerWidth: 1280
+```
+
+### Suggested Fix
+Investigate viewport override routing for hidden in-app browser tabs; retain computed-style and source-contract coverage meanwhile.
+
+---
+
+## [ERR-20261012-008] electron-offscreen-localhost-load
+
+**Logged**: 2026-10-12T17:10:00+03:00
+**Priority**: low
+**Status**: resolved
+**Area**: tests
+
+### Summary
+A temporary Electron offscreen breakpoint audit could not load the reachable local Vite preview.
+
+### Error
+```text
+ERR_FAILED (-2) loading http://127.0.0.1:5173/companion.html
+```
+
+### Context
+- `Invoke-WebRequest` returned HTTP 200 for the same preview URL.
+- Removing GPU and sandbox switches did not change the Electron load result.
+
+### Suggested Fix
+Use the real in-app browser audit plus static breakpoint contracts; do not retain a flaky offscreen harness.
+
+### Resolution
+- **Resolved**: 2026-10-12T17:10:00+03:00
+- **Notes**: Removed the temporary audit script without changing application files.
+
+---
+
+## [ERR-20261012-009] act-map-selected-id-narrowing
+
+**Logged**: 2026-10-12T17:14:00+03:00
+**Priority**: medium
+**Status**: resolved
+**Area**: frontend
+
+### Summary
+Renderer typechecking exposed an empty-string branch in the map's `selectedId && byId.get(selectedId)` expression.
+
+### Error
+```text
+Property 'allRouteLabels' does not exist on type '"" | RouteMapZone'.
+```
+
+### Suggested Fix
+Use an explicit conditional lookup so the absent branch is `undefined`, not a possible empty string.
+
+### Resolution
+- **Resolved**: 2026-10-12T17:14:00+03:00
+- **Notes**: Replaced the short-circuit expression with `selectedId ? byId.get(selectedId) : undefined`.
 
 ---

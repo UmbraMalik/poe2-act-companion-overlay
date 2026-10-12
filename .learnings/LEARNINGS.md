@@ -66,3 +66,26 @@ When a user asks to match an existing control exactly, reuse its production clas
 - Tags: css, companion, settings, chevron, reuse
 
 ---
+
+## [LRN-20261012-001] best_practice
+
+**Logged**: 2026-10-12T17:18:00+03:00
+**Priority**: high
+**Status**: pending
+**Area**: frontend
+
+### Summary
+Global button feedback must support an explicit opt-out for composite positioned controls.
+
+### Details
+The shared button baseline and click-feedback layer changed `min-width`, `position`, `overflow`, `z-index`, `transform`, and animation on the Act map button and its direct children. A visually isolated stylesheet loaded later was not enough because the global selector had greater specificity and keyframe transforms outranked normal positioning. Composite controls whose children form one coordinate system need both a complete local size reset and a semantic opt-out from incompatible global effects.
+
+### Suggested Action
+Use `data-click-feedback="off"` for map/canvas controls that provide their own state feedback, keep the interactive anchor at an explicit size with `min-width: 0`, and verify computed styles rather than source declarations alone.
+
+### Metadata
+- Source: conversation
+- Related Files: src/renderer/main.tsx, src/renderer/styles/33-click-feedback.css, src/renderer/styles/50-act-route-atlas-test.css
+- Tags: css, cascade, click-feedback, positioning, composite-controls
+
+---

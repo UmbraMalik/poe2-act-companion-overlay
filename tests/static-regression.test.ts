@@ -860,3 +860,35 @@ test('unknown/no-guide zones keep act context available for act timer display', 
   assert.match(overlay, /currentZone\.actHint/);
   assert.match(overlay, /lastGameplayAct/);
 });
+
+test('Act 1 route map keeps every marker decoration on one fixed anchor', () => {
+  const component = readText('src/renderer/ActRouteMap.tsx');
+  const atlasStyles = readText('src/renderer/styles/50-act-route-atlas-test.css');
+  const clickFeedbackStyles = readText('src/renderer/styles/33-click-feedback.css');
+  const renderer = readText('src/renderer/main.tsx');
+
+  assert.match(component, /data-click-feedback="off"/);
+  assert.match(component, /bonusDone = bonusCount > 0 && zone\.bonusRewards\.every\(\(bonus\) => bonus\.done\)/);
+  assert.match(component, /point\[0\] > 70 && 'edge-right'/);
+  assert.match(component, /point\[1\] < 22 && 'edge-top'/);
+  assert.match(atlasStyles, /\.route-polish-layout\.is-map-view \{[\s\S]*?grid-template-rows:\s*auto auto auto !important;[\s\S]*?overflow-x:\s*hidden !important;[\s\S]*?overflow-y:\s*auto !important;/);
+  assert.match(atlasStyles, /\.act-atlas-node \{[\s\S]*?width:\s*38px;[\s\S]*?height:\s*38px;[\s\S]*?min-width:\s*0;/);
+  assert.match(atlasStyles, /\.act-atlas-node \{[\s\S]*?transform:\s*translate\(-50%, -50%\);/);
+  assert.match(atlasStyles, /\.act-atlas-node-ring::after \{[\s\S]*?position:\s*absolute;[\s\S]*?inset:\s*-8px;[\s\S]*?border-radius:\s*999px;/);
+  assert.match(atlasStyles, /\.act-atlas-node-caption \{[\s\S]*?position:\s*absolute;/);
+  assert.match(atlasStyles, /\.act-atlas-bonus \{[\s\S]*?position:\s*absolute;/);
+  assert.match(atlasStyles, /\.act-atlas-node\.edge-right \.act-atlas-bonus \{[\s\S]*?right:\s*calc\(50% \+ 10px\);/);
+  assert.match(atlasStyles, /\.act-atlas-scroll \{[\s\S]*?max-width:\s*100%;[\s\S]*?overflow:\s*hidden;/);
+  assert.match(atlasStyles, /\.act-atlas-info \{[\s\S]*?height:\s*0;[\s\S]*?min-height:\s*100%; max-height:\s*100%;/);
+  assert.match(atlasStyles, /@media \(max-width:\s*970px\)[\s\S]*?\.act-atlas-layout \{[\s\S]*?display:\s*flex;[\s\S]*?flex-direction:\s*column;[\s\S]*?overflow:\s*visible;/);
+  assert.match(atlasStyles, /@media \(max-width:\s*970px\)[\s\S]*?\.act-atlas-info \{[\s\S]*?width:\s*100%;[\s\S]*?max-height:\s*520px;/);
+  assert.match(clickFeedbackStyles, /button:not\(\[data-click-feedback='off'\]\)/);
+  assert.match(renderer, /button:not\(\[data-click-feedback="off"\]\)/);
+});
+
+test('Companion browser preview skips Electron-only reset subscriptions', () => {
+  const companion = readText('src/renderer/pages/CompanionPage.tsx');
+
+  assert.match(companion, /const api = window\.poe2Overlay;/);
+  assert.match(companion, /typeof api\.onRunResetConfirmationRequested !== 'function'/);
+});

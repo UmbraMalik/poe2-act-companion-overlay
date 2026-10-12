@@ -92,7 +92,7 @@ export function ActRouteMap({ language, zones, currentGuideId, matchingIds, onSh
 
   const byId = useMemo(() => new Map(zones.map((zone) => [zone.entry.guide.id, zone])), [zones]);
   const byName = useMemo(() => new Map(zones.map((zone) => [normalizedName(zone.entry.guide.zone_ru), zone])), [zones]);
-  const selected = (selectedId && byId.get(selectedId)) ?? activeZone ?? zones[0] ?? null;
+  const selected = (selectedId ? byId.get(selectedId) : undefined) ?? activeZone ?? zones[0] ?? null;
   const matches = new Set(matchingIds);
   const nextActive = activeZone ? byName.get(normalizedName(activeZone.entry.guide.next_zone_ru)) ?? null : null;
   const nextId = nextActive?.entry.guide.id ?? null;
@@ -177,21 +177,27 @@ export function ActRouteMap({ language, zones, currentGuideId, matchingIds, onSh
               const isMatch = matches.has(id);
               const bonusCount = zone.bonusRewards.length;
               const bonusDone = bonusCount > 0 && zone.bonusRewards.every((bonus) => bonus.done);
-              const edgeClass = point[0] > 70
-                ? ' edge-right'
-                : point[0] < 27
-                  ? ' edge-left'
-                  : point[1] > 70
-                    ? ' edge-bottom'
-                    : point[1] < 22
-                      ? ' edge-top'
-                      : '';
+              const edgeClasses = [
+                point[0] > 70 && 'edge-right',
+                point[0] < 27 && 'edge-left',
+                point[1] > 70 && 'edge-bottom',
+                point[1] < 22 && 'edge-top'
+              ].filter(Boolean).join(' ');
               return (
                 <button
                   key={id}
                   type="button"
+                  data-click-feedback="off"
                   style={{ left: `${point[0]}%`, top: `${point[1]}%` }}
-                  className={`act-atlas-node status-${zone.entry.status}${isCurrent ? ' is-live' : ''}${isNext ? ' is-next' : ''}${isSelected ? ' is-selected' : ''}${!isMatch ? ' is-filtered' : ''}${edgeClass}`}
+                  className={[
+                    'act-atlas-node',
+                    `status-${zone.entry.status}`,
+                    isCurrent && 'is-live',
+                    isNext && 'is-next',
+                    isSelected && 'is-selected',
+                    !isMatch && 'is-filtered',
+                    edgeClasses
+                  ].filter(Boolean).join(' ')}
                   aria-pressed={isSelected}
                   aria-label={`${zone.routeCardTitle}${isCurrent ? mapLabel(language, ', текущая зона', ', current zone') : ''}${isNext ? mapLabel(language, ', следующая по гайду', ', next in guide') : ''}${bonusCount ? mapLabel(language, `, бонусов: ${bonusCount}`, `, bonuses: ${bonusCount}`) : ''}`}
                   onClick={() => { setSelectedId(id); setUserSelected(true); }}

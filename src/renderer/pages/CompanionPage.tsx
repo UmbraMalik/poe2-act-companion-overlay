@@ -1313,7 +1313,12 @@ export function CompanionPage() {
   }, [splitRunTimer, splitSnapshotAct, splitActElapsed, language]);
 
   useEffect(() => {
-    const unsubscribe = window.poe2Overlay.onRunResetConfirmationRequested(() => {
+    const api = window.poe2Overlay;
+    if (!api || typeof api.onRunResetConfirmationRequested !== 'function') {
+      return;
+    }
+
+    const unsubscribe = api.onRunResetConfirmationRequested(() => {
       selectTab('timer');
       setRunConfirmDialog({ type: 'reset' });
     });

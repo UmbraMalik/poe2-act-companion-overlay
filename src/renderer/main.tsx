@@ -46,7 +46,7 @@ const CLICK_FEEDBACK_SCOPE_SELECTOR = [
 ].join(', ');
 
 const CLICK_FEEDBACK_TARGET_SELECTOR = [
-  'button'
+  'button:not([data-click-feedback="off"])'
 ].join(', ');
 
 const CLICK_FEEDBACK_BURST_CLASS = 'click-feedback-burst';
