@@ -167,6 +167,31 @@
   background-size: 100% 100%;
   background-repeat: no-repeat;
 }
+/* Use the same interactive atlas controls in Act 2, with a new illustrated
+   desert/ruins terrain background. No coordinates are baked into the artwork. */
+.companion-page .act-atlas.is-act-two .act-atlas-scroll {
+  --atlas-line: rgba(194, 142, 84, .47);
+  background: #241914;
+}
+.companion-page .act-atlas.is-act-two .act-atlas-canvas {
+  background-image:
+    linear-gradient(0deg, rgba(7, 4, 4, .25), rgba(19, 10, 6, .02) 54%, rgba(10, 5, 4, .14)),
+    url('../assets/act2-campaign-schematic.svg');
+  background-position: center;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+.companion-page .act-atlas.is-act-two .act-atlas-edge {
+  stroke: rgba(240, 192, 127, .52);
+}
+.companion-page .act-atlas.is-act-two .act-atlas-edge.is-side {
+  stroke: rgba(143, 163, 168, .63);
+  stroke-dasharray: 2 13;
+}
+.companion-page .act-atlas.is-act-two .act-atlas-edge.is-recommended {
+  stroke: #ffd083;
+}
+
 .companion-page .act-atlas-canvas::after {
   position: absolute; inset: 0; content: ''; pointer-events: none;
   background: radial-gradient(ellipse at 50% 45%, transparent 45%, rgba(0,0,0,.31) 100%);

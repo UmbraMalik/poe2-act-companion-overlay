@@ -16,6 +16,7 @@ export interface RouteMapZone {
 
 interface ActRouteMapProps {
   language: AppLanguage;
+  act: 1 | 2;
   zones: RouteMapZone[];
   currentGuideId: string | null;
   matchingIds: string[];
@@ -42,6 +43,31 @@ const ACT_ONE_POSITIONS: Record<string, readonly [number, number]> = {
   a1_ogham_village: [74, 16],
   a1_manor_ramparts: [86, 13],
   a1_ogham_manor: [93, 23]
+};
+
+/* Act 2 desert ROUTE DIAGRAM: locations and branching are sourced from
+ * src/data/guide.json; these hand-authored coordinates are not game geography.
+ * The two optional/side areas remain visible but are visually differentiated. */
+const ACT_TWO_POSITIONS: Record<string, readonly [number, number]> = {
+  a2_vastiri_outskirts: [13, 77],
+  a2_ardura_caravan: [24, 67],
+  a2_mawdun_quarry: [34, 80],
+  a2_mawdun_mine: [44, 69],
+  a2_traitors_passage: [54, 79],
+  a2_halani_gates: [65, 69],
+  a2_mastodon_badlands: [75, 79],
+  a2_lightless_passage: [87, 65],
+  a2_trial_of_the_sekhemas: [51, 55],
+  a2_bone_pits: [76, 52],
+  a2_keth: [65, 41],
+  a2_lost_city: [54, 46],
+  a2_buried_shrines: [45, 34],
+  a2_valley_titans: [33, 44],
+  a2_titan_grotto: [24, 30],
+  a2_deshar_early: [38, 18],
+  a2_path_of_mourning: [54, 25],
+  a2_spires_deshar: [67, 15],
+  a2_dreadnought: [84, 28]
 };
 
 function mapLabel(language: AppLanguage, ru: string, en: string) {
@@ -77,7 +103,8 @@ function getMapGuideList(guide: GuideEntry, language: AppLanguage, key: string):
   return Array.isArray(values) ? values.filter((value): value is string => typeof value === 'string') : [];
 }
 
-export function ActRouteMap({ language, zones, currentGuideId, matchingIds, onShowList }: ActRouteMapProps) {
+export function ActRouteMap({ language, act, zones, currentGuideId, matchingIds, onShowList }: ActRouteMapProps) {
+  const mapPositions = act === 2 ? ACT_TWO_POSITIONS : ACT_ONE_POSITIONS;
   const activeZone = zones.find(({ entry }) => entry.guide.id === currentGuideId)
     ?? zones.find(({ entry }) => entry.status === 'current')
     ?? null;
@@ -105,7 +132,12 @@ export function ActRouteMap({ language, zones, currentGuideId, matchingIds, onSh
       if (to && zone.entry.guide.id !== to.entry.guide.id) {
         const key = `${zone.entry.guide.id}:${to.entry.guide.id}`;
         if (!uniqueEdges.has(key)) {
-          edges.push({ from: zone.entry.guide.id, to: to.entry.guide.id, kind: 'route' });
+          const isActTwoSide = act === 2 && (
+            zone.entry.guide.id === 'a2_lightless_passage' ||
+            zone.entry.guide.id === 'a2_trial_of_the_sekhemas' ||
+            to.entry.guide.id === 'a2_lightless_passage'
+          );
+          edges.push({ from: zone.entry.guide.id, to: to.entry.guide.id, kind: isActTwoSide ? 'side' : 'route' });
           uniqueEdges.add(key);
         }
       }
@@ -114,8 +146,13 @@ export function ActRouteMap({ language, zones, currentGuideId, matchingIds, onSh
     if (byId.has('a1_clearfell') && byId.has('a1_mud_burrow')) {
       edges.push({ from: 'a1_clearfell', to: 'a1_mud_burrow', kind: 'side' });
     }
+    // The guide marks Lightless Passage as a side diversion; show the
+    // main-route bypass without marking this optional area as completed.
+    if (act === 2 && byId.has('a2_mastodon_badlands') && byId.has('a2_bone_pits')) {
+      edges.push({ from: 'a2_mastodon_badlands', to: 'a2_bone_pits', kind: 'route' });
+    }
     return edges;
-  }, [zones, byId, byName]);
+  }, [act, zones, byId, byName]);
 
   if (!zones.length) {
     return <section className="companion-block act-atlas-empty">{mapLabel(language, 'Нет данных для карты.', 'No map data available.')}</section>;
@@ -131,10 +168,10 @@ export function ActRouteMap({ language, zones, currentGuideId, matchingIds, onSh
   const selectedIsNext = Boolean(selected && selected.entry.guide.id === nextId);
 
   return (
-    <section className="companion-block act-atlas" aria-label={mapLabel(language, 'Схема маршрута Акта 1', 'Act 1 route diagram')}>
+    <section className={`companion-block act-atlas ${act === 2 ? 'is-act-two' : 'is-act-one'}`} aria-label={mapLabel(language, `Схема маршрута Акта ${act}`, `Act ${act} route diagram`)}>
       <div className="act-atlas-header">
         <div>
-          <strong>{mapLabel(language, 'Карта маршрута · Акт 1', 'Route map · Act 1')}</strong>
+          <strong>{mapLabel(language, `Карта маршрута · Акт ${act}`, `Route map · Act ${act}`)}</strong>
           <small>{mapLabel(language, 'Схема прохождения — расположение условное, не игровой атлас', 'Progression diagram — positions are illustrative, not the in-game atlas')}</small>
         </div>
         <div className="act-atlas-header-actions">
@@ -149,7 +186,7 @@ export function ActRouteMap({ language, zones, currentGuideId, matchingIds, onSh
       <div className="act-atlas-layout">
         <div className="act-atlas-map-column">
           <div className="act-atlas-location-strip" aria-live="polite">
-            <span><b>{mapLabel(language, 'ВЫ ЗДЕСЬ', 'YOU ARE HERE')}</b><strong>{activeZone?.routeCardTitle ?? mapLabel(language, 'Нет данных для Акта 1', 'No Act 1 position')}</strong></span>
+            <span><b>{mapLabel(language, 'ВЫ ЗДЕСЬ', 'YOU ARE HERE')}</b><strong>{activeZone?.routeCardTitle ?? mapLabel(language, `Нет данных для Акта ${act}`, `No Act ${act} position`)}</strong></span>
             <span><b>{mapLabel(language, 'СЛЕДУЮЩИЙ ПЕРЕХОД', 'NEXT IN GUIDE')}</b><strong>{nextActive?.routeCardTitle ?? (activeZone ? (getGuideView(activeZone.entry.guide, language)?.nextZoneName || '—') : '—')}</strong></span>
           </div>
         <div className="act-atlas-scroll" role="group" aria-label={mapLabel(language, 'Интерактивная карта маршрута. Весь акт виден сразу.', 'Interactive route map. The entire act is visible at once.')}>
@@ -159,8 +196,8 @@ export function ActRouteMap({ language, zones, currentGuideId, matchingIds, onSh
                 <marker id="act-atlas-next-arrow" markerWidth="7" markerHeight="7" refX="5.6" refY="3.5" orient="auto"><path d="M0 0L7 3.5L0 7" fill="none" stroke="#f5bf64" strokeWidth="1.8"/></marker>
               </defs>
               {connections.map((edge) => {
-                const a = ACT_ONE_POSITIONS[edge.from];
-                const b = ACT_ONE_POSITIONS[edge.to];
+                const a = mapPositions[edge.from];
+                const b = mapPositions[edge.to];
                 if (!a || !b) return null;
                 const isRecommendedNext = edge.from === liveId && edge.to === nextId;
                 return <path key={`${edge.from}:${edge.to}`} className={`act-atlas-edge ${edge.kind === 'side' ? 'is-side' : ''}${isRecommendedNext ? ' is-recommended' : ''}`} d={buildRoutePath(a, b)} markerEnd={isRecommendedNext ? 'url(#act-atlas-next-arrow)' : undefined} />;
@@ -168,7 +205,7 @@ export function ActRouteMap({ language, zones, currentGuideId, matchingIds, onSh
             </svg>
             {zones.map((zone) => {
               const id = zone.entry.guide.id;
-              const originalPoint = ACT_ONE_POSITIONS[id];
+              const originalPoint = mapPositions[id];
               if (!originalPoint) return null;
               const point = insetMapPoint(originalPoint);
               const isCurrent = id === liveId;
