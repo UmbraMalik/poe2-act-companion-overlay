@@ -513,3 +513,67 @@
     transition: none;
   }
 }
+
+/* Collapsing the navigation makes the content pane wider. At medium desktop
+ * widths this used to cross the 1100px route-toolbar container breakpoint and
+ * re-enable a cramped two-column act/search layout. Keep those controls on
+ * separate rows until the content itself has ample room for both columns. */
+@container companion-route-pane (max-width: 1360px) {
+  .companion-page .is-sidebar-collapsed .route-polish-layout .companion-route-toolbar {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 10px !important;
+  }
+
+  .companion-page .is-sidebar-collapsed .route-polish-layout .route-toolbar-acts,
+  .companion-page .is-sidebar-collapsed .route-polish-layout .route-tab-tools {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .companion-page .is-sidebar-collapsed .route-polish-layout .companion-route-toolbar .companion-tab-row {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 105px), 1fr)) !important;
+    gap: 7px !important;
+  }
+
+  .companion-page .is-sidebar-collapsed .route-polish-layout .companion-route-toolbar .companion-tab-row button {
+    min-width: 0;
+    width: 100%;
+    padding-inline: 5px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .companion-page .is-sidebar-collapsed .route-polish-layout .route-tab-tools {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) minmax(260px, 1.1fr);
+    grid-template-areas: "route-search route-filters" "route-footer route-filters";
+    align-items: start;
+    gap: 7px 11px !important;
+  }
+
+  .companion-page .is-sidebar-collapsed .route-polish-layout .route-search-field {
+    grid-area: route-search;
+  }
+
+  .companion-page .is-sidebar-collapsed .route-polish-layout .route-filter-row {
+    grid-area: route-filters;
+    align-self: center;
+  }
+
+  .companion-page .is-sidebar-collapsed .route-polish-layout .route-tools-footer {
+    grid-area: route-footer;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 6px;
+  }
+}
+
+@container companion-route-pane (max-width: 620px) {
+  .companion-page .is-sidebar-collapsed .route-polish-layout .route-tab-tools {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "route-search" "route-filters" "route-footer";
+  }
+}
