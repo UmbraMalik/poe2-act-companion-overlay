@@ -57,3 +57,4 @@
 @import './styles/47-five-features-test.css'; /* UI-V2 functional experiments: configurable overlay and pace */
 @import './styles/48-settings-overlay-live-preview-test.css'; /* Real overlay responsive preview in settings */
 @import './styles/49-overlay-preview-width-border-fix.css'; /* Live width presets and restore edge animation without shell flicker */
+@import './styles/50-act-route-atlas-test.css'; /* Interactive Act 1 route diagram, original art, game-data badges and details */

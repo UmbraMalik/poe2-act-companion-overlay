@@ -32,6 +32,7 @@ import { RunHistoryDetailPanel } from '../RunHistoryDetailPanel';
 import { getRunHistorySignature } from '../run-history-detail';
 import { RouteCardBonusPanel, getRouteCampaignBonusModels, type RouteCardBonusModel } from '../RouteCardBonuses';
 import { RouteTabControls } from '../RouteTabControls';
+import { ActRouteMap } from '../ActRouteMap';
 import { filterRouteCards, getRouteFilterEmptyText, type RouteFilterMode } from '../route-tab-search';
 import { CurrentRunHub } from '../CurrentRunHub';
 import { CompanionHeader } from '../CompanionHeader';
@@ -1006,6 +1007,13 @@ export function CompanionPage() {
   const [focusedRouteZoneId, setFocusedRouteZoneId] = useState<string | null>(null);
   const [routeSearchQuery, setRouteSearchQuery] = useState('');
   const [routeFilterMode, setRouteFilterMode] = useState<RouteFilterMode>('all');
+  const [routeViewMode, setRouteViewMode] = useState<'list' | 'map'>(() => {
+    try {
+      return window.localStorage.getItem('poe2-companion-route-view-v1') === 'map' ? 'map' : 'list';
+    } catch {
+      return 'list';
+    }
+  });
   const [bonusFeedback, setBonusFeedback] = useState<BonusFeedbackState | null>(null);
   const [timerSplitFeedback, setTimerSplitFeedback] = useState<TimerSplitFeedbackState | null>(null);
   const [expandedRouteCards, setExpandedRouteCards] = useState<Record<string, boolean>>({});
@@ -1028,6 +1036,14 @@ export function CompanionPage() {
       // Navigation persistence is a convenience; storage failures must not break the panel.
     }
   }, [navigationState]);
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem('poe2-companion-route-view-v1', routeViewMode);
+    } catch {
+      // View preference must never prevent opening the route tab.
+    }
+  }, [routeViewMode]);
 
   const selectTab = useCallback((tab: CompanionTab) => {
     setNavigationState((current) => updateCompanionNavigationState(current, tab));
@@ -1508,8 +1524,9 @@ export function CompanionPage() {
     />
   ) : null;
 
+  const useRouteMap = routeViewMode === 'map' && selectedRouteAct === 1 && !globalRouteSearch;
   const routeTab = activeTab === 'route' ? (
-    <div className="companion-tab-layout route-polish-layout">
+    <div className={`companion-tab-layout route-polish-layout ${useRouteMap ? 'is-map-view' : 'is-list-view'}`}>
       <section className="companion-block companion-route-toolbar">
         <div className="route-toolbar-acts">
           <div className="route-toolbar-heading">
@@ -1564,6 +1581,27 @@ export function CompanionPage() {
           onFilterChange={setRouteFilterMode} onSearchChange={setRouteSearchQuery} onJumpCurrent={focusCurrentZone} />
       </section>
 
+      <div className="route-map-view-switch" role="group" aria-label={language === 'ru' ? 'Вид маршрута' : 'Route view'}>
+        <span>{language === 'ru' ? 'Вид маршрута' : 'Route view'}</span>
+        <button type="button" className={!useRouteMap ? 'button-primary' : 'button-secondary'} aria-pressed={!useRouteMap} onClick={() => setRouteViewMode('list')}>
+          <UiIcon name="menu" /> {language === 'ru' ? 'Список' : 'List'}
+        </button>
+        <button type="button" className={useRouteMap ? 'button-primary' : 'button-secondary'} aria-pressed={useRouteMap} onClick={() => setRouteViewMode('map')} disabled={selectedRouteAct !== 1 || globalRouteSearch} title={selectedRouteAct !== 1 ? (language === 'ru' ? 'Карта пока доступна только для Акта 1' : 'Map is currently available for Act 1 only') : globalRouteSearch ? (language === 'ru' ? 'Очистите поиск по всей кампании' : 'Clear campaign-wide search') : undefined}>
+          <UiIcon name="map" /> {language === 'ru' ? 'Карта' : 'Map'}
+        </button>
+        {selectedRouteAct !== 1 && <small className="route-map-unavailable">{language === 'ru' ? 'Тестовая карта: Акт 1' : 'Test map: Act 1'}</small>}
+        {globalRouteSearch && <small className="route-map-unavailable">{language === 'ru' ? 'Для карты очистите поиск' : 'Clear search to view the map'}</small>}
+      </div>
+
+      {useRouteMap ? (
+        <ActRouteMap
+          language={language}
+          zones={routeCardModels}
+          currentGuideId={selectedRouteAct === nowAct ? snapshot.currentGuideEntry?.id ?? null : null}
+          matchingIds={visibleRouteCardModels.map((model) => model.entry.guide.id)}
+          onShowList={() => setRouteViewMode('list')}
+        />
+      ) : (<>
       <section className="companion-block route-progress-rail-card" aria-label={t('companion.routeProgressTitle')}>
         <div className="route-progress-rail-header">
           <div>
@@ -1646,6 +1684,7 @@ export function CompanionPage() {
         </div>
         {visibleRouteCardModels.length === 0 && <p className="route-empty-note route-filter-empty">{getRouteFilterEmptyText({ language, filterMode: routeFilterMode, query: routeSearchQuery, shownCount: visibleRouteCardModels.length, totalCount: routeCardModels.length, hasCurrentCard: routeCardModels.some((model) => model.entry.status === 'current') })}</p>}
       </section>
+      </>)}
     </div>
   ) : null;
 
