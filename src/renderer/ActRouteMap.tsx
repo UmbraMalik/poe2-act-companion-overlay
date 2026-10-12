@@ -147,6 +147,11 @@ export function ActRouteMap({ language, zones, currentGuideId, matchingIds, onSh
         </div>
       </div>
       <div className="act-atlas-layout">
+        <div className="act-atlas-map-column">
+          <div className="act-atlas-location-strip" aria-live="polite">
+            <span><b>{mapLabel(language, 'ВЫ ЗДЕСЬ', 'YOU ARE HERE')}</b><strong>{activeZone?.routeCardTitle ?? mapLabel(language, 'Нет данных для Акта 1', 'No Act 1 position')}</strong></span>
+            <span><b>{mapLabel(language, 'СЛЕДУЮЩИЙ ПЕРЕХОД', 'NEXT IN GUIDE')}</b><strong>{nextActive?.routeCardTitle ?? (activeZone ? (getGuideView(activeZone.entry.guide, language)?.nextZoneName || '—') : '—')}</strong></span>
+          </div>
         <div className="act-atlas-scroll" role="group" aria-label={mapLabel(language, 'Интерактивная карта маршрута. Весь акт виден сразу.', 'Interactive route map. The entire act is visible at once.')}>
           <div className="act-atlas-canvas">
             <svg className="act-atlas-edges" viewBox="0 0 1000 740" preserveAspectRatio="none" aria-hidden="true" focusable="false">
@@ -161,7 +166,6 @@ export function ActRouteMap({ language, zones, currentGuideId, matchingIds, onSh
                 return <path key={`${edge.from}:${edge.to}`} className={`act-atlas-edge ${edge.kind === 'side' ? 'is-side' : ''}${isRecommendedNext ? ' is-recommended' : ''}`} d={buildRoutePath(a, b)} markerEnd={isRecommendedNext ? 'url(#act-atlas-next-arrow)' : undefined} />;
               })}
             </svg>
-            <div className="act-atlas-compass" aria-hidden="true">✦ <span>N</span></div>
             {zones.map((zone) => {
               const id = zone.entry.guide.id;
               const originalPoint = ACT_ONE_POSITIONS[id];
@@ -178,13 +182,12 @@ export function ActRouteMap({ language, zones, currentGuideId, matchingIds, onSh
                   key={id}
                   type="button"
                   style={{ left: `${point[0]}%`, top: `${point[1]}%` }}
-                  className={`act-atlas-node status-${zone.entry.status}${isCurrent ? ' is-live' : ''}${isNext ? ' is-next' : ''}${isSelected ? ' is-selected' : ''}${!isMatch ? ' is-filtered' : ''}`}
+                  className={`act-atlas-node status-${zone.entry.status}${isCurrent ? ' is-live' : ''}${isNext ? ' is-next' : ''}${isSelected ? ' is-selected' : ''}${!isMatch ? ' is-filtered' : ''}${point[0] > 69 ? ' edge-right' : point[0] < 26 ? ' edge-left' : point[1] > 70 ? ' edge-bottom' : ''}`}
                   aria-pressed={isSelected}
                   aria-label={`${zone.routeCardTitle}${isCurrent ? mapLabel(language, ', текущая зона', ', current zone') : ''}${isNext ? mapLabel(language, ', следующая по гайду', ', next in guide') : ''}${bonusCount ? mapLabel(language, `, бонусов: ${bonusCount}`, `, bonuses: ${bonusCount}`) : ''}`}
                   title={`${zone.routeCardTitle}${bonusCount ? ` · ${zone.bonusRewards.map((b) => b.title).join(', ')}` : ''}`}
                   onClick={() => { setSelectedId(id); setUserSelected(true); }}
                 >
-                  {isCurrent && <span className="act-atlas-you">{mapLabel(language, 'ВЫ ЗДЕСЬ', 'YOU ARE HERE')}</span>}
                   <span className="act-atlas-node-ring"><span className="act-atlas-node-core">{zone.entry.guide.id.includes('encampment') || zone.entry.guide.id.includes('village') ? '⌂' : isCurrent ? '◆' : '✦'}</span></span>
                   {bonusCount > 0 && (
                     <span className={`act-atlas-bonus${bonusDone ? ' is-collected' : ''}`} title={zone.bonusRewards.map((b) => `${b.title} (${b.done ? mapLabel(language, 'учтено', 'recorded') : mapLabel(language, 'не подтверждено', 'not confirmed')})`).join('\n')}>
@@ -195,8 +198,8 @@ export function ActRouteMap({ language, zones, currentGuideId, matchingIds, onSh
                 </button>
               );
             })}
-            {liveId && nextId && <div className="act-atlas-route-hint">{mapLabel(language, 'Золото: рекомендуемый следующий переход', 'Gold: recommended next transition')}</div>}
           </div>
+        </div>
         </div>
         <aside className="act-atlas-info" aria-label={mapLabel(language, 'Информация о выбранной локации', 'Selected zone information')}>
           {selected && selectedView && <>
@@ -253,7 +256,7 @@ export function ActRouteMap({ language, zones, currentGuideId, matchingIds, onSh
       </div>
       <div className="act-atlas-legend">
         <span><i className="is-live" />{mapLabel(language, 'Текущая', 'Current')}</span>
-        <span><i className="is-next" />{mapLabel(language, 'Следующая', 'Next')}</span>
+        <span><i className="is-next" />{mapLabel(language, 'Следующая по гайду', 'Next in guide')}</span>
         <span><i className="is-regular" />{mapLabel(language, 'Локация', 'Zone')}</span>
         <span><UiIcon name="diamond" />{mapLabel(language, 'Постоянный бонус', 'Permanent bonus')}</span>
         <span>{mapLabel(language, 'Клик по точке — подробности справа', 'Click a node for details')}</span>

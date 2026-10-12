@@ -91,35 +91,71 @@
   gap: 10px;
   min-height: 0;
   min-width: 0;
+  align-items: start;
+}
+/* Map and its status bar occupy intrinsic height: the route canvas never
+   stretches to a tall details panel and never letterboxes top or bottom. */
+.companion-page .act-atlas-map-column {
+  display: grid;
+  grid-template-rows: auto auto;
+  align-content: start;
+  gap: 7px;
+  min-width: 0;
+  min-height: 0;
+}
+.companion-page .act-atlas-location-strip {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+}
+.companion-page .act-atlas-location-strip > span {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 7px;
+  padding: 7px 9px;
+  min-width: 0;
+  border: 1px solid rgba(203,165,95,.22);
+  border-radius: 7px;
+  background: rgba(6,11,13,.88);
+}
+.companion-page .act-atlas-location-strip b {
+  flex: 0 0 auto;
+  font-size: 9px;
+  letter-spacing: .05em;
+  color: #9bbfa1;
+}
+.companion-page .act-atlas-location-strip > span:last-child b { color: #e9b96c; }
+.companion-page .act-atlas-location-strip strong {
+  min-width: 0;
+  font-size: 11px;
+  line-height: 1.2;
+  color: #e8e1d0;
+  overflow-wrap: anywhere;
 }
 .companion-page .act-atlas-scroll {
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 0;
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1000 / 740;
   min-width: 0;
+  min-height: 0;
   overflow: hidden;
   border: 1px solid var(--atlas-line);
   border-radius: 11px;
   background: #111d1c;
-  container: atlas-stage / size;
+  container: atlas-stage / inline-size;
 }
 .companion-page .act-atlas-canvas {
-  position: relative;
-  flex: none;
-  min-width: 0;
-  min-height: 0;
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
-  /* Fit the ENTIRE 1000×740 route into both available dimensions. */
-  width: min(100cqw, 135.135cqh);
-  height: min(100cqh, 74cqw);
-  max-width: 100%;
-  max-height: 100%;
-  aspect-ratio: 1000 / 740;
+  min-width: 0;
+  min-height: 0;
   background-image:
-    linear-gradient(0deg, rgba(3,7,10,.3), transparent 35%, rgba(3,7,10,.14)),
+    linear-gradient(0deg, rgba(3,7,10,.20), transparent 35%, rgba(3,7,10,.09)),
     url('../assets/act1-campaign-schematic.svg');
   background-position: center;
   background-size: 100% 100%;
@@ -127,7 +163,7 @@
 }
 .companion-page .act-atlas-canvas::after {
   position: absolute; inset: 0; content: ''; pointer-events: none;
-  background: radial-gradient(ellipse at 50% 45%, transparent 35%, rgba(0,0,0,.50) 100%);
+  background: radial-gradient(ellipse at 50% 45%, transparent 45%, rgba(0,0,0,.31) 100%);
 }
 .companion-page .act-atlas-edges {
   position: absolute; inset: 0;
@@ -161,8 +197,8 @@
   align-items: center;
   justify-content: center;
   gap: 1px;
-  width: 42px;
-  height: 42px;
+  width: 38px;
+  height: 38px;
   min-height: 0;
   padding: 0;
   transform: translate(-50%, -50%);
@@ -185,15 +221,16 @@
   display: grid;
   place-items: center;
   flex: 0 0 auto;
-  width: 31px; height: 31px;
+  width: 29px; height: 29px;
   border-radius: 50%;
   border: 2px solid #8d8c77;
   background: radial-gradient(circle at 35% 30%, #2a9edf, #145994 43%, #0b2439 61%, #080e15 74%);
   box-shadow: 0 0 0 3px rgba(0, 0, 0, .88), 0 0 0 4px rgba(202,171,112,.56), 0 3px 11px rgba(0,0,0,.9), 0 0 13px rgba(48,163,239,.24);
-  transition: transform 160ms ease, box-shadow 160ms ease;
+  transition: box-shadow 160ms ease;
 }
+/* Never scale the marker on hover: its fixed center is shared with the route SVG. */
 .companion-page .act-atlas-node:hover .act-atlas-node-ring,
-.companion-page .act-atlas-node:focus-visible .act-atlas-node-ring { transform: scale(1.13); }
+.companion-page .act-atlas-node:focus-visible .act-atlas-node-ring { filter: brightness(1.22); }
 .companion-page .act-atlas-node-core { font-size: 13px; line-height: 1; color: #c1e8ff; text-shadow: 0 0 5px #54c4ff; }
 .companion-page .act-atlas-node.status-visited .act-atlas-node-ring,
 .companion-page .act-atlas-node.status-completed .act-atlas-node-ring { filter: saturate(.55) brightness(.78); }
@@ -217,8 +254,8 @@
   transform: translateX(-50%);
   display: block;
   width: max-content;
-  max-width: 118px;
-  padding: 3px 5px;
+  max-width: 140px;
+  padding: 4px 7px;
   border: 1px solid rgba(197,165,102,.35);
   border-radius: 4px;
   background: rgba(4,8,10,.9);
@@ -230,6 +267,25 @@
   line-height: 1.15;
   text-shadow: 0 1px 2px #000;
   overflow-wrap: anywhere;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.companion-page .act-atlas-node:is(:hover, :focus-visible) .act-atlas-node-caption {
+  opacity: 1;
+  visibility: visible;
+}
+/* Edge-aligned tooltips prevent long zone names bleeding outside the stage. */
+.companion-page .act-atlas-node.edge-right .act-atlas-node-caption {
+  top: 50%; left: auto; right: calc(100% + 5px);
+  transform: translateY(-50%);
+}
+.companion-page .act-atlas-node.edge-left .act-atlas-node-caption {
+  top: 50%; left: calc(100% + 5px);
+  transform: translateY(-50%);
+}
+.companion-page .act-atlas-node.edge-bottom:not(.edge-right):not(.edge-left) .act-atlas-node-caption {
+  top: auto; bottom: calc(100% + 5px);
 }
 .companion-page .act-atlas-node.is-live .act-atlas-node-caption,
 .companion-page .act-atlas-node.is-next .act-atlas-node-caption { color: #ffe3a5; border-color: rgba(245,196,110,.72); }
@@ -293,6 +349,7 @@
 .companion-page .act-atlas-compass span { position: absolute; top: -12px; font-size: 10px; }
 .companion-page .act-atlas-info {
   display: flex; flex-direction: column;
+  height: 100%;
   min-width: 0; min-height: 0;
   border: 1px solid var(--atlas-line);
   border-radius: 10px;
@@ -384,31 +441,35 @@
 }
 /* On a small map, keep readable targets rather than forcing sixteen captions to overlap.
    Full labels remain available on hover/focus, and the selected/current/next labels stay visible. */
-@container atlas-stage (max-width: 760px) {
-  .companion-page .act-atlas-node-caption {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-  }
-  .companion-page .act-atlas-node:is(.is-live, .is-next, .is-selected, :hover, :focus-visible) .act-atlas-node-caption {
-    opacity: 1;
-    visibility: visible;
-  }
-}
 @container atlas-stage (max-width: 530px) {
-  .companion-page .act-atlas-node { width: 38px; height: 38px; }
-  .companion-page .act-atlas-node-ring { width: 27px; height: 27px; }
+  .companion-page .act-atlas-node { width: 34px; height: 34px; }
+  .companion-page .act-atlas-node-ring { width: 25px; height: 25px; }
   .companion-page .act-atlas-node-caption { max-width: 100px; font-size: 9px; }
   .companion-page .act-atlas-bonus { top: -5px; left: calc(50% + 8px); }
 }
 @media (max-width: 970px) {
   .companion-page .route-polish-layout.is-map-view { overflow-y: auto !important; }
-  .companion-page .act-atlas { overflow: visible; min-height: 740px; }
-  .companion-page .act-atlas-layout { display: flex; flex-direction: column; overflow: visible; }
-  .companion-page .act-atlas-scroll { flex: 0 0 auto; height: clamp(320px, 62vw, 570px); }
-  .companion-page .act-atlas-info { flex: 0 0 auto; min-height: 330px; max-height: 540px; }
+  .companion-page .act-atlas { overflow: visible; min-height: 0; height: auto; }
+  .companion-page .act-atlas-layout {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    overflow: visible;
+  }
+  .companion-page .act-atlas-map-column,
+  .companion-page .act-atlas-scroll { width: 100%; flex: none; }
+  .companion-page .act-atlas-scroll { height: auto; }
+  .companion-page .act-atlas-info { flex: 0 0 auto; width: 100%; height: auto; min-height: 300px; max-height: 520px; }
   .companion-page .act-atlas-header { flex-wrap: wrap; }
-  .companion-page .act-atlas-info-scroll { min-height: 250px; }
+  .companion-page .act-atlas-info-scroll { min-height: 200px; }
+}
+@container atlas-stage (max-width: 450px) {
+  .companion-page .act-atlas-node-caption { max-width: 105px; font-size: 9px; }
+}
+@media (max-width: 560px) {
+  .companion-page .act-atlas-location-strip strong { font-size: 10px; }
+  .companion-page .act-atlas-location-strip { grid-template-columns: 1fr; }
 }
 .companion-page.fx-off .act-atlas-edge.is-recommended,
 .companion-page.fx-off .act-atlas-node.is-live .act-atlas-node-ring { animation: none !important; }
