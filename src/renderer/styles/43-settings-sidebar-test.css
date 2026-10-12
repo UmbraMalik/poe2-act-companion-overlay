@@ -1,10 +1,11 @@
 /* Settings sidebar experiment (43).
  * Desktop: persistent category navigation at left, independent content scrolling at right.
  * Small window: compact horizontal-top navigation without clipping settings.
+ * Scoped to SettingsPage only: utility windows must keep their own scrollable vertical layout.
  * No settings values, theme choices or data are modified.
  */
 
-.settings-page:not(.companion-page) > .settings-shell {
+.settings-page:not(.companion-page):not(.utility-window-page) > .settings-shell {
   display: grid;
   grid-template-columns: 216px minmax(0, 1fr);
   grid-template-rows: minmax(0, 1fr);
@@ -16,7 +17,7 @@
   padding: 0 5px 4px 0;
 }
 
-.settings-page:not(.companion-page) .settings-content {
+.settings-page:not(.companion-page):not(.utility-window-page) .settings-content {
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -31,26 +32,26 @@
   scrollbar-color: rgba(214, 162, 84, 0.48) rgba(0, 0, 0, 0.16);
 }
 
-.settings-page:not(.companion-page) .settings-content::-webkit-scrollbar,
-.settings-page:not(.companion-page) .settings-sidebar-groups::-webkit-scrollbar {
+.settings-page:not(.companion-page):not(.utility-window-page) .settings-content::-webkit-scrollbar,
+.settings-page:not(.companion-page):not(.utility-window-page) .settings-sidebar-groups::-webkit-scrollbar {
   width: 6px;
 }
 
-.settings-page:not(.companion-page) .settings-content::-webkit-scrollbar-thumb,
-.settings-page:not(.companion-page) .settings-sidebar-groups::-webkit-scrollbar-thumb {
+.settings-page:not(.companion-page):not(.utility-window-page) .settings-content::-webkit-scrollbar-thumb,
+.settings-page:not(.companion-page):not(.utility-window-page) .settings-sidebar-groups::-webkit-scrollbar-thumb {
   border-radius: 10px;
   background: rgba(214, 162, 84, 0.48);
 }
 
-.settings-page:not(.companion-page) .settings-content .settings-card[id] {
+.settings-page:not(.companion-page):not(.utility-window-page) .settings-content .settings-card[id] {
   scroll-margin-top: 12px !important;
 }
 
-.settings-page:not(.companion-page) .settings-content .settings-card[hidden] {
+.settings-page:not(.companion-page):not(.utility-window-page) .settings-content .settings-card[hidden] {
   display: none !important;
 }
 
-.settings-page:not(.companion-page) .settings-sidebar-nav {
+.settings-page:not(.companion-page):not(.utility-window-page) .settings-sidebar-nav {
   display: flex;
   flex-direction: column;
   align-self: stretch;
@@ -64,25 +65,25 @@
   overflow: hidden;
 }
 
-.settings-page:not(.companion-page) .settings-sidebar-nav > .settings-section-title {
+.settings-page:not(.companion-page):not(.utility-window-page) .settings-sidebar-nav > .settings-section-title {
   margin: 0;
   font-size: 11px;
   letter-spacing: 0.10em;
 }
 
-.settings-page:not(.companion-page) .settings-sidebar-nav .settings-search-field {
+.settings-page:not(.companion-page):not(.utility-window-page) .settings-sidebar-nav .settings-search-field {
   flex: 0 0 auto;
   min-width: 0;
   gap: 5px;
 }
 
-.settings-page:not(.companion-page) .settings-sidebar-nav .settings-search-field input {
+.settings-page:not(.companion-page):not(.utility-window-page) .settings-sidebar-nav .settings-search-field input {
   min-width: 0;
   width: 100%;
   font-size: 12px;
 }
 
-.settings-page:not(.companion-page) .settings-sidebar-nav .settings-sidebar-groups {
+.settings-page:not(.companion-page):not(.utility-window-page) .settings-sidebar-nav .settings-sidebar-groups {
   flex: 1 1 auto;
   min-height: 0;
   min-width: 0;
@@ -98,13 +99,13 @@
   scrollbar-color: rgba(214, 162, 84, 0.36) transparent;
 }
 
-.settings-page:not(.companion-page) .settings-sidebar-group {
+.settings-page:not(.companion-page):not(.utility-window-page) .settings-sidebar-group {
   display: grid;
   gap: 5px;
   min-width: 0;
 }
 
-.settings-page:not(.companion-page) .settings-sidebar-group-title {
+.settings-page:not(.companion-page):not(.utility-window-page) .settings-sidebar-group-title {
   margin: 0 0 1px 6px;
   font-size: 10px;
   line-height: 1.3;
@@ -114,13 +115,13 @@
   text-transform: uppercase;
 }
 
-.settings-page:not(.companion-page) .settings-sidebar-links {
+.settings-page:not(.companion-page):not(.utility-window-page) .settings-sidebar-links {
   display: grid;
   gap: 3px;
   min-width: 0;
 }
 
-.settings-page:not(.companion-page) .settings-sidebar-nav .settings-quick-link {
+.settings-page:not(.companion-page):not(.utility-window-page) .settings-sidebar-nav .settings-quick-link {
   display: flex;
   flex: none;
   align-items: center;
@@ -142,13 +143,13 @@
   transition: background-color 110ms ease, border-color 110ms ease, color 110ms ease;
 }
 
-.settings-page:not(.companion-page) .settings-sidebar-nav .settings-quick-link:hover,
-.settings-page:not(.companion-page) .settings-sidebar-nav .settings-quick-link:focus-visible {
+.settings-page:not(.companion-page):not(.utility-window-page) .settings-sidebar-nav .settings-quick-link:hover,
+.settings-page:not(.companion-page):not(.utility-window-page) .settings-sidebar-nav .settings-quick-link:focus-visible {
   border-color: rgba(241, 185, 106, 0.24);
   background: rgba(241, 185, 106, 0.09);
 }
 
-.settings-page:not(.companion-page) .settings-sidebar-nav .settings-quick-link.is-active {
+.settings-page:not(.companion-page):not(.utility-window-page) .settings-sidebar-nav .settings-quick-link.is-active {
   border-color: rgba(241, 185, 106, 0.35);
   background: linear-gradient(90deg, rgba(241, 185, 106, 0.16), rgba(241, 185, 106, 0.035));
   color: #ffe3ac;
@@ -156,11 +157,11 @@
 }
 
 /* Keep the existing optional violet theme consistent with the rest of the app. */
-.theme-dark-fantasy.settings-page:not(.companion-page) .settings-sidebar-group-title {
+.theme-dark-fantasy.settings-page:not(.companion-page):not(.utility-window-page) .settings-sidebar-group-title {
   color: rgba(222, 193, 255, 0.82);
 }
 
-.theme-dark-fantasy.settings-page:not(.companion-page) .settings-sidebar-nav .settings-quick-link.is-active {
+.theme-dark-fantasy.settings-page:not(.companion-page):not(.utility-window-page) .settings-sidebar-nav .settings-quick-link.is-active {
   border-color: rgba(190, 162, 255, 0.42);
   background: linear-gradient(90deg, rgba(167, 123, 255, 0.18), rgba(167, 123, 255, 0.035));
   color: #f1e1ff;
@@ -169,20 +170,20 @@
 
 /* Compact windows should retain search and all categories, not clip controls. */
 @media (max-width: 760px) {
-  .settings-page:not(.companion-page) > .settings-shell {
+  .settings-page:not(.companion-page):not(.utility-window-page) > .settings-shell {
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: minmax(150px, 32vh) minmax(0, 1fr);
     gap: 9px;
     padding: 0 3px 6px 0;
   }
 
-  .settings-page:not(.companion-page) .settings-sidebar-nav {
+  .settings-page:not(.companion-page):not(.utility-window-page) .settings-sidebar-nav {
     height: 100%;
     padding: 9px 11px;
     gap: 7px;
   }
 
-  .settings-page:not(.companion-page) .settings-sidebar-nav .settings-sidebar-groups {
+  .settings-page:not(.companion-page):not(.utility-window-page) .settings-sidebar-nav .settings-sidebar-groups {
     flex-direction: row;
     flex-wrap: nowrap;
     gap: 12px;
@@ -190,13 +191,13 @@
     overflow-y: auto;
   }
 
-  .settings-page:not(.companion-page) .settings-sidebar-group {
+  .settings-page:not(.companion-page):not(.utility-window-page) .settings-sidebar-group {
     min-width: 132px;
     max-width: 168px;
     align-content: start;
   }
 
-  .settings-page:not(.companion-page) .settings-sidebar-nav .settings-quick-link {
+  .settings-page:not(.companion-page):not(.utility-window-page) .settings-sidebar-nav .settings-quick-link {
     min-height: 29px;
     padding: 5px 8px;
     font-size: 11px;
@@ -204,13 +205,13 @@
 }
 
 @media (max-width: 480px) {
-  .settings-page:not(.companion-page) > .settings-shell {
+  .settings-page:not(.companion-page):not(.utility-window-page) > .settings-shell {
     grid-template-rows: minmax(140px, 29vh) minmax(0, 1fr);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .settings-page:not(.companion-page) .settings-sidebar-nav .settings-quick-link {
+  .settings-page:not(.companion-page):not(.utility-window-page) .settings-sidebar-nav .settings-quick-link {
     transition: none;
   }
 }
