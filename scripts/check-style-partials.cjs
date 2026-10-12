@@ -102,6 +102,7 @@ const expected = [
   '46-overlay-narrow-header-toolbar-fix.css',
   '47-five-features-test.css',
   '48-settings-overlay-live-preview-test.css',
+  '49-overlay-preview-width-border-fix.css',
 ];
 const expectedCssFiles = [...expected, ...trackedNonNumberedPartials].sort();
 const expectedImports = [

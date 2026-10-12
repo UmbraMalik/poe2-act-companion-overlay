@@ -1422,7 +1422,7 @@ export function SettingsPage() {
             </div>
           </div>
             </div>
-            <OverlayLivePreview config={config} settingsLanguage={appLanguage} />
+            <OverlayLivePreview config={config} settingsLanguage={appLanguage} overlayMode={runtime.overlayMode} />
           </div>
         </section>
         <section id="settings-detail-panel" className="settings-card" hidden={!isSettingsSectionVisible('settings-detail-panel')}>

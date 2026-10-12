@@ -1,19 +1,66 @@
-import { useMemo, useState } from 'react';
-import type { AppConfig, AppLanguage } from '../../shared/types';
+import { useEffect, useMemo, useState } from 'react';
+import { getOverlayMinimumSize } from '../../shared/overlay-layout';
+import type { AppConfig, AppLanguage, OverlayMode } from '../../shared/types';
 
 const PREVIEW_WIDTHS = [290, 330, 360, 400] as const;
 const PREVIEW_ZONES = ['a1_grelwood', 'a1_ogham_farmlands'] as const;
 
-/** Read-only real-renderer preview. Never invokes the Electron IPC API. */
+/** Uses demo data inside the iframe; width presets resize the live Electron window via the settings page only. */
 export function OverlayLivePreview({
   config,
-  settingsLanguage
+  settingsLanguage,
+  overlayMode
 }: {
   config: AppConfig;
   settingsLanguage: AppLanguage;
+  overlayMode: OverlayMode;
 }) {
   const [previewLanguage, setPreviewLanguage] = useState<AppLanguage>(settingsLanguage);
-  const [width, setWidth] = useState<(typeof PREVIEW_WIDTHS)[number]>(330);
+  const [width, setWidth] = useState<number>(330);
+  const [actualWidth, setActualWidth] = useState<number | null>(null);
+  const [widthBusy, setWidthBusy] = useState(false);
+  const [widthError, setWidthError] = useState<'closed' | 'failed' | null>(null);
+  const minimumWidth = getOverlayMinimumSize(overlayMode, config.overlayDensity, config.overlayScale).width;
+
+  useEffect(() => {
+    let mounted = true;
+    // Display the real current size, not an invented active preset.
+    void window.poe2Overlay.getOverlayBounds().then((bounds) => {
+      if (!mounted) return;
+      setActualWidth(bounds?.width ?? null);
+      if (bounds) setWidth(bounds.width);
+    }).catch(() => { if (mounted) setWidthError('failed'); });
+    return () => { mounted = false; };
+  }, []);
+
+  const selectWidth = async (requestedWidth: number) => {
+    if (widthBusy) return;
+    setWidth(requestedWidth); // Always allow testing narrow demo widths.
+    setWidthBusy(true);
+    setWidthError(null);
+    try {
+      const before = await window.poe2Overlay.getOverlayBounds();
+      if (!before) {
+        setActualWidth(null);
+        setWidthError('closed');
+        return;
+      }
+      // Electron enforces the mode/scale/density minimum. Never try to bypass it.
+      await window.poe2Overlay.resizeOverlay(Math.max(requestedWidth, minimumWidth), before.height);
+      const after = await window.poe2Overlay.getOverlayBounds();
+      if (!after) {
+        setActualWidth(null);
+        setWidthError('closed');
+      } else {
+        setActualWidth(after.width); // Native confirmed width, including clamping.
+        if (after.width !== Math.max(requestedWidth, minimumWidth)) setWidthError('failed');
+      }
+    } catch {
+      setWidthError('failed');
+    } finally {
+      setWidthBusy(false);
+    }
+  };
   const [mode, setMode] = useState<'full' | 'compact'>('full');
   const [zone, setZone] = useState<(typeof PREVIEW_ZONES)[number]>('a1_ogham_farmlands');
   const en = settingsLanguage === 'en';
@@ -73,13 +120,27 @@ export function OverlayLivePreview({
           </div>
         </div>
         <div className="settings-overlay-preview-control settings-overlay-preview-control-wide">
-          <span>{en ? 'Width' : 'Ширина'}</span>
+          <span>{en ? 'Width — preview and live overlay' : 'Ширина — демо и настоящий оверлей'}</span>
           <div className="settings-overlay-preview-choice" role="group" aria-label={en ? 'Preview width' : 'Ширина предпросмотра'}>
             {PREVIEW_WIDTHS.map((value) => (
-              <button key={value} type="button" aria-pressed={width === value}
-                className={width === value ? 'is-active' : ''} onClick={() => setWidth(value)}>{value}</button>
+              <button key={value} type="button" disabled={widthBusy} aria-pressed={width === value}
+                className={width === value ? 'is-active' : ''} onClick={() => void selectWidth(value)}>{value}</button>
             ))}
           </div>
+          <span className="settings-overlay-preview-width-status" role="status" aria-live="polite">
+            {widthBusy
+              ? (en ? 'Applying width…' : 'Применяю ширину…')
+              : widthError === 'closed'
+                ? (en ? 'Overlay window is closed; preview only.' : 'Оверлей закрыт — изменилась только демо-ширина.')
+                : widthError === 'failed'
+                  ? (en ? 'Could not confirm the new overlay width.' : 'Не удалось подтвердить новую ширину оверлея.')
+                  : actualWidth === null
+                    ? (en ? 'No live overlay window.' : 'Нет открытого окна оверлея.')
+                    : actualWidth !== width
+                      ? (en ? `Preview ${width} px · Overlay ${actualWidth} px (minimum ${minimumWidth} px for current mode).` :
+                        `Демо ${width} px · Оверлей ${actualWidth} px (минимум ${minimumWidth} px при текущих настройках).`)
+                      : (en ? `Live overlay: ${actualWidth} px.` : `Ширина оверлея: ${actualWidth} px.`)}
+          </span>
         </div>
         <label className="settings-overlay-preview-control settings-overlay-preview-zone">
           <span>{en ? 'Test area' : 'Тестовая локация'}</span>
@@ -101,8 +162,8 @@ export function OverlayLivePreview({
         />
       </div>
       <p className="settings-overlay-preview-help helper-text">
-        {en ? 'Preview controls do not change the game, live overlay or progress. Changes to overlay options on the left refresh this view.' :
-          'Кнопки предпросмотра не изменяют игру, настоящий оверлей или прогресс. Параметры слева обновляют эту картинку.'}
+        {en ? 'Width buttons resize the live overlay (subject to its minimum). Language, demo mode and test area affect only the preview; game progress remains untouched.' :
+          'Кнопки ширины меняют настоящий оверлей с учётом минимального размера. Язык, демо-режим и тестовая зона влияют только на предпросмотр; прогресс не затрагивается.'}
       </p>
     </aside>
   );

@@ -1,0 +1,26 @@
+/* Restore only the moving edge glint: 39-overlay-mode-stability intentionally
+ * freezes shell animations during native window resizes. It also accidentally
+ * froze the border pseudo-element permanently. Keep the shell static and animate
+ * just the masked conic highlight when OS motion preferences allow it.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .overlay-page:not(.fx-off):not(.theme-dark-fantasy):not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-shell::after,
+  .overlay-page:not(.fx-off).overlay-page-timer-only .overlay-timer-only-card::after,
+  .overlay-page:not(.fx-off).is-overlay-collapsed .overlay-collapsed-shell::after {
+    animation: poe2-ambient-edge-orbit 8.8s linear infinite !important;
+  }
+}
+
+/* A width below the mode's minimum can be simulated but not forced on Electron. */
+#settings-overlay .settings-overlay-preview-width-status {
+  display: block;
+  grid-column: 1 / -1;
+  font-size: 11px;
+  line-height: 1.4;
+  font-weight: 500;
+  color: rgba(220, 192, 142, 0.9);
+}
+#settings-overlay .settings-overlay-preview-choice button:disabled {
+  cursor: progress;
+  opacity: 0.64;
+}
