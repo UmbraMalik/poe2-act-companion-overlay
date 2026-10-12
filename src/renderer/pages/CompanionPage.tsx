@@ -33,6 +33,8 @@ import { getRunHistorySignature } from '../run-history-detail';
 import { RouteCardBonusPanel, getRouteCampaignBonusModels, type RouteCardBonusModel } from '../RouteCardBonuses';
 import { RouteTabControls } from '../RouteTabControls';
 import { ActRouteMap } from '../ActRouteMap';
+import { InterludeAtlas } from '../InterludeAtlas';
+import { hasConfirmedInterludeBranch } from '../../shared/interlude-completion';
 import { filterRouteCards, getRouteFilterEmptyText, type RouteFilterMode } from '../route-tab-search';
 import { CurrentRunHub } from '../CurrentRunHub';
 import { CompanionHeader } from '../CompanionHeader';
@@ -173,7 +175,7 @@ function formatActTitle(act: ZoneAct | null, language: AppLanguage) {
     return translate(language, 'route.endgameToT15');
   }
 
-  return act === 'interlude'
+  return act === 'interlude' || act === 5
     ? translate(language, 'companion.interludes')
     : translate(language, 'route.act', { act });
 }
@@ -1529,7 +1531,7 @@ export function CompanionPage() {
     />
   ) : null;
 
-  const useRouteMap = routeViewMode === 'map' && (selectedRouteAct === 1 || selectedRouteAct === 2 || selectedRouteAct === 3 || selectedRouteAct === 4) && !globalRouteSearch;
+  const useRouteMap = routeViewMode === 'map' && (selectedRouteAct === 1 || selectedRouteAct === 2 || selectedRouteAct === 3 || selectedRouteAct === 4 || selectedRouteAct === 5) && !globalRouteSearch;
   const routeTab = activeTab === 'route' ? (
     <div className={`companion-tab-layout route-polish-layout ${useRouteMap ? 'is-map-view' : 'is-list-view'}`}>
       <section className="companion-block companion-route-toolbar">
@@ -1591,14 +1593,28 @@ export function CompanionPage() {
         <button type="button" className={!useRouteMap ? 'button-primary' : 'button-secondary'} aria-pressed={!useRouteMap} onClick={() => setRouteViewMode('list')}>
           <UiIcon name="menu" /> {language === 'ru' ? 'Список' : 'List'}
         </button>
-        <button type="button" className={useRouteMap ? 'button-primary' : 'button-secondary'} aria-pressed={useRouteMap} onClick={() => setRouteViewMode('map')} disabled={(selectedRouteAct !== 1 && selectedRouteAct !== 2 && selectedRouteAct !== 3 && selectedRouteAct !== 4) || globalRouteSearch} title={selectedRouteAct !== 1 && selectedRouteAct !== 2 && selectedRouteAct !== 3 && selectedRouteAct !== 4 ? (language === 'ru' ? 'Карта пока доступна для Актов 1–4' : 'Map is currently available for Acts 1–4') : globalRouteSearch ? (language === 'ru' ? 'Очистите поиск по всей кампании' : 'Clear campaign-wide search') : undefined}>
+        <button type="button" className={useRouteMap ? 'button-primary' : 'button-secondary'} aria-pressed={useRouteMap} onClick={() => setRouteViewMode('map')} disabled={(selectedRouteAct !== 1 && selectedRouteAct !== 2 && selectedRouteAct !== 3 && selectedRouteAct !== 4 && selectedRouteAct !== 5) || globalRouteSearch} title={selectedRouteAct !== 1 && selectedRouteAct !== 2 && selectedRouteAct !== 3 && selectedRouteAct !== 4 && selectedRouteAct !== 5 ? (language === 'ru' ? 'Карта доступна для Актов 1–4 и Интерлюдий' : 'Map is available for Acts 1–4 and Interludes') : globalRouteSearch ? (language === 'ru' ? 'Очистите поиск по всей кампании' : 'Clear campaign-wide search') : undefined}>
           <UiIcon name="map" /> {language === 'ru' ? 'Карта' : 'Map'}
         </button>
-        {selectedRouteAct !== 1 && selectedRouteAct !== 2 && selectedRouteAct !== 3 && selectedRouteAct !== 4 && <small className="route-map-unavailable">{language === 'ru' ? 'Тестовая карта: Акты 1–4' : 'Test map: Acts 1–4'}</small>}
+        {selectedRouteAct !== 1 && selectedRouteAct !== 2 && selectedRouteAct !== 3 && selectedRouteAct !== 4 && selectedRouteAct !== 5 && <small className="route-map-unavailable">{language === 'ru' ? 'Карта: Акты 1–4 и Интерлюдии' : 'Map: Acts 1–4 and Interludes'}</small>}
         {globalRouteSearch && <small className="route-map-unavailable">{language === 'ru' ? 'Для карты очистите поиск' : 'Clear search to view the map'}</small>}
       </div>
 
-      {useRouteMap ? (
+      {useRouteMap && selectedRouteAct === 5 ? (
+        <InterludeAtlas
+          language={language}
+          zones={routeCardModels}
+          currentGuideId={selectedRouteAct === nowAct ? snapshot.currentGuideEntry?.id ?? null : null}
+          visitedGuideIds={snapshot.config.visitedZones.map((entry) => entry.zoneId)}
+          matchingIds={visibleRouteCardModels.map((model) => model.entry.guide.id)}
+          confirmedChapters={{
+            khari: hasConfirmedInterludeBranch(snapshot.config, 'khari'),
+            kriar: hasConfirmedInterludeBranch(snapshot.config, 'kriar'),
+            ogham: hasConfirmedInterludeBranch(snapshot.config, 'ogham')
+          }}
+          onShowList={() => setRouteViewMode('list')}
+        />
+      ) : useRouteMap ? (
         <ActRouteMap
           key={selectedRouteAct}
           act={selectedRouteAct === 4 ? 4 : selectedRouteAct === 3 ? 3 : selectedRouteAct === 2 ? 2 : 1}

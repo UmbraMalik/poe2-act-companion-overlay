@@ -3,6 +3,7 @@ import { getGuideView } from '../i18n/data';
 import type { AppLanguage, GuideEntry } from '../shared/types';
 import { RouteCardBonusPanel, type RouteCardBonusModel } from './RouteCardBonuses';
 import { UiIcon } from './UiIcon';
+import { INTERLUDE_CHAPTERS, type InterludeChapterId } from './interlude-atlas-data';
 
 type RouteMapStatus = 'current' | 'missed' | 'completed' | 'visited' | 'pending';
 
@@ -16,7 +17,8 @@ export interface RouteMapZone {
 
 interface ActRouteMapProps {
   language: AppLanguage;
-  act: 1 | 2 | 3 | 4;
+  act: 1 | 2 | 3 | 4 | 5;
+  interludeChapter?: InterludeChapterId;
   zones: RouteMapZone[];
   currentGuideId: string | null;
   matchingIds: string[];
@@ -150,8 +152,9 @@ function getMapGuideList(guide: GuideEntry, language: AppLanguage, key: string):
   return Array.isArray(values) ? values.filter((value): value is string => typeof value === 'string') : [];
 }
 
-export function ActRouteMap({ language, act, zones, currentGuideId, matchingIds, onShowList }: ActRouteMapProps) {
-  const mapPositions = act === 4 ? ACT_FOUR_POSITIONS : act === 3 ? ACT_THREE_POSITIONS : act === 2 ? ACT_TWO_POSITIONS : ACT_ONE_POSITIONS;
+export function ActRouteMap({ language, act, interludeChapter, zones, currentGuideId, matchingIds, onShowList }: ActRouteMapProps) {
+  const chapter = act === 5 ? INTERLUDE_CHAPTERS.find((entry) => entry.id === interludeChapter) : undefined;
+  const mapPositions = act === 5 ? (chapter?.positions ?? {}) : act === 4 ? ACT_FOUR_POSITIONS : act === 3 ? ACT_THREE_POSITIONS : act === 2 ? ACT_TWO_POSITIONS : ACT_ONE_POSITIONS;
   const activeZone = zones.find(({ entry }) => entry.guide.id === currentGuideId)
     ?? zones.find(({ entry }) => entry.status === 'current')
     ?? null;
@@ -233,10 +236,10 @@ export function ActRouteMap({ language, act, zones, currentGuideId, matchingIds,
   const selectedIsNext = Boolean(selected && selected.entry.guide.id === nextId);
 
   return (
-    <section className={`companion-block act-atlas ${act === 4 ? 'is-act-four' : act === 3 ? 'is-act-three' : act === 2 ? 'is-act-two' : 'is-act-one'}`} aria-label={mapLabel(language, `Схема маршрута Акта ${act}`, `Act ${act} route diagram`)}>
+    <section className={`companion-block act-atlas ${act === 5 ? `is-interlude is-interlude-${interludeChapter ?? 'khari'}` : act === 4 ? 'is-act-four' : act === 3 ? 'is-act-three' : act === 2 ? 'is-act-two' : 'is-act-one'}`} aria-label={chapter ? mapLabel(language, `Схема Интерлюдии «${chapter.titleRu}»`, `Interlude route diagram: ${chapter.titleEn}`) : mapLabel(language, `Схема маршрута Акта ${act}`, `Act ${act} route diagram`)}>
       <div className="act-atlas-header">
         <div>
-          <strong>{mapLabel(language, `Карта маршрута · Акт ${act}`, `Route map · Act ${act}`)}</strong>
+          <strong>{chapter ? mapLabel(language, `Интерлюдии · ${chapter.titleRu}`, `Interludes · ${chapter.titleEn}`) : mapLabel(language, `Карта маршрута · Акт ${act}`, `Route map · Act ${act}`)}</strong>
           <small>{mapLabel(language, 'Схема прохождения — расположение условное, не игровой атлас', 'Progression diagram — positions are illustrative, not the in-game atlas')}</small>
         </div>
         <div className="act-atlas-header-actions">
@@ -251,7 +254,7 @@ export function ActRouteMap({ language, act, zones, currentGuideId, matchingIds,
       <div className="act-atlas-layout">
         <div className="act-atlas-map-column">
           <div className="act-atlas-location-strip" aria-live="polite">
-            <span><b>{mapLabel(language, 'ВЫ ЗДЕСЬ', 'YOU ARE HERE')}</b><strong>{activeZone?.routeCardTitle ?? mapLabel(language, `Нет данных для Акта ${act}`, `No Act ${act} position`)}</strong></span>
+            <span><b>{mapLabel(language, 'ВЫ ЗДЕСЬ', 'YOU ARE HERE')}</b><strong>{activeZone?.routeCardTitle ?? mapLabel(language, 'Локация не распознана', 'Location not detected')}</strong></span>
             <span><b>{mapLabel(language, 'СЛЕДУЮЩИЙ ПЕРЕХОД', 'NEXT IN GUIDE')}</b><strong>{nextActive?.routeCardTitle ?? (activeZone ? (getGuideView(activeZone.entry.guide, language)?.nextZoneName || '—') : '—')}</strong></span>
           </div>
         <div className="act-atlas-scroll" role="group" aria-label={mapLabel(language, 'Интерактивная карта маршрута. Весь акт виден сразу.', 'Interactive route map. The entire act is visible at once.')}>

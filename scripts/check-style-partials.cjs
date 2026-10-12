@@ -104,6 +104,7 @@ const expected = [
   '48-settings-overlay-live-preview-test.css',
   '49-overlay-preview-width-border-fix.css',
   '50-act-route-atlas-test.css',
+  '51-interlude-atlas-test.css',
 ];
 const expectedCssFiles = [...expected, ...trackedNonNumberedPartials].sort();
 const expectedImports = [

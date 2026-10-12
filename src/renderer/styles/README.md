@@ -40,3 +40,5 @@ Those used to exist as duplicate sources and made it too easy to edit a CSS file
 48. `48-settings-overlay-live-preview-test.css` — actual overlay renderer preview embedded in settings with RU/EN, width and density controls.
 49. `49-overlay-preview-width-border-fix.css` — live width preset feedback and restored masked edge orbit without animating the Electron shell.
 50. `50-act-route-atlas-test.css` — responsive Act 1 route map with fixed marker anchors, route states, bonus badges and the details panel.
+
+51. `51-interlude-atlas-test.css` — three-branch Interlude parchment selector, miniature bonus markers, finale, and responsive per-chapter maps.

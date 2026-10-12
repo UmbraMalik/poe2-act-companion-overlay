@@ -33,13 +33,19 @@ const RELIABLE_CHECKLIST_COMPLETION_SOURCES = new Set<ChecklistDetectedBy>([
 
 type InterludeCompletionConfig = Pick<AppConfig, 'zoneProgress' | 'campaignBonusProgress'>;
 
-export function hasCompletedAllInterludeBranches(config: InterludeCompletionConfig): boolean {
-  if (config.campaignBonusProgress[FINAL_INTERLUDE_BONUS_ID]?.state === 'done') {
-    return true;
-  }
+/** Only a reliable, explicitly recorded completion counts; merely visiting
+ * a final area must never mark the corresponding chapter complete. */
+export function hasConfirmedInterludeBranch(
+  config: InterludeCompletionConfig,
+  branch: (typeof INTERLUDE_BRANCH_COMPLETION_RULES)[number]['branch']
+): boolean {
+  if (config.campaignBonusProgress[FINAL_INTERLUDE_BONUS_ID]?.state === 'done') return true;
+  const rule = INTERLUDE_BRANCH_COMPLETION_RULES.find((entry) => entry.branch === branch);
+  if (!rule) return false;
+  const progress = config.zoneProgress[rule.guideId]?.itemStates[rule.completionChecklistItemId];
+  return progress?.state === 'done' && RELIABLE_CHECKLIST_COMPLETION_SOURCES.has(progress.detectedBy);
+}
 
-  return INTERLUDE_BRANCH_COMPLETION_RULES.every((rule) => {
-    const progress = config.zoneProgress[rule.guideId]?.itemStates[rule.completionChecklistItemId];
-    return progress?.state === 'done' && RELIABLE_CHECKLIST_COMPLETION_SOURCES.has(progress.detectedBy);
-  });
+export function hasCompletedAllInterludeBranches(config: InterludeCompletionConfig): boolean {
+  return INTERLUDE_BRANCH_COMPLETION_RULES.every((rule) => hasConfirmedInterludeBranch(config, rule.branch));
 }

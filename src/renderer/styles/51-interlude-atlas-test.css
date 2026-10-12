@@ -1,0 +1,165 @@
+/* Interlude atlas: three independent parchment routes, using the SAME stable
+   node and bonus badge geometry as the existing Act 1–4 map component. */
+.companion-page .interlude-atlas {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto auto;
+  align-content: start;
+  gap: 13px;
+  min-width: 0;
+  padding: 15px;
+  isolation: isolate;
+  background: linear-gradient(120deg, rgba(189, 152, 89, .07), transparent 32%, rgba(64, 75, 66, .11)), var(--companion-panel, #11151b);
+}
+.companion-page .interlude-atlas-heading,
+.companion-page .interlude-finale-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  min-width: 0;
+}
+.companion-page .interlude-atlas-heading > div:first-child { display: grid; gap: 5px; min-width: 0; }
+.companion-page .interlude-atlas-heading strong { color: #e9c98f; font-size: 15px; }
+.companion-page .interlude-atlas-heading small { font-size: 11px; color: var(--companion-muted); line-height: 1.45; }
+.companion-page .interlude-atlas-head-actions { display: flex; flex-wrap: wrap; gap: 7px; flex: none; }
+.companion-page .interlude-atlas-head-actions button,
+.companion-page .interlude-chapter-nav button,
+.companion-page .interlude-finale-summary button {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  min-height: 32px; padding: 5px 10px; font-size: 11px;
+  border-radius: 8px;
+}
+.companion-page .interlude-parchments {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 12px;
+  min-width: 0;
+}
+.companion-page .interlude-parchment {
+  --parchment-image: url('../assets/interlude-khari-parchment.svg');
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  padding: 10px;
+  border: 1px solid rgba(200,165,110,.54);
+  border-radius: 10px;
+  background: linear-gradient(150deg, #29231f, #111315 70%);
+  color: #e6d8c0;
+  box-shadow: 0 6px 20px rgba(0,0,0,.27), inset 0 0 0 3px rgba(143,103,53,.08);
+  text-align: left;
+  cursor: pointer;
+  transform: none;
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+.companion-page .interlude-parchment.is-kriar { --parchment-image: url('../assets/interlude-kriar-parchment.svg'); }
+.companion-page .interlude-parchment.is-ogham { --parchment-image: url('../assets/interlude-ogham-parchment.svg'); }
+.companion-page .interlude-parchment::before,
+.companion-page .interlude-parchment::after { content: none !important; }
+.companion-page .interlude-parchment:hover,
+.companion-page .interlude-parchment:focus-visible {
+  border-color: rgba(250, 207, 131, .94);
+  box-shadow: 0 0 0 1px rgba(238,184,90,.43), 0 8px 26px rgba(0,0,0,.43);
+}
+.companion-page .interlude-parchment:focus-visible { outline: 2px solid #efc987; outline-offset: 3px; }
+.companion-page .interlude-parchment-title {
+  position: relative; z-index: 2;
+  display: grid; gap: 4px;
+  min-height: 47px;
+  text-align: center;
+}
+.companion-page .interlude-parchment-title small { color: #ab9474; font-size: 9px; letter-spacing: .13em; font-weight: 800; }
+.companion-page .interlude-parchment-title strong { color: #f1d3a0; font: 700 clamp(14px, 1.4vw, 20px)/1.12 Georgia,serif; overflow-wrap: anywhere; }
+.companion-page .interlude-parchment-stage {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 1000 / 740;
+  flex: none;
+  border-radius: 6px;
+  border: 1px solid rgba(203,174,126,.37);
+  background-image: linear-gradient(180deg, rgba(10,10,12,.08), rgba(7,8,10,.24)), var(--parchment-image);
+  background-size: 100% 100%;
+  background-position: center;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 5px rgba(20,16,12,.10);
+}
+.companion-page .interlude-parchment-lines { position: absolute; width: 100%; height: 100%; inset: 0; pointer-events: none; }
+.companion-page .interlude-parchment-node {
+  position: absolute;
+  display: block;
+  z-index: 2;
+  width: clamp(11px, 1.25vw, 18px);
+  height: clamp(11px, 1.25vw, 18px);
+  transform: translate(-50%,-50%);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #9cdafc, #246c9d 45%, #13283b 80%);
+  border: 2px solid #c4b18d;
+  box-shadow: 0 0 0 2px rgba(5, 7, 10, .9), 0 0 7px rgba(85,183,238,.44);
+  pointer-events: none;
+}
+.companion-page .interlude-parchment-node.is-live {
+  border-color: #b8ff9c;
+  box-shadow: 0 0 0 3px rgba(119,240,120,.58), 0 0 15px rgba(112,243,123,.68);
+}
+.companion-page .interlude-parchment-bonus {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  top: -8px;
+  right: -10px;
+  width: 13px;
+  height: 13px;
+  border: 1px solid #ebc77f;
+  border-radius: 50%;
+  background: #382911;
+  color: #ffce69;
+}
+.companion-page .interlude-parchment-bonus.is-recorded { background: #243a28; color: #baf5c5; border-color: #a2e6ac; }
+.companion-page .interlude-parchment-bonus svg { width: 9px; height: 9px; }
+.companion-page .interlude-parchment-bottom {
+  display: flex; flex-direction: column; gap: 5px; margin-top: auto;
+  font-size: 11px; line-height: 1.3; color: #c5b9a4;
+}
+.companion-page .interlude-parchment-bottom > b { color: #f0c889; font-size: 11px; margin-top: 5px; display: inline-flex; gap: 5px; align-items: center; }
+.companion-page .interlude-parchment-bottom > b.is-confirmed { color: #aee7ac; }
+.companion-page .interlude-parchment-bottom > b.is-current { color: #afecb8; }
+.companion-page .interlude-finale {
+  border: 1px solid rgba(198,161,98,.34);
+  background: rgba(23,19,15,.45);
+  border-radius: 9px; padding: 12px;
+}
+.companion-page .interlude-finale-summary > div { flex: 1; min-width: 0; display: grid; gap: 5px; }
+.companion-page .interlude-finale-summary strong { color: #e8c388; font-size: 13px; }
+.companion-page .interlude-finale-summary small { color: #aeb0ae; font-size: 11px; line-height: 1.4; }
+.companion-page .interlude-finale-seal { display: grid; place-items: center; width: 35px; height: 35px; flex: none; border-radius: 50%; color: #e8c17e; border: 1px solid rgba(234,187,109,.44); background: rgba(109,77,37,.23); }
+.companion-page .interlude-finale-detail { display: grid; gap: 11px; padding-top: 14px; margin-top: 11px; border-top: 1px solid rgba(204,166,105,.25); }
+.companion-page .interlude-finale-detail h4 { color: #edd2a4; margin: 0 0 4px; }
+.companion-page .interlude-finale-detail p { color: #aeb9bb; font-size: 11px; margin: 0; }
+.companion-page .interlude-finale-detail ul { margin: 0; padding-left: 20px; display: grid; gap: 6px; color: #cad0d0; font-size: 12px; }
+.companion-page .interlude-atlas-note { font-size: 10px; margin: 0; color: var(--companion-muted); }
+.companion-page .interlude-chapter-nav { display: flex; gap: 7px; flex-wrap: wrap; align-items: center; min-width: 0; }
+.companion-page .act-atlas.is-interlude .act-atlas-scroll { --atlas-line: rgba(216,174,105,.47); background: #32271f; }
+.companion-page .act-atlas.is-interlude .act-atlas-canvas { background-image: linear-gradient(180deg, rgba(4,6,7,.05), rgba(4,6,7,.26)), url('../assets/interlude-khari-parchment.svg'); }
+.companion-page .act-atlas.is-interlude-kriar .act-atlas-canvas { background-image: linear-gradient(180deg, rgba(4,6,7,.05), rgba(4,6,7,.26)), url('../assets/interlude-kriar-parchment.svg'); }
+.companion-page .act-atlas.is-interlude-ogham .act-atlas-canvas { background-image: linear-gradient(180deg, rgba(4,6,7,.05), rgba(4,6,7,.26)), url('../assets/interlude-ogham-parchment.svg'); }
+.companion-page .act-atlas.is-interlude .act-atlas-edge { stroke: rgba(229,198,142,.51); }
+.companion-page .act-atlas.is-interlude .act-atlas-edge.is-recommended { stroke: #fbd08c; }
+@media (max-width: 1200px) { .companion-page .interlude-parchments { gap: 8px; } }
+@media (max-width: 950px) {
+  .companion-page .interlude-parchments { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .companion-page .interlude-atlas-heading { flex-wrap: wrap; }
+}
+@media (max-width: 610px) {
+  .companion-page .interlude-parchments { grid-template-columns: minmax(0, 1fr); }
+  .companion-page .interlude-parchment-title strong { font-size: 19px; }
+  .companion-page .interlude-parchment-node { width: 17px; height: 17px; }
+  .companion-page .interlude-finale-summary { flex-wrap: wrap; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .companion-page .interlude-parchment { transition: none; }
+}

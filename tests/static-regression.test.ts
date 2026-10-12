@@ -892,3 +892,29 @@ test('Companion browser preview skips Electron-only reset subscriptions', () => 
   assert.match(companion, /const api = window\.poe2Overlay;/);
   assert.match(companion, /typeof api\.onRunResetConfirmationRequested !== 'function'/);
 });
+
+test('Interlude route atlas keeps three independent chapters, actual guide IDs and a separate finale', () => {
+  const data = readText('src/renderer/interlude-atlas-data.ts');
+  const ui = readText('src/renderer/InterludeAtlas.tsx');
+  const component = readText('src/renderer/ActRouteMap.tsx');
+  const companion = readText('src/renderer/pages/CompanionPage.tsx');
+  const guide = JSON.parse(readText('src/data/guide.json')) as { zones: { id: string; act: number }[] };
+  const interludeIds = new Set(guide.zones.filter((zone) => zone.act === 5).map((zone) => zone.id));
+  const chapterIds = [
+    ['interlude_khari_bazaar', 'interlude_khari_crossing', 'interlude_pools_of_khatal', 'interlude_selvari_sanctuary', 'interlude_galai_gates', 'i2_kima', 'i2_kima_reservoir'],
+    ['interlude_the_glade', 'interlude_ashen_forest', 'i2_mount_cryer', 'interlude_glacial_tarn', 'i2_glacial_tarn', 'i2_kriar_peaks', 'interlude_etched_ravine', 'interlude_cuachic_vault'],
+    ['interlude_refuge', 'interlude_scorched_farmlands', 'interlude_stones_of_serle', 'i_final_blackwood', 'i_final_holten', 'i_final_wolvenholt', 'i_final_holten_estate']
+  ];
+  const ids = chapterIds.flat();
+  assert.equal(new Set(ids).size, 22);
+  assert.equal(ids.length + 1, interludeIds.size);
+  for (const id of [...ids, 'post_interludes_kingsmarch']) {
+    assert.ok(interludeIds.has(id), `Missing Interlude guide ID: ${id}`);
+    assert.match(data, new RegExp(`\\b${id}\\b`));
+  }
+  assert.match(ui, /INTERLUDE_CHAPTERS\.map/);
+  assert.match(ui, /act=\{5\}/);
+  assert.match(ui, /confirmedChapters/);
+  assert.match(component, /is-interlude-/);
+  assert.match(companion, /hasConfirmedInterludeBranch/);
+});

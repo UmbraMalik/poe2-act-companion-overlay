@@ -351,7 +351,7 @@ export function getRouteActs(
 
   for (const guide of snapshot.guideEntries) {
     const key = guide.act === 'interlude' ? 'interlude' : `act-${guide.act}`;
-    const label = guide.act === 'interlude'
+    const label = guide.act === 'interlude' || guide.act === 5
       ? translate(language, 'route.interludes')
       : translate(language, 'route.act', { act: guide.act });
 

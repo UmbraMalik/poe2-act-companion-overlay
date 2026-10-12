@@ -58,3 +58,5 @@
 @import './styles/48-settings-overlay-live-preview-test.css'; /* Real overlay responsive preview in settings */
 @import './styles/49-overlay-preview-width-border-fix.css'; /* Live width presets and restore edge animation without shell flicker */
 @import './styles/50-act-route-atlas-test.css'; /* Interactive Act 1 route diagram, original art, game-data badges and details */
+
+@import './styles/51-interlude-atlas-test.css'; /* Three independently navigable Interlude parchment maps and finale */

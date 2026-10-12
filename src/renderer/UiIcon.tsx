@@ -2,6 +2,7 @@ import { Fragment, type ReactNode } from 'react';
 
 export type UiIconName =
   | 'arrow-right'
+  | 'arrow-left'
   | 'check'
   | 'bell'
   | 'chart'
@@ -37,6 +38,8 @@ interface UiIconProps {
 
 function getIconShape(name: UiIconName): ReactNode {
   switch (name) {
+    case 'arrow-left':
+      return <><path d="M19 12H5" /><path d="m10 7-5 5 5 5" /></>;
     case 'arrow-right':
       return <><path d="M5 12h14" /><path d="m14 7 5 5-5 5" /></>;
     case 'check':
