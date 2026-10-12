@@ -22,6 +22,8 @@ interface ActRouteMapProps {
   zones: RouteMapZone[];
   currentGuideId: string | null;
   matchingIds: string[];
+  canLocateCurrent: boolean;
+  onLocateCurrent: () => void;
   onShowList: () => void;
 }
 
@@ -152,7 +154,7 @@ function getMapGuideList(guide: GuideEntry, language: AppLanguage, key: string):
   return Array.isArray(values) ? values.filter((value): value is string => typeof value === 'string') : [];
 }
 
-export function ActRouteMap({ language, act, interludeChapter, zones, currentGuideId, matchingIds, onShowList }: ActRouteMapProps) {
+export function ActRouteMap({ language, act, interludeChapter, zones, currentGuideId, matchingIds, canLocateCurrent, onLocateCurrent, onShowList }: ActRouteMapProps) {
   const chapter = act === 5 ? INTERLUDE_CHAPTERS.find((entry) => entry.id === interludeChapter) : undefined;
   const mapPositions = act === 5 ? (chapter?.positions ?? {}) : act === 4 ? ACT_FOUR_POSITIONS : act === 3 ? ACT_THREE_POSITIONS : act === 2 ? ACT_TWO_POSITIONS : ACT_ONE_POSITIONS;
   const activeZone = zones.find(({ entry }) => entry.guide.id === currentGuideId)
@@ -243,7 +245,7 @@ export function ActRouteMap({ language, act, interludeChapter, zones, currentGui
           <small>{mapLabel(language, 'Схема прохождения — расположение условное, не игровой атлас', 'Progression diagram — positions are illustrative, not the in-game atlas')}</small>
         </div>
         <div className="act-atlas-header-actions">
-          <button type="button" className="button-secondary" disabled={!liveId} onClick={() => { setUserSelected(false); setSelectedId(liveId); }}>
+          <button type="button" className="button-secondary" disabled={!canLocateCurrent} onClick={onLocateCurrent}>
             <UiIcon name="compass" /> {mapLabel(language, 'Где я', 'My location')}
           </button>
           <button type="button" className="button-secondary" onClick={onShowList}>

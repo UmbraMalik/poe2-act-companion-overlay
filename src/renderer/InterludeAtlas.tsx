@@ -13,14 +13,18 @@ interface InterludeAtlasProps {
   visitedGuideIds: string[];
   matchingIds: string[];
   confirmedChapters: Record<InterludeChapterId, boolean>;
+  canLocateCurrent: boolean;
+  onLocateCurrent: () => void;
+  focusCurrentGuideId?: string | null;
   onShowList: () => void;
 }
 
 const label = (language: AppLanguage, ru: string, en: string) => language === 'ru' ? ru : en;
 
-export function InterludeAtlas({ language, zones, currentGuideId, visitedGuideIds, matchingIds, confirmedChapters, onShowList }: InterludeAtlasProps) {
-  const [chapterId, setChapterId] = useState<InterludeChapterId | null>(null);
-  const [showFinale, setShowFinale] = useState(false);
+export function InterludeAtlas({ language, zones, currentGuideId, visitedGuideIds, matchingIds, confirmedChapters, canLocateCurrent, onLocateCurrent, focusCurrentGuideId, onShowList }: InterludeAtlasProps) {
+  // Only a deliberate "My location" action opens the matching parchment.
+  const [chapterId, setChapterId] = useState<InterludeChapterId | null>(() => findInterludeChapter(focusCurrentGuideId)?.id ?? null);
+  const [showFinale, setShowFinale] = useState(() => focusCurrentGuideId === INTERLUDE_FINALE_ID);
   const zonesById = useMemo(() => new Map(zones.map((zone) => [zone.entry.guide.id, zone])), [zones]);
   const currentChapter = findInterludeChapter(currentGuideId);
   const visitedSet = useMemo(() => new Set(visitedGuideIds), [visitedGuideIds]);
@@ -47,6 +51,8 @@ export function InterludeAtlas({ language, zones, currentGuideId, visitedGuideId
         zones={chapterZones}
         currentGuideId={currentChapter?.id === chapter.id ? currentGuideId : null}
         matchingIds={matchingIds.filter((id) => chapter.zoneIds.includes(id))}
+        canLocateCurrent={canLocateCurrent}
+        onLocateCurrent={onLocateCurrent}
         onShowList={onShowList}
       />
     </>;
@@ -59,7 +65,7 @@ export function InterludeAtlas({ language, zones, currentGuideId, visitedGuideId
         <small>{label(language, 'Выберите пергамент, чтобы открыть карту и подробный маршрут. Главы можно проходить в разном порядке.', 'Choose a parchment to open its map and detailed route. The chapters can be completed in any order.')}</small>
       </div>
       <div className="interlude-atlas-head-actions">
-        {currentChapter && <button className="button-secondary" type="button" onClick={() => setChapterId(currentChapter.id)}><UiIcon name="compass" /> {label(language, 'Где я', 'My location')}</button>}
+        <button className="button-secondary" type="button" disabled={!canLocateCurrent} onClick={onLocateCurrent}><UiIcon name="compass" /> {label(language, 'Где я', 'My location')}</button>
         <button type="button" className="button-secondary" onClick={onShowList}><UiIcon name="menu" /> {label(language, 'Список', 'List')}</button>
       </div>
     </div>

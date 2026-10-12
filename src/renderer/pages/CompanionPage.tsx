@@ -1009,6 +1009,7 @@ export function CompanionPage() {
   const [focusedRouteZoneId, setFocusedRouteZoneId] = useState<string | null>(null);
   const [routeSearchQuery, setRouteSearchQuery] = useState('');
   const [routeFilterMode, setRouteFilterMode] = useState<RouteFilterMode>('all');
+  const [mapLocateRequest, setMapLocateRequest] = useState(0);
   const [routeViewMode, setRouteViewMode] = useState<'list' | 'map'>(() => {
     try {
       return window.localStorage.getItem('poe2-companion-route-view-v1') === 'map' ? 'map' : 'list';
@@ -1505,6 +1506,27 @@ export function CompanionPage() {
       }, 1400);
     });
   };
+  // "My location" in a map must navigate across acts, not just reselect
+  // the active node in whatever act is currently displayed.
+  const canLocateCurrentMap = Boolean(
+    snapshot.currentGuideEntry &&
+    typeof snapshot.currentGuideEntry.act === 'number' &&
+    snapshot.currentGuideEntry.act >= 1 && snapshot.currentGuideEntry.act <= 5 &&
+    routeActs.some((group) => group.act === snapshot.currentGuideEntry?.act &&
+      group.zones.some((zone) => zone.guide.id === snapshot.currentGuideEntry?.id))
+  );
+  const locateCurrentMapZone = () => {
+    const currentGuide = snapshot.currentGuideEntry;
+    if (!currentGuide || !canLocateCurrentMap) return;
+    setSelectedAct(currentGuide.act);
+    setRouteFilterMode('all');
+    setRouteSearchQuery('');
+    setRouteViewMode('map');
+    // Remount the displayed map to clear any manually selected node;
+    // Interludes will expand the parchment matching this guide ID.
+    setMapLocateRequest((request) => request + 1);
+    selectTab('route');
+  };
   const focusCurrentZone = () => focusRouteZone(snapshot.currentGuideEntry?.id ?? null, nowAct, 'current_zone');
   const openCurrentActRoute = () => {
     setSelectedAct(nowAct);
@@ -1556,7 +1578,7 @@ export function CompanionPage() {
                 className={actButtonClassName}
                 aria-current={isCurrentAct ? 'location' : undefined}
                 onClick={() => {
-                  setRouteFilterMode('all'); setSelectedAct(entry.act);
+                  setRouteFilterMode('all'); setSelectedAct(entry.act); setMapLocateRequest(0);
                 }}
               >
                 {entry.label}
@@ -1585,7 +1607,7 @@ export function CompanionPage() {
         <RouteTabControls language={language} filterMode={globalRouteSearch ? 'all' : routeFilterMode} searchQuery={routeSearchQuery}
           resultState={{ shownCount: visibleRouteCardModels.length, totalCount: routeCardModels.length, hasCurrentCard: routeCardModels.some((model) => model.entry.status === 'current') }}
           canJumpCurrent={Boolean(snapshot.currentGuideEntry?.id && routeActs.some((entry) => entry.zones.some((zone) => zone.guide.id === snapshot.currentGuideEntry?.id)))}
-          onFilterChange={setRouteFilterMode} onSearchChange={setRouteSearchQuery} onJumpCurrent={focusCurrentZone} />
+          onFilterChange={setRouteFilterMode} onSearchChange={setRouteSearchQuery} onJumpCurrent={useRouteMap ? locateCurrentMapZone : focusCurrentZone} />
       </section>
 
       <div className="route-map-view-switch" role="group" aria-label={language === 'ru' ? 'Вид маршрута' : 'Route view'}>
@@ -1602,6 +1624,7 @@ export function CompanionPage() {
 
       {useRouteMap && selectedRouteAct === 5 ? (
         <InterludeAtlas
+          key={`interludes-${mapLocateRequest}`}
           language={language}
           zones={routeCardModels}
           currentGuideId={selectedRouteAct === nowAct ? snapshot.currentGuideEntry?.id ?? null : null}
@@ -1612,16 +1635,21 @@ export function CompanionPage() {
             kriar: hasConfirmedInterludeBranch(snapshot.config, 'kriar'),
             ogham: hasConfirmedInterludeBranch(snapshot.config, 'ogham')
           }}
+          canLocateCurrent={canLocateCurrentMap}
+          onLocateCurrent={locateCurrentMapZone}
+          focusCurrentGuideId={mapLocateRequest > 0 ? snapshot.currentGuideEntry?.id : null}
           onShowList={() => setRouteViewMode('list')}
         />
       ) : useRouteMap ? (
         <ActRouteMap
-          key={selectedRouteAct}
+          key={`${selectedRouteAct}-${mapLocateRequest}`}
           act={selectedRouteAct === 4 ? 4 : selectedRouteAct === 3 ? 3 : selectedRouteAct === 2 ? 2 : 1}
           language={language}
           zones={routeCardModels}
           currentGuideId={selectedRouteAct === nowAct ? snapshot.currentGuideEntry?.id ?? null : null}
           matchingIds={visibleRouteCardModels.map((model) => model.entry.guide.id)}
+          canLocateCurrent={canLocateCurrentMap}
+          onLocateCurrent={locateCurrentMapZone}
           onShowList={() => setRouteViewMode('list')}
         />
       ) : (<>
