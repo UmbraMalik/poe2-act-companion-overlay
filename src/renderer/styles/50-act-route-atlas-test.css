@@ -192,6 +192,32 @@
   stroke: #ffd083;
 }
 
+
+/* Act 3: jungles, flooded stonework and Vaal ruins. The same stable
+   marker/caption/bonus positioning is shared by all three acts. */
+.companion-page .act-atlas.is-act-three .act-atlas-scroll {
+  --atlas-line: rgba(134, 175, 149, .46);
+  background: #192323;
+}
+.companion-page .act-atlas.is-act-three .act-atlas-canvas {
+  background-image:
+    linear-gradient(0deg, rgba(2, 9, 12, .24), rgba(5, 13, 14, .02) 50%, rgba(4, 10, 13, .22)),
+    url('../assets/act3-campaign-schematic.svg');
+  background-position: center;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+.companion-page .act-atlas.is-act-three .act-atlas-edge {
+  stroke: rgba(159, 207, 177, .53);
+}
+.companion-page .act-atlas.is-act-three .act-atlas-edge.is-side {
+  stroke: rgba(191, 158, 105, .65);
+  stroke-dasharray: 2 13;
+}
+.companion-page .act-atlas.is-act-three .act-atlas-edge.is-recommended {
+  stroke: #ffcd82;
+}
+
 .companion-page .act-atlas-canvas::after {
   position: absolute; inset: 0; content: ''; pointer-events: none;
   background: radial-gradient(ellipse at 50% 45%, transparent 45%, rgba(0,0,0,.31) 100%);

@@ -1529,7 +1529,7 @@ export function CompanionPage() {
     />
   ) : null;
 
-  const useRouteMap = routeViewMode === 'map' && (selectedRouteAct === 1 || selectedRouteAct === 2) && !globalRouteSearch;
+  const useRouteMap = routeViewMode === 'map' && (selectedRouteAct === 1 || selectedRouteAct === 2 || selectedRouteAct === 3) && !globalRouteSearch;
   const routeTab = activeTab === 'route' ? (
     <div className={`companion-tab-layout route-polish-layout ${useRouteMap ? 'is-map-view' : 'is-list-view'}`}>
       <section className="companion-block companion-route-toolbar">
@@ -1591,17 +1591,17 @@ export function CompanionPage() {
         <button type="button" className={!useRouteMap ? 'button-primary' : 'button-secondary'} aria-pressed={!useRouteMap} onClick={() => setRouteViewMode('list')}>
           <UiIcon name="menu" /> {language === 'ru' ? 'Список' : 'List'}
         </button>
-        <button type="button" className={useRouteMap ? 'button-primary' : 'button-secondary'} aria-pressed={useRouteMap} onClick={() => setRouteViewMode('map')} disabled={(selectedRouteAct !== 1 && selectedRouteAct !== 2) || globalRouteSearch} title={selectedRouteAct !== 1 && selectedRouteAct !== 2 ? (language === 'ru' ? 'Карта пока доступна для Актов 1 и 2' : 'Map is currently available for Acts 1 and 2') : globalRouteSearch ? (language === 'ru' ? 'Очистите поиск по всей кампании' : 'Clear campaign-wide search') : undefined}>
+        <button type="button" className={useRouteMap ? 'button-primary' : 'button-secondary'} aria-pressed={useRouteMap} onClick={() => setRouteViewMode('map')} disabled={(selectedRouteAct !== 1 && selectedRouteAct !== 2 && selectedRouteAct !== 3) || globalRouteSearch} title={selectedRouteAct !== 1 && selectedRouteAct !== 2 && selectedRouteAct !== 3 ? (language === 'ru' ? 'Карта пока доступна для Актов 1–3' : 'Map is currently available for Acts 1–3') : globalRouteSearch ? (language === 'ru' ? 'Очистите поиск по всей кампании' : 'Clear campaign-wide search') : undefined}>
           <UiIcon name="map" /> {language === 'ru' ? 'Карта' : 'Map'}
         </button>
-        {selectedRouteAct !== 1 && selectedRouteAct !== 2 && <small className="route-map-unavailable">{language === 'ru' ? 'Тестовая карта: Акты 1 и 2' : 'Test map: Acts 1 and 2'}</small>}
+        {selectedRouteAct !== 1 && selectedRouteAct !== 2 && <small className="route-map-unavailable">{language === 'ru' ? 'Тестовая карта: Акты 1–3' : 'Test map: Acts 1–3'}</small>}
         {globalRouteSearch && <small className="route-map-unavailable">{language === 'ru' ? 'Для карты очистите поиск' : 'Clear search to view the map'}</small>}
       </div>
 
       {useRouteMap ? (
         <ActRouteMap
           key={selectedRouteAct}
-          act={selectedRouteAct === 2 ? 2 : 1}
+          act={selectedRouteAct === 3 ? 3 : selectedRouteAct === 2 ? 2 : 1}
           language={language}
           zones={routeCardModels}
           currentGuideId={selectedRouteAct === nowAct ? snapshot.currentGuideEntry?.id ?? null : null}

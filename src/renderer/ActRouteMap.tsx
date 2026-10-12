@@ -16,7 +16,7 @@ export interface RouteMapZone {
 
 interface ActRouteMapProps {
   language: AppLanguage;
-  act: 1 | 2;
+  act: 1 | 2 | 3;
   zones: RouteMapZone[];
   currentGuideId: string | null;
   matchingIds: string[];
@@ -70,6 +70,29 @@ const ACT_TWO_POSITIONS: Record<string, readonly [number, number]> = {
   a2_dreadnought: [84, 28]
 };
 
+/* Act 3 jungle/ruins ROUTE DIAGRAM, keyed to the 17 areas in guide.json.
+ * Coordinates are illustrative, never inferred as real in-game positions.
+ * The Temple of Chaos is shown as an optional diversion. */
+const ACT_THREE_POSITIONS: Record<string, readonly [number, number]> = {
+  a3_sandswept_marsh: [12, 78],
+  a3_ziggurat_encampment: [23, 67],
+  a3_jungle_ruins: [34, 77],
+  a3_venom_crypts: [43, 65],
+  a3_infested_barrens: [54, 77],
+  a3_chimera_wetlands: [64, 66],
+  a3_temple_of_chaos: [84, 79],
+  a3_jiquani_machinarium: [76, 55],
+  a3_jiquani_sanctum: [87, 43],
+  a3_matlan_waterways: [72, 32],
+  a3_azak_bog: [59, 43],
+  a3_drowned_city: [48, 30],
+  a3_molten_vault: [36, 41],
+  a3_apex_of_filth: [24, 29],
+  a3_temple_kopec: [38, 17],
+  a3_vaal_heart: [55, 22],
+  a3_black_chambers: [74, 13]
+};
+
 function mapLabel(language: AppLanguage, ru: string, en: string) {
   return language === 'ru' ? ru : en;
 }
@@ -104,7 +127,7 @@ function getMapGuideList(guide: GuideEntry, language: AppLanguage, key: string):
 }
 
 export function ActRouteMap({ language, act, zones, currentGuideId, matchingIds, onShowList }: ActRouteMapProps) {
-  const mapPositions = act === 2 ? ACT_TWO_POSITIONS : ACT_ONE_POSITIONS;
+  const mapPositions = act === 3 ? ACT_THREE_POSITIONS : act === 2 ? ACT_TWO_POSITIONS : ACT_ONE_POSITIONS;
   const activeZone = zones.find(({ entry }) => entry.guide.id === currentGuideId)
     ?? zones.find(({ entry }) => entry.status === 'current')
     ?? null;
@@ -128,6 +151,9 @@ export function ActRouteMap({ language, act, zones, currentGuideId, matchingIds,
     const edges: { from: string; to: string; kind: 'route' | 'side' }[] = [];
     const uniqueEdges = new Set<string>();
     for (const zone of zones) {
+      // The Temple of Chaos returns to the wetlands; render its optional
+      // branch only once, from the wetlands, to avoid overlapping lines.
+      if (act === 3 && zone.entry.guide.id === 'a3_temple_of_chaos') continue;
       const to = byName.get(normalizedName(zone.entry.guide.next_zone_ru));
       if (to && zone.entry.guide.id !== to.entry.guide.id) {
         const key = `${zone.entry.guide.id}:${to.entry.guide.id}`;
@@ -137,7 +163,11 @@ export function ActRouteMap({ language, act, zones, currentGuideId, matchingIds,
             zone.entry.guide.id === 'a2_trial_of_the_sekhemas' ||
             to.entry.guide.id === 'a2_lightless_passage'
           );
-          edges.push({ from: zone.entry.guide.id, to: to.entry.guide.id, kind: isActTwoSide ? 'side' : 'route' });
+          const isActThreeSide = act === 3 && (
+            zone.entry.guide.id === 'a3_temple_of_chaos' ||
+            to.entry.guide.id === 'a3_temple_of_chaos'
+          );
+          edges.push({ from: zone.entry.guide.id, to: to.entry.guide.id, kind: isActTwoSide || isActThreeSide ? 'side' : 'route' });
           uniqueEdges.add(key);
         }
       }
@@ -150,6 +180,11 @@ export function ActRouteMap({ language, act, zones, currentGuideId, matchingIds,
     // main-route bypass without marking this optional area as completed.
     if (act === 2 && byId.has('a2_mastodon_badlands') && byId.has('a2_bone_pits')) {
       edges.push({ from: 'a2_mastodon_badlands', to: 'a2_bone_pits', kind: 'route' });
+    }
+    // Optional Temple of Chaos: expose its detour from Chimera Wetlands,
+    // without asserting that it is required for the main campaign path.
+    if (act === 3 && byId.has('a3_chimera_wetlands') && byId.has('a3_temple_of_chaos')) {
+      edges.push({ from: 'a3_chimera_wetlands', to: 'a3_temple_of_chaos', kind: 'side' });
     }
     return edges;
   }, [act, zones, byId, byName]);
@@ -168,7 +203,7 @@ export function ActRouteMap({ language, act, zones, currentGuideId, matchingIds,
   const selectedIsNext = Boolean(selected && selected.entry.guide.id === nextId);
 
   return (
-    <section className={`companion-block act-atlas ${act === 2 ? 'is-act-two' : 'is-act-one'}`} aria-label={mapLabel(language, `Схема маршрута Акта ${act}`, `Act ${act} route diagram`)}>
+    <section className={`companion-block act-atlas ${act === 3 ? 'is-act-three' : act === 2 ? 'is-act-two' : 'is-act-one'}`} aria-label={mapLabel(language, `Схема маршрута Акта ${act}`, `Act ${act} route diagram`)}>
       <div className="act-atlas-header">
         <div>
           <strong>{mapLabel(language, `Карта маршрута · Акт ${act}`, `Route map · Act ${act}`)}</strong>
