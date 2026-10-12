@@ -177,20 +177,28 @@ export function ActRouteMap({ language, zones, currentGuideId, matchingIds, onSh
               const isMatch = matches.has(id);
               const bonusCount = zone.bonusRewards.length;
               const bonusDone = bonusCount > 0 && zone.bonusRewards.every((bonus) => bonus.done);
+              const edgeClass = point[0] > 70
+                ? ' edge-right'
+                : point[0] < 27
+                  ? ' edge-left'
+                  : point[1] > 70
+                    ? ' edge-bottom'
+                    : point[1] < 22
+                      ? ' edge-top'
+                      : '';
               return (
                 <button
                   key={id}
                   type="button"
                   style={{ left: `${point[0]}%`, top: `${point[1]}%` }}
-                  className={`act-atlas-node status-${zone.entry.status}${isCurrent ? ' is-live' : ''}${isNext ? ' is-next' : ''}${isSelected ? ' is-selected' : ''}${!isMatch ? ' is-filtered' : ''}${point[0] > 69 ? ' edge-right' : point[0] < 26 ? ' edge-left' : point[1] > 70 ? ' edge-bottom' : ''}`}
+                  className={`act-atlas-node status-${zone.entry.status}${isCurrent ? ' is-live' : ''}${isNext ? ' is-next' : ''}${isSelected ? ' is-selected' : ''}${!isMatch ? ' is-filtered' : ''}${edgeClass}`}
                   aria-pressed={isSelected}
                   aria-label={`${zone.routeCardTitle}${isCurrent ? mapLabel(language, ', текущая зона', ', current zone') : ''}${isNext ? mapLabel(language, ', следующая по гайду', ', next in guide') : ''}${bonusCount ? mapLabel(language, `, бонусов: ${bonusCount}`, `, bonuses: ${bonusCount}`) : ''}`}
-                  title={`${zone.routeCardTitle}${bonusCount ? ` · ${zone.bonusRewards.map((b) => b.title).join(', ')}` : ''}`}
                   onClick={() => { setSelectedId(id); setUserSelected(true); }}
                 >
                   <span className="act-atlas-node-ring"><span className="act-atlas-node-core">{zone.entry.guide.id.includes('encampment') || zone.entry.guide.id.includes('village') ? '⌂' : isCurrent ? '◆' : '✦'}</span></span>
                   {bonusCount > 0 && (
-                    <span className={`act-atlas-bonus${bonusDone ? ' is-collected' : ''}`} title={zone.bonusRewards.map((b) => `${b.title} (${b.done ? mapLabel(language, 'учтено', 'recorded') : mapLabel(language, 'не подтверждено', 'not confirmed')})`).join('\n')}>
+                    <span className={`act-atlas-bonus${bonusDone ? ' is-collected' : ''}`} aria-hidden="true">
                       <UiIcon name={bonusDone ? 'check' : 'diamond'} />{bonusCount > 1 ? bonusCount : ''}
                     </span>
                   )}
