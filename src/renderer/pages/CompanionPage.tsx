@@ -2229,6 +2229,7 @@ export function CompanionPage() {
         <CompanionNavigation
           activeSection={activeSection}
           activeTab={activeTab}
+          language={language}
           sectionLabels={sectionLabels}
           tabLabels={tabLabels}
           onSectionChange={selectSection}

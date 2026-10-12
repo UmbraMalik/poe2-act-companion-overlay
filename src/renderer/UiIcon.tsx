@@ -3,6 +3,15 @@ import { Fragment, type ReactNode } from 'react';
 export type UiIconName =
   | 'arrow-right'
   | 'check'
+  | 'bell'
+  | 'chart'
+  | 'compass'
+  | 'flag'
+  | 'gift'
+  | 'map'
+  | 'panel-collapse'
+  | 'panel-expand'
+  | 'timer'
   | 'chevron-down'
   | 'chevron-up'
   | 'circle'
@@ -32,6 +41,24 @@ function getIconShape(name: UiIconName): ReactNode {
       return <><path d="M5 12h14" /><path d="m14 7 5 5-5 5" /></>;
     case 'check':
       return <path d="m5 12.5 4.1 4.1L19 6.8" />;
+    case 'bell':
+      return <><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9Z" /><path d="M10 21h4" /></>;
+    case 'chart':
+      return <><path d="M4 20V4M4 20h17" /><path d="M8 16V12M12.5 16V7M17 16V10" /></>;
+    case 'compass':
+      return <><circle cx="12" cy="12" r="9" /><path d="m15.7 8.3-2.4 5-5 2.4 2.4-5 5-2.4Z" /></>;
+    case 'flag':
+      return <><path d="M5 21V4" /><path d="M5 5c4-3 7 3 12 0v11c-5 3-8-3-12 0" /></>;
+    case 'gift':
+      return <><rect x="3" y="10" width="18" height="11" rx="2" /><path d="M3 14h18M12 10v11M3 10V7h18v3" /><path d="M12 7C9 7 6 6 6 4.5A2 2 0 0 1 8 2.5c2 0 4 4.5 4 4.5Zm0 0c3 0 6-1 6-2.5A2 2 0 0 0 16 2.5C14 2.5 12 7 12 7Z" /></>;
+    case 'map':
+      return <><path d="m3 5 6-2 6 2 6-2v16l-6 2-6-2-6 2V5Z" /><path d="M9 3v16M15 5v16" /></>;
+    case 'panel-collapse':
+      return <><rect x="3" y="4" width="18" height="16" rx="2" /><path d="M9 4v16m8-11-3 3 3 3" /></>;
+    case 'panel-expand':
+      return <><rect x="3" y="4" width="18" height="16" rx="2" /><path d="M9 4v16m5-11 3 3-3 3" /></>;
+    case 'timer':
+      return <><circle cx="12" cy="13" r="8" /><path d="M12 8v5l3 2M9 2h6" /></>;
     case 'chevron-down':
       return <path d="m6.5 9.5 5.5 5 5.5-5" />;
     case 'chevron-up':
