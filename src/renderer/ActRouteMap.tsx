@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { getGuideView } from '../i18n/data';
 import type { AppLanguage, GuideEntry } from '../shared/types';
 import { RouteCardBonusPanel, type RouteCardBonusModel } from './RouteCardBonuses';
@@ -52,11 +52,19 @@ function normalizedName(name: string): string {
   return name.trim().toLocaleLowerCase('ru').replace(/\s+/g, ' ');
 }
 
+// Keep complete markers, bonus badges and labels inside the visible map frame.
+// Positions are illustrative; both nodes and guide-derived edges use the same inset.
+function insetMapPoint(point: readonly [number, number]): readonly [number, number] {
+  return [13 + (point[0] - 13) * .9, 14 + (point[1] - 13) * .86];
+}
+
 function buildRoutePath(from: readonly [number, number], to: readonly [number, number]) {
-  const x1 = from[0] * 10;
-  const y1 = from[1] * 7.4;
-  const x2 = to[0] * 10;
-  const y2 = to[1] * 7.4;
+  const start = insetMapPoint(from);
+  const end = insetMapPoint(to);
+  const x1 = start[0] * 10;
+  const y1 = start[1] * 7.4;
+  const x2 = end[0] * 10;
+  const y2 = end[1] * 7.4;
   const bend = Math.max(14, Math.min(65, Math.abs(x2 - x1) * .22));
   const sign = y2 >= y1 ? 1 : -1;
   return `M${x1},${y1} C${x1 + bend},${y1 + sign * 12} ${x2 - bend},${y2 - sign * 12} ${x2},${y2}`;
@@ -76,7 +84,6 @@ export function ActRouteMap({ language, zones, currentGuideId, matchingIds, onSh
   const liveId = activeZone?.entry.guide.id ?? null;
   const [selectedId, setSelectedId] = useState<string | null>(liveId);
   const [userSelected, setUserSelected] = useState(false);
-  const mapViewport = useRef<HTMLDivElement | null>(null);
 
   // Follow live position until the user chooses another location manually.
   useEffect(() => {
@@ -89,17 +96,6 @@ export function ActRouteMap({ language, zones, currentGuideId, matchingIds, onSh
   const matches = new Set(matchingIds);
   const nextActive = activeZone ? byName.get(normalizedName(activeZone.entry.guide.next_zone_ru)) ?? null : null;
   const nextId = nextActive?.entry.guide.id ?? null;
-
-  // Keep the player's actual location in view even when the atlas is wider than the window.
-  useEffect(() => {
-    const viewport = mapViewport.current;
-    const point = liveId ? ACT_ONE_POSITIONS[liveId] : null;
-    if (!viewport || !point) return;
-    const x = viewport.scrollWidth * point[0] / 100;
-    const y = viewport.scrollHeight * point[1] / 100;
-    viewport.scrollLeft = Math.max(0, x - viewport.clientWidth / 2);
-    viewport.scrollTop = Math.max(0, y - viewport.clientHeight / 2);
-  }, [liveId]);
 
   const connections = useMemo(() => {
     const edges: { from: string; to: string; kind: 'route' | 'side' }[] = [];
@@ -151,7 +147,7 @@ export function ActRouteMap({ language, zones, currentGuideId, matchingIds, onSh
         </div>
       </div>
       <div className="act-atlas-layout">
-        <div ref={mapViewport} className="act-atlas-scroll" tabIndex={0} aria-label={mapLabel(language, 'Интерактивная карта маршрута. При необходимости прокручивайте её.', 'Interactive route diagram. Scroll if necessary.')}>
+        <div className="act-atlas-scroll" role="group" aria-label={mapLabel(language, 'Интерактивная карта маршрута. Весь акт виден сразу.', 'Interactive route map. The entire act is visible at once.')}>
           <div className="act-atlas-canvas">
             <svg className="act-atlas-edges" viewBox="0 0 1000 740" preserveAspectRatio="none" aria-hidden="true" focusable="false">
               <defs>
@@ -168,8 +164,9 @@ export function ActRouteMap({ language, zones, currentGuideId, matchingIds, onSh
             <div className="act-atlas-compass" aria-hidden="true">✦ <span>N</span></div>
             {zones.map((zone) => {
               const id = zone.entry.guide.id;
-              const point = ACT_ONE_POSITIONS[id];
-              if (!point) return null;
+              const originalPoint = ACT_ONE_POSITIONS[id];
+              if (!originalPoint) return null;
+              const point = insetMapPoint(originalPoint);
               const isCurrent = id === liveId;
               const isNext = id === nextId;
               const isSelected = selected?.entry.guide.id === id;
