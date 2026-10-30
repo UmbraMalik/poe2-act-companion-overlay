@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "totalDownloads": 1050,
+  "totalDownloads": 1052,
   "latestVersion": "0.6.1",
-  "updatedAt": "2026-10-30T15:48:57.418Z",
+  "updatedAt": "2026-10-30T20:17:12.730Z",
   "source": "monotonic-github-releases-snapshot",
   "countsOnly": "installer .exe assets; latest.yml, .blockmap and source archives are excluded",
-  "currentInstallerDownloads": 6,
-  "githubCurrentInstallerDownloads": 1050,
+  "currentInstallerDownloads": 8,
+  "githubCurrentInstallerDownloads": 1052,
   "manualAdjustmentDownloads": 0,
   "installerDownloadsByVersion": {
     "0.1.0": 1,
@@ -50,7 +50,7 @@
     "0.5.5b": 23,
     "0.5.5c": 45,
     "0.6.0": 12,
-    "0.6.1": 6
+    "0.6.1": 8
   },
   "trackedInstallerAssets": 43,
   "visibleInstallerAssets": 42,
@@ -63,7 +63,7 @@
       "version": "0.4.1",
       "file": "POE2-Act-Companion-Overlay-Setup-0.4.1.exe",
       "countedDownloads": 0,
-      "detectedAt": "2026-10-30T15:48:57.418Z"
+      "detectedAt": "2026-10-30T20:17:12.730Z"
     }
   ]
 }
