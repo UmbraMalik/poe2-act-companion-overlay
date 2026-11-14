@@ -1,9 +1,11 @@
 import { useMemo, useState } from 'react';
 import { getCampaignBonusView, getGuideView, translateDataText, type LocalizedGuideEntryView } from '../i18n/data';
 import { translate } from '../i18n/translations';
+import { isLegacyInterludeAct } from '../shared/campaign-profile';
 import { isEndgameT15Act } from '../shared/timers';
 import type {
   AppLanguage,
+  CampaignProfile,
   AppSnapshot,
   CampaignBonusDefinition,
   GuideEntry,
@@ -61,16 +63,16 @@ interface CurrentRunHubProps {
   onOpenCurrentActRoute: () => void;
 }
 
-function formatActTitle(act: ZoneAct | null, language: AppLanguage) {
+function formatActTitle(act: ZoneAct | null, language: AppLanguage, profile: CampaignProfile = 'legacy-0.5') {
   if (act === null) {
     return translate(language, 'companion.routeTitleFallback');
   }
 
-  if (typeof act === 'number' && isEndgameT15Act(act)) {
+  if (typeof act === 'number' && isEndgameT15Act(act, profile)) {
     return translate(language, 'route.endgameToT15');
   }
 
-  return act === 'interlude'
+  return isLegacyInterludeAct(act, profile)
     ? translate(language, 'companion.interludes')
     : translate(language, 'route.act', { act });
 }
@@ -495,7 +497,7 @@ export function CurrentRunHub({
       <section className="companion-block zone-command-center" aria-label={translate(language, 'companion.zoneHubCommandCenter')}>
         <div className="zone-command-header">
           <div className="zone-command-location">
-            <p className="eyebrow">{formatActTitle(nowAct, language)}</p>
+            <p className="eyebrow">{formatActTitle(nowAct, language, snapshot.config.campaignProfile)}</p>
             <h2>{sceneName}</h2>
             <div className={`zone-health-row is-${zoneRecognition.tone}`}>
               <strong>{zoneRecognition.label}</strong>

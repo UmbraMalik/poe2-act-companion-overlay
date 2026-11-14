@@ -17,7 +17,7 @@ export interface RouteMapZone {
 
 interface ActRouteMapProps {
   language: AppLanguage;
-  act: 1 | 2 | 3 | 4 | 5;
+  act: 1 | 2 | 3 | 4 | 5 | 6;
   interludeChapter?: InterludeChapterId;
   zones: RouteMapZone[];
   currentGuideId: string | null;
@@ -155,8 +155,8 @@ function getMapGuideList(guide: GuideEntry, language: AppLanguage, key: string):
 }
 
 export function ActRouteMap({ language, act, interludeChapter, zones, currentGuideId, matchingIds, canLocateCurrent, onLocateCurrent, onShowList }: ActRouteMapProps) {
-  const chapter = act === 5 ? INTERLUDE_CHAPTERS.find((entry) => entry.id === interludeChapter) : undefined;
-  const mapPositions = act === 5 ? (chapter?.positions ?? {}) : act === 4 ? ACT_FOUR_POSITIONS : act === 3 ? ACT_THREE_POSITIONS : act === 2 ? ACT_TWO_POSITIONS : ACT_ONE_POSITIONS;
+  const chapter = act === 5 && interludeChapter ? INTERLUDE_CHAPTERS.find((entry) => entry.id === interludeChapter) : undefined;
+  const mapPositions = chapter ? chapter.positions : act >= 5 ? {} : act === 4 ? ACT_FOUR_POSITIONS : act === 3 ? ACT_THREE_POSITIONS : act === 2 ? ACT_TWO_POSITIONS : ACT_ONE_POSITIONS;
   const activeZone = zones.find(({ entry }) => entry.guide.id === currentGuideId)
     ?? zones.find(({ entry }) => entry.status === 'current')
     ?? null;
@@ -225,7 +225,18 @@ export function ActRouteMap({ language, act, interludeChapter, zones, currentGui
   }, [act, zones, byId, byName]);
 
   if (!zones.length) {
-    return <section className="companion-block act-atlas-empty">{mapLabel(language, 'Нет данных для карты.', 'No map data available.')}</section>;
+    return (
+      <section className="companion-block act-atlas-empty">
+        <h3>{mapLabel(language, `Акт ${act} · подготовка 1.0`, `Act ${act} · 1.0 preview`)}</h3>
+        <p className="helper-text">{mapLabel(language,
+          'Карта подготовлена. После выхода обновления добавим реальные зоны, переходы и бонусы из игрового лога. Сейчас маршрут не выдумываем.',
+          'Map shell is ready. Actual zones, transitions and rewards will be added after verification in game logs. No speculative route is shown.'
+        )}</p>
+        <button type="button" className="button-secondary" onClick={onShowList}>
+          <UiIcon name="menu" /> {mapLabel(language, 'Открыть список', 'Open list')}
+        </button>
+      </section>
+    );
   }
 
   const selectedView = selected ? getGuideView(selected.entry.guide, language) : null;
@@ -238,7 +249,7 @@ export function ActRouteMap({ language, act, interludeChapter, zones, currentGui
   const selectedIsNext = Boolean(selected && selected.entry.guide.id === nextId);
 
   return (
-    <section className={`companion-block act-atlas ${act === 5 ? `is-interlude is-interlude-${interludeChapter ?? 'khari'}` : act === 4 ? 'is-act-four' : act === 3 ? 'is-act-three' : act === 2 ? 'is-act-two' : 'is-act-one'}`} aria-label={chapter ? mapLabel(language, `Схема Интерлюдии «${chapter.titleRu}»`, `Interlude route diagram: ${chapter.titleEn}`) : mapLabel(language, `Схема маршрута Акта ${act}`, `Act ${act} route diagram`)}>
+    <section className={`companion-block act-atlas ${chapter ? `is-interlude is-interlude-${interludeChapter ?? 'khari'}` : act === 4 ? 'is-act-four' : act === 3 ? 'is-act-three' : act === 2 ? 'is-act-two' : 'is-act-one'}`} aria-label={chapter ? mapLabel(language, `Схема Интерлюдии «${chapter.titleRu}»`, `Interlude route diagram: ${chapter.titleEn}`) : mapLabel(language, `Схема маршрута Акта ${act}`, `Act ${act} route diagram`)}>
       <div className="act-atlas-header">
         <div>
           <strong>{chapter ? mapLabel(language, `Интерлюдии · ${chapter.titleRu}`, `Interludes · ${chapter.titleEn}`) : mapLabel(language, `Карта маршрута · Акт ${act}`, `Route map · Act ${act}`)}</strong>

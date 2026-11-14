@@ -6,7 +6,7 @@ import type {
   HotkeySettings
 } from './types';
 
-export const CURRENT_CONFIG_SCHEMA_VERSION = 2;
+export const CURRENT_CONFIG_SCHEMA_VERSION = 3;
 
 export const DEFAULT_OVERLAY_BOUNDS = {
   width: 500,
@@ -73,6 +73,7 @@ export const DEFAULT_RUN_TIMER_SETTINGS: RunTimerSettings = {
 
 export const DEFAULT_CONFIG: AppConfig = {
   configSchemaVersion: CURRENT_CONFIG_SCHEMA_VERSION,
+  campaignProfile: 'legacy-0.5',
   appLanguage: 'ru',
   logFilePath: null,
   logFileSelectionMode: null,
@@ -132,6 +133,7 @@ export const DEFAULT_CONFIG: AppConfig = {
   visitedZones: [],
   zoneTimeHistory: [],
   bestRun: null,
+  bestRunsByProfile: {},
   lastRunSummary: null,
   runHistory: [],
   levelRemindersState: {

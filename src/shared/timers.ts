@@ -1,13 +1,19 @@
+import { getEndgameT15Act } from './campaign-profile';
+import type { CampaignProfile } from './types';
 import type {
   RunTimerSettings,
   RunTimerState,
   TownTimerState
 } from './types';
 
+// Historical saves use split 6 for endgame; release-1.0 uses split 7.
 export const ENDGAME_T15_ACT = 6;
 
-export function isEndgameT15Act(act: number | null | undefined): boolean {
-  return act === ENDGAME_T15_ACT;
+export function isEndgameT15Act(
+  act: number | null | undefined,
+  profile: CampaignProfile = 'legacy-0.5'
+): boolean {
+  return act === getEndgameT15Act(profile);
 }
 
 export function formatDuration(ms: number): string {

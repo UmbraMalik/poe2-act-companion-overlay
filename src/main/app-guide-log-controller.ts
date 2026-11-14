@@ -2,7 +2,7 @@ import { access, stat } from 'node:fs/promises';
 import { constants } from 'node:fs';
 import { join } from 'node:path';
 import { app } from 'electron';
-import { ENDGAME_T15_ACT } from '../shared/timers';
+import { getEndgameT15Act, isGuideInCampaign } from '../shared/campaign-profile';
 import type { ZoneMatchExtractor } from './services/zone-match-extractor';
 import {
   inferActHintFromInternalAreaId as inferActHintFromInternalAreaIdFromScene,
@@ -38,7 +38,7 @@ type ZoneMatchExtractionContext = {
 export const POST_INTERLUDES_KINGSMARCH_GUIDE_ID = 'post_interludes_kingsmarch';
 
 type ContextualGuideApp = {
-    config: Pick<AppConfig, 'zoneProgress' | 'campaignBonusProgress'>;
+    config: Pick<AppConfig, 'zoneProgress' | 'campaignBonusProgress' | 'campaignProfile'>;
     currentZone?: {
         guide?: Pick<GuideEntry, 'act'> | null;
         actHint?: number | null;
@@ -59,6 +59,9 @@ export function resolveContextualGuide(
     app: ContextualGuideApp,
     guide: GuideEntry | null
 ): GuideEntry | null {
+    if (guide && !isGuideInCampaign(guide, app.config.campaignProfile)) {
+        return null;
+    }
     if (guide?.id !== 'a4_kingsmarch' && guide?.id !== POST_INTERLUDES_KINGSMARCH_GUIDE_ID) {
         return guide;
     }
@@ -67,7 +70,7 @@ export function resolveContextualGuide(
         app.currentZone?.guide?.act ??
         app.currentZone?.actHint ??
         null;
-    const contextualGuideId = campaignAct === 5 && hasCompletedAllInterludeBranches(app.config)
+    const contextualGuideId = app.config.campaignProfile === 'legacy-0.5' && campaignAct === 5 && hasCompletedAllInterludeBranches(app.config)
         ? POST_INTERLUDES_KINGSMARCH_GUIDE_ID
         : 'a4_kingsmarch';
     return app.guideService.findById(contextualGuideId) ?? guide;
@@ -112,7 +115,7 @@ export function runRestoreLastZoneFromConfig(this: any) {
         const matchedGuide = this.guideService.matchByZoneName(this.config.lastZoneName).guide;
         const shouldPreserveRestoredKingsmarch = matchedGuide?.id === 'a4_kingsmarch' ||
             matchedGuide?.id === POST_INTERLUDES_KINGSMARCH_GUIDE_ID;
-        const guide = shouldPreserveRestoredKingsmarch
+        const guide = shouldPreserveRestoredKingsmarch && matchedGuide && isGuideInCampaign(matchedGuide, this.config.campaignProfile)
             ? matchedGuide
             : resolveContextualGuide(this, matchedGuide);
         this.currentZone = {
@@ -368,8 +371,8 @@ export function runSetTownScene(this: any, rawZoneName: any, source: any) {
             this,
             rawZoneName ? this.guideService.findByZoneName(rawZoneName) : null
         );
-        const townActHint = matchedTownGuide?.act ?? inferActHintFromTownScene(rawZoneName);
-        const shouldClearGuide = townActHint === ENDGAME_T15_ACT ||
+        const townActHint = matchedTownGuide?.act ?? inferActHintFromTownScene(rawZoneName, this.config.campaignProfile);
+        const shouldClearGuide = townActHint === getEndgameT15Act(this.config.campaignProfile) ||
             this.normalizeSceneSource(rawZoneName) === 'clearfell encampment';
         const nextTownGuide = matchedTownGuide ??
             (shouldClearGuide ? null : this.currentZone.guide);
@@ -492,7 +495,7 @@ export function runBuildRunSummary(this: any, runTimer: any, totalElapsedMs: any
         const longestZones = [...this.config.zoneTimeHistory]
             .sort((left: any, right: any) => right.elapsedMs - left.elapsedMs)
             .slice(0, 5);
-        const previousPb = this.config.bestRun;
+        const previousPb = this.config.bestRunsByProfile[this.config.campaignProfile] ?? null;
         const isNewPb = previousPb === null || totalElapsedMs < previousPb.totalElapsedMs;
         // Only recorded zones are considered. An absent log event is not proof that
         // a player skipped a quest or permanent bonus.
@@ -545,7 +548,9 @@ export function runNormalizeSceneSource(this: any, rawSceneSource: any) {
     }
 
 export function runGetZoneMatchActHint(this: any, zoneMatch: any) {
-        return zoneMatch?.guide?.act ?? inferActHintFromInternalAreaIdFromScene(zoneMatch?.extractedInternalAreaId) ?? null;
+        const guide = zoneMatch?.guide;
+        return (guide && isGuideInCampaign(guide, this.config.campaignProfile) ? guide.act : null) ??
+            inferActHintFromInternalAreaIdFromScene(zoneMatch?.extractedInternalAreaId, this.config.campaignProfile) ?? null;
     }
 
 export function runGetFallbackActHintForScene(this: any, sceneKind: any, explicitActHint: any = null) {

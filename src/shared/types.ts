@@ -60,6 +60,7 @@ export type OverlayTextSize = 0 | 1 | 2 | 3;
 export type VisualFxIntensity = 'off' | 'subtle' | 'normal' | 'rich';
 export type OverlayMode = 'full' | 'timer_only';
 export type AppLanguage = 'ru' | 'en';
+export type CampaignProfile = 'legacy-0.5' | 'release-1.0';
 export type AppTheme = 'classic' | 'dark_fantasy';
 
 export interface OverlayVisibleSections {
@@ -103,6 +104,8 @@ export interface GuideDetails {
 export interface GuideEntry {
   id: string;
   act: number | 'interlude';
+  /** Optional opt-in; required for new 1.0 Act 5–6 guide entries. */
+  campaignProfiles?: CampaignProfile[];
   zone_en: string;
   zone_ru: string;
   recommended_level: number | null;
@@ -381,6 +384,7 @@ export interface RunSummary {
 
 
 export interface SavedRunHistoryEntry {
+  campaignProfile: CampaignProfile;
   id: string;
   label: string;
   savedAt: number;
@@ -395,6 +399,7 @@ export interface SavedRunHistoryEntry {
 
 export interface AppConfig {
   configSchemaVersion: number;
+  campaignProfile: CampaignProfile;
   appLanguage: AppLanguage;
   logFilePath: string | null;
   logFileSelectionMode: 'auto' | 'manual' | null;
@@ -429,6 +434,7 @@ export interface AppConfig {
   visitedZones: VisitedZoneEntry[];
   zoneTimeHistory: ZoneTimeEntry[];
   bestRun: BestRunSummary | null;
+  bestRunsByProfile: Partial<Record<CampaignProfile, BestRunSummary>>;
   lastRunSummary: RunSummary | null;
   runHistory: SavedRunHistoryEntry[];
   levelRemindersState: LevelRemindersState;
@@ -579,6 +585,7 @@ export interface AutoUpdateState {
 }
 
 export interface SettingsPatch {
+  campaignProfile?: CampaignProfile;
   appLanguage?: AppLanguage;
   overlayOpacity?: number;
   overlayMovementLocked?: boolean;

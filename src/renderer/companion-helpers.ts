@@ -1,3 +1,4 @@
+import { getCampaignActCount, isGuideInCampaign } from '../shared/campaign-profile';
 import {
   buildChecklistViewItems,
   shouldItemBeMissed
@@ -349,9 +350,9 @@ export function getRouteActs(
   const grouped = new Map<string, RouteActGroup>();
   const visitedZoneIds = new Set(snapshot.config.visitedZones.map((entry) => entry.zoneId));
 
-  for (const guide of snapshot.guideEntries) {
+  for (const guide of snapshot.guideEntries.filter((entry) => isGuideInCampaign(entry, snapshot.config.campaignProfile))) {
     const key = guide.act === 'interlude' ? 'interlude' : `act-${guide.act}`;
-    const label = guide.act === 'interlude' || guide.act === 5
+    const label = guide.act === 'interlude' || (guide.act === 5 && snapshot.config.campaignProfile === 'legacy-0.5')
       ? translate(language, 'route.interludes')
       : translate(language, 'route.act', { act: guide.act });
 
@@ -367,9 +368,21 @@ export function getRouteActs(
     grouped.get(key)!.zones.push(getRouteZoneStatus(guide, snapshot, visitedZoneIds));
   }
 
-  const actFive = grouped.get('act-5');
+  const actFive = snapshot.config.campaignProfile === 'legacy-0.5' ? grouped.get('act-5') : null;
   if (actFive) {
     actFive.zones = orderActFiveForRecommendedPowerRoute(actFive.zones);
+  }
+
+  if (snapshot.config.campaignProfile === 'release-1.0') {
+    for (let act = 5; act <= getCampaignActCount(snapshot.config.campaignProfile); act += 1) {
+      if (grouped.has(`act-${act}`)) continue;
+      grouped.set(`act-${act}`, {
+        key: `act-${act}`,
+        label: translate(language, 'route.act', { act }),
+        act,
+        zones: [] // Do not invent unreleased zone names or links.
+      });
+    }
   }
 
   return [...grouped.values()].sort((left, right) => {

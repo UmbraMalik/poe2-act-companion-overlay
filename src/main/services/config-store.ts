@@ -1,4 +1,5 @@
 import { isQimahChoice } from '../../shared/campaign-bonus-choice';
+import { normalizeCampaignProfile } from '../../shared/campaign-profile';
 import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { basename, dirname, extname, join } from 'node:path';
 import {
@@ -552,6 +553,7 @@ function normalizeSavedRunHistoryEntry(value: unknown): SavedRunHistoryEntry | n
   const totalElapsedMs = nonNegativeMs(value.totalElapsedMs);
 
   return {
+    campaignProfile: normalizeCampaignProfile(value.campaignProfile),
     id,
     label: safeString(value.label, '') ?? '',
     savedAt,
@@ -599,6 +601,25 @@ export function normalizeAppConfig(config: Partial<AppConfig> = {}): AppConfig {
       }
     : DEFAULT_CONFIG.bestRun;
 
+  const savedBestRuns = isRecord(rawConfig.bestRunsByProfile) ? rawConfig.bestRunsByProfile : {};
+  const bestRunsByProfile: AppConfig['bestRunsByProfile'] = {};
+  for (const profile of ['legacy-0.5', 'release-1.0'] as const) {
+    const source = savedBestRuns[profile];
+    if (isRecord(source)) {
+      bestRunsByProfile[profile] = {
+        totalElapsedMs: nonNegativeMs(source.totalElapsedMs),
+        finishedAt: finiteTimestamp(source.finishedAt) ?? 0,
+        actSplits: Array.isArray(source.actSplits)
+          ? source.actSplits.map(normalizeRunTimerActSplit).filter((split): split is RunTimerActSplit => split !== null)
+          : []
+      };
+    }
+  }
+  // Old configs have only bestRun. In the old data it always belongs to 0.5.
+  if (!bestRunsByProfile['legacy-0.5'] && bestRun) {
+    bestRunsByProfile['legacy-0.5'] = bestRun;
+  }
+
   const lastRunSummary = isRecord(rawConfig.lastRunSummary)
     ? {
         totalElapsedMs: nonNegativeMs(rawConfig.lastRunSummary.totalElapsedMs),
@@ -626,6 +647,7 @@ export function normalizeAppConfig(config: Partial<AppConfig> = {}): AppConfig {
   return {
     ...DEFAULT_CONFIG,
     configSchemaVersion: CURRENT_CONFIG_SCHEMA_VERSION,
+    campaignProfile: normalizeCampaignProfile(rawConfig.campaignProfile),
     appLanguage: rawConfig.appLanguage === 'en' ? 'en' : DEFAULT_CONFIG.appLanguage,
     logFilePath: safeString(rawConfig.logFilePath, DEFAULT_CONFIG.logFilePath),
     logFileSelectionMode:
@@ -672,6 +694,7 @@ export function normalizeAppConfig(config: Partial<AppConfig> = {}): AppConfig {
     visitedZones: normalizeVisitedZones(rawConfig.visitedZones),
     zoneTimeHistory: normalizeZoneTimeHistory(rawConfig.zoneTimeHistory),
     bestRun,
+    bestRunsByProfile,
     lastRunSummary,
     runHistory,
     levelRemindersState: normalizeLevelRemindersState(rawConfig.levelRemindersState),
@@ -730,6 +753,9 @@ export class ConfigStore {
 
   updateSettings(patch: SettingsPatch): AppConfig {
     return this.update({
+      ...(patch.campaignProfile !== undefined
+        ? { campaignProfile: normalizeCampaignProfile(patch.campaignProfile) }
+        : {}),
       ...(patch.appLanguage !== undefined
         ? { appLanguage: patch.appLanguage === 'en' ? 'en' : 'ru' }
         : {}),
@@ -856,6 +882,7 @@ export class ConfigStore {
       visitedZones: [],
       zoneTimeHistory: [],
       bestRun: null,
+      bestRunsByProfile: {},
       lastRunSummary: null,
       campaignBonusProgress: {},
       levelRemindersState: {

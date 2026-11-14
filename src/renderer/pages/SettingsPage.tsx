@@ -8,6 +8,7 @@ import { formatZoneMatcherReason, translateSystemText } from '../../i18n/runtime
 import { translate } from '../../i18n/translations';
 import { getAppThemeClassName } from '../theme';
 import { SettingsSelect } from '../settings/SettingsSelect';
+import { CampaignProfileSelector } from '../settings/CampaignProfileSelector';
 import { OverlayLayoutEditor } from '../settings/OverlayLayoutEditor';
 import { OverlayLivePreview } from '../settings/OverlayLivePreview';
 import { SettingsWindowResizeGrip } from '../settings/SettingsWindowResizeGrip';
@@ -51,7 +52,6 @@ import type {
 } from '../../shared/types';
 
 const SHOW_DEVELOPER_SETTINGS = import.meta.env.DEV;
-
 function getDefaultDevLine(language: AppLanguage): string {
   return language === 'en'
     ? '2026/05/12 12:00:00 You have entered area: Grelwood'
@@ -63,7 +63,6 @@ function getDefaultRewardLine(language: AppLanguage): string {
     ? 'Player has received +10% to [Resistances|Cold].'
     : 'Игрок получил +10% к сопротивлению [Resistances|холоду].';
 }
-
 const DEFAULT_HOTKEYS: HotkeySettings = {
   markChecklistDone: 'F6',
   undoChecklistMark: 'F7',
@@ -71,7 +70,6 @@ const DEFAULT_HOTKEYS: HotkeySettings = {
   openCompanion: 'F9',
   toggleOverlayMode: 'F10'
 };
-
 const HOTKEY_LABELS: Array<{ key: keyof HotkeySettings; labelKey: string; noteKey: string }> = [
   { key: 'markChecklistDone', labelKey: 'settings.hotkeyMarkChecklist', noteKey: 'settings.hotkeyManual' },
   { key: 'undoChecklistMark', labelKey: 'settings.hotkeyUndoChecklist', noteKey: 'settings.hotkeyManual' },
@@ -768,8 +766,9 @@ export function SettingsPage() {
               />
             </label>
           </div>
+          <CampaignProfileSelector language={appLanguage} value={config.campaignProfile}
+            onChange={(campaignProfile) => { void runTask('change-campaign-profile', () => window.poe2Overlay.updateSettings({ campaignProfile })); }} />
         </section>
-
         <section id="settings-updates" className="settings-card" hidden={!isSettingsSectionVisible('settings-updates')}>
           <div className="settings-card-header">
             <div>

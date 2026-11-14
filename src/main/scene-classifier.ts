@@ -1,6 +1,6 @@
 import townScenes from '../data/town-scenes.json';
-import { ENDGAME_T15_ACT } from '../shared/timers';
-import type { GuideEntry } from '../shared/types';
+import { getEndgameT15Act } from '../shared/campaign-profile';
+import type { CampaignProfile, GuideEntry } from '../shared/types';
 
 const TOWN_ZONE_HINTS = ['encampment', 'camp', 'town', 'hideout', 'лагерь', 'город', 'убежище'];
 
@@ -14,6 +14,7 @@ const NON_GAMEPLAY_SCENES = new Set([
   'акт 3',
   'акт 4',
   'акт 5',
+  'акт 6',
   'логин',
   'login',
   'меню',
@@ -42,11 +43,13 @@ const PENDING_AREA_ID_HOLD_SCENES = new Set([
   'act 3',
   'act 4',
   'act 5',
+  'act 6',
   'акт 1',
   'акт 2',
   'акт 3',
   'акт 4',
   'акт 5',
+  'акт 6',
   'interlude',
   'интерлюдия'
 ]);
@@ -55,10 +58,11 @@ const TOWN_ACT_HINTS = new Map<string, number>([
   ['kingsmarch', 4],
   ['кингсмарк', 4],
   ['кингсмарш', 4],
-  ['g_endgame_town', ENDGAME_T15_ACT],
-  ['убежище в зиккурате', ENDGAME_T15_ACT],
-  ['ziggurat refuge', ENDGAME_T15_ACT],
-  ['endgame town', ENDGAME_T15_ACT]
+  // Explicitly endgame (not Act 6) in either campaign profile.
+  ['g_endgame_town', -1],
+  ['убежище в зиккурате', -1],
+  ['ziggurat refuge', -1],
+  ['endgame town', -1]
 ]);
 
 const TOWN_SCENES = new Set(
@@ -74,11 +78,14 @@ export function normalizeSceneText(input: unknown): string {
     .trim();
 }
 
-export function inferActHintFromInternalAreaId(areaId: unknown): number | null {
+export function inferActHintFromInternalAreaId(
+  areaId: unknown,
+  profile: CampaignProfile = 'legacy-0.5'
+): number | null {
   const normalized = normalizeSceneText(areaId).replace(/^c_/, '');
 
   if (normalized === 'g_endgame_town') {
-    return ENDGAME_T15_ACT;
+    return getEndgameT15Act(profile);
   }
 
   if (/^g1(?:_|$)/.test(normalized)) {
@@ -97,9 +104,9 @@ export function inferActHintFromInternalAreaId(areaId: unknown): number | null {
     return 4;
   }
 
-  if (/^g5(?:_|$)/.test(normalized) || /^p[123](?:_|$)/.test(normalized)) {
-    return 5;
-  }
+  if (/^g5(?:_|$)/.test(normalized)) return 5;
+  if (/^g6(?:_|$)/.test(normalized) && profile === 'release-1.0') return 6;
+  if (/^p[123](?:_|$)/.test(normalized)) return profile === 'legacy-0.5' ? 5 : null;
 
   return null;
 }
@@ -119,8 +126,12 @@ export function isLoginLikeScene(rawSceneSource: unknown): boolean {
   return Boolean(normalized) && LOGIN_SCENE_HINTS.some((hint) => normalized.includes(hint));
 }
 
-export function inferActHintFromTownScene(rawSceneSource: unknown): number | null {
-  return TOWN_ACT_HINTS.get(normalizeSceneText(rawSceneSource)) ?? null;
+export function inferActHintFromTownScene(
+  rawSceneSource: unknown,
+  profile: CampaignProfile = 'legacy-0.5'
+): number | null {
+  const hint = TOWN_ACT_HINTS.get(normalizeSceneText(rawSceneSource));
+  return hint === -1 ? getEndgameT15Act(profile) : hint ?? null;
 }
 
 export function isTownSceneWithGuide(rawSceneSource: unknown, guide: GuideEntry | null | undefined): boolean {

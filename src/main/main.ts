@@ -925,6 +925,7 @@ export class PoeOverlayApp {
         const runLabelLocale = this.config.appLanguage === 'en' ? 'en-US' : 'ru-RU';
         const defaultRunLabel = `${this.t('companion.savedRunFallback')} · ${new Date(now).toLocaleString(runLabelLocale)}`;
         const entry: SavedRunHistoryEntry = {
+            campaignProfile: this.config.campaignProfile,
             id: `run-${now}-${Math.random().toString(36).slice(2, 8)}`,
             label: safeLabel ?? defaultRunLabel,
             savedAt: now,
@@ -966,6 +967,7 @@ export class PoeOverlayApp {
             };
         }
         this.config = this.configStore.update({
+            campaignProfile: entry.campaignProfile,
             ignoreExistingLogOnNextStart: true,
             runTimer: {
                 ...entry.runTimer,
@@ -980,6 +982,7 @@ export class PoeOverlayApp {
             zoneTimeHistory: [...entry.zoneTimeHistory],
             lastRunSummary: null
         });
+        this.rebindCurrentZoneAfterGuideReload();
         this.emitRunTimerState();
         this.refreshTrayMenu();
         this.broadcastState();

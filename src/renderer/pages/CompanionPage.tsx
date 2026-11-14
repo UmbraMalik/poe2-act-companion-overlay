@@ -26,6 +26,7 @@ import {
 } from '../../i18n/data';
 import { getCampaignBonusProvenanceView } from '../../shared/campaign-bonus-provenance';
 import { translate } from '../../i18n/translations';
+import { getCampaignActCount, isLegacyInterludeAct } from '../../shared/campaign-profile';
 import { isEndgameT15Act } from '../../shared/timers';
 import { getZoneRecognitionView } from '../log-health';
 import { RunHistoryDetailPanel } from '../RunHistoryDetailPanel';
@@ -50,7 +51,7 @@ import {
   type CompanionNavigationTab,
   type CompanionSection
 } from '../companion-navigation-state';
-import type { AppLanguage, CampaignBonusDefinition, CampaignBonusProgress, GuideEntry, RunSummary, RunTimerStatus, SavedRunHistoryEntry, ZoneAct } from '../../shared/types';
+import type { AppLanguage, CampaignBonusDefinition, CampaignBonusProgress, CampaignProfile, GuideEntry, RunSummary, RunTimerStatus, SavedRunHistoryEntry, ZoneAct } from '../../shared/types';
 
 type CompanionTab = CompanionNavigationTab;
 type RunConfirmDialog =
@@ -88,7 +89,6 @@ type RouteCardModel = {
 };
 
 const ROUTE_OVERVIEW_VISIBLE_ITEMS = 2;
-const TOTAL_CAMPAIGN_ACTS = 5;
 const EMPTY_CAMPAIGN_BONUS_PROGRESS: Record<string, CampaignBonusProgress> = {};
 
 function getRouteStatusLabel(
@@ -166,16 +166,16 @@ function formatRouteCardTitle(guide: GuideEntry, language: AppLanguage): string 
   return getGuideView(guide, language)?.zoneName ?? (language === 'en' ? guide.zone_en : guide.zone_ru);
 }
 
-function formatActTitle(act: ZoneAct | null, language: AppLanguage) {
+function formatActTitle(act: ZoneAct | null, language: AppLanguage, profile: CampaignProfile = 'legacy-0.5') {
   if (act === null) {
     return translate(language, 'companion.routeTitleFallback');
   }
 
-  if (typeof act === 'number' && isEndgameT15Act(act)) {
+  if (typeof act === 'number' && isEndgameT15Act(act, profile)) {
     return translate(language, 'route.endgameToT15');
   }
 
-  return act === 'interlude' || act === 5
+  return isLegacyInterludeAct(act, profile)
     ? translate(language, 'companion.interludes')
     : translate(language, 'route.act', { act });
 }
@@ -309,8 +309,8 @@ function renderActTimeTable(rows: ActTimeRow[], emptyMessage: string, language: 
   );
 }
 
-function getCompletedActCount(rows: ActTimeRow[]): number {
-  return rows.filter((row) => row.status === 'finished' && !isEndgameT15Act(row.act)).length;
+function getCompletedActCount(rows: ActTimeRow[], profile: CampaignProfile = 'legacy-0.5'): number {
+  return rows.filter((row) => row.status === 'finished' && !isEndgameT15Act(row.act, profile)).length;
 }
 
 function getSlowestActRow(rows: ActTimeRow[]): ActTimeRow | null {
@@ -319,8 +319,8 @@ function getSlowestActRow(rows: ActTimeRow[]): ActTimeRow | null {
     : null;
 }
 
-function getAverageActElapsedMs(rows: ActTimeRow[]): number | null {
-  const finishedRows = rows.filter((row) => row.status === 'finished' && row.elapsedMs > 0 && !isEndgameT15Act(row.act));
+function getAverageActElapsedMs(rows: ActTimeRow[], profile: CampaignProfile = 'legacy-0.5'): number | null {
+  const finishedRows = rows.filter((row) => row.status === 'finished' && row.elapsedMs > 0 && !isEndgameT15Act(row.act, profile));
 
   if (finishedRows.length === 0) {
     return null;
@@ -329,18 +329,18 @@ function getAverageActElapsedMs(rows: ActTimeRow[]): number | null {
   return Math.round(finishedRows.reduce((total, row) => total + row.elapsedMs, 0) / finishedRows.length);
 }
 
-function formatActLabel(act: number, language: AppLanguage): string {
-  return isEndgameT15Act(act)
+function formatActLabel(act: number, language: AppLanguage, profile: CampaignProfile = 'legacy-0.5'): string {
+  return isEndgameT15Act(act, profile)
     ? translate(language, 'route.endgameToT15')
     : translate(language, 'route.act', { act });
 }
 
-function formatCurrentSegmentMetric(row: ActTimeRow | null, language: AppLanguage): string {
+function formatCurrentSegmentMetric(row: ActTimeRow | null, language: AppLanguage, profile: CampaignProfile = 'legacy-0.5'): string {
   if (!row) {
     return translate(language, 'companion.noCurrentAct');
   }
 
-  return isEndgameT15Act(row.act)
+  return isEndgameT15Act(row.act, profile)
     ? translate(language, 'route.endgameToT15')
     : translate(language, 'companion.currentActMetric', { act: row.act });
 }
@@ -360,7 +360,7 @@ function renderMetricCard(
   );
 }
 
-function renderActTimeCards(rows: ActTimeRow[], emptyMessage: string, language: AppLanguage) {
+function renderActTimeCards(rows: ActTimeRow[], emptyMessage: string, language: AppLanguage, profile: CampaignProfile = 'legacy-0.5') {
   if (rows.length === 0) {
     return <p className="helper-text">{emptyMessage}</p>;
   }
@@ -381,7 +381,7 @@ function renderActTimeCards(rows: ActTimeRow[], emptyMessage: string, language: 
           <div key={`act-time-row-${row.act}`} className={`act-split-row ${isCurrent ? 'is-current' : 'is-finished'}`} role="row">
             <span className="act-split-act" role="cell">
               <small>{String(index + 1).padStart(2, '0')}</small>
-              <strong>{formatActLabel(row.act, language)}</strong>
+              <strong>{formatActLabel(row.act, language, profile)}</strong>
             </span>
             <strong className="act-split-time" role="cell">{formatDuration(row.elapsedMs)}</strong>
             <span className="act-split-total" role="cell">{formatDuration(row.totalElapsedMs)}</span>
@@ -427,8 +427,8 @@ function getSavedRunActRows(entry: SavedRunHistoryEntry): ActTimeRow[] {
   });
 }
 
-function getBestSavedRun(history: SavedRunHistoryEntry[]): SavedRunHistoryEntry | null {
-  const candidates = history.filter((entry) => entry.totalElapsedMs > 0);
+function getBestSavedRun(history: SavedRunHistoryEntry[], profile: CampaignProfile): SavedRunHistoryEntry | null {
+  const candidates = history.filter((entry) => entry.campaignProfile === profile && entry.totalElapsedMs > 0);
   return candidates.length > 0
     ? [...candidates].sort((left, right) => left.totalElapsedMs - right.totalElapsedMs)[0]
     : null;
@@ -460,11 +460,12 @@ function renderActTimesDashboard(
   rows: ActTimeRow[],
   totalElapsedMs: number,
   emptyMessage: string,
-  language: AppLanguage
+  language: AppLanguage,
+  profile: CampaignProfile
 ) {
-  const completedActCount = getCompletedActCount(rows);
+  const completedActCount = getCompletedActCount(rows, profile);
   const slowestAct = getSlowestActRow(rows);
-  const averageActElapsedMs = getAverageActElapsedMs(rows);
+  const averageActElapsedMs = getAverageActElapsedMs(rows, profile);
   const currentAct = rows.find((row) => row.status === 'current') ?? rows[rows.length - 1] ?? null;
 
   return (
@@ -483,13 +484,13 @@ function renderActTimesDashboard(
           )}
           {renderMetricCard(
             translate(language, 'companion.completedActs'),
-            `${completedActCount} / ${TOTAL_CAMPAIGN_ACTS}`,
-            formatCurrentSegmentMetric(currentAct, language)
+            `${completedActCount} / ${getCampaignActCount(profile)}`,
+            formatCurrentSegmentMetric(currentAct, language, profile)
           )}
           {renderMetricCard(
             translate(language, 'companion.longestAct'),
             slowestAct ? formatDuration(slowestAct.elapsedMs) : '—',
-            slowestAct ? formatActLabel(slowestAct.act, language) : translate(language, 'companion.noActSplits')
+            slowestAct ? formatActLabel(slowestAct.act, language, profile) : translate(language, 'companion.noActSplits')
           )}
           {renderMetricCard(
             translate(language, 'companion.averageAct'),
@@ -503,9 +504,9 @@ function renderActTimesDashboard(
       <section className="companion-block act-times-card-list">
         <div className="summary-section-heading">
           <h3>{translate(language, 'companion.actSplitCards')}</h3>
-          <span>{translate(language, 'companion.completedActs')}: {completedActCount} / {TOTAL_CAMPAIGN_ACTS}</span>
+          <span>{translate(language, 'companion.completedActs')}: {completedActCount} / {getCampaignActCount(profile)}</span>
         </div>
-        {renderActTimeCards(rows, emptyMessage, language)}
+        {renderActTimeCards(rows, emptyMessage, language, profile)}
       </section>
     </div>
   );
@@ -515,7 +516,8 @@ function renderActBreakdownTable(
   rows: ActTimeRow[],
   bestRows: ActTimeRow[],
   emptyMessage: string,
-  language: AppLanguage
+  language: AppLanguage,
+  profile: CampaignProfile
 ) {
   if (rows.length === 0) {
     return <p className="helper-text">{emptyMessage}</p>;
@@ -537,7 +539,7 @@ function renderActBreakdownTable(
 
         return (
           <div key={`summary-act-${row.act}`} className="summary-act-breakdown-row" role="row">
-            <strong role="cell">{formatActLabel(row.act, language)}</strong>
+            <strong role="cell">{formatActLabel(row.act, language, profile)}</strong>
             <span role="cell">{formatDuration(row.elapsedMs)}</span>
             <span role="cell">{formatDuration(row.totalElapsedMs)}</span>
             <small role="cell" className={delta === null ? '' : getDeltaClass(delta)}>
@@ -554,9 +556,10 @@ function renderBestComparison(
   history: SavedRunHistoryEntry[],
   currentElapsedMs: number,
   currentRows: ActTimeRow[],
-  language: AppLanguage
+  language: AppLanguage,
+  profile: CampaignProfile
 ) {
-  const bestRun = getBestSavedRun(history);
+  const bestRun = getBestSavedRun(history, profile);
 
   if (!bestRun) {
     return null;
@@ -586,7 +589,7 @@ function renderBestComparison(
         <strong className={getDeltaClass(totalDelta)}>{formatBestDeltaLabel(totalDelta, language)}</strong>
         <span>{translate(language, 'companion.currentRunTime')}: {formatDuration(currentElapsedMs)} · {translate(language, 'companion.bestSavedRun')}: {formatDuration(bestRun.totalElapsedMs)}</span>
         {biggestLoss && biggestLoss.delta > 0 && (
-          <small>{translate(language, 'companion.biggestTimeLoss', { act: formatActLabel(biggestLoss.act, language), time: formatDuration(biggestLoss.delta) })}</small>
+          <small>{translate(language, 'companion.biggestTimeLoss', { act: formatActLabel(biggestLoss.act, language, profile), time: formatDuration(biggestLoss.delta) })}</small>
         )}
       </div>
       {acts.length > 0 && (
@@ -597,7 +600,7 @@ function renderBestComparison(
             const delta = current && best ? current.elapsedMs - best.elapsedMs : null;
             return (
               <div key={`run-compare-act-${act}`} className="summary-compare-act-pill">
-                <span>{formatActLabel(act, language)}</span>
+                <span>{formatActLabel(act, language, profile)}</span>
                 <strong className={delta === null ? '' : getDeltaClass(delta)}>
                   {delta === null ? '—' : formatDelta(delta)}
                 </strong>
@@ -876,7 +879,8 @@ function renderLiveSummary(
   currentActLabel: string,
   currentActElapsedLabel: string,
   longestZone: { zone_ru: string; elapsedMs: number } | null,
-  language: AppLanguage
+  language: AppLanguage,
+  profile: CampaignProfile
 ) {
   const statusLabel = formatRunStatus(status, language);
 
@@ -889,7 +893,7 @@ function renderLiveSummary(
       </div>
       <div className="summary-result-facts">
         {renderSummaryStat(translate(language, 'common.status'), statusLabel)}
-        {renderSummaryStat(translate(language, 'companion.completedActs'), `${completedActCount} / ${TOTAL_CAMPAIGN_ACTS}`)}
+        {renderSummaryStat(translate(language, 'companion.completedActs'), `${completedActCount} / ${getCampaignActCount(profile)}`)}
         {renderSummaryStat(translate(language, 'companion.currentAct'), currentActLabel, currentActElapsedLabel)}
         {renderSummaryStat(
           translate(language, 'companion.longestZone'),
@@ -902,13 +906,13 @@ function renderLiveSummary(
   );
 }
 
-function renderFinishedResults(summary: RunSummary | null, bestRun: SavedRunHistoryEntry | null, language: AppLanguage, guides: GuideEntry[]) {
+function renderFinishedResults(summary: RunSummary | null, bestRun: SavedRunHistoryEntry | null, language: AppLanguage, guides: GuideEntry[], profile: CampaignProfile) {
   if (!summary) {
     return <p className="helper-text">{translate(language, 'companion.summaryEmpty')}</p>;
   }
 
   const actTimeRows = getActTimeRowsFromSplits(summary.actSplits, summary.totalElapsedMs);
-  const completedActCount = getCompletedActCount(actTimeRows);
+  const completedActCount = getCompletedActCount(actTimeRows, profile);
   const slowestAct = getSlowestActRow(actTimeRows);
   const bestRows = bestRun ? getSavedRunActRows(bestRun) : [];
   const totalDelta = bestRun ? summary.totalElapsedMs - bestRun.totalElapsedMs : null;
@@ -931,7 +935,7 @@ function renderFinishedResults(summary: RunSummary | null, bestRun: SavedRunHist
           </small>
         </div>
         <div className="summary-result-facts">
-          {renderSummaryStat(translate(language, 'companion.completedActs'), `${completedActCount} / ${TOTAL_CAMPAIGN_ACTS}`)}
+          {renderSummaryStat(translate(language, 'companion.completedActs'), `${completedActCount} / ${getCampaignActCount(profile)}`)}
           {renderSummaryStat(translate(language, 'companion.pauses'), String(summary.pauseCount), translate(language, 'companion.pauseCountHint'))}
           {renderSummaryStat(
             translate(language, 'companion.record'),
@@ -963,9 +967,9 @@ function renderFinishedResults(summary: RunSummary | null, bestRun: SavedRunHist
         <section className="companion-block summary-act-breakdown-panel">
           <div className="summary-section-heading">
             <h3>{translate(language, 'companion.runBreakdownTitle')}</h3>
-            {slowestAct && <span>{translate(language, 'companion.longestActShort', { act: formatActLabel(slowestAct.act, language), time: formatDuration(slowestAct.elapsedMs) })}</span>}
+            {slowestAct && <span>{translate(language, 'companion.longestActShort', { act: formatActLabel(slowestAct.act, language, profile), time: formatDuration(slowestAct.elapsedMs) })}</span>}
           </div>
-          {renderActBreakdownTable(actTimeRows, bestRows, translate(language, 'companion.actTimesEmptyFinished'), language)}
+          {renderActBreakdownTable(actTimeRows, bestRows, translate(language, 'companion.actTimesEmptyFinished'), language, profile)}
         </section>
 
         <section className="companion-block summary-longest-card">
@@ -980,6 +984,7 @@ function renderFinishedResults(summary: RunSummary | null, bestRun: SavedRunHist
 export function CompanionPage() {
   const snapshot = useAppSnapshot();
   const { t, language } = useI18n(snapshot?.config.appLanguage);
+  const campaignProfile = snapshot?.config.campaignProfile ?? 'legacy-0.5';
   const liveRunTimer = useLiveRunTimer(
     snapshot?.config.runTimer,
     snapshot?.config.runTimerSettings,
@@ -1089,6 +1094,7 @@ export function CompanionPage() {
       snapshot?.guideEntries,
       snapshot?.config.zoneProgress,
       snapshot?.config.visitedZones,
+      snapshot?.config.campaignProfile,
       snapshot?.currentGuideEntry?.id,
       language
     ]
@@ -1231,13 +1237,14 @@ export function CompanionPage() {
   const bonusGroups = useMemo(
     () => (snapshot?.campaignBonuses ?? []).reduce<Record<string, CampaignBonusDefinition[]>>(
       (groups, bonus) => {
+        if (campaignProfile === 'release-1.0' && (bonus.act === 'interlude' || bonus.act === 5)) return groups;
         const key = bonus.act === 'interlude' ? 'interlude' : String(bonus.act);
         groups[key] = [...(groups[key] ?? []), bonus];
         return groups;
       },
       {}
     ),
-    [snapshot?.campaignBonuses]
+    [snapshot?.campaignBonuses, campaignProfile]
   );
   const bonusGroupOrder = useMemo(
     () => Object.keys(bonusGroups).sort((left, right) => {
@@ -1257,8 +1264,8 @@ export function CompanionPage() {
     return columns.filter((column) => column.length > 0);
   }, [bonusGroupOrder]);
   const bestSavedRun = useMemo(
-    () => getBestSavedRun(runHistory),
-    [runHistory]
+    () => getBestSavedRun(runHistory, campaignProfile),
+    [runHistory, campaignProfile]
   );
   const hasSnapshot = snapshot !== null;
 
@@ -1293,7 +1300,7 @@ export function CompanionPage() {
 
     if (previous.act !== null && splitSnapshotAct !== null && previous.act !== splitSnapshotAct) {
       const splitText = translate(language, 'companion.actSplitFeedback', {
-        act: formatActTitle(previous.act, language),
+        act: formatActTitle(previous.act, language, campaignProfile),
         time: previous.elapsedMs === null ? translate(language, 'common.notAvailable') : formatDuration(previous.elapsedMs)
       });
 
@@ -1553,14 +1560,15 @@ export function CompanionPage() {
     />
   ) : null;
 
-  const useRouteMap = routeViewMode === 'map' && (selectedRouteAct === 1 || selectedRouteAct === 2 || selectedRouteAct === 3 || selectedRouteAct === 4 || selectedRouteAct === 5) && !globalRouteSearch;
+  const canUseRouteMap = typeof selectedRouteAct === 'number' && selectedRouteAct >= 1 && selectedRouteAct <= getCampaignActCount(campaignProfile);
+  const useRouteMap = routeViewMode === 'map' && canUseRouteMap && !globalRouteSearch;
   const routeTab = activeTab === 'route' ? (
     <div className={`companion-tab-layout route-polish-layout ${useRouteMap ? 'is-map-view' : 'is-list-view'}`}>
       <section className="companion-block companion-route-toolbar">
         <div className="route-toolbar-acts">
           <div className="route-toolbar-heading">
             <span>{t('companion.routeActPicker')}</span>
-            <small>{formatActTitle(selectedRouteAct, language)}</small>
+            <small>{formatActTitle(selectedRouteAct, language, campaignProfile)}</small>
           </div>
           <div className="companion-tab-row">
             {routeActs.map((entry) => {
@@ -1615,14 +1623,14 @@ export function CompanionPage() {
         <button type="button" className={!useRouteMap ? 'button-primary' : 'button-secondary'} aria-pressed={!useRouteMap} onClick={() => setRouteViewMode('list')}>
           <UiIcon name="menu" /> {language === 'ru' ? 'Список' : 'List'}
         </button>
-        <button type="button" className={useRouteMap ? 'button-primary' : 'button-secondary'} aria-pressed={useRouteMap} onClick={() => setRouteViewMode('map')} disabled={(selectedRouteAct !== 1 && selectedRouteAct !== 2 && selectedRouteAct !== 3 && selectedRouteAct !== 4 && selectedRouteAct !== 5) || globalRouteSearch} title={selectedRouteAct !== 1 && selectedRouteAct !== 2 && selectedRouteAct !== 3 && selectedRouteAct !== 4 && selectedRouteAct !== 5 ? (language === 'ru' ? 'Карта доступна для Актов 1–4 и Интерлюдий' : 'Map is available for Acts 1–4 and Interludes') : globalRouteSearch ? (language === 'ru' ? 'Очистите поиск по всей кампании' : 'Clear campaign-wide search') : undefined}>
+        <button type="button" className={useRouteMap ? 'button-primary' : 'button-secondary'} aria-pressed={useRouteMap} onClick={() => setRouteViewMode('map')} disabled={!canUseRouteMap || globalRouteSearch} title={!canUseRouteMap ? (language === 'ru' ? 'Карта недоступна для этого этапа' : 'Map is unavailable for this stage') : globalRouteSearch ? (language === 'ru' ? 'Очистите поиск по всей кампании' : 'Clear campaign-wide search') : undefined}>
           <UiIcon name="map" /> {language === 'ru' ? 'Карта' : 'Map'}
         </button>
-        {selectedRouteAct !== 1 && selectedRouteAct !== 2 && selectedRouteAct !== 3 && selectedRouteAct !== 4 && selectedRouteAct !== 5 && <small className="route-map-unavailable">{language === 'ru' ? 'Карта: Акты 1–4 и Интерлюдии' : 'Map: Acts 1–4 and Interludes'}</small>}
+        {!canUseRouteMap && <small className="route-map-unavailable">{language === 'ru' ? 'Карта: Акты 1–4 и Интерлюдии' : 'Map: Acts 1–4 and Interludes'}</small>}
         {globalRouteSearch && <small className="route-map-unavailable">{language === 'ru' ? 'Для карты очистите поиск' : 'Clear search to view the map'}</small>}
       </div>
 
-      {useRouteMap && selectedRouteAct === 5 ? (
+      {useRouteMap && selectedRouteAct === 5 && campaignProfile === 'legacy-0.5' ? (
         <InterludeAtlas
           key={`interludes-${mapLocateRequest}`}
           language={language}
@@ -1643,7 +1651,7 @@ export function CompanionPage() {
       ) : useRouteMap ? (
         <ActRouteMap
           key={`${selectedRouteAct}-${mapLocateRequest}`}
-          act={selectedRouteAct === 4 ? 4 : selectedRouteAct === 3 ? 3 : selectedRouteAct === 2 ? 2 : 1}
+          act={selectedRouteAct as 1 | 2 | 3 | 4 | 5 | 6}
           language={language}
           zones={routeCardModels}
           currentGuideId={selectedRouteAct === nowAct ? snapshot.currentGuideEntry?.id ?? null : null}
@@ -1657,7 +1665,7 @@ export function CompanionPage() {
         <div className="route-progress-rail-header">
           <div>
             <p className="eyebrow">{t('companion.routeProgressTitle')}</p>
-            <strong>{formatActTitle(selectedRouteAct, language)}</strong>
+            <strong>{formatActTitle(selectedRouteAct, language, campaignProfile)}</strong>
           </div>
           <span>{t('companion.routeProgressComplete', {
             current: Math.min(routeProgressTotal, routeProgressCurrentCount),
@@ -1674,7 +1682,7 @@ export function CompanionPage() {
       </section>
 
       <section className="companion-block companion-route-list-card">
-        <h3>{globalRouteSearch ? (language === 'ru' ? 'Результаты по всей кампании' : 'Results across the campaign') : formatActTitle(selectedRouteAct, language)}</h3>
+        <h3>{globalRouteSearch ? (language === 'ru' ? 'Результаты по всей кампании' : 'Results across the campaign') : formatActTitle(selectedRouteAct, language, campaignProfile)}</h3>
         <div className="route-overview-list route-overview-grid">
           {visibleRouteCardModels.map((model) => {
             const { entry } = model;
@@ -1691,7 +1699,7 @@ export function CompanionPage() {
                 <div className="route-overview-header">
                   <span className="route-step-index">{model.indexLabel}</span>
                   <strong className="route-zone-name">{model.routeCardTitle}</strong>
-                  {globalRouteSearch && <small className="route-search-act">{formatActTitle(entry.guide.act, language)}</small>}
+                  {globalRouteSearch && <small className="route-search-act">{formatActTitle(entry.guide.act, language, campaignProfile)}</small>}
                   <span className="route-rec-badge">{t('companion.routeCardLevel', { level: model.recommendedLevelLabel })}</span>
                   {model.statusLabel && <span className="route-state-pill">{model.statusLabel}</span>}
                 </div>
@@ -1733,7 +1741,9 @@ export function CompanionPage() {
             );
           })}
         </div>
-        {visibleRouteCardModels.length === 0 && <p className="route-empty-note route-filter-empty">{getRouteFilterEmptyText({ language, filterMode: routeFilterMode, query: routeSearchQuery, shownCount: visibleRouteCardModels.length, totalCount: routeCardModels.length, hasCurrentCard: routeCardModels.some((model) => model.entry.status === 'current') })}</p>}
+        {visibleRouteCardModels.length === 0 && <p className="route-empty-note route-filter-empty">{campaignProfile === 'release-1.0' && (selectedRouteAct === 5 || selectedRouteAct === 6) && !globalRouteSearch
+          ? (language === 'ru' ? 'Заготовка 1.0: локации и маршрут появятся после проверки игрового лога.' : '1.0 preview: areas and routes will be populated from verified game logs.')
+          : getRouteFilterEmptyText({ language, filterMode: routeFilterMode, query: routeSearchQuery, shownCount: visibleRouteCardModels.length, totalCount: routeCardModels.length, hasCurrentCard: routeCardModels.some((model) => model.entry.status === 'current') })}</p>}
       </section>
       </>)}
     </div>
@@ -1755,7 +1765,7 @@ export function CompanionPage() {
         <div className="timer-cockpit-details">
           <div>
             <span>{t('companion.currentAct')}</span>
-            <strong>{nowAct === null ? '—' : formatActTitle(nowAct, language)}</strong>
+            <strong>{nowAct === null ? '—' : formatActTitle(nowAct, language, campaignProfile)}</strong>
             <small>{currentActElapsed === null ? t('common.notAvailable') : formatDuration(currentActElapsed)}</small>
           </div>
           <div>
@@ -1789,11 +1799,11 @@ export function CompanionPage() {
         <div className="timer-segment-list">
           <div>
             <span>{t('companion.lastRecordedSplit')}</span>
-            <strong>{latestActRow ? `${formatActLabel(latestActRow.act, language)} · ${formatDuration(latestActRow.elapsedMs)}` : '—'}</strong>
+            <strong>{latestActRow ? `${formatActLabel(latestActRow.act, language, campaignProfile)} · ${formatDuration(latestActRow.elapsedMs)}` : '—'}</strong>
           </div>
           <div>
             <span>{t('companion.longestAct')}</span>
-            <strong>{slowestActRow ? `${formatActLabel(slowestActRow.act, language)} · ${formatDuration(slowestActRow.elapsedMs)}` : '—'}</strong>
+            <strong>{slowestActRow ? `${formatActLabel(slowestActRow.act, language, campaignProfile)} · ${formatDuration(slowestActRow.elapsedMs)}` : '—'}</strong>
           </div>
           <div>
             <span>{t('companion.longestZone')}</span>
@@ -1881,7 +1891,8 @@ export function CompanionPage() {
         activeDisplayRunTimer.status === 'finished'
           ? t('companion.actTimesEmptyFinished')
           : t('companion.actTimesEmptyRunning'),
-        language
+        language,
+        campaignProfile
       )}
       <section className="companion-block run-save-card">
         <div>
@@ -2113,17 +2124,18 @@ export function CompanionPage() {
   ) : null;
 
   const summaryContent = activeTab === 'summary' && activeDisplayRunTimer.status === 'finished' ? (
-    renderFinishedResults(config.lastRunSummary, bestSavedRun, language, snapshot.guideEntries)
+    renderFinishedResults(config.lastRunSummary, bestSavedRun, language, snapshot.guideEntries, campaignProfile)
   ) : activeTab === 'summary' ? (
     <div className="summary-results-dashboard">
       {renderLiveSummary(
         currentRunElapsed,
         activeDisplayRunTimer.status,
-        getCompletedActCount(actTimeRows),
-        nowAct === null ? '—' : formatActTitle(nowAct, language),
+        getCompletedActCount(actTimeRows, campaignProfile),
+        nowAct === null ? '—' : formatActTitle(nowAct, language, campaignProfile),
         currentActElapsed !== null ? formatDuration(currentActElapsed) : t('common.notAvailable'),
         longestZones[0] ?? null,
-        language
+        language,
+        campaignProfile
       )}
 
       <section className="companion-block summary-longest-card summary-diagnostic-card">
@@ -2140,7 +2152,7 @@ export function CompanionPage() {
     <div className="companion-tab-layout companion-summary-layout">
       <div className="summary-scroll-body summary-scroll-body--full">
         {summaryContent}
-        {renderBestComparison(runHistory, currentRunElapsed, actTimeRows, language)}
+        {renderBestComparison(runHistory, currentRunElapsed, actTimeRows, language, campaignProfile)}
         <RunHistoryDetailPanel
           history={runHistory}
           historySignature={runHistorySignature}

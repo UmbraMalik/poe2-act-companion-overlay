@@ -1,6 +1,7 @@
 import { parseLevelUp } from './services/log-parser';
 import { DEFAULT_RUN_TIMER, DEFAULT_TOWN_TIMER } from '../shared/defaults';
-import { ENDGAME_T15_ACT, getRunTimerDisplayElapsed, getZoneTimerDisplayElapsed } from '../shared/timers';
+import { getCampaignActCount, getEndgameT15Act } from '../shared/campaign-profile';
+import { getRunTimerDisplayElapsed, getZoneTimerDisplayElapsed } from '../shared/timers';
 import { inferActHintFromTownScene } from './scene-classifier';
 import type { RunTimerState } from '../shared/types';
 import {
@@ -144,8 +145,8 @@ export function runProcessRunTimerActivityFromLogLine(this: any, line: any, sour
         if (source === 'bootstrap') {
             if (this.isTownSceneWithGuide(rawSceneSource, matchedGuide)) {
                 const matchedTownGuide = rawSceneSource ? this.guideService.findByZoneName(rawSceneSource) : null;
-                const townActHint = inferActHintFromTownScene(rawSceneSource);
-                const shouldClearGuide = townActHint === ENDGAME_T15_ACT ||
+                const townActHint = inferActHintFromTownScene(rawSceneSource, this.config.campaignProfile);
+                const shouldClearGuide = townActHint === getEndgameT15Act(this.config.campaignProfile) ||
                     this.normalizeSceneSource(rawSceneSource) === 'clearfell encampment';
                 const nextTownGuide = matchedTownGuide ??
                     (shouldClearGuide ? null : this.currentZone.guide);
@@ -242,9 +243,12 @@ export function runIsEndgameT15CompletionLogLine(this: any, line: any) {
             return false;
         }
 
-        return this.currentZone.actHint === ENDGAME_T15_ACT ||
-            this.runtime.lastGameplayAct === ENDGAME_T15_ACT ||
-            runTimer.actSplits.some((split: any) => split.act === 5);
+        const endgameAct = getEndgameT15Act(this.config.campaignProfile);
+        // Keep legacy T15 completion from a completed final-act split, but
+        // never interpret release Act 6 itself as endgame slot 6.
+        return this.currentZone.actHint === endgameAct ||
+            this.runtime.lastGameplayAct === endgameAct ||
+            runTimer.actSplits.some((split: any) => split.act === getCampaignActCount(this.config.campaignProfile));
     }
 
 export function runCompleteEndgameT15Run(this: any, line: any) {
@@ -254,13 +258,13 @@ export function runCompleteEndgameT15Run(this: any, line: any) {
 
         const now = Date.now();
         const previousActHint = this.currentZone.guide?.act ?? this.currentZone.actHint ?? this.runtime.lastGameplayAct ?? null;
-        if (previousActHint !== ENDGAME_T15_ACT) {
+        if (previousActHint !== getEndgameT15Act(this.config.campaignProfile)) {
             this.currentZone = {
                 ...this.currentZone,
-                actHint: ENDGAME_T15_ACT
+                actHint: getEndgameT15Act(this.config.campaignProfile)
             };
-            this.runtime.lastGameplayAct = ENDGAME_T15_ACT;
-            this.recordActTransitionByHint(previousActHint, ENDGAME_T15_ACT, now);
+            this.runtime.lastGameplayAct = getEndgameT15Act(this.config.campaignProfile);
+            this.recordActTransitionByHint(previousActHint, getEndgameT15Act(this.config.campaignProfile), now);
         }
 
         this.finishRunTimer();
@@ -284,7 +288,7 @@ export function runCompleteEndgameT15Run(this: any, line: any) {
             previousStatus: 'running',
             nextStatus: 'finished',
             totalElapsedMs,
-            act: ENDGAME_T15_ACT,
+            act: getEndgameT15Act(this.config.campaignProfile),
             note: 'entered-level-79-area'
         });
         this.refreshTrayMenu();
@@ -554,7 +558,8 @@ export function runFinishRunTimer(this: any) {
             pauseReason: null,
             actSplits: finalizedActSplits
         };
-        const previousPb = this.config.bestRun;
+        const profile = this.config.campaignProfile;
+        const previousPb = this.config.bestRunsByProfile[profile] ?? null;
         const isNewPb = previousPb === null || elapsedMs < previousPb.totalElapsedMs;
         const nextBestRun = isNewPb
             ? {
@@ -565,7 +570,8 @@ export function runFinishRunTimer(this: any) {
             : previousPb;
         this.config = this.configStore.update({
             runTimer: nextRunTimer,
-            bestRun: nextBestRun,
+            bestRun: profile === 'legacy-0.5' ? nextBestRun : this.config.bestRun,
+            bestRunsByProfile: { ...this.config.bestRunsByProfile, [profile]: nextBestRun },
             lastRunSummary: {
                 ...this.buildRunSummary(nextRunTimer, elapsedMs, now),
                 isNewPb

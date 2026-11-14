@@ -28,6 +28,7 @@ import {
 } from '../companion-helpers';
 import { formatDuration, getLevelState } from '../utils';
 import { getOverlayMinimumSize } from '../../shared/overlay-layout';
+import { isLegacyInterludeAct } from '../../shared/campaign-profile';
 import { isEndgameT15Act } from '../../shared/timers';
 import { shouldStartOverlayDrag } from '../../shared/overlay-drag';
 import {
@@ -53,6 +54,7 @@ import { FirstRunWizard } from '../FirstRunWizard';
 import { UiIcon, type UiIconName } from '../UiIcon';
 import type {
   AppLanguage,
+  CampaignProfile,
   CampaignBonusDefinition,
   GuideEntry,
   LevelReminder,
@@ -65,16 +67,16 @@ import type {
 
 type OverlayPageSnapshot = OverlaySnapshot;
 
-function formatActTitle(act: ZoneAct | null, language: AppLanguage): string {
+function formatActTitle(act: ZoneAct | null, language: AppLanguage, profile: CampaignProfile = 'legacy-0.5'): string {
   if (act === null) {
     return translate(language, 'overlay.currentZoneFallback');
   }
 
-  if (typeof act === 'number' && isEndgameT15Act(act)) {
+  if (typeof act === 'number' && isEndgameT15Act(act, profile)) {
     return translate(language, 'route.endgameToT15');
   }
 
-  return act === 'interlude'
+  return isLegacyInterludeAct(act, profile)
     ? translate(language, 'route.interludes')
     : translate(language, 'route.act', { act });
 }
@@ -1185,7 +1187,7 @@ export function OverlayPage() {
           : runtime.lastGameplayAct ?? null;
     const currentActTimerLabel =
       currentActTimerAct !== null
-        ? formatActTitle(currentActTimerAct, language)
+        ? formatActTitle(currentActTimerAct, language, config.campaignProfile)
         : guide?.act === 'interlude' || currentZone.actHint === 'interlude'
           ? translate(language, 'route.interludes')
           : null;
@@ -1202,12 +1204,12 @@ export function OverlayPage() {
         ? (guideView?.skip ?? []).slice(0, 3)
         : [];
     const speedrunLines = visibleSections.speedrun ? getOverlaySpeedrunLines(guide, language) : [];
-    const actTitle = formatActTitle(currentZone.actHint ?? guide?.act ?? null, language);
+    const actTitle = formatActTitle(currentZone.actHint ?? guide?.act ?? null, language, config.campaignProfile);
     const overlayTitle = guide ? `${actTitle} · ${sceneName}` : sceneName;
     const overlayActLabel = guide
       ? actTitle
       : currentZone.actHint
-        ? formatActTitle(currentZone.actHint, language)
+        ? formatActTitle(currentZone.actHint, language, config.campaignProfile)
         : translate(language, 'overlay.currentZoneFallback');
 
     return {

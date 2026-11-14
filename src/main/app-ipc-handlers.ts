@@ -309,11 +309,16 @@ export function runRegisterIpc(this: any) {
         });
         ipcMain.handle('app:update-settings', async (_event: any, patch: any) => {
             patch = normalizeSettingsPatchInput(patch);
+            if (patch.campaignProfile && patch.campaignProfile !== this.config.campaignProfile &&
+                !['not_started', 'finished'].includes(this.config.runTimer.status)) {
+                throw new Error('Reset or finish the active run before changing campaign version.');
+            }
             patch = normalizeOverlayModeSettingsPatch(patch);
             const previousOverlayMode = this.overlayMode;
             const previousOverlayDensity = this.config.overlayDensity;
             const previousOverlayScale = this.config.overlayScale;
             const previousRealtimePriorityEnabled = this.config.realtimePriorityEnabled;
+            const previousCampaignProfile = this.config.campaignProfile;
             const nextOverlayMode = patch.mainOverlaySettings?.overlayMode ?? previousOverlayMode;
             const nextOverlayDensity = patch.overlayDensity ?? previousOverlayDensity;
             const nextOverlayScale = patch.overlayScale ?? previousOverlayScale;
@@ -340,6 +345,14 @@ export function runRegisterIpc(this: any) {
             }
             if (patch.companionAlwaysOnTop !== undefined) {
                 this.companionWindow?.setAlwaysOnTop(this.config.companionAlwaysOnTop);
+            }
+            if (patch.campaignProfile !== undefined && this.config.campaignProfile !== previousCampaignProfile) {
+                this.config = this.configStore.update({ lastRunSummary: null });
+                this.rebindCurrentZoneAfterGuideReload();
+                this.runtime.lastGameplayAct = this.currentZone.guide && typeof this.currentZone.guide.act === 'number'
+                    ? this.currentZone.guide.act
+                    : null;
+                this.currentZone.actHint = this.currentZone.guide?.act ?? null;
             }
             if (patch.runTimerSettings !== undefined) {
                 this.reconcileRunTimerState();

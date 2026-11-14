@@ -1,6 +1,7 @@
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { translateDataText } from '../i18n/data';
 import { translate } from '../i18n/translations';
+import { getCampaignActCount } from '../shared/campaign-profile';
 import { isEndgameT15Act } from '../shared/timers';
 import type { AppLanguage, SavedRunHistoryEntry } from '../shared/types';
 import { formatDuration } from './utils';
@@ -19,7 +20,6 @@ type RunHistoryDetailPanelProps = {
   onDelete: (runId: string) => void;
 };
 
-const TOTAL_CAMPAIGN_ACTS = 5;
 const DETAIL_MODEL_CACHE_LIMIT = 8;
 
 function getDetailModelCacheKey(historySignature: string, runId: string): string {
@@ -45,8 +45,8 @@ function formatNullableDate(timestamp: number | null, language: AppLanguage): st
   return timestamp === null ? '—' : formatSavedRunDate(timestamp, language);
 }
 
-function formatActLabel(act: number, language: AppLanguage): string {
-  return isEndgameT15Act(act)
+function formatActLabel(act: number, language: AppLanguage, profile: SavedRunHistoryEntry['campaignProfile']): string {
+  return isEndgameT15Act(act, profile)
     ? translate(language, 'route.endgameToT15')
     : translate(language, 'route.act', { act });
 }
@@ -55,7 +55,7 @@ function getCompletedActCount(entry: SavedRunHistoryEntry): number {
   const acts = new Set<number>();
 
   for (const split of Array.isArray(entry.actSplits) ? entry.actSplits : []) {
-    if (Number.isFinite(split.act) && !isEndgameT15Act(split.act)) {
+    if (Number.isFinite(split.act) && !isEndgameT15Act(split.act, entry.campaignProfile)) {
       acts.add(split.act);
     }
   }
@@ -144,7 +144,7 @@ function RunHistoryDetailCard({
             <p className="helper-text">{translate(language, 'companion.noActSplits')}</p>
           ) : model.actRows.map((row) => (
             <div key={`run-detail-act-${row.act}`} className="run-history-detail-table-row" role="row">
-              <strong role="cell">{formatActLabel(row.act, language)}</strong>
+              <strong role="cell">{formatActLabel(row.act, language, model.selectedRun.campaignProfile)}</strong>
               <span role="cell">{formatDuration(row.elapsedMs)}</span>
               <span role="cell">{renderDeltaCell(row.previousDeltaMs)}</span>
               <span role="cell">{renderDeltaCell(row.bestDeltaMs)}</span>
@@ -260,7 +260,7 @@ function RunHistoryDetailPanelInner({
                   </div>
                   <div className="summary-history-stats">
                     <span><b>{formatDuration(entry.totalElapsedMs)}</b></span>
-                    <span>{completedActCount} / {TOTAL_CAMPAIGN_ACTS}</span>
+                    <span>{completedActCount} / {getCampaignActCount(entry.campaignProfile)}</span>
                     <span>{longestZoneLabel}</span>
                   </div>
                   <div className="button-row summary-history-actions">

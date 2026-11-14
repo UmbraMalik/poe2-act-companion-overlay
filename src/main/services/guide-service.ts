@@ -333,7 +333,7 @@ export class GuideService {
     rawZoneName: string,
     guide: GuideEntry | null
   ): GuideEntry | null {
-    return this.contextResolver?.({ rawZoneName, guide }) ?? guide;
+    return this.contextResolver ? this.contextResolver({ rawZoneName, guide }) : guide;
   }
 
   getLoadedAt(): string | null {
@@ -553,6 +553,8 @@ export class GuideService {
       'act 3',
       'act 4',
       'act 5',
+      'act 6',
+      'акт 6',
       'interlude',
       '\u0438\u043d\u0442\u0435\u0440\u043b\u044e\u0434\u0438\u044f'
     ]);

@@ -198,8 +198,12 @@ export function buildRunHistoryDetailModel(
     ? sortedHistory.find((entry) => entry.id === selectedRunId) ?? sortedHistory[0] ?? null
     : sortedHistory[0] ?? null;
   const selectedIndex = selectedRun ? sortedHistory.findIndex((entry) => entry.id === selectedRun.id) : -1;
-  const previousRun = selectedIndex >= 0 ? sortedHistory[selectedIndex + 1] ?? null : null;
-  const bestRun = getBestRunFromHistory(sortedHistory);
+  const comparableRuns = selectedRun
+    ? sortedHistory.filter((entry) => entry.campaignProfile === selectedRun.campaignProfile)
+    : [];
+  const comparableIndex = selectedRun ? comparableRuns.findIndex((entry) => entry.id === selectedRun.id) : -1;
+  const previousRun = comparableIndex >= 0 ? comparableRuns[comparableIndex + 1] ?? null : null;
+  const bestRun = getBestRunFromHistory(comparableRuns);
   const previousRowsByAct = new Map(getRunHistoryActRows(previousRun).map((row) => [row.act, row]));
   const bestRowsByAct = new Map(getRunHistoryActRows(bestRun).map((row) => [row.act, row]));
   const previousZonesById = getBestZoneById(previousRun);
