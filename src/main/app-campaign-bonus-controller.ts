@@ -1,3 +1,4 @@
+import { isCampaignBonusInProfile } from '../shared/campaign-profile';
 import { QIMAH_BONUS_ID } from '../shared/campaign-bonus-choice';
 import {
   normalizeText,
@@ -86,7 +87,7 @@ export function runSetCampaignBonusDone(
         line: string | null = null
     ) {
         const app = this as CampaignBonusDoneContext;
-        const matchedBonus = app.campaignBonuses.find((bonus) => bonus.id === bonusId) ?? null;
+        const matchedBonus = app.campaignBonuses.find((bonus) => bonus.id === bonusId && isCampaignBonusInProfile(bonus, app.config.campaignProfile)) ?? null;
         if (!matchedBonus) {
             return false;
         }
@@ -361,6 +362,7 @@ export function runFindCampaignBonusFromParsedReward(this: any, line: any, parse
             return null;
         }
         const candidates = this.campaignBonuses
+            .filter((bonus: CampaignBonusDefinition) => isCampaignBonusInProfile(bonus, this.config.campaignProfile))
             .map((bonus: any, index: any) => ({ bonus, index, score: this.getCampaignBonusRewardFallbackScore(bonus) }))
             .filter(({ bonus }: any) => !this.config.campaignBonusProgress[bonus.id])
             .filter(({ bonus }: any) => this.campaignBonusRewardMatchesParsedReward(bonus, reward))
@@ -417,6 +419,9 @@ export function runApplyCampaignBonusMatchesFromLogLine(this: any, line: any, so
             return;
         }
         const matchedByExplicitRule = this.campaignBonuses.find((bonus: any) => {
+            if (!isCampaignBonusInProfile(bonus, this.config.campaignProfile)) {
+                return false;
+            }
             if (this.config.campaignBonusProgress[bonus.id]) {
                 return false;
             }

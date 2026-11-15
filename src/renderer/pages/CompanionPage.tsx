@@ -1,3 +1,4 @@
+import { isCampaignBonusInProfile } from '../../shared/campaign-profile';
 import { QIMAH_BONUS_ID, QIMAH_CHOICE_OPTIONS, getQimahResistanceContribution } from '../../shared/campaign-bonus-choice';
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { buildChecklistDefinition } from '../../shared/checklist';
@@ -1162,8 +1163,11 @@ export function CompanionPage() {
   const campaignBonusProgress: Record<string, CampaignBonusProgress> =
     snapshot?.config.campaignBonusProgress ?? EMPTY_CAMPAIGN_BONUS_PROGRESS;
   const campaignBonusTotals = useMemo(
-    () => getCampaignBonusTotals(snapshot?.campaignBonuses ?? [], campaignBonusProgress),
-    [snapshot?.campaignBonuses, campaignBonusProgress]
+    () => getCampaignBonusTotals(
+      (snapshot?.campaignBonuses ?? []).filter((bonus) => isCampaignBonusInProfile(bonus, campaignProfile)),
+      campaignBonusProgress
+    ),
+    [snapshot?.campaignBonuses, campaignBonusProgress, campaignProfile]
   );
   const rawRunHistory = snapshot?.config.runHistory ?? [];
   const runHistorySignature = useMemo(
@@ -1237,7 +1241,7 @@ export function CompanionPage() {
   const bonusGroups = useMemo(
     () => (snapshot?.campaignBonuses ?? []).reduce<Record<string, CampaignBonusDefinition[]>>(
       (groups, bonus) => {
-        if (campaignProfile === 'release-1.0' && (bonus.act === 'interlude' || bonus.act === 5)) return groups;
+        if (!isCampaignBonusInProfile(bonus, campaignProfile)) return groups;
         const key = bonus.act === 'interlude' ? 'interlude' : String(bonus.act);
         groups[key] = [...(groups[key] ?? []), bonus];
         return groups;

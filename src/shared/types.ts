@@ -230,6 +230,8 @@ export interface CampaignBonusEventRule {
 export interface CampaignBonusDefinition {
   id: string;
   act: ZoneAct;
+  /** Explicit campaign membership for release-only bonuses (especially Act 5). */
+  campaignProfiles?: CampaignProfile[];
   zoneId?: string;
   zone_ru: string;
   title: string;

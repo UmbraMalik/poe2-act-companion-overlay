@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { getCampaignActCount, getEndgameT15Act, isGuideInCampaign, normalizeCampaignProfile } from '../src/shared/campaign-profile';
+import { getCampaignActCount, getEndgameT15Act, isGuideInCampaign, isCampaignBonusInProfile, normalizeCampaignProfile } from '../src/shared/campaign-profile';
 import { isEndgameT15Act } from '../src/shared/timers';
 import { inferActHintFromInternalAreaId, inferActHintFromTownScene } from '../src/main/scene-classifier';
 import { normalizeAppConfig, normalizeSavedRunHistoryEntry } from '../src/main/services/config-store';
@@ -36,4 +36,13 @@ test('older configs and saved history entries get the original campaign profile'
   assert.equal(config.campaignProfile, 'legacy-0.5');
   const entry = normalizeSavedRunHistoryEntry({ id: 'old', savedAt: 100, totalElapsedMs: 1234, currentAct: 6 });
   assert.equal(entry?.campaignProfile, 'legacy-0.5');
+});
+
+test('new Act 5 bonuses are allowed when tagged for 1.0, while old Interludes stay hidden', () => {
+  assert.equal(isCampaignBonusInProfile({ act: 5 }, 'release-1.0'), false);
+  assert.equal(isCampaignBonusInProfile({ act: 'interlude' }, 'release-1.0'), false);
+  assert.equal(isCampaignBonusInProfile({ act: 5, campaignProfiles: ['release-1.0'] }, 'release-1.0'), true);
+  assert.equal(isCampaignBonusInProfile({ act: 5, campaignProfiles: ['release-1.0'] }, 'legacy-0.5'), false);
+  assert.equal(isCampaignBonusInProfile({ act: 6, campaignProfiles: ['release-1.0'] }, 'release-1.0'), true);
+  assert.equal(isCampaignBonusInProfile({ act: 2 }, 'release-1.0'), true);
 });

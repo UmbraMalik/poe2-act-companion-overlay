@@ -1,3 +1,4 @@
+import { isCampaignBonusInProfile } from '../shared/campaign-profile';
 import { buildChecklistDefinition, buildChecklistViewItems } from '../shared/checklist';
 import type { ChecklistItemProgress } from '../shared/types';
 import { BROADCAST_THROTTLE_MS } from './app-environment';
@@ -162,7 +163,7 @@ export function runGetSnapshot(this: any) {
             guideEntries: this.guideService.getAll(),
             vendorCheckpoints: this.guideService.getVendorCheckpoints(),
             powerSpikes: this.guideService.getPowerSpikes(),
-            campaignBonuses: this.campaignBonuses,
+            campaignBonuses: this.campaignBonuses.filter((bonus: any) => isCampaignBonusInProfile(bonus, this.config.campaignProfile)),
             activeLevelReminder: this.getActiveLevelReminder(),
             runtime: {
                 ...this.runtime,
@@ -179,7 +180,7 @@ export function runGetOverlaySnapshot(this: any) {
             currentGuideEntry,
             vendorCheckpoints: this.guideService.getVendorCheckpoints(),
             powerSpikes: this.guideService.getPowerSpikes(),
-            campaignBonuses: this.campaignBonuses,
+            campaignBonuses: this.campaignBonuses.filter((bonus: any) => isCampaignBonusInProfile(bonus, this.config.campaignProfile)),
             runtime: {
                 ...this.runtime,
                 timerNowMs: Date.now()
