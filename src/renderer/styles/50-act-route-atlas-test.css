@@ -129,7 +129,8 @@
   letter-spacing: .05em;
   color: #9bbfa1;
 }
-.companion-page .act-atlas-location-strip > span:last-child b { color: #e9b96c; }
+.companion-page .act-atlas-location-strip > span:last-child b,
+.companion-page .act-atlas-location-strip > span.is-preview b { color: #e9b96c; }
 .companion-page .act-atlas-location-strip strong {
   min-width: 0;
   font-size: 11px;

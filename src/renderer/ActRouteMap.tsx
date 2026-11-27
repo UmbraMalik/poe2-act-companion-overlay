@@ -4,6 +4,7 @@ import type { AppLanguage, GuideEntry } from '../shared/types';
 import { RouteCardBonusPanel, type RouteCardBonusModel } from './RouteCardBonuses';
 import { UiIcon } from './UiIcon';
 import { INTERLUDE_CHAPTERS, type InterludeChapterId } from './interlude-atlas-data';
+import { buildRoutePath, insetMapPoint, normalizedName, resolveRouteDirection } from './act-route-direction';
 
 type RouteMapStatus = 'current' | 'missed' | 'completed' | 'visited' | 'pending';
 
@@ -125,28 +126,6 @@ function mapLabel(language: AppLanguage, ru: string, en: string) {
   return language === 'ru' ? ru : en;
 }
 
-function normalizedName(name: string): string {
-  return name.trim().toLocaleLowerCase('ru').replace(/\s+/g, ' ');
-}
-
-// Keep complete markers, bonus badges and labels inside the visible map frame.
-// Positions are illustrative; both nodes and guide-derived edges use the same inset.
-function insetMapPoint(point: readonly [number, number]): readonly [number, number] {
-  return [13 + (point[0] - 13) * .9, 14 + (point[1] - 13) * .86];
-}
-
-function buildRoutePath(from: readonly [number, number], to: readonly [number, number]) {
-  const start = insetMapPoint(from);
-  const end = insetMapPoint(to);
-  const x1 = start[0] * 10;
-  const y1 = start[1] * 7.4;
-  const x2 = end[0] * 10;
-  const y2 = end[1] * 7.4;
-  const bend = Math.max(14, Math.min(65, Math.abs(x2 - x1) * .22));
-  const sign = y2 >= y1 ? 1 : -1;
-  return `M${x1},${y1} C${x1 + bend},${y1 + sign * 12} ${x2 - bend},${y2 - sign * 12} ${x2},${y2}`;
-}
-
 function getMapGuideList(guide: GuideEntry, language: AppLanguage, key: string): string[] {
   const details = getGuideView(guide, language)?.details;
   if (!details || Array.isArray(details)) return [];
@@ -173,8 +152,12 @@ export function ActRouteMap({ language, act, interludeChapter, zones, currentGui
   const byName = useMemo(() => new Map(zones.map((zone) => [normalizedName(zone.entry.guide.zone_ru), zone])), [zones]);
   const selected = (selectedId ? byId.get(selectedId) : undefined) ?? activeZone ?? zones[0] ?? null;
   const matches = new Set(matchingIds);
-  const nextActive = activeZone ? byName.get(normalizedName(activeZone.entry.guide.next_zone_ru)) ?? null : null;
-  const nextId = nextActive?.entry.guide.id ?? null;
+  const { originId, nextId, isPreview } = resolveRouteDirection(
+    selected?.entry.guide ?? null, liveId, byName
+  );
+  const nextZone = nextId ? byId.get(nextId) : undefined;
+  const directionFrom = originId ? mapPositions[originId] : undefined;
+  const directionTo = nextId ? mapPositions[nextId] : undefined;
 
   const connections = useMemo(() => {
     const edges: { from: string; to: string; kind: 'route' | 'side' | 'voyage' }[] = [];
@@ -267,22 +250,25 @@ export function ActRouteMap({ language, act, interludeChapter, zones, currentGui
       <div className="act-atlas-layout">
         <div className="act-atlas-map-column">
           <div className="act-atlas-location-strip" aria-live="polite">
-            <span><b>{mapLabel(language, 'ВЫ ЗДЕСЬ', 'YOU ARE HERE')}</b><strong>{activeZone?.routeCardTitle ?? mapLabel(language, 'Локация не распознана', 'Location not detected')}</strong></span>
-            <span><b>{mapLabel(language, 'СЛЕДУЮЩИЙ ПЕРЕХОД', 'NEXT IN GUIDE')}</b><strong>{nextActive?.routeCardTitle ?? (activeZone ? (getGuideView(activeZone.entry.guide, language)?.nextZoneName || '—') : '—')}</strong></span>
+            <span className={isPreview ? 'is-preview' : undefined}><b>{isPreview ? mapLabel(language, 'ВЫБРАНО', 'SELECTED') : mapLabel(language, 'ВЫ ЗДЕСЬ', 'YOU ARE HERE')}</b><strong>{selected?.routeCardTitle ?? '—'}</strong></span>
+            <span><b>{mapLabel(language, 'СЛЕДУЮЩИЙ ПЕРЕХОД', 'NEXT IN GUIDE')}</b><strong>{nextZone?.routeCardTitle ?? (selectedView?.nextZoneName || '—')}</strong></span>
           </div>
         <div className="act-atlas-scroll" role="group" aria-label={mapLabel(language, 'Интерактивная карта маршрута. Весь акт виден сразу.', 'Interactive route map. The entire act is visible at once.')}>
           <div className="act-atlas-canvas">
             <svg className="act-atlas-edges" viewBox="0 0 1000 740" preserveAspectRatio="none" aria-hidden="true" focusable="false">
               <defs>
-                <marker id="act-atlas-next-arrow" markerWidth="7" markerHeight="7" refX="5.6" refY="3.5" orient="auto"><path d="M0 0L7 3.5L0 7" fill="none" stroke="#f5bf64" strokeWidth="1.8"/></marker>
+                <marker id="act-atlas-next-arrow" markerUnits="userSpaceOnUse" markerWidth="28" markerHeight="28" refX="14" refY="14" orient="auto"><path d="M4 4L23 14L4 24L10 14Z" fill="#ffe2a3" stroke="#533414" strokeWidth="2" strokeLinejoin="round"/></marker>
               </defs>
               {connections.map((edge) => {
                 const a = mapPositions[edge.from];
                 const b = mapPositions[edge.to];
                 if (!a || !b) return null;
-                const isRecommendedNext = edge.from === liveId && edge.to === nextId;
-                return <path key={`${edge.from}:${edge.to}`} className={`act-atlas-edge ${edge.kind === 'side' ? ' is-side' : edge.kind === 'voyage' ? ' is-voyage' : ''}${isRecommendedNext ? ' is-recommended' : ''}`} d={buildRoutePath(a, b)} markerEnd={isRecommendedNext ? 'url(#act-atlas-next-arrow)' : undefined} />;
+                return <path key={`${edge.from}:${edge.to}`} className={`act-atlas-edge ${edge.kind === 'side' ? ' is-side' : edge.kind === 'voyage' ? ' is-voyage' : ''}`} d={buildRoutePath(a, b)} />;
               })}
+              {/* Draw last, with the arrow halfway between nodes rather than under the destination marker. */}
+              {directionFrom && directionTo && (
+                <path className="act-atlas-edge is-recommended" d={buildRoutePath(directionFrom, directionTo, true)} markerMid="url(#act-atlas-next-arrow)" />
+              )}
             </svg>
             {zones.map((zone) => {
               const id = zone.entry.guide.id;
