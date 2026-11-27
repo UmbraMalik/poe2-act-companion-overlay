@@ -10,7 +10,7 @@ import type {
 } from '../../shared/types';
 
 interface LogWatcherCallbacks {
-  onLine: (line: string, source: 'bootstrap' | 'append') => void;
+  onLine: (line: string, source: 'bootstrap' | 'append', zoneMatch: ExtractedZoneMatch | null) => void;
   onAppendLine: (line: string) => void;
   onZoneDetected: (zoneMatch: ExtractedZoneMatch) => void;
   onStatusChange: (status: LogWatcherStatus, message: string) => void;
@@ -333,13 +333,25 @@ export class LogWatcher {
         this.needsResync = true;
         return;
       }
-      const buffer = Buffer.alloc(fileSize - start);
-      const { bytesRead } = await handle.read(buffer, 0, buffer.length, start);
-      if (generation !== this.generation || this.needsResync) return;
+      // Include the byte preceding the tail to distinguish a line boundary
+      // from a truncated first line, without reading unbounded history.
+      const readStart = Math.max(0, start - 1);
+      const buffer = Buffer.alloc(fileSize - readStart);
+      let bytesRead = 0;
+      while (bytesRead < buffer.length) {
+        const result = await handle.read(buffer, bytesRead, buffer.length - bytesRead, readStart + bytesRead);
+        if (generation !== this.generation || this.needsResync) return;
+        if (!result.bytesRead) {
+          // The file shrank while reading. Retry as historical on the next poll.
+          this.needsResync = true;
+          return;
+        }
+        bytesRead += result.bytesRead;
+      }
       this.resetTextState();
-      this.filePosition = start + bytesRead;
-      let content = this.decodeBuffer(buffer.subarray(0, bytesRead));
-      if (start > 0) {
+      this.filePosition = readStart + bytesRead;
+      let content = this.decodeBuffer(buffer.subarray(start - readStart, bytesRead));
+      if (start > 0 && buffer[0] !== 0x0a) {
         const newline = content.indexOf('\n');
         this.discardUntilNewline = newline < 0;
         content = newline < 0 ? '' : content.slice(newline + 1);
@@ -347,7 +359,9 @@ export class LogWatcher {
       // Bootstrap and resync use the same historical event path. Do not send
       // append callbacks or mutate timer/rewards as if these were live lines.
       this.consumeChunk(content, false);
-      this.historicalRemainder = Boolean(this.remainder) || bytesRead > 0 && !content.endsWith('\n');
+      // Check raw bytes: StringDecoder can hold an unfinished UTF-8 code point
+      // even when the decoded text currently ends at a newline.
+      this.historicalRemainder = Boolean(this.remainder) || bytesRead > 0 && buffer[bytesRead - 1] !== 0x0a;
     } finally { await handle.close(); }
   }
 
@@ -459,7 +473,8 @@ export class LogWatcher {
         this.runtimeState.lastMatchedZone &&
         this.runtimeState.lastMatcherReason !== 'none'
       );
-      this.callbacks.onLine(cleanedLine, live ? 'append' : 'bootstrap');
+      const zoneMatch = this.extractZoneMatch(cleanedLine);
+      this.callbacks.onLine(cleanedLine, live ? 'append' : 'bootstrap', zoneMatch);
       if (live) this.updateRuntimeState({
         lastAppendedLine: cleanedLine,
         currentOffset: this.filePosition,
@@ -467,7 +482,6 @@ export class LogWatcher {
         lastMatcherReason: 'none'
       });
 
-      const zoneMatch = this.extractZoneMatch(cleanedLine);
       if (zoneMatch) {
         if (live) {
           this.updateRuntimeState({ lastLiveZoneAt: new Date().toISOString() });

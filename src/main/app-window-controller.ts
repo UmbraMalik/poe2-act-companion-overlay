@@ -95,9 +95,18 @@ export function runCreateOverlayWindow(this: any) {
             focusable: true,
             hasShadow: false,
             backgroundColor: '#00000000',
-            webPreferences: getSecureWebPreferences()
+            webPreferences: getSecureWebPreferences(false)
         });
         attachWindowNavigationGuards(this.overlayWindow);
+        const overlay = this.overlayWindow as BrowserWindow;
+        // Preserve the unthrottled visible overlay behavior; hidden windows can sleep.
+        const setOverlayThrottling = (enabled: boolean) => {
+            if (!overlay.isDestroyed() && !overlay.webContents.isDestroyed()) {
+                overlay.webContents.setBackgroundThrottling(enabled);
+            }
+        };
+        overlay.on('hide', () => setOverlayThrottling(true));
+        overlay.on('show', () => setOverlayThrottling(false));
         this.attachManualHotkeys(this.overlayWindow);
         this.overlayWindow.setAlwaysOnTop(true, 'screen-saver');
         this.overlayWindow.setVisibleOnAllWorkspaces(true, {

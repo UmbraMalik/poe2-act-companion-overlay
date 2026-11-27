@@ -11,13 +11,13 @@ import { resolveRuntimePath } from './services/runtime-paths';
 
 type SecureWebPreferences = NonNullable<BrowserWindowConstructorOptions['webPreferences']>;
 
-export function getSecureWebPreferences(): SecureWebPreferences {
+export function getSecureWebPreferences(backgroundThrottling = true): SecureWebPreferences {
   return {
     preload: join(__dirname, 'preload.js'),
     contextIsolation: true,
     nodeIntegration: false,
     webSecurity: true,
-    backgroundThrottling: false
+    backgroundThrottling
     // Sandbox is not forced yet: preload compatibility needs a dedicated pass.
   };
 }

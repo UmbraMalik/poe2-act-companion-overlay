@@ -18,6 +18,28 @@ async function registeredSteamRoot(): Promise<string | null> {
   } catch { return null; }
 }
 
+// Enumerate only local fixed volumes. A disconnected network share or removable
+// device must not be probed just because it has a drive letter.
+export function parseFixedDriveRoots(output: string): string[] {
+  return [...new Set(output.split(/\r?\n/).map(line => line.trim().toUpperCase())
+    .filter(line => /^[A-Z]:$/.test(line)).map(line => `${line}\\`))];
+}
+
+async function fixedDriveRoots(): Promise<string[]> {
+  if (process.platform !== 'win32') return [];
+  try {
+    const { stdout } = await execFileAsync('powershell.exe', [
+      '-NoProfile', '-NonInteractive', '-Command',
+      "Get-CimInstance -ClassName Win32_LogicalDisk -Filter 'DriveType=3' | Select-Object -ExpandProperty DeviceID"
+    ], { windowsHide: true, timeout: 2000, maxBuffer: 64 * 1024 });
+    return [...new Set([...parseFixedDriveRoots(process.env.SystemDrive || 'C:'), ...parseFixedDriveRoots(stdout)])];
+  } catch {
+    // Preserve the system drive fallback when WMI is unavailable. Explicit Steam
+    // libraries, Program Files and the configured path are still searched.
+    return parseFixedDriveRoots(process.env.SystemDrive || 'C:');
+  }
+}
+
 // Steam's current libraryfolders.vdf stores each library root in a "path" entry.
 export function parseSteamLibraryPaths(text: string): string[] {
   return [...text.matchAll(/"path"\s*"((?:\\.|[^"\\])*)"/gi)]
@@ -58,13 +80,7 @@ export async function discoverGameLog(documents: string, previousPath: string | 
   const env = process.env;
   const programRoots = [env.ProgramFiles, env['ProgramFiles(x86)'], env.LOCALAPPDATA].filter((p): p is string => Boolean(p));
   // Probe fixed locations only; never recursively scan disks.
-  const driveRoots = process.platform === 'win32'
-    ? await Promise.all('CDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(async (letter) => {
-        const root = `${letter}:\\`;
-        try { return (await stat(root)).isDirectory() ? root : null; } catch { return null; }
-      })).then((roots) => roots.filter((root): root is string => root !== null))
-    : [];
-  const steamRoot = await registeredSteamRoot();
+  const [driveRoots, steamRoot] = await Promise.all([fixedDriveRoots(), registeredSteamRoot()]);
   const steamRoots = new Set([
     ...(steamRoot ? [steamRoot] : []),
     ...programRoots.map((root) => join(root, 'Steam')),

@@ -530,10 +530,19 @@ export interface AppSnapshot {
   runtime: RuntimeState;
 }
 
+export type OverlayConfig = Pick<AppConfig,
+  'campaignProfile' | 'appLanguage' | 'logFilePath' | 'currentLevel'
+  | 'overlayOpacity' | 'overlayMovementLocked' | 'overlayScale' | 'overlayTextSize'
+  | 'overlayDensity' | 'visualFxIntensity' | 'overlayEffectsEnabled' | 'theme'
+  | 'setupWizardCompleted' | 'overlayDebugLayoutEnabled' | 'overlayVisibleSections' | 'overlayLayoutOrder'
+  | 'mainOverlaySettings' | 'hotkeys' | 'lastRunSummary' | 'runHistory'
+  | 'runTimer' | 'runTimerSettings' | 'campaignBonusProgress'
+>;
+
 export type OverlaySnapshot = Omit<
   AppSnapshot,
-  'currentZoneProgress' | 'currentChecklist' | 'guideEntries' | 'activeLevelReminder'
->;
+  'currentZoneProgress' | 'currentChecklist' | 'guideEntries' | 'activeLevelReminder' | 'config'
+> & { config: OverlayConfig };
 
 export interface UiPreferencesSnapshot {
   config: Pick<AppConfig, 'appLanguage' | 'theme' | 'visualFxIntensity'>;

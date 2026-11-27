@@ -172,10 +172,35 @@ export function runGetSnapshot(this: any) {
         };
     }
 
-export function runGetOverlaySnapshot(this: any) {
+export function runGetOverlaySnapshot(this: any): import('../shared/types').OverlaySnapshot {
         const currentGuideEntry = this.currentZone.guide;
+        const config: import('../shared/types').AppConfig = this.config;
         return {
-            config: this.config,
+            config: {
+                campaignProfile: config.campaignProfile,
+                appLanguage: config.appLanguage,
+                logFilePath: config.logFilePath,
+                currentLevel: config.currentLevel,
+                overlayOpacity: config.overlayOpacity,
+                overlayMovementLocked: config.overlayMovementLocked,
+                overlayScale: config.overlayScale,
+                overlayTextSize: config.overlayTextSize,
+                overlayDensity: config.overlayDensity,
+                visualFxIntensity: config.visualFxIntensity,
+                overlayEffectsEnabled: config.overlayEffectsEnabled,
+                theme: config.theme,
+                setupWizardCompleted: config.setupWizardCompleted,
+                overlayDebugLayoutEnabled: config.overlayDebugLayoutEnabled,
+                overlayVisibleSections: config.overlayVisibleSections,
+                overlayLayoutOrder: config.overlayLayoutOrder,
+                mainOverlaySettings: config.mainOverlaySettings,
+                hotkeys: config.hotkeys,
+                lastRunSummary: config.lastRunSummary,
+                runHistory: config.runHistory,
+                runTimer: config.runTimer,
+                runTimerSettings: config.runTimerSettings,
+                campaignBonusProgress: config.campaignBonusProgress
+            },
             currentZone: this.currentZone,
             currentGuideEntry,
             vendorCheckpoints: this.guideService.getVendorCheckpoints(),

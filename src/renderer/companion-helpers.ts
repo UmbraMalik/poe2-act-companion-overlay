@@ -28,7 +28,7 @@ export interface XpStatus {
   variant: 'ok' | 'low' | 'farm' | 'unknown';
 }
 
-type XpStatusSnapshot = Pick<AppSnapshot, 'config' | 'currentGuideEntry'>;
+type XpStatusSnapshot = Pick<AppSnapshot, 'currentGuideEntry'> & { config: Pick<AppSnapshot['config'], 'currentLevel'> };
 
 type SceneDisplaySnapshot = Pick<AppSnapshot, 'currentGuideEntry' | 'currentZone'>;
 

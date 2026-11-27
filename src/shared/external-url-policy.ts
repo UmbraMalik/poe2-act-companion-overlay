@@ -61,7 +61,7 @@ export function isAllowedExternalUrl(value: unknown): value is string {
     return false;
   }
 
-  if (parsed.protocol !== 'https:') {
+  if (parsed.protocol !== 'https:' || parsed.port !== '') {
     return false;
   }
 

@@ -9,6 +9,8 @@ import {
   type OverlayPresetId
 } from './overlay-presets';
 
+type DisplayConfig = Pick<AppConfig, 'overlayOpacity' | 'overlayScale' | 'overlayDensity' | 'visualFxIntensity' | 'overlayEffectsEnabled' | 'overlayVisibleSections' | 'mainOverlaySettings' | 'runTimerSettings' | 'overlayLayoutOrder'>;
+
 export type OverlayDisplayIntent = 'normal' | 'speedrun' | 'timer_only' | 'custom';
 
 export const OVERLAY_CONTENT_BLOCKS = [
@@ -62,7 +64,7 @@ function cloneVisibleSections(sections: OverlayVisibleSections): OverlayVisibleS
   return { ...sections };
 }
 
-function buildBlockOrder(config: AppConfig): Record<OverlayContentBlock, number> {
+function buildBlockOrder(config: DisplayConfig): Record<OverlayContentBlock, number> {
   const sections: OverlayLayoutSection[] = ['zoneInfo', 'route', 'nearby', 'tips'];
   const selected = Array.isArray(config.overlayLayoutOrder) ? config.overlayLayoutOrder : sections;
   const order = [...new Set([...selected, ...sections])];
@@ -96,7 +98,7 @@ function getIntentFromPreset(presetId: OverlayPresetId | null): OverlayDisplayIn
 }
 
 export function getOverlayDisplayIntent(
-  config: AppConfig,
+  config: DisplayConfig,
   runtimeOverlayMode?: OverlayMode | null
 ): { intent: OverlayDisplayIntent; presetId: OverlayPresetId | null } {
   if (
@@ -153,7 +155,7 @@ function applyPresetIntentVisibility(
 }
 
 export function buildOverlayContentPlan(params: {
-  config: AppConfig;
+  config: DisplayConfig;
   runtimeOverlayMode?: OverlayMode | null;
 }): OverlayContentPlan {
   const { intent, presetId } = getOverlayDisplayIntent(

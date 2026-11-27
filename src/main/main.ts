@@ -276,10 +276,10 @@ export class PoeOverlayApp {
         this.zoneMatchExtractor = new ZoneMatchExtractor(this.guideService);
         this.campaignBonuses = campaignBonusesData.bonuses as CampaignBonusDefinition[];
         this.logWatcher = new LogWatcher(this.guideService, {
-            onLine: (line: any, source: any) => {
+            onLine: (line, source, zoneMatch) => {
                 this.runtime.lastLogLineAt = new Date().toISOString();
                 this.runtime.lastLogLine = line;
-                this.processRunTimerActivityFromLogLine(line, source);
+                this.processRunTimerActivityFromLogLine(line, source, zoneMatch);
                 this.processLevelUpFromLogLine(line, source);
                 this.applyCampaignBonusMatchesFromLogLine(line, source);
                 // Do not broadcast the full app snapshot for every log line. Zone changes,
@@ -884,7 +884,7 @@ export class PoeOverlayApp {
     extractZoneMatchFromLogLine(line: any) {
         return runExtractZoneMatchFromLogLineMethod.apply(this, arguments as any);
     }
-    processRunTimerActivityFromLogLine(line: any, source: any) {
+    processRunTimerActivityFromLogLine(line: any, source: any, zoneMatch?: import('./services/guide-service').ExtractedZoneMatch | null) {
         return runProcessRunTimerActivityFromLogLineMethod.apply(this, arguments as any);
     }
     clearRunTimerStartTimer() {

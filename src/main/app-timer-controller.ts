@@ -127,12 +127,12 @@ function getGeneratedAreaLevel(line: unknown): number | null {
         return Number.isFinite(level) ? level : null;
     }
 
-export function runProcessRunTimerActivityFromLogLine(this: any, line: any, source: any) {
+export function runProcessRunTimerActivityFromLogLine(this: any, line: any, source: any, parsedMatch?: import('./services/guide-service').ExtractedZoneMatch | null) {
         if (source === 'append') {
             this.completeEndgameT15Run(line);
         }
         const nowIso = new Date().toISOString();
-        const zoneMatch = this.extractZoneMatchFromLogLine(line);
+        const zoneMatch = parsedMatch === undefined ? this.extractZoneMatchFromLogLine(line) : parsedMatch;
         if (!zoneMatch) {
             return;
         }
@@ -765,10 +765,11 @@ export function runStartTimerVisualHeartbeat(this: any) {
         this.stopTimerVisualHeartbeat();
         this.timerVisualHeartbeat = setInterval(() => {
             const overlayWindow = this.overlayWindow;
-            if (!overlayWindow || overlayWindow.isDestroyed()) {
-                return;
-            }
-            if (overlayWindow.webContents.isDestroyed()) {
+            if (!overlayWindow || overlayWindow.isDestroyed() || !overlayWindow.isVisible() ||
+                overlayWindow.webContents.isDestroyed()) {
+                // Hidden time is not a main-thread stall. The next visible tick
+                // starts a new diagnostic interval, with the current wall clock.
+                this.lastTimerVisualHeartbeatSentAtMs = null;
                 return;
             }
             const now = Date.now();

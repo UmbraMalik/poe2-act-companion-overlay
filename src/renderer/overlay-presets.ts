@@ -246,7 +246,9 @@ function clonePresetPatch(preset: OverlayPresetPatch): OverlayPresetPatch {
   };
 }
 
-function matchesPreset(config: AppConfig, preset: OverlayPresetPatch): boolean {
+type PresetConfig = Pick<AppConfig, 'overlayOpacity' | 'overlayScale' | 'overlayDensity' | 'visualFxIntensity' | 'overlayEffectsEnabled' | 'overlayVisibleSections' | 'mainOverlaySettings' | 'runTimerSettings'>;
+
+function matchesPreset(config: PresetConfig, preset: OverlayPresetPatch): boolean {
   return config.overlayOpacity === preset.overlayOpacity &&
     config.overlayScale === preset.overlayScale &&
     config.overlayDensity === preset.overlayDensity &&
@@ -262,7 +264,7 @@ export function buildOverlayPresetPatch(presetId: OverlayPresetId): SettingsPatc
   return clonePresetPatch(OVERLAY_PRESET_PATCHES[presetId]);
 }
 
-export function getMatchingOverlayPreset(config: AppConfig): OverlayPresetId | null {
+export function getMatchingOverlayPreset(config: PresetConfig): OverlayPresetId | null {
   return OVERLAY_PRESET_IDS.find((presetId) => matchesPreset(config, OVERLAY_PRESET_PATCHES[presetId])) ?? null;
 }
 
