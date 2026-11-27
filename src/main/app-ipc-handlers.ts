@@ -307,6 +307,22 @@ export function runRegisterIpc(this: any) {
             }
             return selectedPath;
         });
+        ipcMain.handle('app:auto-detect-log-file', async () => {
+            const previousPath = this.config.logFilePath;
+            const selectedPath = await this.findAutoLogFile();
+            if (!selectedPath) return null;
+            // Do not overwrite a manual selection made while discovery was running.
+            if (this.config.logFilePath !== previousPath) return null;
+            this.config = this.configStore.update({
+                logFilePath: selectedPath,
+                logFileSelectionMode: 'auto'
+            });
+            if (this.runtime.watchedLogPath !== selectedPath) {
+                await this.startLogWatcher(selectedPath, this.config.ignoreExistingLogOnNextStart);
+            }
+            this.broadcastState();
+            return selectedPath;
+        });
         ipcMain.handle('app:update-settings', async (_event: any, patch: any) => {
             patch = normalizeSettingsPatchInput(patch);
             if (patch.campaignProfile && patch.campaignProfile !== this.config.campaignProfile &&

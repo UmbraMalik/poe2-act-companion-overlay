@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { translate } from '../i18n/translations';
 import type { AppLanguage, AppTheme, OverlaySnapshot } from '../shared/types';
 import { UiIcon } from './UiIcon';
+import { isLogActivityRecent } from '../shared/log-activity';
+import { useLiveNow } from './hooks';
 
 interface FirstRunWizardProps {
   snapshot: OverlaySnapshot;
@@ -16,10 +18,13 @@ export function FirstRunWizard({ snapshot, language }: FirstRunWizardProps) {
     return Number.isInteger(stored) && stored >= 0 && stored < SETUP_WIZARD_STEP_COUNT ? stored : 0;
   });
   const [busy, setBusy] = useState<string | null>(null);
+  const [autoSearchEmpty, setAutoSearchEmpty] = useState(false);
+  const now = useLiveNow(5000);
   const { config, currentGuideEntry, currentZone, runtime } = snapshot;
   const hasLogFile = Boolean(runtime.watchedLogPath ?? config.logFilePath);
-  const logReady = hasLogFile && runtime.logFileExists;
-  const zoneDetected = Boolean(currentGuideEntry ?? currentZone.rawZoneName);
+  const logReady = hasLogFile && runtime.logFileExists && runtime.logWatcherStatus === 'ready';
+  const logActive = logReady && isLogActivityRecent(runtime.lastActivityAt, now);
+  const zoneDetected = logReady && Boolean(runtime.lastLiveZoneAt) && runtime.lastZoneSource === 'log' && Boolean(currentZone.rawZoneName);
   const hotkeysReady = [config.hotkeys.openCompanion, config.hotkeys.toggleTimerPause]
     .every((value) => value.trim().length > 0);
 
@@ -31,10 +36,10 @@ export function FirstRunWizard({ snapshot, language }: FirstRunWizardProps) {
     {
       id: 'log',
       label: translate(language, 'setupWizard.readyLog'),
-      ready: logReady,
-      detail: logReady
+      ready: logActive,
+      detail: logActive
         ? runtime.watchedLogPath ?? config.logFilePath ?? ''
-        : translate(language, 'setupWizard.readyLogPending')
+        : translate(language, logReady ? 'settings.logStatusInactive' : 'setupWizard.readyLogPending')
     },
     {
       id: 'zone',
@@ -59,6 +64,7 @@ export function FirstRunWizard({ snapshot, language }: FirstRunWizardProps) {
     hotkeysReady,
     language,
     logReady,
+    logActive,
     runtime.watchedLogPath,
     zoneDetected
   ]);
@@ -80,7 +86,14 @@ export function FirstRunWizard({ snapshot, language }: FirstRunWizardProps) {
     void window.poe2Overlay.updateSettings({ theme, themePreferencePrompted: true });
   };
 
-  const chooseLogFile = () => runTask('log', () => window.poe2Overlay.chooseLogFile());
+  const chooseLogFile = () => runTask('log', async () => {
+    setAutoSearchEmpty(false);
+    await window.poe2Overlay.chooseLogFile();
+  });
+  const autoDetectLogFile = () => runTask('auto-log', async () => {
+    setAutoSearchEmpty(false);
+    setAutoSearchEmpty(!(await window.poe2Overlay.autoDetectLogFile()));
+  });
 
   const completeWizard = (name: 'finish' | 'skip') => runTask(name, async () => {
     window.sessionStorage.removeItem('poe2-setup-wizard-step');
@@ -144,17 +157,21 @@ export function FirstRunWizard({ snapshot, language }: FirstRunWizardProps) {
         {step === 1 && (
           <div className="overlay-setup-log-step">
             <p>{translate(language, 'setupWizard.logBody')}</p>
-            <div className={`overlay-setup-status-card ${logReady ? 'is-ready' : 'is-pending'}`}>
-              <UiIcon name={logReady ? 'check' : 'circle'} className="ui-status-icon" />
+            <div className={`overlay-setup-status-card ${logActive ? 'is-ready' : 'is-pending'}`}>
+              <UiIcon name={logActive ? 'check' : 'circle'} className="ui-status-icon" />
               <div>
-                <strong>{logReady ? translate(language, 'setupWizard.logReady') : translate(language, 'setupWizard.logPending')}</strong>
+                <strong>{translate(language, logActive ? 'settings.logStatusActive' : logReady ? 'settings.logStatusInactive' : 'setupWizard.logPending')}</strong>
                 <small>{runtime.watchedLogPath ?? config.logFilePath ?? translate(language, 'overlay.onboardingPath')}</small>
               </div>
             </div>
             <button type="button" className="button-primary" disabled={busy !== null} onClick={() => void chooseLogFile()}>
               {busy === 'log' ? translate(language, 'common.loading') : translate(language, 'settings.chooseLogFile')}
             </button>
-            <small>{translate(language, 'setupWizard.logHint')}</small>
+            <button type="button" className="button-secondary" disabled={busy !== null} onClick={() => void autoDetectLogFile()}>
+              {busy === 'auto-log' ? translate(language, 'common.loading') : translate(language, 'settings.autoDetectLogFile')}
+            </button>
+            {autoSearchEmpty && <small>{translate(language, 'settings.autoDetectLogFileEmpty')}</small>}
+            <small>{translate(language, logActive ? 'setupWizard.logHint' : 'settings.logActivityHint')}</small>
           </div>
         )}
 

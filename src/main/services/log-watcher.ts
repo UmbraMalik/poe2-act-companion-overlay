@@ -48,6 +48,8 @@ export class LogWatcher {
     lastMatchedZone: null,
     lastUpdateTimestamp: null,
     lastReadAt: null,
+    lastActivityAt: null,
+    lastLiveZoneAt: null,
     lastMatchedAt: null,
     lastMatcherReason: 'none',
     fileExists: false
@@ -92,6 +94,8 @@ export class LogWatcher {
       lastAppendedLine: null,
       lastMatchedZone: null,
       lastReadAt: null,
+      lastActivityAt: null,
+      lastLiveZoneAt: null,
       lastMatchedAt: null,
       lastMatcherReason: 'none',
       fileExists: false
@@ -138,6 +142,8 @@ export class LogWatcher {
       lastAppendedLine: null,
       lastMatchedZone: null,
       lastReadAt: null,
+      lastActivityAt: null,
+      lastLiveZoneAt: null,
       lastMatchedAt: null,
       lastMatcherReason: 'none',
       fileExists: false
@@ -168,6 +174,7 @@ export class LogWatcher {
       this.updateRuntimeState({
         fileExists: true,
         lastFileSize: fileStat.size,
+        lastActivityAt: fileStat.mtime.toISOString(),
         currentOffset: this.filePosition,
         lastReadAt: readAt,
         lastMatchedZone: null,
@@ -179,6 +186,8 @@ export class LogWatcher {
       this.updateRuntimeState({
         fileExists: false,
         lastFileSize: null,
+        lastActivityAt: null,
+        lastLiveZoneAt: null,
         currentOffset: this.filePosition,
         lastReadAt: readAt
       });
@@ -374,6 +383,8 @@ export class LogWatcher {
         this.updateRuntimeState({
           fileExists: false,
           lastFileSize: null,
+          lastActivityAt: null,
+          lastLiveZoneAt: null,
           currentOffset: this.filePosition,
           lastReadAt: readAt
         });
@@ -388,6 +399,8 @@ export class LogWatcher {
         this.updateRuntimeState({
           fileExists: false,
           lastFileSize: null,
+          lastActivityAt: null,
+          lastLiveZoneAt: null,
           currentOffset: this.filePosition,
           lastReadAt: readAt
         });
@@ -406,6 +419,7 @@ export class LogWatcher {
         this.updateRuntimeState({
           fileExists: true,
           lastFileSize: fileStat.size,
+          lastActivityAt: fileStat.mtime.toISOString(),
           currentOffset: this.filePosition,
           lastReadAt: readAt
         });
@@ -421,6 +435,7 @@ export class LogWatcher {
         this.updateRuntimeState({
           fileExists: true,
           lastFileSize: fileStat.size,
+          lastActivityAt: fileStat.mtime.toISOString(),
           currentOffset: this.filePosition,
           lastReadAt: readAt
         });
@@ -430,6 +445,7 @@ export class LogWatcher {
 
       const requiresResync = this.needsResync || fileStat.size < this.filePosition;
       if (requiresResync) {
+        this.updateRuntimeState({ lastActivityAt: fileStat.mtime.toISOString(), lastLiveZoneAt: null });
         this.resetTextState();
         this.needsResync = false;
         if (await this.resyncLargeFileFromTail(this.filePath, fileStat.size, readAt)) {
@@ -441,6 +457,7 @@ export class LogWatcher {
       this.updateRuntimeState({
         fileExists: true,
         lastFileSize: fileStat.size,
+        lastActivityAt: fileStat.mtime.toISOString(),
         currentOffset: this.filePosition,
         lastReadAt: readAt
       });
@@ -456,10 +473,11 @@ export class LogWatcher {
         const buffer = Buffer.alloc(readSize);
         await handle.read(buffer, 0, buffer.length, this.filePosition);
         this.filePosition = fileStat.size;
-        this.consumeChunk(this.decodeBuffer(buffer));
+        this.consumeChunk(this.decodeBuffer(buffer), !requiresResync);
         this.updateRuntimeState({
           fileExists: true,
           lastFileSize: fileStat.size,
+          lastActivityAt: fileStat.mtime.toISOString(),
           currentOffset: this.filePosition,
           lastReadAt: new Date().toISOString()
         });
@@ -467,12 +485,15 @@ export class LogWatcher {
       } finally {
         await handle.close();
       }
+    } catch (error) {
+      this.updateRuntimeState({ fileExists: false, lastFileSize: null, lastActivityAt: null, lastLiveZoneAt: null });
+      this.emitStatus('error', error instanceof Error ? error.message : 'Ошибка чтения лог-файла');
     } finally {
       this.reading = false;
     }
   }
 
-  private consumeChunk(chunk: string): void {
+  private consumeChunk(chunk: string, isLiveAppend: boolean): void {
     const merged = stripNulCharacters(`${this.remainder}${chunk}`);
     const lines = merged.split(/\r?\n/);
     this.remainder = lines.pop() ?? '';
@@ -497,6 +518,9 @@ export class LogWatcher {
 
       const zoneMatch = this.extractZoneMatch(cleanedLine);
       if (zoneMatch) {
+        if (isLiveAppend) {
+          this.updateRuntimeState({ lastLiveZoneAt: new Date().toISOString() });
+        }
         if (!this.shouldPreserveRuntimeMatchedZone(zoneMatch, hadMatchedGuideBeforeLine)) {
           this.updateRuntimeState({
             lastMatchedZone: zoneMatch.guide?.zone_ru ?? zoneMatch.rawZoneName,

@@ -1,6 +1,6 @@
 import { access, stat } from 'node:fs/promises';
 import { constants } from 'node:fs';
-import { join } from 'node:path';
+import { discoverGameLog } from './services/log-discovery';
 import { app } from 'electron';
 import { getEndgameT15Act, isGuideInCampaign } from '../shared/campaign-profile';
 import type { ZoneMatchExtractor } from './services/zone-match-extractor';
@@ -153,12 +153,9 @@ export function runRebindCurrentZoneAfterGuideReload(this: any) {
     }
 
 export async function runEnsureLogFile(this: any) {
-        if (this.config.logFilePath) {
-            const shouldPreservePath = this.config.logFileSelectionMode !== 'auto';
-            if (shouldPreservePath || (await this.isReadable(this.config.logFilePath))) {
-                await this.refreshLogFileInfo(this.config.logFilePath);
-                return;
-            }
+        if (this.config.logFilePath && this.config.logFileSelectionMode !== 'auto') {
+            await this.refreshLogFileInfo(this.config.logFilePath);
+            return;
         }
         const discoveredPath = await this.findAutoLogFile();
         if (discoveredPath) {
@@ -182,22 +179,7 @@ export async function runEnsureLogFile(this: any) {
     }
 
 export async function runFindAutoLogFile(this: any) {
-        const documents = app.getPath('documents');
-        const baseDirectories = [
-            join(documents, 'My Games', 'Path of Exile 2', 'logs'),
-            join(documents, 'My Games', 'Path of Exile 2'),
-            'C:\\Program Files (x86)\\Steam\\steamapps\\common\\Path of Exile 2\\logs',
-            'C:\\Program Files\\Steam\\steamapps\\common\\Path of Exile 2\\logs',
-            'E:\\Steam\\steamapps\\common\\Path of Exile 2\\logs'
-        ];
-        const fileNamesByPriority = ['LatestClient.txt', 'Client.txt'];
-        const candidates = fileNamesByPriority.flatMap((fileName: any) => baseDirectories.map((directory: any) => join(directory, fileName)));
-        for (const candidate of candidates) {
-            if (await this.isReadable(candidate)) {
-                return candidate;
-            }
-        }
-        return null;
+        return discoverGameLog(app.getPath('documents'), this.config.logFilePath);
     }
 
 export async function runIsReadable(this: any, filePath: any) {

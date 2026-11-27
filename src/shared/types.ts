@@ -467,6 +467,8 @@ export interface LogWatcherRuntimeState {
   lastMatchedZone: string | null;
   lastUpdateTimestamp: string | null;
   lastReadAt: string | null;
+  lastActivityAt: string | null;
+  lastLiveZoneAt: string | null;
   lastMatchedAt: string | null;
   lastMatcherReason: ZoneMatcherReason;
 }
@@ -496,6 +498,8 @@ export interface RuntimeState {
   watcherLastMatchedZone: string | null;
   lastWatcherUpdateAt: string | null;
   lastReadAt: string | null;
+  lastActivityAt: string | null;
+  lastLiveZoneAt: string | null;
   lastMatchedAt: string | null;
   lastMatcherReason: ZoneMatcherReason;
   lastLevelUpDetectedAt: string | null;
@@ -697,6 +701,7 @@ export interface ElectronApi {
   downloadAutoUpdate: () => Promise<AutoUpdateState>;
   installAutoUpdate: () => Promise<boolean>;
   chooseLogFile: () => Promise<string | null>;
+  autoDetectLogFile: () => Promise<string | null>;
   updateSettings: (patch: SettingsPatch) => Promise<AppSnapshot>;
   simulateZone: (zoneSelector: string) => Promise<AppSnapshot>;
   reloadGuide: () => Promise<AppSnapshot>;

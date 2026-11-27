@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { appendFileSync, mkdirSync, writeFileSync } from 'node:fs';
+import { appendFileSync, mkdirSync, writeFileSync, utimesSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import type { LogWatcherRuntimeState } from '../src/shared/types';
 import { installElectronMock } from './helpers/electron-mock';
@@ -74,4 +74,38 @@ test('LogWatcher resyncs large files from the capped tail and continues appended
   } finally {
     watcher.stop();
   }
+});
+
+
+test('idle polling and bootstrap do not manufacture file activity or a live zone', async () => {
+  const tempDir = join(process.cwd(), '.tmp-tests', `log-health-${process.pid}-${Date.now()}`);
+  const logPath = join(tempDir, 'LatestClient.txt');
+  mkdirSync(tempDir, { recursive: true });
+  writeFileSync(logPath, '[SCENE] Set Source [Grelwood]\n');
+  const oldTime = new Date(Date.now() - 600_000);
+  utimesSync(logPath, oldTime, oldTime);
+  const oldMtime = statSync(logPath).mtime.toISOString();
+  const guideService = new GuideService();
+  guideService.load();
+  const states: LogWatcherRuntimeState[] = [];
+  const watcher = new LogWatcher(guideService, {
+    onLine: () => {}, onAppendLine: () => {}, onZoneDetected: () => {}, onStatusChange: () => {},
+    onRuntimeStateChange: (state) => states.push(state)
+  });
+  const latest = () => states[states.length - 1];
+  try {
+    await watcher.start(logPath);
+    assert.equal(latest().lastActivityAt, oldMtime);
+    assert.equal(latest().lastLiveZoneAt, null);
+    await watcher.checkNow();
+    assert.equal(latest().lastActivityAt, oldMtime);
+    assert.equal(latest().lastLiveZoneAt, null);
+    appendFileSync(logPath, '[SCENE] Set Source [The Riverbank]\n');
+    await watcher.checkNow();
+    assert.notEqual(latest().lastActivityAt, oldMtime);
+    assert.ok(latest().lastLiveZoneAt);
+    watcher.stop();
+    assert.equal(latest().lastActivityAt, null);
+    assert.equal(latest().lastLiveZoneAt, null);
+  } finally { watcher.stop(); }
 });

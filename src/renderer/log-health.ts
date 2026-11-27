@@ -5,7 +5,8 @@ import type {
   RuntimeState
 } from '../shared/types';
 
-export const LOG_HEALTH_STALE_AFTER_MS = 120_000;
+import { isLogActivityRecent } from '../shared/log-activity';
+export { LOG_HEALTH_STALE_AFTER_MS } from '../shared/log-activity';
 
 export type ZoneRecognitionState =
   | 'matched'
@@ -32,7 +33,7 @@ export type ZoneRecognitionView = {
 
 type LogHealthRuntime = Pick<
   RuntimeState,
-  'logWatcherStatus' | 'watchedLogPath' | 'lastReadAt' | 'lastMatchedAt'
+  'logWatcherStatus' | 'watchedLogPath' | 'lastActivityAt' | 'lastMatchedAt'
 >;
 
 type LogHealthZone = Pick<CurrentZoneState, 'rawZoneName' | 'sceneKind' | 'guide'>;
@@ -91,7 +92,7 @@ const COPY: Record<AppLanguage, Copy> = {
     knownNoGuide: 'Зона без карточки',
     unknownZone: 'Неизвестная зона',
     noPreviousMatch: 'Маршрут ещё не совпадал',
-    lastRead: (age) => `Последнее чтение: ${age}`,
+    lastRead: (age) => `Последнее изменение: ${age}`,
     lastMatched: (age) => `Маршрут совпал: ${age}`,
     justNow: 'только что',
     secondsAgo: (value) => `${value} с назад`,
@@ -103,7 +104,7 @@ const COPY: Record<AppLanguage, Copy> = {
     missingText: 'Выбери Client.txt или LatestClient.txt в настройках, затем зайди в любую зону.',
     missingHint: 'Оверлей не будет обновлять маршрут, пока лог не подключён.',
     staleTitle: 'Лог давно не обновлялся',
-    staleText: 'Файл выбран, но оверлей давно не видел новых чтений из Client.txt.',
+    staleText: 'Файл доступен, но свежих изменений не обнаружено. Если игра не запущена, это нормально.',
     staleHint: 'Если игра открыта, зайди в новую зону или перепроверь выбранный лог-файл.',
     townTitle: 'Обнаружен город или хаб',
     townText: (zone) => `${zone}: это безопасное состояние без карточки маршрута.`,
@@ -127,7 +128,7 @@ const COPY: Record<AppLanguage, Copy> = {
     knownNoGuide: 'No route card',
     unknownZone: 'Unknown zone',
     noPreviousMatch: 'No route match yet',
-    lastRead: (age) => `Last read: ${age}`,
+    lastRead: (age) => `Last file update: ${age}`,
     lastMatched: (age) => `Route matched: ${age}`,
     justNow: 'just now',
     secondsAgo: (value) => `${value}s ago`,
@@ -139,7 +140,7 @@ const COPY: Record<AppLanguage, Copy> = {
     missingText: 'Choose Client.txt or LatestClient.txt in Settings, then enter any zone.',
     missingHint: 'The overlay cannot update the route until the log is connected.',
     staleTitle: 'Log has not updated recently',
-    staleText: 'A file is selected, but the overlay has not read Client.txt recently.',
+    staleText: 'The file is accessible, but no recent changes were detected. This is normal when the game is closed.',
     staleHint: 'If the game is open, enter a new zone or re-check the selected log file.',
     townTitle: 'Town or hub detected',
     townText: (zone) => `${zone}: this is a safe state without a route card.`,
@@ -191,8 +192,7 @@ function isLogReadStale(runtime: LogHealthRuntime, nowMs: number): boolean {
     return false;
   }
 
-  const lastReadMs = parseTimestampMs(runtime.lastReadAt);
-  return lastReadMs !== null && nowMs - lastReadMs > LOG_HEALTH_STALE_AFTER_MS;
+  return !isLogActivityRecent(runtime.lastActivityAt, nowMs);
 }
 
 function getLastMatchDetail(runtime: LogHealthRuntime, nowMs: number, copy: Copy): string {
@@ -253,10 +253,10 @@ export function getZoneRecognitionView(
   }
 
   if (isLogReadStale(runtime, nowMs)) {
-    const age = formatRelativeAge(runtime.lastReadAt, nowMs, copy);
+    const age = formatRelativeAge(runtime.lastActivityAt, nowMs, copy);
     return makeView(
       'log_stale',
-      'warning',
+      'neutral',
       copy.logStale,
       age ? copy.lastRead(age) : copy.waitingForZone,
       copy.sceneUnknown,
@@ -348,4 +348,20 @@ export function getZoneRecognitionView(
     copy.missingHint,
     copy.activeSummary
   );
+}
+
+
+export function getLogFileStatus(
+  runtime: Pick<RuntimeState, 'watchedLogPath' | 'logFileExists' | 'logWatcherStatus' | 'lastActivityAt'>,
+  configuredPath: string | null,
+  nowMs: number
+) {
+  const selected = Boolean(runtime.watchedLogPath ?? configuredPath);
+  const available = runtime.logFileExists && runtime.logWatcherStatus === 'ready';
+  const active = available && isLogActivityRecent(runtime.lastActivityAt, nowMs);
+  return {
+    active,
+    labelKey: !selected ? 'settings.logStatusPending' : !available ? 'settings.logStatusMissing' : active ? 'settings.logStatusActive' : 'settings.logStatusInactive',
+    tone: !selected || (available && !active) ? 'is-pending' : active ? 'is-success' : 'is-warning'
+  };
 }

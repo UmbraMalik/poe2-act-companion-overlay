@@ -97,6 +97,8 @@ export function DiagnosticsBundlePanel({
     snapshot?.config.logFilePath,
     snapshot?.runtime.watchedLogPath,
     snapshot?.runtime.lastReadAt,
+    snapshot?.runtime.lastActivityAt,
+    snapshot?.runtime.lastLiveZoneAt,
     snapshot?.runtime.lastLogLineAt
   ]);
 

@@ -284,6 +284,8 @@ export function getPreviewSnapshot(): AppSnapshot {
       watcherLastMatchedZone: selectedGuide?.zone_ru ?? null,
       lastWatcherUpdateAt: '2026-05-12T12:00:00.000Z',
       lastReadAt: '2026-05-12T12:00:00.000Z',
+      lastActivityAt: '2026-05-12T12:00:00.000Z',
+      lastLiveZoneAt: '2026-05-12T12:00:00.000Z',
       lastMatchedAt: '2026-05-12T12:00:00.000Z',
       lastMatcherReason: selectedGuide ? 'zone_ru' : 'none',
       lastLevelUpDetectedAt: currentLevel ? '2026-05-12T12:00:00.000Z' : null,

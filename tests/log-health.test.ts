@@ -23,7 +23,7 @@ function makeSnapshot(
   const runtime: LogHealthSnapshot['runtime'] = {
     logWatcherStatus: 'ready',
     watchedLogPath: 'C:\\Games\\Path of Exile 2\\logs\\Client.txt',
-    lastReadAt: isoAgo(10_000),
+    lastActivityAt: isoAgo(10_000),
     lastMatchedAt: isoAgo(20_000),
     ...overrides.runtime
   };
@@ -65,7 +65,7 @@ test('zone recognition view separates log active, missing, stale and matched sta
   const stale = getZoneRecognitionView(
     makeSnapshot({
       runtime: {
-        lastReadAt: isoAgo(LOG_HEALTH_STALE_AFTER_MS + 1_000)
+        lastActivityAt: isoAgo(LOG_HEALTH_STALE_AFTER_MS + 1_000)
       }
     }),
     'en',
@@ -73,8 +73,8 @@ test('zone recognition view separates log active, missing, stale and matched sta
   );
   assert.equal(stale.state, 'log_stale');
   assert.equal(stale.label, 'Log stale');
-  assert.equal(stale.tone, 'warning');
-  assert.match(stale.detail, /Last read:/);
+  assert.equal(stale.tone, 'neutral');
+  assert.match(stale.detail, /Last file update:/);
 
   const matched = getZoneRecognitionView(
     makeSnapshot({
@@ -136,4 +136,11 @@ test('zone recognition view separates town, known no-guide and unknown zone copy
   assert.equal(unknown.label, 'Unknown zone');
   assert.match(unknown.noGuideText, /could not match/);
   assert.equal(unknown.sceneLabel, 'Unknown scene');
+});
+
+
+test('a readable file with no modification timestamp is not shown as active', () => {
+  const view = getZoneRecognitionView(makeSnapshot({ runtime: { lastActivityAt: null } }), 'ru', NOW_MS);
+  assert.equal(view.state, 'log_stale');
+  assert.equal(view.tone, 'neutral');
 });

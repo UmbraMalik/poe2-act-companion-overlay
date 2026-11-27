@@ -30,6 +30,7 @@ const api: ElectronApi = {
   downloadAutoUpdate: () => ipcRenderer.invoke('app:auto-update-download'),
   installAutoUpdate: () => ipcRenderer.invoke('app:auto-update-install'),
   chooseLogFile: () => ipcRenderer.invoke('app:choose-log-file'),
+  autoDetectLogFile: () => ipcRenderer.invoke('app:auto-detect-log-file'),
   updateSettings: (patch: SettingsPatch) =>
     ipcRenderer.invoke('app:update-settings', patch),
   simulateZone: (zoneSelector: string) =>

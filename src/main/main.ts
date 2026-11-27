@@ -11,6 +11,7 @@ import { ConfigStore } from './services/config-store';
 import { GuideService } from './services/guide-service';
 import { ZoneMatchExtractor } from './services/zone-match-extractor';
 import { LogWatcher } from './services/log-watcher';
+import { isLogActivityRecent } from '../shared/log-activity';
 import { AutoUpdateService } from './services/auto-update-service';
 import { TimerDiagnosticsLog } from './timer-diagnostics-log';
 import { translate } from '../i18n/translations';
@@ -298,7 +299,12 @@ export class PoeOverlayApp {
             onRuntimeStateChange: (state: any) => {
                 const shouldBroadcast = this.runtime.watchedLogPath !== state.watchedLogPath ||
                     this.runtime.logFileExists !== state.fileExists ||
-                    this.runtime.watcherLastMatchedZone !== state.lastMatchedZone;
+                    this.runtime.watcherLastMatchedZone !== state.lastMatchedZone ||
+                    Boolean(this.runtime.lastLiveZoneAt) !== Boolean(state.lastLiveZoneAt) ||
+                    (this.runtime.lastActivityAt !== state.lastActivityAt &&
+                        Math.floor(Date.parse(this.runtime.lastActivityAt ?? '') / 15000) !== Math.floor(Date.parse(state.lastActivityAt ?? '') / 15000)) ||
+                    isLogActivityRecent(this.runtime.lastActivityAt, Date.parse(this.runtime.lastWatcherUpdateAt ?? '')) !==
+                        isLogActivityRecent(state.lastActivityAt);
                 this.runtime.watchedLogPath = state.watchedLogPath;
                 this.runtime.currentLogOffset = state.currentOffset;
                 this.runtime.logFileExists = state.fileExists;
@@ -307,6 +313,8 @@ export class PoeOverlayApp {
                 this.runtime.watcherLastMatchedZone = state.lastMatchedZone;
                 this.runtime.lastWatcherUpdateAt = state.lastUpdateTimestamp;
                 this.runtime.lastReadAt = state.lastReadAt;
+                this.runtime.lastActivityAt = state.lastActivityAt;
+                this.runtime.lastLiveZoneAt = state.lastLiveZoneAt;
                 this.runtime.lastMatchedAt = state.lastMatchedAt;
                 this.runtime.lastMatcherReason = state.lastMatcherReason;
                 if (shouldBroadcast) {
@@ -358,6 +366,8 @@ export class PoeOverlayApp {
             watcherLastMatchedZone: null,
             lastWatcherUpdateAt: null,
             lastReadAt: null,
+            lastActivityAt: null,
+            lastLiveZoneAt: null,
             lastMatchedAt: null,
             lastMatcherReason: 'none',
             lastLevelUpDetectedAt: null,

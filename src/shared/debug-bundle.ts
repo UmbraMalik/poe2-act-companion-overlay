@@ -53,6 +53,8 @@ type DebugBundleText = {
   watcherStatus: string;
   watcherMessage: string;
   lastReadAt: string;
+  lastActivityAt: string;
+  lastLiveZoneAt: string;
   lastMatchedAt: string;
   currentRawZone: string;
   sceneKind: string;
@@ -103,6 +105,8 @@ const TEXT: Record<AppLanguage, DebugBundleText> = {
     watcherStatus: 'Статус watcher',
     watcherMessage: 'Сообщение watcher',
     lastReadAt: 'Последнее чтение',
+    lastActivityAt: 'Последнее изменение файла',
+    lastLiveZoneAt: 'Свежее событие зоны',
     lastMatchedAt: 'Последнее совпадение',
     currentRawZone: 'Текущая сырая зона',
     sceneKind: 'Тип сцены',
@@ -151,6 +155,8 @@ const TEXT: Record<AppLanguage, DebugBundleText> = {
     watcherStatus: 'Watcher status',
     watcherMessage: 'Watcher message',
     lastReadAt: 'Last read at',
+    lastActivityAt: 'Last file modification',
+    lastLiveZoneAt: 'Live zone event',
     lastMatchedAt: 'Last matched at',
     currentRawZone: 'Current raw zone',
     sceneKind: 'Scene kind',
@@ -366,6 +372,8 @@ export function buildDebugBundle(options: DebugBundleOptions): DebugBundle {
     `${labels.watcherStatus}: ${formatKnownValue(runtime?.logWatcherStatus, language)}`,
     `${labels.watcherMessage}: ${formatValue(runtime?.logWatcherMessage)}`,
     `${labels.lastReadAt}: ${formatValue(runtime?.lastReadAt)}`,
+    `${labels.lastActivityAt}: ${formatValue(runtime?.lastActivityAt)}`,
+    `${labels.lastLiveZoneAt}: ${formatValue(runtime?.lastLiveZoneAt)}`,
     `${labels.lastMatchedAt}: ${formatValue(runtime?.lastMatchedAt)}`,
     '',
     `## ${labels.zone}`,

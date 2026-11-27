@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, type KeyboardEvent, type ReactNode } from 'react';
-import { useAppSnapshot, useLiveRunTimer } from '../hooks';
+import { useAppSnapshot, useLiveNow, useLiveRunTimer } from '../hooks';
+import { getLogFileStatus } from '../log-health';
 import { useDocumentTitle, useI18n } from '../useI18n';
 import { getCurrentActElapsedMs, getSceneDisplayName } from '../companion-helpers';
 import { formatDuration, formatFileSize, formatGuideLabel, getReleaseNoteItems, formatTimestamp, formatZoneOption } from '../utils';
@@ -250,6 +251,8 @@ export function SettingsPage() {
       component: 'settings-live-timer'
     } : undefined
   );
+  const logHealthNow = useLiveNow(5000);
+  const [autoSearchEmpty, setAutoSearchEmpty] = useState(false);
   const [busy, setBusy] = useState<string | null>(null);
   const [simulateZone, setSimulateZone] = useState('');
   const [devLogLine, setDevLogLine] = useState(() => getDefaultDevLine('ru'));
@@ -373,17 +376,9 @@ export function SettingsPage() {
   const sceneName = getSceneDisplayName(snapshot, appLanguage);
   const activeOverlayPreset = getMatchingOverlayPreset(config);
   const overlayPresetTitle = formatOverlayPresetTitle(appLanguage);
-  const hasSelectedLogFile = Boolean(runtime.watchedLogPath ?? config.logFilePath);
-  const logFileStatusText = !hasSelectedLogFile
-    ? t('settings.logStatusPending')
-    : runtime.logFileExists
-      ? t('settings.logStatusReady')
-      : t('settings.logStatusMissing');
-  const logFileStatusTone = !hasSelectedLogFile
-    ? 'is-pending'
-    : runtime.logFileExists
-      ? 'is-success'
-      : 'is-warning';
+  const logHealth = getLogFileStatus(runtime, config.logFilePath, logHealthNow);
+  const logFileStatusText = t(logHealth.labelKey);
+  const logFileStatusTone = logHealth.tone;
   const autoUpdateStatus = autoUpdateState?.status ?? 'idle';
   const updateReleaseNoteItems = getReleaseNoteItems(autoUpdateState?.releaseNotes ?? '');
   const updateProgress = autoUpdateState?.downloadProgress ?? null;
@@ -516,11 +511,15 @@ export function SettingsPage() {
     });
   };
 
-  const chooseLogFile = async () => {
-    await runTask('choose-log-file', async () => {
-      await window.poe2Overlay.chooseLogFile();
-    });
-  };
+  const chooseLogFile = () => runTask('choose-log-file', async () => {
+    setAutoSearchEmpty(false);
+    await window.poe2Overlay.chooseLogFile();
+  });
+
+  const autoDetectLogFile = () => runTask('auto-detect-log-file', async () => {
+    setAutoSearchEmpty(false);
+    setAutoSearchEmpty(!(await window.poe2Overlay.autoDetectLogFile()));
+  });
 
   const saveLeagueStartSettings = async () => {
     const leagueStartAt = leagueStartDraft ? new Date(leagueStartDraft).getTime() : null;
@@ -937,21 +936,22 @@ export function SettingsPage() {
               { label: t('settings.fileAvailable'), value: runtime.logFileExists ? t('common.yes') : t('common.no') },
               { label: t('settings.fileSize'), value: formatFileSize(runtime.logFileSize) },
               { label: t('settings.readOffset'), value: `${runtime.currentLogOffset} B` },
-              { label: t('common.status'), value: logWatcherMessage }
+              { label: t('common.status'), value: logFileStatusText },
+              { label: t('settings.watcherStatus'), value: logWatcherMessage },
+              { label: t('settings.logLastActivity'), value: formatTimestamp(runtime.lastActivityAt, appLanguage) },
+              { label: t('settings.logLiveZone'), value: formatTimestamp(runtime.lastLiveZoneAt, appLanguage) }
             ]}
           />
           <div className="button-row">
-            <button
-              type="button"
-              className="button-primary"
-              disabled={busy !== null}
-              onClick={() => {
-                void chooseLogFile();
-              }}
-            >
+            <button type="button" className="button-primary" disabled={busy !== null} onClick={() => void chooseLogFile()}>
               {t('settings.chooseLogFile')}
             </button>
+            <button type="button" className="button-secondary" disabled={busy !== null} onClick={() => void autoDetectLogFile()}>
+              {t('settings.autoDetectLogFile')}
+            </button>
           </div>
+          {!logHealth.active && <p className="helper-text">{t('settings.logActivityHint')}</p>}
+          {autoSearchEmpty && <p className="helper-text">{t('settings.autoDetectLogFileEmpty')}</p>}
         </section>
 
         {SHOW_DEVELOPER_SETTINGS && (

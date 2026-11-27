@@ -78,6 +78,8 @@ function makeSnapshot(): AppSnapshot {
       watcherLastMatchedZone: 'Кхарийский перевал',
       lastWatcherUpdateAt: '2026-05-17T12:00:00.000Z',
       lastReadAt: '2026-05-17T12:00:00.000Z',
+      lastActivityAt: '2026-05-17T12:00:00.000Z',
+      lastLiveZoneAt: '2026-05-17T12:00:00.000Z',
       lastMatchedAt: '2026-05-17T12:00:00.000Z',
       lastMatcherReason: 'internal_area',
       lastLevelUpDetectedAt: null,
