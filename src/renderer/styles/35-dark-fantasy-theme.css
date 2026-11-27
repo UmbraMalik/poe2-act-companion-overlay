@@ -513,7 +513,7 @@
   background:
     linear-gradient(90deg, transparent 0%, var(--overlay-section-edge-soft, rgba(241, 185, 106, 0.14)) 18%, transparent 36%),
     linear-gradient(180deg, transparent 0%, var(--overlay-section-edge, rgba(241, 185, 106, 0.26)) 48%, transparent 74%) !important;
-  opacity: 0.52 !important;
+  opacity: 0.52;
   animation: poe2-overlay-section-edge-breathe 4.8s ease-in-out infinite !important;
 }
 
@@ -530,7 +530,7 @@
 }
 
 .overlay-page.fx-subtle:not(.overlay-page-timer-only) .hud-block::after {
-  opacity: 0.34 !important;
+  opacity: 0.34;
   animation-duration: 7.4s !important;
 }
 
@@ -539,7 +539,7 @@
 }
 
 .overlay-page.fx-rich:not(.overlay-page-timer-only) .hud-block::after {
-  opacity: 0.70 !important;
+  opacity: 0.70;
   animation-duration: 4.4s !important;
 }
 

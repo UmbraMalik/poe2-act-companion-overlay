@@ -772,6 +772,19 @@ test('default motion avoids continuous compositor-heavy ambient animations', () 
   assert.match(modeStability, /\.overlay-page \.overlay-shell::after,[\s\S]*animation: none !important;/);
 });
 
+test('overlay local frame effects preserve intensity, motion preference and setup status alignment', () => {
+  const frames = readText('src/renderer/styles/49-overlay-preview-width-border-fix.css');
+  const setup = readText('src/renderer/styles/36-companion-cohesion.css');
+  assert.match(frames, /@media \(prefers-reduced-motion: no-preference\)/);
+  assert.match(frames, /:is\(\.fx-subtle, \.fx-normal, \.fx-rich\)/);
+  assert.match(frames, /\.theme-dark-fantasy\.overlay-page[^\n]+\.overlay-shell::before/);
+  assert.match(frames, /\.overlay-guidance-stack \.hud-block::after \{\s*display: block !important;/);
+  assert.match(frames, /animation: poe2-overlay-local-edge-glow var\(--overlay-local-card-duration\)/);
+  assert.match(frames, /@media \(prefers-reduced-motion: reduce\) \{[\s\S]*\.overlay-shell::before \{\s*animation: none !important;/);
+  assert.match(setup, /\.overlay-setup-ready-list > div \{\s*display: grid;\s*grid-template-columns: 20px minmax\(0, 1fr\);/);
+  assert.match(setup, /\.overlay-setup-ready-list > div > \.ui-icon \{[^}]*margin: 0;[^}]*justify-self: center;/);
+});
+
 test('overlay mode changes use one latest-layout resize without transition-shell flashes', () => {
   const overlay = readText('src/renderer/pages/OverlayPage.tsx');
 

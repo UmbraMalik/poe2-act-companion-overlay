@@ -1,13 +1,85 @@
-/* Restore only the moving edge glint: 39-overlay-mode-stability intentionally
- * freezes shell animations during native window resizes. It also accidentally
- * froze the border pseudo-element permanently. Keep the shell static and animate
- * just the masked conic highlight when OS motion preferences allow it.
- */
+/* Keep native-window surfaces static during mode changes. Animate only local
+ * decorative layers, with explicit theme/mode selectors to win the earlier
+ * FX intensity overrides. Dark fantasy uses ::before for the full shell. */
+.overlay-page:is(.fx-off, .fx-subtle, .fx-normal, .fx-rich):not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-shell,
+.overlay-page:is(.fx-off, .fx-subtle, .fx-normal, .fx-rich).is-overlay-collapsed .overlay-collapsed-shell {
+  animation: none !important;
+}
+
+@keyframes poe2-overlay-local-edge-glow {
+  0%, 100% { opacity: 0.28; }
+  50% { opacity: 0.90; }
+}
+
 @media (prefers-reduced-motion: no-preference) {
-  .overlay-page:not(.fx-off):not(.theme-dark-fantasy):not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-shell::after,
-  .overlay-page:not(.fx-off).overlay-page-timer-only .overlay-timer-only-card::after,
-  .overlay-page:not(.fx-off).is-overlay-collapsed .overlay-collapsed-shell::after {
-    animation: poe2-ambient-edge-orbit 8.8s linear infinite !important;
+  .overlay-page:is(.fx-subtle, .fx-normal, .fx-rich):not(.theme-dark-fantasy):not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-shell::after,
+  .theme-dark-fantasy.overlay-page:is(.fx-subtle, .fx-normal, .fx-rich):not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-shell::before,
+  .overlay-page:is(.fx-subtle, .fx-normal, .fx-rich).overlay-page-timer-only .overlay-timer-only-card::after,
+  .overlay-page:is(.fx-subtle, .fx-normal, .fx-rich).is-overlay-collapsed .overlay-collapsed-shell::after {
+    animation: poe2-ambient-edge-orbit var(--overlay-local-orbit-duration) linear infinite !important;
+    opacity: var(--overlay-local-orbit-opacity) !important;
+    filter: none;
+  }
+}
+
+.overlay-page.fx-subtle {
+  --overlay-local-orbit-duration: 12s;
+  --overlay-local-orbit-opacity: 0.46;
+  --overlay-local-card-duration: 7.4s;
+  --overlay-local-card-strength: 58%;
+}
+.overlay-page.fx-normal {
+  --overlay-local-orbit-duration: 8.8s;
+  --overlay-local-orbit-opacity: 0.85;
+  --overlay-local-card-duration: 5.4s;
+  --overlay-local-card-strength: 85%;
+}
+.overlay-page.fx-rich {
+  --overlay-local-orbit-duration: 6.2s;
+  --overlay-local-orbit-opacity: 1;
+  --overlay-local-card-duration: 4.4s;
+  --overlay-local-card-strength: 100%;
+}
+
+/* The old box-shadow keyframes could not override important static shadows.
+ * Use a fixed inset glow on the decorative layer, animating opacity only. */
+.overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .hud-block {
+  animation: none !important;
+}
+.overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .hud-block::after {
+  animation: none !important;
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .overlay-page:is(.fx-subtle, .fx-normal, .fx-rich):not(.overlay-page-timer-only):not(.is-overlay-collapsed) .hud-block::after {
+    content: "" !important;
+    background: none !important;
+    padding: 0;
+    mask: none;
+    -webkit-mask: none;
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--overlay-section-title, #f1b96a) var(--overlay-local-card-strength), transparent),
+      inset 0 0 8px color-mix(in srgb, var(--overlay-section-title, #f1b96a) 22%, transparent);
+    filter: none !important;
+    animation: poe2-overlay-local-edge-glow var(--overlay-local-card-duration) ease-in-out infinite !important;
+  }
+
+  /* Keep the grouped advice layout: illuminate its existing colored left
+   * markers rather than recreating three nested card borders. */
+  .overlay-page:is(.fx-subtle, .fx-normal, .fx-rich):not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-guidance-stack .hud-block::after {
+    display: block !important;
+    inset: 0 auto 0 -2px;
+    width: 2px;
+    border-radius: 2px;
+    background: var(--overlay-section-title, #f1b96a) !important;
+    box-shadow: 0 0 7px var(--overlay-section-edge, rgba(241, 185, 106, 0.28));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-dark-fantasy.overlay-page:not(.overlay-page-timer-only):not(.is-overlay-collapsed) .overlay-shell::before {
+    animation: none !important;
   }
 }
 
