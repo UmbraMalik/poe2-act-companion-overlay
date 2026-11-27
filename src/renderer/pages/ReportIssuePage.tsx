@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useAppSnapshot } from '../hooks';
 import { useDocumentTitle, useI18n } from '../useI18n';
 import { getAppThemeClassName } from '../theme';
+import { redactSensitiveText } from '../../shared/debug-bundle';
 import { DiagnosticsBundlePanel } from '../DiagnosticsBundlePanel';
 import { UtilityWindowFrame } from '../UtilityWindowFrame';
 import { SettingsSelect } from '../settings/SettingsSelect';
@@ -62,7 +63,7 @@ export function ReportIssuePage() {
 
   const templateLabels = useMemo(() => getReportTemplateLabels(language), [language]);
   const diagnostics = useMemo(
-    () => buildReportDiagnostics(snapshot, appVersion, language),
+    () => redactSensitiveText(buildReportDiagnostics(snapshot, appVersion, language)),
     [snapshot, appVersion, language]
   );
 

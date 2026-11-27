@@ -250,6 +250,7 @@ export class PoeOverlayApp {
     private isOverlayCloseConfirmationInFlight: boolean;
     private pendingCloseConfirmResult: Promise<any> | any | null;
     private resolveCloseConfirmResult: ((value: any) => void) | null;
+    private logWatcherRequestId = 0;
     private logInfoRefreshTimer: ReturnType<typeof setTimeout> | null;
     private checklistHistory: Array<{ zoneId: string; itemId: string }>;
     private broadcastTimer: ReturnType<typeof setTimeout> | null;

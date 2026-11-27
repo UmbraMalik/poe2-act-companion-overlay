@@ -208,6 +208,10 @@ export function redactSensitiveText(value: string | null | undefined): string {
   }
 
   return value
+    .replace(/("(?:[\w-]*token|secret|password|passwd|authorization|proxy-authorization|cookie|set-cookie|auth|api[_-]?key)"\s*:\s*)"(?:\\.|[^"\\])*"/gi, '$1"<redacted>"')
+    .replace(/\b(?:authorization|proxy-authorization)\s*[:=]\s*(?:Bearer|Basic|Digest)\s+[^\r\n,;]+/gi, 'authorization=<redacted>')
+    .replace(/\b(?:cookie|set-cookie)\s*:\s*[^\r\n]+/gi, 'cookie=<redacted>')
+    .replace(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi, '<redacted-email>')
     .replace(/(token|secret|password|passwd|authorization|auth|api[_-]?key)\s*[:=]\s*["']?[^"'\s,;]+/gi, '$1=<redacted>')
     .replace(/\b(?:ghp|github_pat|xox[baprs])_[A-Za-z0-9_=-]+/g, '<redacted>')
     .replace(/[A-Za-z]:\\(?:[^\\\r\n<>:"|?*]+\\)*[^\\\r\n<>:"|?*]*/g, redactPathMatch)
@@ -225,6 +229,7 @@ export function sanitizeDebugLogLines(
 ): string[] {
   const safeLimit = Math.max(0, Math.min(DEBUG_BUNDLE_LOG_LINE_LIMIT, Math.floor(limit)));
 
+  if (!safeLimit) return [];
   return lines
     .slice(-safeLimit)
     .map((line) => truncateText(redactSensitiveText(line), DEBUG_BUNDLE_MAX_LOG_LINE_LENGTH));
@@ -409,6 +414,6 @@ export function normalizeDebugBundleExportText(value: unknown): string | null {
   const normalized = value.trim();
 
   return normalized
-    ? truncateText(normalized, DEBUG_BUNDLE_MAX_TEXT_LENGTH)
+    ? truncateText(redactSensitiveText(normalized), DEBUG_BUNDLE_MAX_TEXT_LENGTH)
     : null;
 }

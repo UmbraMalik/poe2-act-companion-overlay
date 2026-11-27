@@ -157,7 +157,10 @@ export async function runEnsureLogFile(this: any) {
             await this.refreshLogFileInfo(this.config.logFilePath);
             return;
         }
+        const previousPath = this.config.logFilePath;
+        const previousMode = this.config.logFileSelectionMode;
         const discoveredPath = await this.findAutoLogFile();
+        if (this.config.logFilePath !== previousPath || this.config.logFileSelectionMode !== previousMode) return;
         if (discoveredPath) {
             this.config = this.configStore.update({
                 logFilePath: discoveredPath,
@@ -227,6 +230,7 @@ export async function runRefreshLogFileInfo(this: any, filePath: any = this.conf
                 nextSize = null;
             }
         }
+        if (nextPath !== this.config.logFilePath) return;
         const hasChanges = this.runtime.logFileExists !== nextExists ||
             this.runtime.logFileSize !== nextSize;
         this.runtime.logFileExists = nextExists;
@@ -237,9 +241,12 @@ export async function runRefreshLogFileInfo(this: any, filePath: any = this.conf
     }
 
 export async function runStartLogWatcher(this: any, filePath: any, skipBootstrap: any = false) {
+        const requestId = ++this.logWatcherRequestId;
         await this.refreshLogFileInfo(filePath);
+        if (requestId !== this.logWatcherRequestId || filePath !== this.config.logFilePath || this.isQuitting) return;
         this.zoneMatchExtractor.reset();
         await this.logWatcher.start(filePath, { skipBootstrap });
+        if (requestId !== this.logWatcherRequestId || filePath !== this.config.logFilePath || this.isQuitting) return;
         if (skipBootstrap && this.config.ignoreExistingLogOnNextStart) {
             this.config = this.configStore.update({
                 ignoreExistingLogOnNextStart: false

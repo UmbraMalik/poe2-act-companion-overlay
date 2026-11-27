@@ -74,6 +74,7 @@ export function DiagnosticsBundlePanel({
   const [logLines, setLogLines] = useState<string[]>([]);
   const [localUpdateState, setLocalUpdateState] = useState<AutoUpdateState | null>(null);
   const [status, setStatus] = useState('');
+  const [reviewedBundle, setReviewedBundle] = useState<DebugBundle | null>(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -139,24 +140,30 @@ export function DiagnosticsBundlePanel({
     [snapshot, appVersion, language, updateState, localUpdateState, diagnosticsText, logLines]
   );
 
+  const reviewed = reviewedBundle !== null;
+  const visibleBundle = reviewedBundle ?? bundle;
+
   const showStatus = (message: string) => {
     setStatus(message);
     window.setTimeout(() => setStatus(''), 2200);
   };
 
   const handleCopyDiagnostics = async () => {
-    await copyToClipboard(bundle.diagnosticsText);
+    if (!reviewed) return;
+    await copyToClipboard(visibleBundle.diagnosticsText);
     showStatus(labels.copied);
   };
 
   const handleCopyBundle = async () => {
-    await copyToClipboard(bundle.text);
+    if (!reviewed) return;
+    await copyToClipboard(visibleBundle.text);
     showStatus(labels.copied);
   };
 
   const handleExportBundle = async () => {
+    if (!reviewed) return;
     try {
-      const exported = await window.poe2Overlay.exportDebugBundle(bundle.text);
+      const exported = await window.poe2Overlay.exportDebugBundle(visibleBundle.text);
       showStatus(exported ? labels.exported : labels.exportCanceled);
     } catch {
       showStatus(labels.exportFailed);
@@ -180,20 +187,24 @@ export function DiagnosticsBundlePanel({
         <span>{labels.preview}</span>
         <textarea
           className="debug-bundle-preview no-drag"
-          value={bundle.text}
+          value={visibleBundle.text}
           readOnly
           spellCheck={false}
         />
       </label>
 
+      <label className="no-drag">
+        <input type="checkbox" checked={reviewed} onChange={(event) => setReviewedBundle(event.target.checked ? bundle : null)} />
+        {language === 'ru' ? ' Я проверил содержимое отчёта' : ' I reviewed the report contents'}
+      </label>
       <div className="button-row debug-bundle-actions no-drag">
-        <button className="button-secondary" type="button" onClick={() => void handleCopyDiagnostics()}>
+        <button className="button-secondary" type="button" disabled={!reviewed} onClick={() => void handleCopyDiagnostics()}>
           {labels.copyDiagnostics}
         </button>
-        <button className="button-primary" type="button" onClick={() => void handleCopyBundle()}>
+        <button className="button-primary" type="button" disabled={!reviewed} onClick={() => void handleCopyBundle()}>
           {labels.copyBundle}
         </button>
-        <button className="button-secondary" type="button" onClick={() => void handleExportBundle()}>
+        <button className="button-secondary" type="button" disabled={!reviewed} onClick={() => void handleExportBundle()}>
           {labels.exportBundle}
         </button>
       </div>

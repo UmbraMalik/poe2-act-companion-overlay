@@ -1,5 +1,5 @@
 import type { GuideDataFile, GuideEntry } from '../../src/shared/types';
-import { createMockUserDataPath, installElectronMock } from './electron-mock';
+import { createMockUserDataPath, installElectronMock, setIpcTestApp } from './electron-mock';
 import { readJson } from './loadJson';
 
 export interface SimilarZonePair {
@@ -112,6 +112,7 @@ export function createTestAppInstance(): InstanceType<typeof import('../../src/m
   const { PoeOverlayApp } = loadMainModule();
   createMockUserDataPath();
   const app = new PoeOverlayApp();
+  setIpcTestApp(app as unknown as Record<string, any>);
   (app as unknown as { loadGuide: () => void }).loadGuide();
   return app as InstanceType<typeof PoeOverlayApp>;
 }

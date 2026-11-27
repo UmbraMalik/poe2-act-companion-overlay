@@ -3,11 +3,11 @@ import { appendFile, writeFile } from 'node:fs/promises';
 import {
   app,
   dialog,
-  ipcMain,
+  ipcMain as electronIpcMain,
   screen,
   shell
 } from 'electron';
-import type { OpenDialogOptions, SaveDialogOptions } from 'electron';
+import type { IpcMainInvokeEvent, OpenDialogOptions, SaveDialogOptions } from 'electron';
 
 import {
   areOverlayBoundsEqual,
@@ -28,6 +28,8 @@ import {
 } from './app-environment';
 import { readRedactedDebugLogTail } from './debug-bundle';
 import { normalizeDebugBundleExportText } from '../shared/debug-bundle';
+
+import { isAuthorizedIpc } from './ipc-security';
 
 const MAX_DEV_LOG_LINE_LENGTH = 4000;
 const MAX_TIMER_DIAGNOSTICS_SOURCE_LENGTH = 160;
@@ -220,6 +222,14 @@ function normalizeDevLogLine(value: unknown): string | null {
 }
 
 export function runRegisterIpc(this: any) {
+        const ipcMain = {
+            handle: (channel: string, handler: (event: IpcMainInvokeEvent, ...args: any[]) => unknown) => {
+                electronIpcMain.handle(channel, (event, ...args) => {
+                    if (!isAuthorizedIpc(channel, event, this)) throw new Error('IPC request denied');
+                    return handler(event, ...args);
+                });
+            }
+        };
         ipcMain.handle('app:get-snapshot', async () => this.getSnapshot());
         ipcMain.handle('app:get-overlay-snapshot', async () => this.getOverlaySnapshot());
         ipcMain.handle('app:get-ui-preferences-snapshot', async () => this.getUiPreferencesSnapshot());
@@ -309,10 +319,11 @@ export function runRegisterIpc(this: any) {
         });
         ipcMain.handle('app:auto-detect-log-file', async () => {
             const previousPath = this.config.logFilePath;
+            const previousMode = this.config.logFileSelectionMode;
             const selectedPath = await this.findAutoLogFile();
             if (!selectedPath) return null;
             // Do not overwrite a manual selection made while discovery was running.
-            if (this.config.logFilePath !== previousPath) return null;
+            if (this.config.logFilePath !== previousPath || this.config.logFileSelectionMode !== previousMode) return null;
             this.config = this.configStore.update({
                 logFilePath: selectedPath,
                 logFileSelectionMode: 'auto'
@@ -325,6 +336,12 @@ export function runRegisterIpc(this: any) {
         });
         ipcMain.handle('app:update-settings', async (_event: any, patch: any) => {
             patch = normalizeSettingsPatchInput(patch);
+            const allowedKeys = _event.sender === this.overlayWindow?.webContents
+                ? ['appLanguage', 'theme', 'themePreferencePrompted', 'setupWizardCompleted', 'overlayDensity', 'overlayMovementLocked']
+                : _event.sender === this.companionWindow?.webContents
+                    ? ['theme', 'themePreferencePrompted']
+                    : null;
+            if (allowedKeys) patch = Object.fromEntries(Object.entries(patch).filter(([key]) => allowedKeys.includes(key)));
             if (patch.campaignProfile && patch.campaignProfile !== this.config.campaignProfile &&
                 !['not_started', 'finished'].includes(this.config.runTimer.status)) {
                 throw new Error('Reset or finish the active run before changing campaign version.');
@@ -400,6 +417,7 @@ export function runRegisterIpc(this: any) {
             return this.getSnapshot();
         });
         ipcMain.handle('app:simulate-zone', async (_event: any, zoneSelector: any) => {
+            if (!isDev) throw new Error('Zone simulation is available only in development mode.');
             const explicitGuide = this.guideService.findById(zoneSelector);
             const guide = explicitGuide ??
                 this.guideService.findByZoneName(zoneSelector);

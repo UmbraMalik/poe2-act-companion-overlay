@@ -40,6 +40,17 @@ function isAllowedAppNavigationUrl(rawUrl: string): boolean {
   }
 }
 
+// IPC requires the exact page associated with the registered native window.
+export function isAllowedAppPageUrl(rawUrl: string, page: string): boolean {
+  try {
+    const parsed = new URL(rawUrl);
+    if (parsed.protocol === 'file:') {
+      return resolve(fileURLToPath(parsed)) === resolve(resolveRuntimePath('dist', `${page}.html`));
+    }
+    return isDev && parsed.origin === new URL(devServerUrl).origin && parsed.pathname === `/${page}.html`;
+  } catch { return false; }
+}
+
 function openSafeExternalUrl(rawUrl: string): void {
   if (isSafeExternalUrl(rawUrl)) {
     void shell.openExternal(rawUrl);

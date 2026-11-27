@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import type { AutoUpdateState, UpdateInfo } from '../../shared/types';
 import { translateSystemText } from '../../i18n/runtime';
 import { formatFileSize, formatTimestamp, getReleaseNoteItems } from '../utils';
+import { useUiPreferencesSnapshot } from '../hooks';
 import { useDocumentTitle, useI18n } from '../useI18n';
 import { UiIcon } from '../UiIcon';
 
@@ -14,7 +15,8 @@ function getSpeedLabel(bytesPerSecond: number | undefined): string {
 }
 
 export function UpdatePage() {
-  const { t, language } = useI18n();
+  const preferences = useUiPreferencesSnapshot();
+  const { t, language } = useI18n(preferences?.config.appLanguage);
   const [manualUpdateInfo, setManualUpdateInfo] = useState<UpdateInfo | null>(null);
   const [autoUpdateState, setAutoUpdateState] = useState<AutoUpdateState | null>(null);
   const [actionBusy, setActionBusy] = useState<'download' | 'install' | 'manual' | null>(null);

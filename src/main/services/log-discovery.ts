@@ -1,7 +1,7 @@
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { constants } from 'node:fs';
-import { access, readFile, stat } from 'node:fs/promises';
+import { access, open, readFile, stat } from 'node:fs/promises';
 import { basename, dirname, join } from 'node:path';
 
 const GAME_FOLDERS = ['Path of Exile 2', 'Path of Exile 2 Production'];
@@ -32,14 +32,24 @@ export async function findNewestReadableLog(candidates: string[]): Promise<strin
       const info = await stat(path);
       if (!info.isFile()) return null;
       await access(path, constants.R_OK);
-      return { path, mtime: info.mtimeMs, size: info.size };
+      let recognizable = false;
+      if (info.size > 0) {
+        const handle = await open(path, 'r');
+        try {
+          const buffer = Buffer.alloc(Math.min(info.size, 32 * 1024));
+          const { bytesRead } = await handle.read(buffer, 0, buffer.length, info.size - buffer.length);
+          recognizable = /\[SCENE\]\s+Set Source|\[INFO Client(?: \d+)?\]|You have entered|Вы вошли в область/i.test(buffer.subarray(0, bytesRead).toString('utf8'));
+        } finally { await handle.close(); }
+      }
+      return { path, mtime: Math.min(info.mtimeMs, Date.now()), size: info.size, recognizable };
     } catch {
       return null;
     }
   }));
   return results.filter((entry) => entry !== null).sort((a, b) =>
-    b.mtime - a.mtime ||
     Number(b.size > 0) - Number(a.size > 0) ||
+    Number(b.recognizable) - Number(a.recognizable) ||
+    b.mtime - a.mtime ||
     LOG_NAMES.indexOf(basename(a.path)) - LOG_NAMES.indexOf(basename(b.path))
   )[0]?.path ?? null;
 }

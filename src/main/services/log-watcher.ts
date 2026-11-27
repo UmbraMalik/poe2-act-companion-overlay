@@ -21,6 +21,8 @@ interface LogWatcherCallbacks {
 
 const TAIL_BYTES = 128 * 1024;
 const POLL_INTERVAL_MS = 750;
+const READ_CHUNK_BYTES = 64 * 1024;
+const MAX_LINE_CHARS = 128 * 1024;
 function stripNulCharacters(input: string): string {
   return String(input ?? '').replace(/\u0000/g, '');
 }
@@ -36,7 +38,12 @@ export class LogWatcher {
   private remainder = '';
   private readonly zoneExtractor: ZoneMatchExtractor;
   private decoder = new StringDecoder('utf8');
-  private reading = false;
+  private generation = 0;
+  private activeRead: Promise<void> | null = null;
+  private seeking = false;
+  private fileIdentity: string | null = null;
+  private historicalRemainder = false;
+  private discardUntilNewline = false;
   private needsResync = false;
   private status: LogWatcherStatus = 'idle';
   private statusMessage = 'Ожидание лог-файла';
@@ -64,6 +71,8 @@ export class LogWatcher {
 
   private resetTextState(): void {
     this.remainder = '';
+    this.historicalRemainder = false;
+    this.discardUntilNewline = false;
     this.zoneExtractor.reset();
     this.decoder = new StringDecoder('utf8');
   }
@@ -72,16 +81,13 @@ export class LogWatcher {
     return stripNulCharacters(this.decoder.write(buffer));
   }
 
-  private decodeBootstrapBuffer(buffer: Buffer): string {
-    return stripNulCharacters(buffer.toString('utf8'));
-  }
-
   private extractZoneMatch(line: string): ExtractedZoneMatch | null {
     return this.zoneExtractor.extractFromLogLine(line);
   }
 
   async start(filePath: string, options?: { skipBootstrap?: boolean }): Promise<void> {
     this.stop();
+    const generation = this.generation;
     this.filePath = filePath;
     this.watchedFileName = basename(filePath).toLowerCase();
     this.filePosition = 0;
@@ -101,9 +107,11 @@ export class LogWatcher {
       fileExists: false
     });
 
+    this.seeking = true;
     this.bindDirectoryWatcher(filePath);
-    await this.tryBindFileWatcher();
-    this.startPolling();
+    await this.tryBindFileWatcher(generation);
+    if (generation !== this.generation) return;
+    this.seeking = false;
     if (options?.skipBootstrap) {
       await this.seekToEnd();
     } else {
@@ -111,9 +119,14 @@ export class LogWatcher {
         allowBootstrap: true
       });
     }
+    if (generation === this.generation) this.startPolling();
   }
 
   stop(): void {
+    this.generation++;
+    this.activeRead = null;
+    this.seeking = false;
+    this.fileIdentity = null;
     this.filePath = null;
     this.watchedFileName = null;
     this.filePosition = 0;
@@ -160,14 +173,21 @@ export class LogWatcher {
       return;
     }
 
+    const generation = this.generation;
+    const filePath = this.filePath;
+    this.seeking = true;
     const readAt = new Date().toISOString();
 
     try {
-      const fileStat = await stat(this.filePath);
+      await this.activeRead;
+      if (generation !== this.generation) return;
+      const fileStat = await stat(filePath);
+      if (generation !== this.generation) return;
       if (!fileStat.isFile()) {
         return;
       }
 
+      this.fileIdentity = `${fileStat.dev}:${fileStat.ino}`;
       this.filePosition = fileStat.size;
       this.resetTextState();
       this.needsResync = false;
@@ -183,6 +203,7 @@ export class LogWatcher {
       });
       this.emitStatus('ready', 'Чтение лога активно');
     } catch {
+      if (generation !== this.generation) return;
       this.updateRuntimeState({
         fileExists: false,
         lastFileSize: null,
@@ -191,46 +212,55 @@ export class LogWatcher {
         currentOffset: this.filePosition,
         lastReadAt: readAt
       });
+    } finally {
+      if (generation === this.generation) this.seeking = false;
     }
   }
 
   private bindDirectoryWatcher(filePath: string): void {
-    const watchedDirectory = dirname(filePath);
-
+    const generation = this.generation;
     try {
-      this.directoryWatcher = watch(watchedDirectory, (eventType, fileName) => {
+      const watcher = watch(dirname(filePath), (eventType, fileName) => {
+        if (generation !== this.generation || this.directoryWatcher !== watcher) return;
         const nextName = fileName?.toString().toLowerCase() ?? null;
         if (!nextName || nextName === this.watchedFileName) {
-          if (eventType === 'rename') {
-            this.needsResync = true;
-          }
+          if (eventType === 'rename') this.needsResync = true;
           this.queueRead(25);
         }
       });
-    } catch {
-      this.directoryWatcher = null;
-    }
+      this.directoryWatcher = watcher;
+      watcher.on('error', () => {
+        if (generation !== this.generation || this.directoryWatcher !== watcher) return;
+        this.directoryWatcher = null;
+        watcher.close();
+        this.queueRead();
+      });
+    } catch { this.directoryWatcher = null; }
   }
 
-  private async tryBindFileWatcher(): Promise<void> {
-    if (!this.filePath || this.fileWatcher) {
-      return;
-    }
-
+  private async tryBindFileWatcher(generation: number): Promise<void> {
+    const filePath = this.filePath;
+    if (!filePath || this.fileWatcher || generation !== this.generation) return;
     try {
-      await access(this.filePath, constants.R_OK);
-      this.fileWatcher = watch(this.filePath, (eventType) => {
+      await access(filePath, constants.R_OK);
+      if (generation !== this.generation || this.fileWatcher) return;
+      const watcher = watch(filePath, (eventType) => {
+        if (generation !== this.generation || this.fileWatcher !== watcher) return;
         if (eventType === 'rename') {
           this.needsResync = true;
-          this.fileWatcher?.close();
           this.fileWatcher = null;
+          watcher.close();
         }
-
         this.queueRead(25);
       });
-    } catch {
-      this.fileWatcher = null;
-    }
+      this.fileWatcher = watcher;
+      watcher.on('error', () => {
+        if (generation !== this.generation || this.fileWatcher !== watcher) return;
+        this.fileWatcher = null;
+        watcher.close();
+        this.queueRead();
+      });
+    } catch { /* Polling remains available. */ }
   }
 
   private startPolling(): void {
@@ -291,216 +321,137 @@ export class LogWatcher {
   }
 
   private async bootstrapFromTail(
-    filePath: string,
-    fileSize: number
+    filePath: string, fileSize: number, generation: number
   ): Promise<void> {
     const start = Math.max(0, fileSize - TAIL_BYTES);
     const handle = await open(filePath, 'r');
-
     try {
+      if (generation !== this.generation) return;
+      const openedStat = await handle.stat();
+      if (generation !== this.generation) return;
+      if (`${openedStat.dev}:${openedStat.ino}` !== this.fileIdentity || openedStat.size < fileSize) {
+        this.needsResync = true;
+        return;
+      }
       const buffer = Buffer.alloc(fileSize - start);
-      if (buffer.length === 0) {
-        return;
+      const { bytesRead } = await handle.read(buffer, 0, buffer.length, start);
+      if (generation !== this.generation || this.needsResync) return;
+      this.resetTextState();
+      this.filePosition = start + bytesRead;
+      let content = this.decodeBuffer(buffer.subarray(0, bytesRead));
+      if (start > 0) {
+        const newline = content.indexOf('\n');
+        this.discardUntilNewline = newline < 0;
+        content = newline < 0 ? '' : content.slice(newline + 1);
       }
-
-      await handle.read(buffer, 0, buffer.length, start);
-      const content = this.decodeBootstrapBuffer(buffer);
-      const lines = content.split(/\r?\n/).filter(Boolean);
-      let lastZone: ExtractedZoneMatch | null = null;
-      this.zoneExtractor.reset();
-
-      for (const line of lines) {
-        this.callbacks.onLine(line, 'bootstrap');
-        const zoneMatch = this.extractZoneMatch(line);
-        if (zoneMatch && !this.shouldKeepPreviousMatchedZone(lastZone, zoneMatch)) {
-          lastZone = zoneMatch;
-        }
-      }
-
-      if (lastZone) {
-        this.updateRuntimeState({
-          lastMatchedZone: lastZone.guide?.zone_ru ?? lastZone.rawZoneName,
-          lastMatchedAt: new Date().toISOString(),
-          lastMatcherReason: lastZone.matcherReason
-        });
-        this.callbacks.onZoneDetected(lastZone);
-      }
-    } finally {
-      await handle.close();
-    }
+      // Bootstrap and resync use the same historical event path. Do not send
+      // append callbacks or mutate timer/rewards as if these were live lines.
+      this.consumeChunk(content, false);
+      this.historicalRemainder = Boolean(this.remainder) || bytesRead > 0 && !content.endsWith('\n');
+    } finally { await handle.close(); }
   }
 
-  private async resyncLargeFileFromTail(
-    filePath: string,
-    fileSize: number,
-    readAt: string
-  ): Promise<boolean> {
-    if (fileSize <= TAIL_BYTES) {
-      return false;
-    }
-
-    // Large resyncs use the same capped tail path as startup bootstrap.
-    await this.bootstrapFromTail(filePath, fileSize);
-    this.filePosition = fileSize;
-    this.resetTextState();
-    this.updateRuntimeState({
-      fileExists: true,
-      lastFileSize: fileSize,
-      currentOffset: this.filePosition,
-      lastReadAt: readAt
+  private readNewContent(options?: { allowBootstrap?: boolean }): Promise<void> {
+    if (!this.filePath || this.seeking) return Promise.resolve();
+    if (this.activeRead) return this.activeRead;
+    const generation = this.generation;
+    const promise = this.readContent(this.filePath, generation, options).finally(() => {
+      if (this.activeRead === promise) this.activeRead = null;
     });
-    this.emitStatus('ready', 'Чтение лога активно');
-    return true;
+    this.activeRead = promise;
+    return promise;
   }
 
-  private async readNewContent(options?: {
-    allowBootstrap?: boolean;
-  }): Promise<void> {
-    if (!this.filePath || this.reading) {
-      return;
-    }
-
-    this.reading = true;
+  private async readContent(filePath: string, generation: number, _options?: { allowBootstrap?: boolean }): Promise<void> {
+    const current = () => generation === this.generation;
     const readAt = new Date().toISOString();
-
     try {
-      await this.tryBindFileWatcher();
-
+      if (!this.directoryWatcher) this.bindDirectoryWatcher(filePath);
+      await this.tryBindFileWatcher(generation);
+      if (!current()) return;
       let fileStat;
-      try {
-        fileStat = await stat(this.filePath);
-      } catch (error) {
-        const isMissingFile =
-          error instanceof Error &&
-          'code' in error &&
-          (error as NodeJS.ErrnoException).code === 'ENOENT';
-
-        if (isMissingFile) {
-          this.fileWatcher?.close();
-          this.fileWatcher = null;
-        }
-
-        this.updateRuntimeState({
-          fileExists: false,
-          lastFileSize: null,
-          lastActivityAt: null,
-          lastLiveZoneAt: null,
-          currentOffset: this.filePosition,
-          lastReadAt: readAt
-        });
-        this.emitStatus(
-          isMissingFile ? 'missing' : 'error',
-          error instanceof Error ? error.message : 'Ошибка чтения лог-файла'
-        );
+      try { fileStat = await stat(filePath); }
+      catch (error) {
+        if (!current()) return;
+        const missing = (error as NodeJS.ErrnoException)?.code === 'ENOENT';
+        if (missing) { this.fileWatcher?.close(); this.fileWatcher = null; }
+        this.updateRuntimeState({ fileExists: false, lastFileSize: null, lastActivityAt: null,
+          lastLiveZoneAt: null, currentOffset: this.filePosition, lastReadAt: readAt });
+        this.emitStatus(missing ? 'missing' : 'error', error instanceof Error ? error.message : 'Ошибка чтения лог-файла');
         return;
       }
-
+      if (!current()) return;
       if (!fileStat.isFile()) {
-        this.updateRuntimeState({
-          fileExists: false,
-          lastFileSize: null,
-          lastActivityAt: null,
-          lastLiveZoneAt: null,
-          currentOffset: this.filePosition,
-          lastReadAt: readAt
-        });
+        this.updateRuntimeState({ fileExists: false, lastFileSize: null, lastActivityAt: null,
+          lastLiveZoneAt: null, currentOffset: this.filePosition, lastReadAt: readAt });
         this.emitStatus('missing', 'Лог-файл не найден');
         return;
       }
-
-      await this.tryBindFileWatcher();
-
-      const wasMissing = !this.runtimeState.fileExists;
-      if (options?.allowBootstrap && wasMissing) {
-        await this.bootstrapFromTail(this.filePath, fileStat.size);
-        this.filePosition = fileStat.size;
-        this.resetTextState();
-        this.needsResync = false;
-        this.updateRuntimeState({
-          fileExists: true,
-          lastFileSize: fileStat.size,
-          lastActivityAt: fileStat.mtime.toISOString(),
-          currentOffset: this.filePosition,
-          lastReadAt: readAt
-        });
-        this.emitStatus('ready', 'Чтение лога активно');
-        return;
-      }
-
-      if (wasMissing) {
-        await this.bootstrapFromTail(this.filePath, fileStat.size);
-        this.filePosition = fileStat.size;
-        this.resetTextState();
-        this.needsResync = false;
-        this.updateRuntimeState({
-          fileExists: true,
-          lastFileSize: fileStat.size,
-          lastActivityAt: fileStat.mtime.toISOString(),
-          currentOffset: this.filePosition,
-          lastReadAt: readAt
-        });
-        this.emitStatus('ready', 'Чтение лога активно');
-        return;
-      }
-
-      const requiresResync = this.needsResync || fileStat.size < this.filePosition;
+      const identity = `${fileStat.dev}:${fileStat.ino}`;
+      const requiresResync = !this.runtimeState.fileExists || this.needsResync ||
+        fileStat.size < this.filePosition || this.fileIdentity !== identity;
+      this.fileIdentity = identity;
       if (requiresResync) {
-        this.updateRuntimeState({ lastActivityAt: fileStat.mtime.toISOString(), lastLiveZoneAt: null });
-        this.resetTextState();
         this.needsResync = false;
-        if (await this.resyncLargeFileFromTail(this.filePath, fileStat.size, readAt)) {
-          return;
-        }
-        this.filePosition = 0;
+        this.updateRuntimeState({ lastLiveZoneAt: null });
+        await this.bootstrapFromTail(filePath, fileStat.size, generation);
+        if (!current() || this.needsResync) return;
+      } else if (fileStat.size > this.filePosition) {
+        const handle = await open(filePath, 'r');
+        try {
+          if (!current()) return;
+          const openedStat = await handle.stat();
+          if (!current()) return;
+          if (`${openedStat.dev}:${openedStat.ino}` !== identity || openedStat.size < fileStat.size) {
+            this.needsResync = true;
+            return;
+          }
+          const buffer = Buffer.alloc(READ_CHUNK_BYTES);
+          while (this.filePosition < fileStat.size && current() && !this.needsResync) {
+            const { bytesRead } = await handle.read(buffer, 0, Math.min(buffer.length, fileStat.size - this.filePosition), this.filePosition);
+            if (!current() || this.needsResync) return;
+            if (!bytesRead) break;
+            this.filePosition += bytesRead;
+            this.consumeChunk(this.decodeBuffer(buffer.subarray(0, bytesRead)), true);
+            // Bound per-turn work even when an entire backlog is already cached.
+            await new Promise<void>((resolve) => setImmediate(resolve));
+          }
+        } finally { await handle.close(); }
+        if (!current()) return;
       }
-
-      this.updateRuntimeState({
-        fileExists: true,
-        lastFileSize: fileStat.size,
-        lastActivityAt: fileStat.mtime.toISOString(),
-        currentOffset: this.filePosition,
-        lastReadAt: readAt
-      });
-
-      const readSize = fileStat.size - this.filePosition;
-      if (readSize <= 0) {
-        this.emitStatus('ready', 'Чтение лога активно');
-        return;
-      }
-
-      const handle = await open(this.filePath, 'r');
-      try {
-        const buffer = Buffer.alloc(readSize);
-        await handle.read(buffer, 0, buffer.length, this.filePosition);
-        this.filePosition = fileStat.size;
-        this.consumeChunk(this.decodeBuffer(buffer), !requiresResync);
-        this.updateRuntimeState({
-          fileExists: true,
-          lastFileSize: fileStat.size,
-          lastActivityAt: fileStat.mtime.toISOString(),
-          currentOffset: this.filePosition,
-          lastReadAt: new Date().toISOString()
-        });
-        this.emitStatus('ready', 'Чтение лога активно');
-      } finally {
-        await handle.close();
-      }
+      this.updateRuntimeState({ fileExists: true, lastFileSize: fileStat.size,
+        lastActivityAt: fileStat.mtime.toISOString(), currentOffset: this.filePosition, lastReadAt: readAt });
+      this.emitStatus('ready', 'Чтение лога активно');
     } catch (error) {
+      if (!current()) return;
       this.updateRuntimeState({ fileExists: false, lastFileSize: null, lastActivityAt: null, lastLiveZoneAt: null });
       this.emitStatus('error', error instanceof Error ? error.message : 'Ошибка чтения лог-файла');
-    } finally {
-      this.reading = false;
     }
   }
 
   private consumeChunk(chunk: string, isLiveAppend: boolean): void {
+    if (this.discardUntilNewline) {
+      const newline = chunk.indexOf('\n');
+      if (newline < 0) return;
+      chunk = chunk.slice(newline + 1);
+      this.discardUntilNewline = false;
+      this.historicalRemainder = false;
+    }
     const merged = stripNulCharacters(`${this.remainder}${chunk}`);
     const lines = merged.split(/\r?\n/);
     this.remainder = lines.pop() ?? '';
+    if (this.remainder.length > MAX_LINE_CHARS) {
+      this.remainder = '';
+      this.discardUntilNewline = true;
+    }
+    let historical = this.historicalRemainder;
+    if (lines.length) this.historicalRemainder = false;
 
     for (const line of lines) {
+      const live = isLiveAppend && !historical;
+      historical = false;
       const cleanedLine = stripNulCharacters(line);
-      if (!cleanedLine.trim()) {
+      if (cleanedLine.length > MAX_LINE_CHARS || !cleanedLine.trim()) {
         continue;
       }
 
@@ -508,8 +459,8 @@ export class LogWatcher {
         this.runtimeState.lastMatchedZone &&
         this.runtimeState.lastMatcherReason !== 'none'
       );
-      this.callbacks.onLine(cleanedLine, 'append');
-      this.updateRuntimeState({
+      this.callbacks.onLine(cleanedLine, live ? 'append' : 'bootstrap');
+      if (live) this.updateRuntimeState({
         lastAppendedLine: cleanedLine,
         currentOffset: this.filePosition,
         lastReadAt: new Date().toISOString(),
@@ -518,7 +469,7 @@ export class LogWatcher {
 
       const zoneMatch = this.extractZoneMatch(cleanedLine);
       if (zoneMatch) {
-        if (isLiveAppend) {
+        if (live) {
           this.updateRuntimeState({ lastLiveZoneAt: new Date().toISOString() });
         }
         if (!this.shouldPreserveRuntimeMatchedZone(zoneMatch, hadMatchedGuideBeforeLine)) {
@@ -531,7 +482,7 @@ export class LogWatcher {
         this.callbacks.onZoneDetected(zoneMatch);
       }
 
-      this.callbacks.onAppendLine(cleanedLine);
+      if (live) this.callbacks.onAppendLine(cleanedLine);
     }
   }
 }

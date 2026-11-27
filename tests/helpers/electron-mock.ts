@@ -12,6 +12,8 @@ export let mockUserDataPath = join(process.cwd(), '.tmp-tests', 'mock-user-data'
 mkdirSync(mockUserDataPath, { recursive: true });
 
 const noop = () => {};
+let ipcTestApp: Record<string, any> | null = null;
+export function setIpcTestApp(app: Record<string, any>): void { ipcTestApp = app; }
 const ipcHandlers = new Map<string, (event: unknown, ...args: unknown[]) => unknown>();
 
 class MockBrowserWindow {
@@ -22,6 +24,7 @@ class MockBrowserWindow {
   webContents = {
     send: noop,
     isDestroyed: () => false,
+    mainFrame: { url: 'http://localhost:5173/overlay.html' },
     on: noop,
     once: noop,
     setWindowOpenHandler: noop
@@ -230,7 +233,11 @@ export async function invokeIpcHandler<T = unknown>(
   if (!handler) {
     throw new Error(`Missing IPC handler for ${channel}`);
   }
-  return await handler({}, ...args) as T;
+  const role = channel === 'app:resize-settings-window' || channel === 'app:simulate-zone' ? 'settings' : 'overlay';
+  if (!ipcTestApp) throw new Error('Missing test app');
+  const key = `${role}Window`;
+  const window = ipcTestApp[key] ?? (ipcTestApp[key] = new MockBrowserWindow());
+  return await handler(mockIpcEvent(window, role), ...args) as T;
 }
 
 export async function invokeIpcHandlerWithEvent<T = unknown>(
@@ -243,4 +250,10 @@ export async function invokeIpcHandlerWithEvent<T = unknown>(
     throw new Error(`Missing IPC handler for ${channel}`);
   }
   return await handler(event, ...args) as T;
+}
+
+export function mockIpcEvent(window: { webContents: any }, role: string) {
+  const sender = window.webContents;
+  sender.mainFrame.url = `${process.env.VITE_DEV_SERVER_URL ?? 'http://localhost:5173'}/${role}.html`;
+  return { sender, senderFrame: sender.mainFrame };
 }

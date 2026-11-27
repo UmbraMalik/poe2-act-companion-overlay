@@ -708,12 +708,14 @@ export function normalizeAppConfig(config: Partial<AppConfig> = {}): AppConfig {
 export class ConfigStore {
   private readonly configPath: string;
   private config: AppConfig = { ...DEFAULT_CONFIG };
+  private needsPersist = false;
 
   constructor(configPath: string) {
     this.configPath = configPath;
   }
 
   load(): AppConfig {
+    this.needsPersist = false;
     try {
       const raw = readFileSync(this.configPath, 'utf8');
       const parsed = JSON.parse(raw) as Partial<AppConfig>;
@@ -722,7 +724,8 @@ export class ConfigStore {
         try {
           this.save();
         } catch {
-          // Keep the migrated config in memory; a later successful update can persist it.
+          // Keep the migrated config in memory and retry even an unchanged update.
+          this.needsPersist = true;
         }
       }
     } catch {
@@ -743,11 +746,11 @@ export class ConfigStore {
       ...this.config,
       ...patch
     });
-    if (JSON.stringify(nextConfig) === JSON.stringify(this.config)) {
+    if (!this.needsPersist && JSON.stringify(nextConfig) === JSON.stringify(this.config)) {
       return this.get();
     }
+    this.save(nextConfig);
     this.config = nextConfig;
-    this.save();
     return this.get();
   }
 
@@ -911,13 +914,14 @@ export class ConfigStore {
     });
   }
 
-  private save(): void {
+  private save(config: AppConfig = this.config): void {
     const configDir = dirname(this.configPath);
     const tempPath = `${this.configPath}.tmp`;
     mkdirSync(configDir, { recursive: true });
     try {
-      writeFileSync(tempPath, JSON.stringify(this.config, null, 2), 'utf8');
+      writeFileSync(tempPath, JSON.stringify(config, null, 2), 'utf8');
       renameSync(tempPath, this.configPath);
+      this.needsPersist = false;
     } catch (error) {
       try {
         rmSync(tempPath, { force: true });

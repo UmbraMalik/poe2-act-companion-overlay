@@ -140,7 +140,8 @@ test('window page routing uses explicit html markers before URL fallback', () =>
   assert.match(rendererMain, /const explicitPage = getRendererPageCandidate\(window\.__POE2_RENDERER_PAGE__\)/);
   assert.match(rendererMain, /const bodyPage = getRendererPageCandidate\(document\.body\.dataset\.page\)/);
   assert.match(rendererMain, /return explicitPage \?\? bodyPage \?\? getRendererPageFromLocation\(\) \?\? 'overlay'/);
-  assert.match(readText('companion.html'), /window\.__POE2_RENDERER_PAGE__ = 'companion'/);
+  assert.match(readText('companion.html'), /data-page="companion"/);
+  assert.doesNotMatch(readText('companion.html'), /<script>/);
   assert.match(windowController, /const pageSearch = `\?page=\$\{encodeURIComponent\(pageName\)\}`/);
   assert.match(windowController, /loadURL\(`\$\{devServerUrl\}\/\$\{pageName\}\.html\$\{pageSearch\}`\)/);
   assert.match(

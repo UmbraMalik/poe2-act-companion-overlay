@@ -10,6 +10,7 @@ import {
 import {
   invokeIpcHandler,
   invokeIpcHandlerWithEvent,
+  mockIpcEvent,
   resetElectronMockState
 } from './helpers/electron-mock';
 import { createTestAppInstance } from './helpers/zoneTestUtils';
@@ -165,7 +166,7 @@ test('standalone utility windows use the same resize IPC without targeting setti
 
   const changed = await invokeIpcHandlerWithEvent<boolean>(
     'app:resize-settings-window',
-    { sender: app.infoWindow.webContents },
+    mockIpcEvent(app.infoWindow, 'info'),
     {
       edge: 'se',
       x: 120,

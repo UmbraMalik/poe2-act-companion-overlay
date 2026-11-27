@@ -1,10 +1,12 @@
 import { useEffect, useRef } from 'react';
+import { useUiPreferencesSnapshot } from '../hooks';
 import { useDocumentTitle, useI18n } from '../useI18n';
 import { UiIcon } from '../UiIcon';
 
 export function CloseConfirmPage() {
   const stayButtonRef = useRef<HTMLButtonElement | null>(null);
-  const { t } = useI18n();
+  const preferences = useUiPreferencesSnapshot();
+  const { t } = useI18n(preferences?.config.appLanguage);
 
   useDocumentTitle(t('titles.closeConfirm'));
 
