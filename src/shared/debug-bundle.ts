@@ -1,3 +1,4 @@
+import { translateSystemText } from '../i18n/runtime';
 import type { AppLanguage, AppSnapshot, AutoUpdateState } from './types';
 import { buildReportDiagnostics } from './report-issue';
 
@@ -375,7 +376,7 @@ export function buildDebugBundle(options: DebugBundleOptions): DebugBundle {
     `${labels.logExists}: ${boolValue(runtime?.logFileExists, labels)}`,
     `${labels.logSize}: ${formatValue(runtime?.logFileSize)}`,
     `${labels.watcherStatus}: ${formatKnownValue(runtime?.logWatcherStatus, language)}`,
-    `${labels.watcherMessage}: ${formatValue(runtime?.logWatcherMessage)}`,
+    `${labels.watcherMessage}: ${formatValue(translateSystemText(runtime?.logWatcherMessage, language))}`,
     `${labels.lastReadAt}: ${formatValue(runtime?.lastReadAt)}`,
     `${labels.lastActivityAt}: ${formatValue(runtime?.lastActivityAt)}`,
     `${labels.lastLiveZoneAt}: ${formatValue(runtime?.lastLiveZoneAt)}`,

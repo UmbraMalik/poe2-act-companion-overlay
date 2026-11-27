@@ -146,9 +146,6 @@
 
 
 /* Timer-only / race focus overlay mode. */
-.overlay-page-timer-only {
-  min-width: 0;
-}
 
 .overlay-timer-only-card {
   min-height: 0;
@@ -162,10 +159,6 @@
   justify-content: space-between;
   gap: 12px;
   align-items: flex-start;
-}
-
-.timer-only-heading {
-  min-width: 0;
 }
 
 .timer-only-header-actions {

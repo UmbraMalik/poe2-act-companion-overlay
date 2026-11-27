@@ -20,10 +20,13 @@ import campaignBonusesData from '../data/campaign-bonuses.json';
 import type {
   AppConfig,
   AppSnapshot,
+  GuideEntry,
   CampaignBonusDefinition,
   CurrentZoneState,
   OverlayBounds,
   OverlayMode,
+  OverlayDensity,
+  OverlayScale,
   SavedRunHistoryEntry,
   UpdateCheckResult,
   UpdateInfo,
@@ -590,8 +593,8 @@ export class PoeOverlayApp {
     clearPerformancePriorityTimers() {
         return runClearPerformancePriorityTimersMethod.apply(this, arguments as any);
     }
-    logOverlayBoundsEvent(level: any, payload: any) {
-        return runLogOverlayBoundsEventMethod.apply(this, arguments as any);
+    logOverlayBoundsEvent(level: 'warn' | 'info', payload: unknown) {
+        return runLogOverlayBoundsEventMethod(level, payload);
     }
     getOverlayBoundsSourceHint() {
         return runGetOverlayBoundsSourceHintMethod.apply(this, arguments as any);
@@ -683,23 +686,23 @@ export class PoeOverlayApp {
     getStartupOverlayMode() {
         return runGetStartupOverlayModeMethod.apply(this, arguments as any);
     }
-    getOverlayMinimumSize(mode: any, density: any = this.config.overlayDensity, scale: any = this.config.overlayScale) {
-        return runGetOverlayMinimumSizeMethod.apply(this, arguments as any);
+    getOverlayMinimumSize(mode: OverlayMode, density: OverlayDensity = this.config.overlayDensity, scale: OverlayScale = this.config.overlayScale) {
+        return runGetOverlayMinimumSizeMethod(mode, density, scale);
     }
-    getOverlayMaximumOffscreenX(width: any) {
-        return runGetOverlayMaximumOffscreenXMethod.apply(this, arguments as any);
+    getOverlayMaximumOffscreenX(width: number) {
+        return runGetOverlayMaximumOffscreenXMethod(width);
     }
-    getOverlayMinimumVisibleWidth(width: any) {
-        return runGetOverlayMinimumVisibleWidthMethod.apply(this, arguments as any);
+    getOverlayMinimumVisibleWidth(width: number) {
+        return runGetOverlayMinimumVisibleWidthMethod(width);
     }
-    getOverlayMinimumVisibleHeight(height: any) {
-        return runGetOverlayMinimumVisibleHeightMethod.apply(this, arguments as any);
+    getOverlayMinimumVisibleHeight(height: number) {
+        return runGetOverlayMinimumVisibleHeightMethod(height);
     }
     getOverlayScaledDefaultBounds(mode: any, density: any = this.config.overlayDensity) {
         return runGetOverlayScaledDefaultBoundsMethod.apply(this, arguments as any);
     }
     getOverlayVirtualWorkArea() {
-        return runGetOverlayVirtualWorkAreaMethod.apply(this, arguments as any);
+        return runGetOverlayVirtualWorkAreaMethod();
     }
     normalizeOverlayBoundsForMode(bounds: any, mode: any, density: any = this.config.overlayDensity) {
         return runNormalizeOverlayBoundsForModeMethod.apply(this, arguments as any);
@@ -1071,16 +1074,16 @@ export class PoeOverlayApp {
         return runApplyCampaignBonusMatchesFromLogLineMethod.apply(this, arguments as any);
     }
     clearMissedWarning() {
-        return runClearMissedWarningMethod.apply(this, arguments as any);
+        return runClearMissedWarningMethod(this.runtime);
     }
-    syncRuntimeZoneFields(rawZoneName: any, guide: any) {
-        return runSyncRuntimeZoneFieldsMethod.apply(this, arguments as any);
+    syncRuntimeZoneFields(rawZoneName: string | null, guide: GuideEntry | null) {
+        return runSyncRuntimeZoneFieldsMethod(this.runtime, rawZoneName, guide);
     }
     updateZoneProgress(guide: any) {
         return runUpdateZoneProgressMethod.apply(this, arguments as any);
     }
-    getZoneProgress(zoneId: any) {
-        return runGetZoneProgressMethod.apply(this, arguments as any);
+    getZoneProgress(zoneId: string) {
+        return runGetZoneProgressMethod(this.config, zoneId);
     }
     mergeLikelyDoneKeywords(guide: any, matchedKeywords: any) {
         return runMergeLikelyDoneKeywordsMethod.apply(this, arguments as any);

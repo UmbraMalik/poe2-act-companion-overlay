@@ -1,19 +1,19 @@
 import { isCampaignBonusInProfile } from '../shared/campaign-profile';
 import { buildChecklistDefinition, buildChecklistViewItems } from '../shared/checklist';
-import type { ChecklistItemProgress } from '../shared/types';
+import type { ChecklistItemProgress, RuntimeState, GuideEntry, AppConfig, GuideZoneProgress } from '../shared/types';
 import { BROADCAST_THROTTLE_MS } from './app-environment';
 
 
-export function runClearMissedWarning(this: any) {
-        this.runtime.missedWarningZoneRu = null;
-        this.runtime.missedWarningItems = [];
+export function runClearMissedWarning(runtime: RuntimeState) {
+        runtime.missedWarningZoneRu = null;
+        runtime.missedWarningItems = [];
     }
 
-export function runSyncRuntimeZoneFields(this: any, rawZoneName: any, guide: any) {
-        this.runtime.lastRawZoneName = rawZoneName;
-        this.runtime.lastMatchedZoneEn = guide?.zone_en ?? null;
-        this.runtime.lastMatchedZoneRu = guide?.zone_ru ?? null;
-        this.runtime.lastMatchedGuideId = guide?.id ?? null;
+export function runSyncRuntimeZoneFields(runtime: RuntimeState, rawZoneName: string | null, guide: GuideEntry | null) {
+        runtime.lastRawZoneName = rawZoneName;
+        runtime.lastMatchedZoneEn = guide?.zone_en ?? null;
+        runtime.lastMatchedZoneRu = guide?.zone_ru ?? null;
+        runtime.lastMatchedGuideId = guide?.id ?? null;
     }
 
 export function runUpdateZoneProgress(this: any, guide: any) {
@@ -32,8 +32,8 @@ export function runUpdateZoneProgress(this: any, guide: any) {
         });
     }
 
-export function runGetZoneProgress(this: any, zoneId: any) {
-        return (this.config.zoneProgress[zoneId] ?? {
+export function runGetZoneProgress(config: Pick<AppConfig, 'zoneProgress'>, zoneId: string): GuideZoneProgress {
+        return (config.zoneProgress[zoneId] ?? {
             itemStates: {},
             likelyDoneKeywords: [],
             lastVisitedAt: null

@@ -85,7 +85,7 @@ Use `data-click-feedback="off"` for map/canvas controls that provide their own s
 
 ### Metadata
 - Source: conversation
-- Related Files: src/renderer/main.tsx, src/renderer/styles/33-click-feedback.css, src/renderer/styles/50-act-route-atlas-test.css
+- Related Files: src/renderer/main.tsx, src/renderer/styles/33-click-feedback.css, src/renderer/styles/50-act-route-atlas.css
 - Tags: css, cascade, click-feedback, positioning, composite-controls
 
 ---

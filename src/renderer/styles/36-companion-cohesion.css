@@ -2199,13 +2199,6 @@ body.settings-window-resizing .settings-page:not(.companion-page) {
   }
 }
 
-.companion-page .bonuses-tab-layout {
-  display: grid !important;
-  grid-template-rows: auto minmax(0, 1fr) !important;
-  min-height: 0 !important;
-  overflow: hidden !important;
-}
-
 .companion-page .bonuses-act-grid {
   display: grid !important;
   grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
@@ -2234,11 +2227,6 @@ body.settings-window-resizing .settings-page:not(.companion-page) {
   align-self: start !important;
   contain: none !important;
   overflow: visible !important;
-  transform: none !important;
-}
-
-.companion-page .bonuses-act-card:hover,
-.companion-page .bonuses-tab-layout .bonus-row:hover {
   transform: none !important;
 }
 

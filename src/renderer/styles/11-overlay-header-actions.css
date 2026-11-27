@@ -417,58 +417,10 @@
 }
 
 /* Start / continue: green action glow. */
-.overlay-page .overlay-timer-control-start:hover:not(:disabled),
-.overlay-page .overlay-timer-control-start:focus-visible:not(:disabled),
-.overlay-page:not(.overlay-page-timer-only) .overlay-timer-control-start:hover:not(:disabled),
-.overlay-page:not(.overlay-page-timer-only) .overlay-timer-control-start:focus-visible:not(:disabled),
-.overlay-page .timer-only-controls-row .overlay-timer-control-start:hover:not(:disabled),
-.overlay-page .timer-only-controls-row .overlay-timer-control-start:focus-visible:not(:disabled) {
-  border-color: rgba(125, 236, 162, 0.78) !important;
-  background:
-    radial-gradient(circle at 50% 22%, rgba(169, 255, 195, 0.34), transparent 58%),
-    linear-gradient(180deg, rgba(55, 151, 89, 0.44), rgba(24, 84, 52, 0.34)) !important;
-  color: #f0fff4 !important;
-  box-shadow:
-    inset 0 0 0 1px rgba(205, 255, 220, 0.13),
-    0 0 0 1px rgba(125, 236, 162, 0.18),
-    0 0 16px rgba(84, 190, 112, 0.26) !important;
-}
 
 /* Pause: amber warning/action glow. */
-.overlay-page .overlay-timer-control-pause:hover:not(:disabled),
-.overlay-page .overlay-timer-control-pause:focus-visible:not(:disabled),
-.overlay-page:not(.overlay-page-timer-only) .overlay-timer-control-pause:hover:not(:disabled),
-.overlay-page:not(.overlay-page-timer-only) .overlay-timer-control-pause:focus-visible:not(:disabled),
-.overlay-page .timer-only-controls-row .overlay-timer-control-pause:hover:not(:disabled),
-.overlay-page .timer-only-controls-row .overlay-timer-control-pause:focus-visible:not(:disabled) {
-  border-color: rgba(255, 219, 128, 0.84) !important;
-  background:
-    radial-gradient(circle at 50% 22%, rgba(255, 236, 179, 0.36), transparent 58%),
-    linear-gradient(180deg, rgba(161, 106, 37, 0.46), rgba(92, 62, 24, 0.36)) !important;
-  color: #fff3cc !important;
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 239, 192, 0.14),
-    0 0 0 1px rgba(255, 219, 128, 0.18),
-    0 0 16px rgba(241, 185, 106, 0.26) !important;
-}
 
 /* Reset: red/orange destructive glow. */
-.overlay-page .overlay-timer-control-reset:hover:not(:disabled),
-.overlay-page .overlay-timer-control-reset:focus-visible:not(:disabled),
-.overlay-page:not(.overlay-page-timer-only) .overlay-timer-control-reset:hover:not(:disabled),
-.overlay-page:not(.overlay-page-timer-only) .overlay-timer-control-reset:focus-visible:not(:disabled),
-.overlay-page .timer-only-controls-row .overlay-timer-control-reset:hover:not(:disabled),
-.overlay-page .timer-only-controls-row .overlay-timer-control-reset:focus-visible:not(:disabled) {
-  border-color: rgba(255, 136, 112, 0.78) !important;
-  background:
-    radial-gradient(circle at 50% 22%, rgba(255, 164, 146, 0.32), transparent 58%),
-    linear-gradient(180deg, rgba(149, 53, 46, 0.44), rgba(86, 31, 28, 0.34)) !important;
-  color: #ffe5df !important;
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 215, 207, 0.12),
-    0 0 0 1px rgba(255, 136, 112, 0.16),
-    0 0 16px rgba(255, 93, 73, 0.22) !important;
-}
 
 /* Compact / expand view: blue UI mode glow. */
 .overlay-page .compact-mode-button:hover,

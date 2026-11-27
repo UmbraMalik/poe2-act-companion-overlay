@@ -1,3 +1,4 @@
+import { translate } from '../../i18n/translations';
 import { app } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import type { AutoUpdateState, AutoUpdateProgress } from '../../shared/types';
@@ -11,11 +12,11 @@ const GITHUB_UPDATE_FEED = {
 };
 
 const GENERIC_AUTO_UPDATE_ERROR =
-  'Не удалось проверить обновления. Проверь интернет/VPN или попробуй позже.';
+  translate('en', 'system.autoUpdate.generic');
 const LATEST_YML_AUTO_UPDATE_ERROR =
-  'Не удалось проверить автообновление: в последнем релизе не найден latest.yml. Проверь assets релиза.';
+  translate('en', 'system.autoUpdate.latestYml');
 const INSTALLER_FALLBACK_ERROR =
-  'Новая версия найдена, но автоматическое обновление недоступно. Если приложение уже было открыто, а потом включался VPN, отключи VPN и нажми “Проверить обновления” ещё раз. Либо открой релиз и скачай установщик вручную.';
+  translate('en', 'system.autoUpdate.installerFallback');
 
 function getErrorMessage(error: unknown): string {
   if (error instanceof Error && error.message) {
@@ -38,7 +39,7 @@ function getUserFacingUpdateError(error: unknown, fallback = GENERIC_AUTO_UPDATE
   }
 
   if (lowerMessage.includes('404')) {
-    return 'Не удалось проверить обновления: GitHub вернул 404 для файла обновления.';
+    return translate('en', 'system.autoUpdate.github404');
   }
 
   if (lowerMessage.includes('net::') || lowerMessage.includes('network') || lowerMessage.includes('timeout')) {
@@ -182,7 +183,7 @@ export class AutoUpdateService {
         currentVersion: app.getVersion(),
         errorMessage: getUserFacingUpdateError(
           error,
-          'Не удалось проверить или скачать обновление.'
+          translate('en', 'system.autoUpdate.checkOrDownload')
         )
       });
     });
@@ -249,7 +250,7 @@ export class AutoUpdateService {
         ...this.state,
         status: 'error',
         currentVersion: app.getVersion(),
-        errorMessage: getUserFacingUpdateError(error, 'Не удалось скачать обновление.')
+        errorMessage: getUserFacingUpdateError(error, translate('en', 'system.autoUpdate.downloadFailed'))
       });
     }
 

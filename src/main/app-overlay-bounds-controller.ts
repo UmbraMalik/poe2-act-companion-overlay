@@ -1,3 +1,4 @@
+import type { OverlayMode, OverlayDensity, OverlayScale } from '../shared/types';
 import { screen } from 'electron';
 import {
   DEFAULT_COMPACT_OVERLAY_BOUNDS,
@@ -16,7 +17,7 @@ import {
 import { diagnosticInfo, diagnosticWarn } from './diagnostic-logger';
 
 
-export function runLogOverlayBoundsEvent(this: any, level: any, payload: any) {
+export function runLogOverlayBoundsEvent(level: 'warn' | 'info', payload: unknown) {
         if (level === 'warn') {
             diagnosticWarn('OverlayBounds', 'Bounds event', payload);
             return;
@@ -140,19 +141,19 @@ export function runHandleOverlayWindowBoundsEvent(this: any, eventName: any) {
         }
     }
 
-export function runGetOverlayMinimumSize(this: any, mode: any, density: any = this.config.overlayDensity, scale: any = this.config.overlayScale) {
+export function runGetOverlayMinimumSize(mode: OverlayMode, density: OverlayDensity, scale: OverlayScale) {
         return getOverlayMinimumSize(mode, density, scale);
     }
 
-export function runGetOverlayMaximumOffscreenX(this: any, width: any) {
+export function runGetOverlayMaximumOffscreenX(width: number) {
         return Math.min(120, Math.round(width * 0.35));
     }
 
-export function runGetOverlayMinimumVisibleWidth(this: any, width: any) {
+export function runGetOverlayMinimumVisibleWidth(width: number) {
         return Math.min(width, Math.max(120, Math.min(160, Math.round(width * 0.4))));
     }
 
-export function runGetOverlayMinimumVisibleHeight(this: any, height: any) {
+export function runGetOverlayMinimumVisibleHeight(height: number) {
         return Math.min(height, 120);
     }
 
@@ -176,15 +177,15 @@ export function runGetOverlayScaledDefaultBounds(this: any, mode: any, density: 
         };
     }
 
-export function runGetOverlayVirtualWorkArea(this: any) {
+export function runGetOverlayVirtualWorkArea() {
         const displays = screen.getAllDisplays();
         if (displays.length === 0) {
             return screen.getPrimaryDisplay().workArea;
         }
-        const left = Math.min(...displays.map((display: any) => display.workArea.x));
-        const top = Math.min(...displays.map((display: any) => display.workArea.y));
-        const right = Math.max(...displays.map((display: any) => display.workArea.x + display.workArea.width));
-        const bottom = Math.max(...displays.map((display: any) => display.workArea.y + display.workArea.height));
+        const left = Math.min(...displays.map((display) => display.workArea.x));
+        const top = Math.min(...displays.map((display) => display.workArea.y));
+        const right = Math.max(...displays.map((display) => display.workArea.x + display.workArea.width));
+        const bottom = Math.max(...displays.map((display) => display.workArea.y + display.workArea.height));
         return {
             x: left,
             y: top,

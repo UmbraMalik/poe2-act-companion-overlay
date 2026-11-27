@@ -1,22 +1,71 @@
-import { useEffect, useMemo, useState, type KeyboardEvent, type ReactNode } from 'react';
-import { useAppSnapshot, useLiveNow, useLiveRunTimer } from '../hooks';
-import { getLogFileStatus } from '../log-health';
-import { useDocumentTitle, useI18n } from '../useI18n';
-import { getCurrentActElapsedMs, getSceneDisplayName } from '../companion-helpers';
-import { formatDuration, formatFileSize, formatGuideLabel, getReleaseNoteItems, formatTimestamp, formatZoneOption } from '../utils';
-import { getLevelReminderView } from '../../i18n/data';
-import { formatZoneMatcherReason, translateSystemText } from '../../i18n/runtime';
-import { translate } from '../../i18n/translations';
-import { getAppThemeClassName } from '../theme';
-import { SettingsSelect } from '../settings/SettingsSelect';
-import { CampaignProfileSelector } from '../settings/CampaignProfileSelector';
-import { OverlayLayoutEditor } from '../settings/OverlayLayoutEditor';
-import { OverlayLivePreview } from '../settings/OverlayLivePreview';
-import { SettingsWindowResizeGrip } from '../settings/SettingsWindowResizeGrip';
-import { SettingsWindowShellEffects } from '../settings/SettingsWindowShellEffects';
-import { TimerTargetField } from '../settings/TimerTargetField';
-import { SettingsQuickNav } from '../settings/SettingsQuickNav';
-import { formatTargetRunTimeInput, parseTargetRunTimeInput } from '../run-target';
+import {
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode
+} from 'react';
+import {
+  useAppSnapshot,
+  useLiveNow,
+  useLiveRunTimer
+} from '../hooks';
+import {
+  getLogFileStatus
+} from '../log-health';
+import {
+  useDocumentTitle,
+  useI18n
+} from '../useI18n';
+import {
+  getCurrentActElapsedMs,
+  getSceneDisplayName
+} from '../companion-helpers';
+import {
+  formatDuration,
+  formatFileSize,
+  formatGuideLabel,
+  getReleaseNoteItems,
+  formatTimestamp,
+  formatZoneOption
+} from '../utils';
+import {
+  getLevelReminderView
+} from '../../i18n/data';
+import {
+  formatZoneMatcherReason,
+  translateSystemText
+} from '../../i18n/runtime';
+import {
+  getAppThemeClassName
+} from '../theme';
+import {
+  SettingsSelect
+} from '../settings/SettingsSelect';
+import {
+  CampaignProfileSelector
+} from '../settings/CampaignProfileSelector';
+import {
+  OverlayLayoutEditor
+} from '../settings/OverlayLayoutEditor';
+import {
+  OverlayLivePreview
+} from '../settings/OverlayLivePreview';
+import {
+  SettingsWindowResizeGrip
+} from '../settings/SettingsWindowResizeGrip';
+import {
+  SettingsWindowShellEffects
+} from '../settings/SettingsWindowShellEffects';
+import {
+  TimerTargetField
+} from '../settings/TimerTargetField';
+import {
+  SettingsQuickNav
+} from '../settings/SettingsQuickNav';
+import {
+  formatTargetRunTimeInput,
+  parseTargetRunTimeInput
+} from '../run-target';
 import {
   buildOverlayPresetPatch,
   formatOverlayPresetLabel,
@@ -46,11 +95,11 @@ import type {
   OverlayTextSize,
   OverlayVisibleSections,
   RunTimerAutoStartMode,
-  RunTimerStatus,
   VisualFxIntensity,
   UpdateCheckResult,
   AutoUpdateState
 } from '../../shared/types';
+import { formatDateTimeLocalInput, formatRunTimerStatus, formatOverlayDensity, formatOverlayTextSize, formatVisualFxIntensity, formatAppTheme, formatLogSelectionMode, hotkeyFromKeyboardEvent, DEFAULT_HOTKEYS, HOTKEY_LABELS, OVERLAY_SECTION_VISIBILITY_LABELS } from './settings-formatters';
 
 const SHOW_DEVELOPER_SETTINGS = import.meta.env.DEV;
 function getDefaultDevLine(language: AppLanguage): string {
@@ -64,157 +113,27 @@ function getDefaultRewardLine(language: AppLanguage): string {
     ? 'Player has received +10% to [Resistances|Cold].'
     : 'Игрок получил +10% к сопротивлению [Resistances|холоду].';
 }
-const DEFAULT_HOTKEYS: HotkeySettings = {
-  markChecklistDone: 'F6',
-  undoChecklistMark: 'F7',
-  toggleTimerPause: 'F8',
-  openCompanion: 'F9',
-  toggleOverlayMode: 'F10'
-};
-const HOTKEY_LABELS: Array<{ key: keyof HotkeySettings; labelKey: string; noteKey: string }> = [
-  { key: 'markChecklistDone', labelKey: 'settings.hotkeyMarkChecklist', noteKey: 'settings.hotkeyManual' },
-  { key: 'undoChecklistMark', labelKey: 'settings.hotkeyUndoChecklist', noteKey: 'settings.hotkeyManual' },
-  { key: 'toggleTimerPause', labelKey: 'settings.hotkeyPause', noteKey: 'settings.hotkeyAlways' },
-  { key: 'openCompanion', labelKey: 'settings.hotkeyCompanion', noteKey: 'settings.hotkeyAlways' },
-  { key: 'toggleOverlayMode', labelKey: 'settings.hotkeyOverlayMode', noteKey: 'settings.hotkeyAlways' }
-];
-
-const OVERLAY_SECTION_VISIBILITY_LABELS = [
-  ['nearby', 'settings.overlayShowNearby'],
-  ['zoneInfo', 'settings.overlayShowZoneInfo'],
-  ['zoneBonuses', 'settings.overlayShowZoneBonuses'],
-  ['next', 'settings.overlayShowNext'],
-  ['skip', 'settings.overlayShowSkip'],
-  ['speedrun', 'settings.overlayShowSpeedrun'],
-  ['important', 'settings.overlayShowImportant']
-] as const;
-
-function hotkeyFromKeyboardEvent(event: KeyboardEvent<HTMLInputElement>): string | null {
-  const key = event.key;
-  if (!key || key === 'Control' || key === 'Shift' || key === 'Alt' || key === 'Meta') {
-    return null;
-  }
-
-  if (key === 'Escape') {
-    event.currentTarget.blur();
-    return null;
-  }
-
-  if (key === 'Backspace' || key === 'Delete') {
-    return '';
-  }
-
-  const parts: string[] = [];
-  if (event.ctrlKey || event.metaKey) {
-    parts.push('Ctrl');
-  }
-  if (event.altKey) {
-    parts.push('Alt');
-  }
-  if (event.shiftKey) {
-    parts.push('Shift');
-  }
-
-  let normalizedKey = key.length === 1 ? key.toUpperCase() : key;
-  if (normalizedKey === ' ') {
-    normalizedKey = 'Space';
-  }
-
-  const isFunctionKey = /^F(?:[1-9]|1[0-9]|2[0-4])$/.test(normalizedKey.toUpperCase());
-  const isSimpleKey = /^[A-Z0-9]$/.test(normalizedKey.toUpperCase()) || normalizedKey === 'Space';
-
-  if (!isFunctionKey && !isSimpleKey) {
-    return null;
-  }
-
-  if (!isFunctionKey && parts.length === 0) {
-    // Bare letters/numbers would hijack typing globally. Require Ctrl/Alt/Shift for them.
-    return null;
-  }
-
-  return [...parts, normalizedKey.toUpperCase()].join('+');
-}
 
 
-function formatDateTimeLocalInput(
-  timestamp: number | null,
-  fallbackLabel: string | null
-): string {
-  if (fallbackLabel) {
-    return fallbackLabel;
-  }
 
-  if (timestamp === null) {
-    return '';
-  }
 
-  const date = new Date(timestamp);
-  const pad = (value: number) => String(value).padStart(2, '0');
 
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
-}
 
-function formatRunTimerStatus(status: RunTimerStatus, language: AppLanguage): string {
-  switch (status) {
-    case 'armed':
-      return translate(language, 'companion.runStatus.armed');
-    case 'running':
-      return translate(language, 'companion.runStatus.running');
-    case 'paused':
-      return translate(language, 'companion.runStatus.paused');
-    case 'finished':
-      return translate(language, 'companion.runStatus.finished');
-    default:
-      return translate(language, 'companion.runStatus.idle');
-  }
-}
 
-function formatOverlayDensity(value: OverlayDensity, language: AppLanguage): string {
-  switch (value) {
-    case 'compact':
-      return translate(language, 'overlayDensity.compact');
-    case 'detailed':
-      return translate(language, 'overlayDensity.detailed');
-    default:
-      return translate(language, 'overlayDensity.normal');
-  }
-}
 
-function formatOverlayTextSize(value: OverlayTextSize, language: AppLanguage): string {
-  if (value === 0) {
-    return translate(language, 'overlayTextSize.normal');
-  }
 
-  return translate(language, 'overlayTextSize.plus', { value });
-}
 
-function formatVisualFxIntensity(value: VisualFxIntensity, language: AppLanguage): string {
-  switch (value) {
-    case 'off':
-      return translate(language, 'visualFxIntensity.off');
-    case 'subtle':
-      return translate(language, 'visualFxIntensity.subtle');
-    case 'rich':
-      return translate(language, 'visualFxIntensity.rich');
-    default:
-      return translate(language, 'visualFxIntensity.normal');
-  }
-}
 
-function formatAppTheme(value: AppTheme, language: AppLanguage): string {
-  return translate(language, value === 'dark_fantasy' ? 'appTheme.darkFantasy' : 'appTheme.classic');
-}
 
-function formatLogSelectionMode(mode: 'auto' | 'manual' | null, language: AppLanguage): string {
-  switch (mode) {
-    case 'auto':
-      return translate(language, 'logSelectionMode.auto');
-    case 'manual':
-      return translate(language, 'logSelectionMode.manual');
-    default:
-      return translate(language, 'logSelectionMode.legacy');
-  }
-}
+
+
+
+
+
+
+
+
+
 
 function InfoGrid({
   items

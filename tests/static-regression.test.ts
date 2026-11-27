@@ -28,9 +28,9 @@ test('main-process timer heartbeat exists and renderer exposes visual tick API',
 test('timer diagnostics stay env-gated and keep anomaly thresholds explicit', () => {
   const main = readMainProcessSource();
   const preload = readText('src/main/preload.ts');
-  const hooks = readText('src/renderer/hooks.ts');
+  const hooks = [readText('src/renderer/snapshot-hooks.ts'), readText('src/renderer/hooks.ts')].join('\n');
   const helper = readText('src/main/timer-diagnostics-log.ts');
-  const overlay = readText('src/renderer/pages/OverlayPage.tsx');
+  const overlay = [readText('src/renderer/pages/overlay-content.ts'), readText('src/renderer/pages/OverlayPage.tsx')].join('\n');
   const visualHook = hooks.slice(hooks.indexOf('export function useLiveRunTimerText'));
 
   assert.match(preload, /POE2_TIMER_DIAGNOSTICS/);
@@ -64,8 +64,8 @@ test('overlay Windows compositor compatibility mode is finalized without obsolet
   const main = readMainProcessSource();
   const startup = readText('src/main/electron-startup.ts');
   const preload = readText('src/main/preload.ts');
-  const hooks = readText('src/renderer/hooks.ts');
-  const overlay = readText('src/renderer/pages/OverlayPage.tsx');
+  const hooks = [readText('src/renderer/snapshot-hooks.ts'), readText('src/renderer/hooks.ts')].join('\n');
+  const overlay = [readText('src/renderer/pages/overlay-content.ts'), readText('src/renderer/pages/OverlayPage.tsx')].join('\n');
   const types = readText('src/shared/types.ts');
 
   assert.match(startup, /DIRECT_COMPOSITION_COMPAT_ENABLED\s*=\s*process\.platform\s*===\s*'win32'/);
@@ -89,7 +89,7 @@ test('overlay Windows compositor compatibility mode is finalized without obsolet
 });
 
 test('snapshot updates use the shared render scheduler with a timeout fallback', () => {
-  const hooks = readText('src/renderer/hooks.ts');
+  const hooks = [readText('src/renderer/snapshot-hooks.ts'), readText('src/renderer/hooks.ts')].join('\n');
   const scheduler = readText('src/renderer/render-scheduler.ts');
   const diagnostics = readText('src/renderer/render-diagnostics.ts');
   const types = readText('src/shared/types.ts');
@@ -174,7 +174,7 @@ test('electron renderer html entrypoints define CSP without unsafe-eval', () => 
 });
 
 test('run timer snapshot sync tracks act split content changes', () => {
-  const hooks = readText('src/renderer/hooks.ts');
+  const hooks = [readText('src/renderer/snapshot-hooks.ts'), readText('src/renderer/hooks.ts')].join('\n');
   const runTimerHook = hooks.slice(
     hooks.indexOf('export function useRunTimerState'),
     hooks.indexOf('export function useLiveRunTimerDisplay')
@@ -186,9 +186,9 @@ test('run timer snapshot sync tracks act split content changes', () => {
 });
 
 test('settings page memoizes repeated snapshot-derived option lists', () => {
-  const settingsPage = readText('src/renderer/pages/SettingsPage.tsx');
+  const settingsPage = [readText('src/renderer/pages/settings-formatters.ts'), readText('src/renderer/pages/SettingsPage.tsx')].join('\n');
 
-  assert.match(settingsPage, /import \{ useEffect, useMemo, useState/);
+  assert.match(settingsPage, /import\s*\{\s*useEffect,\s*useMemo,\s*useState/);
   assert.match(settingsPage, /const zoneOptions = useMemo\(/);
   assert.match(settingsPage, /\[snapshot\?\.guideEntries, language\]/);
   assert.match(settingsPage, /const settingsQuickLinks = useMemo\(/);
@@ -198,8 +198,8 @@ test('settings page memoizes repeated snapshot-derived option lists', () => {
 
 test('seasonal reward cards are absent from overlay and companion', () => {
   const companion = readText('src/renderer/CurrentRunHub.tsx');
-  const overlay = readText('src/renderer/pages/OverlayPage.tsx');
-  const settings = readText('src/renderer/pages/SettingsPage.tsx');
+  const overlay = [readText('src/renderer/pages/overlay-content.ts'), readText('src/renderer/pages/OverlayPage.tsx')].join('\n');
+  const settings = [readText('src/renderer/pages/settings-formatters.ts'), readText('src/renderer/pages/SettingsPage.tsx')].join('\n');
   assert.doesNotMatch(overlay, /leagueZoneContent|getCampaignLeagueZoneContent|league-reward-section/);
   assert.doesNotMatch(companion, /currentZoneLeagueContent|getCampaignLeagueZoneContent/);
   assert.doesNotMatch(settings, /overlayShowLeague.*\],/);
@@ -207,8 +207,8 @@ test('seasonal reward cards are absent from overlay and companion', () => {
 
 
 test('timer text updates are routed through the shared render scheduler', () => {
-  const hooks = readText('src/renderer/hooks.ts');
-  const overlay = readText('src/renderer/pages/OverlayPage.tsx');
+  const hooks = [readText('src/renderer/snapshot-hooks.ts'), readText('src/renderer/hooks.ts')].join('\n');
+  const overlay = [readText('src/renderer/pages/overlay-content.ts'), readText('src/renderer/pages/OverlayPage.tsx')].join('\n');
   const visualHook = hooks.slice(hooks.indexOf('export function useLiveRunTimerText'));
 
   assert.match(visualHook, /schedulePublishText/);
@@ -249,7 +249,7 @@ test('town timer legacy surface stays intentionally disabled', () => {
 test('real-time priority remains opt-in and is controlled from settings', () => {
   const main = readMainProcessSource();
   const performance = readText('src/main/app-performance-priority.ts');
-  const settingsPage = readText('src/renderer/pages/SettingsPage.tsx');
+  const settingsPage = [readText('src/renderer/pages/settings-formatters.ts'), readText('src/renderer/pages/SettingsPage.tsx')].join('\n');
   const defaults = readText('src/shared/defaults.ts');
   const configStore = readText('src/main/services/config-store.ts');
   const translations = readText('src/i18n/translations.ts');
@@ -271,7 +271,7 @@ test('real-time priority remains opt-in and is controlled from settings', () => 
 });
 
 test('settings search keeps performance toggles under advanced grouping', () => {
-  const settingsPage = readText('src/renderer/pages/SettingsPage.tsx');
+  const settingsPage = [readText('src/renderer/pages/settings-formatters.ts'), readText('src/renderer/pages/SettingsPage.tsx')].join('\n');
   const settingsSearch = readText('src/renderer/settings-search.ts');
   const overlayStart = settingsPage.indexOf('id="settings-overlay"');
   const detailPanelStart = settingsPage.indexOf('id="settings-detail-panel"');
@@ -290,8 +290,8 @@ test('settings search keeps performance toggles under advanced grouping', () => 
 });
 
 test('overlay visual effects can be disabled independently from global FX intensity', () => {
-  const overlay = readText('src/renderer/pages/OverlayPage.tsx');
-  const settingsPage = readText('src/renderer/pages/SettingsPage.tsx');
+  const overlay = [readText('src/renderer/pages/overlay-content.ts'), readText('src/renderer/pages/OverlayPage.tsx')].join('\n');
+  const settingsPage = [readText('src/renderer/pages/settings-formatters.ts'), readText('src/renderer/pages/SettingsPage.tsx')].join('\n');
   const defaults = readText('src/shared/defaults.ts');
   const configStore = readText('src/main/services/config-store.ts');
   const translations = readText('src/i18n/translations.ts');
@@ -307,10 +307,10 @@ test('overlay visual effects can be disabled independently from global FX intens
 });
 
 test('app theme is persisted and available in overlay and settings', () => {
-  const overlay = readText('src/renderer/pages/OverlayPage.tsx');
+  const overlay = [readText('src/renderer/pages/overlay-content.ts'), readText('src/renderer/pages/OverlayPage.tsx')].join('\n');
   const setupWizard = readText('src/renderer/FirstRunWizard.tsx');
-  const settingsPage = readText('src/renderer/pages/SettingsPage.tsx');
-  const companionPage = readText('src/renderer/pages/CompanionPage.tsx');
+  const settingsPage = [readText('src/renderer/pages/settings-formatters.ts'), readText('src/renderer/pages/SettingsPage.tsx')].join('\n');
+  const companionPage = [readText('src/renderer/pages/companion-route-model.ts'), readText('src/renderer/pages/CompanionPage.tsx')].join('\n');
   const defaults = readText('src/shared/defaults.ts');
   const types = readText('src/shared/types.ts');
   const configStore = readText('src/main/services/config-store.ts');
@@ -386,7 +386,7 @@ test('no forbidden performance hacks are reintroduced', () => {
   const source = [
     readMainProcessSource(),
     readText('src/main/preload.ts'),
-    readText('src/renderer/pages/OverlayPage.tsx')
+    [readText('src/renderer/pages/overlay-content.ts'), readText('src/renderer/pages/OverlayPage.tsx')].join('\n')
   ].join('\n');
 
   assert.doesNotMatch(source, /powerSaveBlocker/);
@@ -543,7 +543,7 @@ test('hidden windows and unchanged bounds do not trigger unnecessary smoothness 
 });
 
 test('overlay renderer memoizes heavy derived view state and throttles layout IPC', () => {
-  const overlay = readText('src/renderer/pages/OverlayPage.tsx');
+  const overlay = [readText('src/renderer/pages/overlay-content.ts'), readText('src/renderer/pages/OverlayPage.tsx')].join('\n');
   const types = readText('src/shared/types.ts');
 
   assert.match(overlay, /useMemo/);
@@ -559,7 +559,7 @@ test('overlay renderer memoizes heavy derived view state and throttles layout IP
 });
 
 test('companion route tab memoizes route card derived labels outside render map', () => {
-  const companion = readText('src/renderer/pages/CompanionPage.tsx');
+  const companion = [readText('src/renderer/pages/companion-route-model.ts'), readText('src/renderer/pages/CompanionPage.tsx')].join('\n');
   const helpers = readText('src/renderer/companion-helpers.ts');
   const routeCardModelsStart = companion.indexOf('{visibleRouteCardModels.map');
   const routeCardModelsEnd = companion.indexOf('const latestActRow', routeCardModelsStart);
@@ -586,7 +586,7 @@ test('companion route tab memoizes route card derived labels outside render map'
 });
 
 test('companion route tab keeps search and filters in helper-backed memoized flow', () => {
-  const companion = readText('src/renderer/pages/CompanionPage.tsx');
+  const companion = [readText('src/renderer/pages/companion-route-model.ts'), readText('src/renderer/pages/CompanionPage.tsx')].join('\n');
   const routeControls = readText('src/renderer/RouteTabControls.tsx');
   const routeSearch = readText('src/renderer/route-tab-search.ts');
   const routeBonuses = readText('src/renderer/RouteCardBonuses.tsx');
@@ -610,7 +610,7 @@ test('companion route tab keeps search and filters in helper-backed memoized flo
 });
 
 test('companion bonus manual marks keep visible source-specific feedback', () => {
-  const companion = readText('src/renderer/pages/CompanionPage.tsx');
+  const companion = [readText('src/renderer/pages/companion-route-model.ts'), readText('src/renderer/pages/CompanionPage.tsx')].join('\n');
   const provenance = readText('src/shared/campaign-bonus-provenance.ts');
   const translations = readText('src/i18n/translations.ts');
   const cohesion = readText('src/renderer/styles/36-companion-cohesion.css');
@@ -664,7 +664,7 @@ test('interactive chrome uses the shared typed SVG icon system instead of font g
   const iconSystem = readText('src/renderer/styles/37-icon-system.css');
   const stylesIndex = readText('src/renderer/styles.css');
   const header = readText('src/renderer/CompanionHeader.tsx');
-  const overlay = readText('src/renderer/pages/OverlayPage.tsx');
+  const overlay = [readText('src/renderer/pages/overlay-content.ts'), readText('src/renderer/pages/OverlayPage.tsx')].join('\n');
   const currentRun = readText('src/renderer/CurrentRunHub.tsx');
   const closeConfirm = readText('src/renderer/pages/CloseConfirmPage.tsx');
   const update = readText('src/renderer/pages/UpdatePage.tsx');
@@ -688,7 +688,7 @@ test('interactive chrome uses the shared typed SVG icon system instead of font g
 });
 
 test('timer play and pause SVGs stay centered in every overlay layout', () => {
-  const overlay = readText('src/renderer/pages/OverlayPage.tsx');
+  const overlay = [readText('src/renderer/pages/overlay-content.ts'), readText('src/renderer/pages/OverlayPage.tsx')].join('\n');
   const iconSystem = readText('src/renderer/styles/37-icon-system.css');
 
   assert.match(overlay, /overlay-timer-icon-control/);
@@ -715,7 +715,7 @@ test('running-timer close confirmation fits its fixed Electron window without cl
 
 test('companion run history details button opens a stable detached detail card', () => {
   const detailPanel = readText('src/renderer/RunHistoryDetailPanel.tsx');
-  const companion = readText('src/renderer/pages/CompanionPage.tsx');
+  const companion = [readText('src/renderer/pages/companion-route-model.ts'), readText('src/renderer/pages/CompanionPage.tsx')].join('\n');
   const translations = readText('src/i18n/translations.ts');
   const cohesion = readText('src/renderer/styles/36-companion-cohesion.css');
 
@@ -774,7 +774,7 @@ test('default motion avoids continuous compositor-heavy ambient animations', () 
 });
 
 test('overlay local frame effects preserve intensity, motion preference and setup status alignment', () => {
-  const frames = readText('src/renderer/styles/49-overlay-preview-width-border-fix.css');
+  const frames = readText('src/renderer/styles/49-overlay-preview-width-border.css');
   const setup = readText('src/renderer/styles/36-companion-cohesion.css');
   assert.match(frames, /@media \(prefers-reduced-motion: no-preference\)/);
   assert.match(frames, /:is\(\.fx-subtle, \.fx-normal, \.fx-rich\)/);
@@ -787,7 +787,7 @@ test('overlay local frame effects preserve intensity, motion preference and setu
 });
 
 test('overlay mode changes use one latest-layout resize without transition-shell flashes', () => {
-  const overlay = readText('src/renderer/pages/OverlayPage.tsx');
+  const overlay = [readText('src/renderer/pages/overlay-content.ts'), readText('src/renderer/pages/OverlayPage.tsx')].join('\n');
 
   assert.match(overlay, /scheduleAdaptiveOverlayHeightRef\.current = scheduleAdaptiveOverlayHeight/);
   assert.match(overlay, /window\.setTimeout\(\(\) => \{[\s\S]*scheduleAdaptiveOverlayHeightRef\.current\?\.\(\{ force: true, allowBelowMinimum \}\);[\s\S]*\}, 48\)/);
@@ -797,7 +797,7 @@ test('overlay mode changes use one latest-layout resize without transition-shell
 });
 
 test('overlay supports full left-click drag with an icon-only lock toggle', () => {
-  const overlay = readText('src/renderer/pages/OverlayPage.tsx');
+  const overlay = [readText('src/renderer/pages/overlay-content.ts'), readText('src/renderer/pages/OverlayPage.tsx')].join('\n');
   const drag = readText('src/shared/overlay-drag.ts');
   const preload = readText('src/main/preload.ts');
   const styles = readRendererStyles();
@@ -842,7 +842,7 @@ test('overlay supports full left-click drag with an icon-only lock toggle', () =
 
 
 test('overlay drag suspends adaptive auto-resize to avoid high-DPI window growth', () => {
-  const overlay = readText('src/renderer/pages/OverlayPage.tsx');
+  const overlay = [readText('src/renderer/pages/overlay-content.ts'), readText('src/renderer/pages/OverlayPage.tsx')].join('\n');
   const main = readMainProcessSource();
   const preload = readText('src/main/preload.ts');
   const types = readText('src/shared/types.ts');
@@ -861,14 +861,14 @@ test('overlay drag suspends adaptive auto-resize to avoid high-DPI window growth
 });
 
 test('main overlay no longer shows old F9/F10 hint text', () => {
-  const overlay = readText('src/renderer/pages/OverlayPage.tsx');
+  const overlay = [readText('src/renderer/pages/overlay-content.ts'), readText('src/renderer/pages/OverlayPage.tsx')].join('\n');
   assert.doesNotMatch(overlay, /РџРѕРґСЂРѕР±РЅРѕСЃС‚Рё:\s*F9\s*В·\s*F10 СЃРІРµСЂРЅСѓС‚СЊ/);
   assert.doesNotMatch(overlay, /F10 СЃРІРµСЂРЅСѓС‚СЊ/);
 });
 
 test('unknown/no-guide zones keep act context available for act timer display', () => {
   const main = readMainProcessSource();
-  const overlay = readText('src/renderer/pages/OverlayPage.tsx');
+  const overlay = [readText('src/renderer/pages/overlay-content.ts'), readText('src/renderer/pages/OverlayPage.tsx')].join('\n');
   assert.match(main, /inferActHintFromInternalAreaId/);
   assert.match(main, /lastGameplayAct/);
   assert.match(overlay, /currentZone\.actHint/);
@@ -877,7 +877,7 @@ test('unknown/no-guide zones keep act context available for act timer display', 
 
 test('Act 1 route map keeps every marker decoration on one fixed anchor', () => {
   const component = readText('src/renderer/ActRouteMap.tsx');
-  const atlasStyles = readText('src/renderer/styles/50-act-route-atlas-test.css');
+  const atlasStyles = readText('src/renderer/styles/50-act-route-atlas.css');
   const clickFeedbackStyles = readText('src/renderer/styles/33-click-feedback.css');
   const renderer = readText('src/renderer/main.tsx');
 
@@ -901,7 +901,7 @@ test('Act 1 route map keeps every marker decoration on one fixed anchor', () => 
 });
 
 test('Companion browser preview skips Electron-only reset subscriptions', () => {
-  const companion = readText('src/renderer/pages/CompanionPage.tsx');
+  const companion = [readText('src/renderer/pages/companion-route-model.ts'), readText('src/renderer/pages/CompanionPage.tsx')].join('\n');
 
   assert.match(companion, /const api = window\.poe2Overlay;/);
   assert.match(companion, /typeof api\.onRunResetConfirmationRequested !== 'function'/);
@@ -911,7 +911,7 @@ test('Interlude route atlas keeps three independent chapters, actual guide IDs a
   const data = readText('src/renderer/interlude-atlas-data.ts');
   const ui = readText('src/renderer/InterludeAtlas.tsx');
   const component = readText('src/renderer/ActRouteMap.tsx');
-  const companion = readText('src/renderer/pages/CompanionPage.tsx');
+  const companion = [readText('src/renderer/pages/companion-route-model.ts'), readText('src/renderer/pages/CompanionPage.tsx')].join('\n');
   const guide = JSON.parse(readText('src/data/guide.json')) as { zones: { id: string; act: number }[] };
   const interludeIds = new Set(guide.zones.filter((zone) => zone.act === 5).map((zone) => zone.id));
   const chapterIds = [

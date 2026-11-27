@@ -1,3 +1,4 @@
+import { translate } from '../../i18n/translations';
 import { constants, watch, type FSWatcher } from 'node:fs';
 import { access, open, stat } from 'node:fs/promises';
 import { basename, dirname } from 'node:path';
@@ -46,7 +47,7 @@ export class LogWatcher {
   private discardUntilNewline = false;
   private needsResync = false;
   private status: LogWatcherStatus = 'idle';
-  private statusMessage = 'Ожидание лог-файла';
+  private statusMessage = translate('en', 'system.logWatcher.waiting');
   private runtimeState: LogWatcherRuntimeState & { fileExists: boolean } = {
     watchedLogPath: null,
     currentOffset: 0,
@@ -161,7 +162,7 @@ export class LogWatcher {
       lastMatcherReason: 'none',
       fileExists: false
     });
-    this.emitStatus('idle', 'Ожидание лог-файла');
+    this.emitStatus('idle', translate('en', 'system.logWatcher.waiting'));
   }
 
   async checkNow(): Promise<void> {
@@ -201,7 +202,7 @@ export class LogWatcher {
         lastMatchedAt: null,
         lastMatcherReason: 'none'
       });
-      this.emitStatus('ready', 'Чтение лога активно');
+      this.emitStatus('ready', translate('en', 'system.logWatcher.ready'));
     } catch {
       if (generation !== this.generation) return;
       this.updateRuntimeState({
@@ -302,24 +303,6 @@ export class LogWatcher {
     }, delayMs);
   }
 
-  private shouldKeepPreviousMatchedZone(
-    previousMatch: ExtractedZoneMatch | null,
-    nextMatch: ExtractedZoneMatch
-  ): boolean {
-    void previousMatch;
-    void nextMatch;
-    return false;
-  }
-
-  private shouldPreserveRuntimeMatchedZone(
-    nextMatch: ExtractedZoneMatch,
-    hadMatchedGuideBeforeLine: boolean
-  ): boolean {
-    void nextMatch;
-    void hadMatchedGuideBeforeLine;
-    return false;
-  }
-
   private async bootstrapFromTail(
     filePath: string, fileSize: number, generation: number
   ): Promise<void> {
@@ -391,14 +374,14 @@ export class LogWatcher {
         if (missing) { this.fileWatcher?.close(); this.fileWatcher = null; }
         this.updateRuntimeState({ fileExists: false, lastFileSize: null, lastActivityAt: null,
           lastLiveZoneAt: null, currentOffset: this.filePosition, lastReadAt: readAt });
-        this.emitStatus(missing ? 'missing' : 'error', error instanceof Error ? error.message : 'Ошибка чтения лог-файла');
+        this.emitStatus(missing ? 'missing' : 'error', error instanceof Error ? error.message : translate('en', 'system.logWatcher.readError'));
         return;
       }
       if (!current()) return;
       if (!fileStat.isFile()) {
         this.updateRuntimeState({ fileExists: false, lastFileSize: null, lastActivityAt: null,
           lastLiveZoneAt: null, currentOffset: this.filePosition, lastReadAt: readAt });
-        this.emitStatus('missing', 'Лог-файл не найден');
+        this.emitStatus('missing', translate('en', 'system.logWatcher.missing'));
         return;
       }
       const identity = `${fileStat.dev}:${fileStat.ino}`;
@@ -435,11 +418,11 @@ export class LogWatcher {
       }
       this.updateRuntimeState({ fileExists: true, lastFileSize: fileStat.size,
         lastActivityAt: fileStat.mtime.toISOString(), currentOffset: this.filePosition, lastReadAt: readAt });
-      this.emitStatus('ready', 'Чтение лога активно');
+      this.emitStatus('ready', translate('en', 'system.logWatcher.ready'));
     } catch (error) {
       if (!current()) return;
       this.updateRuntimeState({ fileExists: false, lastFileSize: null, lastActivityAt: null, lastLiveZoneAt: null });
-      this.emitStatus('error', error instanceof Error ? error.message : 'Ошибка чтения лог-файла');
+      this.emitStatus('error', error instanceof Error ? error.message : translate('en', 'system.logWatcher.readError'));
     }
   }
 
@@ -469,10 +452,6 @@ export class LogWatcher {
         continue;
       }
 
-      const hadMatchedGuideBeforeLine = Boolean(
-        this.runtimeState.lastMatchedZone &&
-        this.runtimeState.lastMatcherReason !== 'none'
-      );
       const zoneMatch = this.extractZoneMatch(cleanedLine);
       this.callbacks.onLine(cleanedLine, live ? 'append' : 'bootstrap', zoneMatch);
       if (live) this.updateRuntimeState({
@@ -486,13 +465,11 @@ export class LogWatcher {
         if (live) {
           this.updateRuntimeState({ lastLiveZoneAt: new Date().toISOString() });
         }
-        if (!this.shouldPreserveRuntimeMatchedZone(zoneMatch, hadMatchedGuideBeforeLine)) {
-          this.updateRuntimeState({
-            lastMatchedZone: zoneMatch.guide?.zone_ru ?? zoneMatch.rawZoneName,
-            lastMatchedAt: new Date().toISOString(),
-            lastMatcherReason: zoneMatch.matcherReason
-          });
-        }
+        this.updateRuntimeState({
+          lastMatchedZone: zoneMatch.guide?.zone_ru ?? zoneMatch.rawZoneName,
+          lastMatchedAt: new Date().toISOString(),
+          lastMatcherReason: zoneMatch.matcherReason
+        });
         this.callbacks.onZoneDetected(zoneMatch);
       }
 

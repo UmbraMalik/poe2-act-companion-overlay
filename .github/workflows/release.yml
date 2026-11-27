@@ -25,9 +25,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run checks and tests
-        run: npm test
-
       - name: Build distributable
         run: npm run dist:checked
         env:

@@ -1,3 +1,4 @@
+import { translate } from '../i18n/translations';
 import { app } from 'electron';
 
 import { isAllowedExternalUrl } from '../shared/external-url-policy';
@@ -8,7 +9,7 @@ const forceProductionRenderer = process.env.ELECTRON_RENDERER_MODE === 'producti
 export const isDev = !app.isPackaged && !forceProductionRenderer;
 export const devServerUrl = process.env.VITE_DEV_SERVER_URL ?? 'http://localhost:5173';
 export const DEV_SAMPLE_ZONE_LINE = '2026/05/12 12:00:00 Вы вошли в область: Грельвуд';
-export const DEFAULT_LOG_STATUS_MESSAGE = 'Ожидание лог-файла';
+export const DEFAULT_LOG_STATUS_MESSAGE = translate('en', 'system.logWatcher.waiting');
 export const BROADCAST_THROTTLE_MS = 32;
 export const UPDATE_CHECK_DELAY_MS = 4000;
 export const TIMER_VISUAL_HEARTBEAT_MS = 250;

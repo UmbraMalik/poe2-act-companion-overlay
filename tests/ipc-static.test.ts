@@ -37,7 +37,7 @@ test('debug bundle IPC reads bounded redacted log tail and exports preview text 
   const mainDebugBundle = readText('src/main/debug-bundle.ts');
   const sharedDebugBundle = readText('src/shared/debug-bundle.ts');
   const reportPage = readText('src/renderer/pages/ReportIssuePage.tsx');
-  const settingsPage = readText('src/renderer/pages/SettingsPage.tsx');
+  const settingsPage = [readText('src/renderer/pages/settings-formatters.ts'), readText('src/renderer/pages/SettingsPage.tsx')].join('\n');
   const logTailStart = main.indexOf("ipcMain.handle('app:get-debug-bundle-log-tail'");
   const logTailEnd = main.indexOf("ipcMain.handle('app:export-debug-bundle'", logTailStart);
   const exportStart = logTailEnd;
@@ -75,14 +75,14 @@ test('overlay initial snapshot uses trimmed overlay IPC while app pages keep ful
   const main = readMainProcessSource();
   const preload = readText('src/main/preload.ts');
   const types = readText('src/shared/types.ts');
-  const hooks = readText('src/renderer/hooks.ts');
+  const hooks = readText('src/renderer/snapshot-hooks.ts');
   const overlayPage = readText('src/renderer/pages/OverlayPage.tsx');
-  const settingsPage = readText('src/renderer/pages/SettingsPage.tsx');
+  const settingsPage = [readText('src/renderer/pages/settings-formatters.ts'), readText('src/renderer/pages/SettingsPage.tsx')].join('\n');
   const companionPage = readText('src/renderer/pages/CompanionPage.tsx');
   const useI18n = readText('src/renderer/useI18n.ts');
   const snapshotHook = hooks.slice(
     hooks.indexOf('export interface UseAppSnapshotOptions'),
-    hooks.indexOf('export function useLiveNow')
+    hooks.indexOf('export function useUiPreferencesSnapshot')
   );
 
   assert.match(main, /ipcMain\.handle\('app:get-overlay-snapshot', async \(\) => this\.getOverlaySnapshot\(\)\)/);
@@ -129,7 +129,7 @@ test('static info community support pages use lightweight UI preferences snapsho
   const stateController = readText('src/main/app-state-controller.ts');
   const preload = readText('src/main/preload.ts');
   const types = readText('src/shared/types.ts');
-  const hooks = readText('src/renderer/hooks.ts');
+  const hooks = readText('src/renderer/snapshot-hooks.ts');
   const infoPage = readText('src/renderer/pages/InfoPage.tsx');
   const communityPage = readText('src/renderer/pages/CommunityPage.tsx');
   const supportPage = readText('src/renderer/pages/SupportPage.tsx');
@@ -143,8 +143,7 @@ test('static info community support pages use lightweight UI preferences snapsho
     stateController.indexOf('export function runBroadcastState')
   );
   const uiSnapshotHook = hooks.slice(
-    hooks.indexOf('export function useUiPreferencesSnapshot'),
-    hooks.indexOf('export function useLiveNow')
+    hooks.indexOf('export function useUiPreferencesSnapshot')
   );
 
   assert.match(main, /ipcMain\.handle\('app:get-ui-preferences-snapshot', async \(\) => this\.getUiPreferencesSnapshot\(\)\)/);
@@ -317,7 +316,7 @@ test('manual checklist IPC exposes gated global F6/F7 hotkeys for manual items',
   const preload = readText('src/main/preload.ts');
   const stateController = readText('src/main/app-state-controller.ts');
   const appWindow = readText('src/main/app-window-controller.ts');
-  const settingsPage = readText('src/renderer/pages/SettingsPage.tsx');
+  const settingsPage = [readText('src/renderer/pages/settings-formatters.ts'), readText('src/renderer/pages/SettingsPage.tsx')].join('\n');
   const hotkeyUtils = readText('src/main/hotkey-utils.ts');
 
   assert.match(main, /ipcMain\.handle\('app:mark-current-checklist-item-done'/);

@@ -11,7 +11,7 @@ The app uses the numbered CSS partials in this folder as the single source of tr
 5. `05-overlay-layout-modes.css` — companion header, adaptive overlay, compact and timer-only modes.
 6. `06-report-community-support.css` — report window and companion community/support tabs.
 7. `07-ui-polish-settings-support.css` — late UI polish, companion actions, settings/support overrides.
-8. `08-route-polish-final.css` — final route overlap and density fixes.
+8. `08-route-density.css` — final route overlap and density fixes.
 9. `09-overlay-chrome-controls.css` — overlay chrome, controls, icons, header pass.
 10. `10-typography-refresh.css` — typography refresh and text weight tuning.
 11. `11-overlay-header-actions.css` — header layout, close UX, intent hover/focus colors, compact header fixes.
@@ -27,18 +27,18 @@ Keep imports in `src/renderer/styles.css` in numeric order unless you intentiona
 Do not add parallel folder copies like `styles/base/*`, `styles/overlay/*`, `styles/pages/*`, `styles/polish/*` or `styles/settings/*`.
 Those used to exist as duplicate sources and made it too easy to edit a CSS file that the app never imported.
 
-40. `40-ui-test-structure-pass.css` — test pass for overlay structure refinement and select chevron alignment.
-41. `41-typography-readability-test.css` — reversible readability experiment: Segoe UI Variable body copy on Windows, Geist headings, size and weight polish for RU/EN.
-42. `42-overlay-structure-v3-test.css` — reversible reading order and grouped secondary tips in the full overlay; preserves RU/EN and core gameplay list.
-43. `43-settings-sidebar-test.css` — reversible settings navigation sidebar, scrollable content and responsive compact layout.
-44. `44-companion-sidebar-test.css` — reversible companion navigation sidebar; all seven tabs remain available in RU/EN, with compact horizontal navigation in narrow windows.
-45. `45-overlay-narrow-ru-en-test.css` — reversible narrow-overlay wrapping/layout for RU/EN and all four overlay modes.
+40. `40-overlay-structure.css` — test pass for overlay structure refinement and select chevron alignment.
+41. `41-typography-readability.css` — reversible readability experiment: Segoe UI Variable body copy on Windows, Geist headings, size and weight polish for RU/EN.
+42. `42-overlay-guidance-groups.css` — reversible reading order and grouped secondary tips in the full overlay; preserves RU/EN and core gameplay list.
+43. `43-settings-sidebar.css` — reversible settings navigation sidebar, scrollable content and responsive compact layout.
+44. `44-companion-sidebar.css` — reversible companion navigation sidebar; all seven tabs remain available in RU/EN, with compact horizontal navigation in narrow windows.
+45. `45-overlay-narrow-localization.css` — reversible narrow-overlay wrapping/layout for RU/EN and all four overlay modes.
 
-46. `46-overlay-narrow-header-toolbar-fix.css` — reversible fix for narrow full overlay headers so the quick-action toolbar stays beside the zone title when width still allows it, with stacked fallback only at smaller widths.
+46. `46-overlay-narrow-header-toolbar.css` — reversible fix for narrow full overlay headers so the quick-action toolbar stays beside the zone title when width still allows it, with stacked fallback only at smaller widths.
 
-47. `47-five-features-test.css` — ghost pace, layout editor and run recap visual support.
-48. `48-settings-overlay-live-preview-test.css` — actual overlay renderer preview embedded in settings with RU/EN, width and density controls.
-49. `49-overlay-preview-width-border-fix.css` — live width preset feedback and restored masked edge orbit without animating the Electron shell.
-50. `50-act-route-atlas-test.css` — responsive Act 1 route map with fixed marker anchors, route states, bonus badges and the details panel.
+47. `47-pace-layout-recap.css` — ghost pace, layout editor and run recap visual support.
+48. `48-settings-overlay-live-preview.css` — actual overlay renderer preview embedded in settings with RU/EN, width and density controls.
+49. `49-overlay-preview-width-border.css` — live width preset feedback and restored masked edge orbit without animating the Electron shell.
+50. `50-act-route-atlas.css` — responsive Act 1 route map with fixed marker anchors, route states, bonus badges and the details panel.
 
-51. `51-interlude-atlas-test.css` — three-branch Interlude parchment selector, miniature bonus markers, finale, and responsive per-chapter maps.
+51. `51-interlude-atlas.css` — three-branch Interlude parchment selector, miniature bonus markers, finale, and responsive per-chapter maps.

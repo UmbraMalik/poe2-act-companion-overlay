@@ -1,3 +1,4 @@
+import { translate } from '../../i18n/translations';
 import type {
   GitHubReleaseAsset,
   UpdateCheckResult,
@@ -7,8 +8,8 @@ import type {
 const RELEASES_API_URL =
   'https://api.github.com/repos/UmbraMalik/poe2-act-companion-overlay/releases/latest';
 const GENERIC_UPDATE_ERROR =
-  'Не удалось проверить обновления. Проверь интернет/VPN или попробуй позже.';
-const INSTALLER_NOT_FOUND_ERROR = 'В релизе не найден установщик.';
+  translate('en', 'system.autoUpdate.generic');
+const INSTALLER_NOT_FOUND_ERROR = translate('en', 'system.autoUpdate.installerNotFound');
 
 interface GitHubReleaseResponse {
   tag_name: string;

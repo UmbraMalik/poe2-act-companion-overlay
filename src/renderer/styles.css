@@ -14,7 +14,7 @@
 @import './styles/05-overlay-layout-modes.css'; /* Companion header, adaptive overlay, compact and timer-only modes */
 @import './styles/06-report-community-support.css'; /* Report window and companion community/support tabs */
 @import './styles/07-ui-polish-settings-support.css'; /* 0.2.x UI polish, companion actions, settings/support polish */
-@import './styles/08-route-polish-final.css'; /* Final route overlap and density fixes */
+@import './styles/08-route-density.css'; /* Final route overlap and density fixes */
 @import './styles/09-overlay-chrome-controls.css'; /* Overlay chrome, controls, icons, header pass */
 @import './styles/10-typography-refresh.css'; /* Typography refresh and text weight tuning */
 @import './styles/11-overlay-header-actions.css'; /* Header layout, close UX, intent hover/focus colors, compact header fixes */
@@ -28,7 +28,7 @@
 @import './styles/19-overlay-control-unified-hover.css'; /* Final unified overlay control hover/focus states */
 @import './styles/20-reminders-timeline.css'; /* Reminders tab power-spike timeline */
 @import './styles/21-reminders-layout-polish.css'; /* Reminders tab bento layout and ordered power-spike roadmap */
-@import './styles/22-reminders-final-alignment.css'; /* Final reminders alignment: compact bento rows and single roadmap */
+@import './styles/22-reminders-compact-alignment.css'; /* Final reminders alignment: compact bento rows and single roadmap */
 @import './styles/23-results-recap.css'; /* Results recap polish: hero result, metrics, splits and longest zones */
 @import './styles/24-companion-panel-ux.css'; /* Companion panel UX pass: timer, act times, reminders and summary */
 @import './styles/route-visual-pass.css'; /* Route tab final visual and scroll override */
@@ -47,16 +47,16 @@
 @import './styles/37-icon-system.css'; /* Unified SVG icons for controls, navigation and status markers */
 @import './styles/38-close-confirm-polish.css'; /* Fixed-window close confirmation geometry and clipping guard */
 @import './styles/39-overlay-mode-stability.css'; /* Flicker-free transparent-window mode changes */
-@import './styles/40-ui-test-structure-pass.css'; /* Test pass: overlay structure refinement and select chevron alignment */
-@import './styles/41-typography-readability-test.css'; /* Reversible typography and readability experiment */
-@import './styles/42-overlay-structure-v3-test.css'; /* Test overlay reading order and grouped secondary tips */
-@import './styles/43-settings-sidebar-test.css'; /* Reversible settings sidebar navigation experiment */
-@import './styles/44-companion-sidebar-test.css'; /* Reversible detailed companion panel sidebar */
-@import './styles/45-overlay-narrow-ru-en-test.css'; /* Narrow-window overlay RU/EN responsiveness test */
-@import './styles/46-overlay-narrow-header-toolbar-fix.css'; /* Keep the top control row in the header for narrow overlays when width still allows it */
-@import './styles/47-five-features-test.css'; /* UI-V2 functional experiments: configurable overlay and pace */
-@import './styles/48-settings-overlay-live-preview-test.css'; /* Real overlay responsive preview in settings */
-@import './styles/49-overlay-preview-width-border-fix.css'; /* Live width presets and restore edge animation without shell flicker */
-@import './styles/50-act-route-atlas-test.css'; /* Interactive Act 1 route diagram, original art, game-data badges and details */
+@import './styles/40-overlay-structure.css'; /* Test pass: overlay structure refinement and select chevron alignment */
+@import './styles/41-typography-readability.css'; /* Reversible typography and readability experiment */
+@import './styles/42-overlay-guidance-groups.css'; /* Test overlay reading order and grouped secondary tips */
+@import './styles/43-settings-sidebar.css'; /* Reversible settings sidebar navigation experiment */
+@import './styles/44-companion-sidebar.css'; /* Reversible detailed companion panel sidebar */
+@import './styles/45-overlay-narrow-localization.css'; /* Narrow-window overlay RU/EN responsiveness test */
+@import './styles/46-overlay-narrow-header-toolbar.css'; /* Keep the top control row in the header for narrow overlays when width still allows it */
+@import './styles/47-pace-layout-recap.css'; /* UI-V2 functional experiments: configurable overlay and pace */
+@import './styles/48-settings-overlay-live-preview.css'; /* Real overlay responsive preview in settings */
+@import './styles/49-overlay-preview-width-border.css'; /* Live width presets and restore edge animation without shell flicker */
+@import './styles/50-act-route-atlas.css'; /* Interactive Act 1 route diagram, original art, game-data badges and details */
 
-@import './styles/51-interlude-atlas-test.css'; /* Three independently navigable Interlude parchment maps and finale */
+@import './styles/51-interlude-atlas.css'; /* Three independently navigable Interlude parchment maps and finale */

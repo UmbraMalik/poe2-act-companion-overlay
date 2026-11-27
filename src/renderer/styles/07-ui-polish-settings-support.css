@@ -794,14 +794,6 @@
   z-index: 1;
 }
 
-.overlay-page:not(.overlay-page-timer-only) .hud-block h2 {
-  color: var(--overlay-section-title, rgba(255, 220, 160, 0.88)) !important;
-}
-
-.overlay-page:not(.overlay-page-timer-only) .hud-block h2::after {
-  background: linear-gradient(90deg, var(--overlay-section-rule, rgba(241, 185, 106, 0.20)), transparent) !important;
-}
-
 .overlay-page:not(.overlay-page-timer-only) .upcoming-overlay-section {
   --overlay-section-border: rgba(241, 185, 106, 0.46);
   --overlay-section-title: rgba(255, 211, 132, 0.94);
@@ -921,9 +913,4 @@
 
 .overlay-page:not(.overlay-page-timer-only) .hud-next-zone {
   text-align: center;
-}
-
-.overlay-page.fx-off:not(.overlay-page-timer-only) .hud-block::after {
-  animation: none !important;
-  opacity: 0 !important;
 }
